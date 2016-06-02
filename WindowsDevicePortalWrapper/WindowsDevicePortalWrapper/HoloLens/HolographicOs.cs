@@ -26,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
-                throw new NotSupportedException("The GetInterPupilaryDistance method is only supported on HoloLens.");
+                throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
             InterPupilaryDistance ipd = await Get<InterPupilaryDistance>(_ipdApi);
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if ((Platform != DevicePortalPlatforms.Unknown) && 
                     (Platform != DevicePortalPlatforms.HoloLens))
                 {
-                    throw new NotSupportedException("The GetIsHttpsRequired method is only supported on HoloLens.");
+                    throw new NotSupportedException("This method is only supported on HoloLens.");
                 }
 
                 WebManagementHttpSettings httpSettings = await Get<WebManagementHttpSettings>(_webManagementHttpSettingsApi);
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if ((dpe != null) &&
                     (dpe.StatusCode != System.Net.HttpStatusCode.NotFound))
                 {
-                    throw new NotSupportedException("The GetIsHttpsRequired method is only supported on HoloLens.");
+                    throw new NotSupportedException("This method is only supported on HoloLens.");
                 }
 
                 throw;
@@ -74,7 +74,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
-                throw new NotSupportedException("The SetIsHttpsRequired method is only supported on HoloLens.");
+                throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
             await Post(_webManagementHttpSettingsApi,
@@ -92,7 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
-                throw new NotSupportedException("The SetInterPupilaryDistance method is only supported on HoloLens.");
+                throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
             String payload = String.Format("ipd={0}", (Int32)(ipd * 1000.0f));

@@ -21,6 +21,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<ThermalStages> GetThermalStage()
         {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
             ThermalStage thermalStage = await Get<ThermalStage>(_thermalStageApi);
             return thermalStage.Stage;
         }
