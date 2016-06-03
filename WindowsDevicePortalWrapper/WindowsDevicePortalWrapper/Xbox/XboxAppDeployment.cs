@@ -10,6 +10,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
     {
         private static readonly String _registerPackageApi = "api/app/packagemanager/register";
 
+        /// <summary>
+        /// Registers a loose app on the console
+        /// </summary>
         public async Task RegisterApplication(string folderName)
         {
             await Post(_registerPackageApi,

@@ -9,6 +9,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Xbox
     {
         string _networkName;
 
+        /// <summary>
+        /// Abstracts out Network connection credentials for SMB shares which require a username and password.
+        /// </summary>
         public NetworkConnection(string networkName,
             NetworkCredential credentials)
         {
