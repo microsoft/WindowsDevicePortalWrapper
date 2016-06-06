@@ -14,11 +14,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
     {
         private static readonly String _userApi = "ext/user";
 
+        /// <summary>
+        /// Gets the Xbox Live user info for all users present on the device
+        /// </summary>
+        /// <returns>UserList containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task<UserList> GetXboxLiveUsers()
         {
             return await Get<UserList>(_userApi);
         }
 
+        /// <summary>
+        /// Updates info for the Xbox Live users present on the device
+        /// </summary>
+        /// <returns>UserList containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task UpdateXboxLiveUsers(UserList users)
         {
             await Put(_userApi, users);
