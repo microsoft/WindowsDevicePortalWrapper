@@ -3,9 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -19,6 +18,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public ApplicationInstallStatusEventHandler AppInstallStatus;
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<InstallState> GetInstallState()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Gets the collection of applications installed on the device.
         /// </summary>
         /// <returns>AppPackages object containing the list of installed application packages.</returns>
@@ -27,10 +35,70 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await Get<AppPackages>(_installedPackagesApi);
         }
 
-        public async Task InstallApplication(/* BUGBUG */)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <param name="packageFileName"></param>
+        /// <param name="dependencyFileNames"></param>
+        /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
+        /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
+        /// <param name="stateCheckInterval"></param>
+        public async Task InstallApplication(String appName,
+                                            String packageFileName, 
+                                            List<String> dependencyFileNames,
+                                            Int16 stateCheckInterval = 500)
         {
-            // BUGBUG
-            throw new NotImplementedException();
+            String installPhaseDescription = String.Empty;
+
+            try
+            {
+                // First, uninstall the application.
+                installPhaseDescription = "Uninstalling previous app version";
+                SendAppInstallStatus(ApplicationInstallStatus.InProgress,
+                                    ApplicationInstallPhase.UninstallingPreviousVersion,
+                                    installPhaseDescription);
+                AppPackages installedApps = await GetInstalledAppPackages();
+                foreach (PackageInfo package in installedApps.Packages)
+                {
+                    if (package.Name == appName)
+                    {
+                        await UninstallApplication(package.FullName);
+                        break;
+                    }
+                }
+
+                // Create the install request.
+                // TODO
+
+                // Upload the app package.
+                // TODO
+
+                // Upload the dependency file(s).
+                // TODO
+
+                // Commit the install request.
+                // TODO
+
+                // Poll the status until complete.
+                // TODO
+            }
+            catch(Exception e)
+            {
+                DevicePortalException dpe = e as DevicePortalException;
+
+                HttpStatusCode status = (HttpStatusCode)0;
+                Uri request = null;
+                if (dpe != null)
+                {
+                    status = dpe.StatusCode;
+                    request = dpe.RequestUri;
+                }
+
+                SendConnectionStatus(DeviceConnectionStatus.Failed,
+                                    DeviceConnectionPhase.Idle,
+                                    String.Format("Device connection failed: {0}", installPhaseDescription));
+            }
         }
 
         /// <summary>
@@ -45,8 +113,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 String.Format("package={0}", packageName));
         }
 
-        private void SendAppInstallStatus(AppInstallStatus status,
-                                        AppInstallPhase phase,
+        private void SendAppInstallStatus(ApplicationInstallStatus status,
+                                        ApplicationInstallPhase phase,
                                         String message = "")
         {
             AppInstallStatus?.Invoke(this,
@@ -60,6 +128,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
     {
         [DataMember(Name="InstalledPackages")]
         public List<PackageInfo> Packages { get; set; }
+    }
+
+    [DataContract]
+    public class InstallState
+    {
+        [DataMember(Name="Code")]
+        public Int32 Code;
+
+        [DataMember(Name="CodeText")]
+        public String CodeText;
+
+        [DataMember(Name ="Reason")]
+        public String Reason;
+
+        [DataMember(Name="Success")]
+        public Boolean WasSuccessful;
     }
 
     [DataContract]

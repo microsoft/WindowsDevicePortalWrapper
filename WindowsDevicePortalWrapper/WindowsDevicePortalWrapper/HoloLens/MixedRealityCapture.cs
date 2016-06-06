@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -15,7 +16,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly String _mrcFileApi = "api/holographic/mrc/file";
         private static readonly String _mrcFileListApi = "api/holographic/mrc/files";
         private static readonly String _mrcPhotoApi = "api/holographic/mrc/photo";
-        private static readonly String _mrcSettingsApi = "api/holographic/mrc/settings";
         private static readonly String _mrcStartRecordingApi = "api/holographic/mrc/video/control/start";
         private static readonly String _mrcStatusApi = "api/holographic/mrc/status";
         private static readonly String _mrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
@@ -27,17 +27,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="fileName">The name of the file to be deleted.</param>
         public async Task DeleteMrcFile(String fileName)
         {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
             await Delete(_mrcFileApi, 
                         String.Format("filename={0}", Utilities.Hex64Encode(fileName)));
         }
 
-        public async Task<Byte[]> GetMrcFileData(String fileName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="isThumbnailRequest"></param>
+        /// <returns></returns>
+        public async Task<Byte[]> GetMrcFileData(String fileName,
+                                                Boolean isThumbnailRequest = false)
         {
-            throw new NotImplementedException();   
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            Byte[] dataBytes = null;
+
+            String apiPath = isThumbnailRequest ? _mrcThumbnailApi : _mrcFileApi;
+
+            using (MemoryStream data = await Get<MemoryStream>(apiPath,
+                                                        String.Format("filename={0}", Utilities.Hex64Encode(fileName))))
+            {
+                dataBytes = new Byte[data.Length];
+                data.Read(dataBytes, 0, dataBytes.Length);
+            }
+
+            return dataBytes;   
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<MrcFileList> GetMrcFileList()
         {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
             MrcFileList mrcFileList = await Get<MrcFileList>(_mrcFileListApi);
 
             foreach (MrcFileInformation mfi in mrcFileList.Files)
@@ -53,20 +90,78 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return mrcFileList;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<MrcStatus> GetMrcStatus()
+        {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            return await Get<MrcStatus>(_mrcStatusApi);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public async Task<Byte[]> GetMrcThumbnailData(String fileName)
         {
-            throw new NotImplementedException();   
+            // GetMrcFileData checks for the appropriate platform. We do not need to duplicate the check here.
+            return await GetMrcFileData(fileName, true);
         }
 
-        // BUGBUG public async Task StartMrcRecording()
-        // BUGBUG public async Task StopMrcRecording()
-
-        public async Task TakeMrcPhoto(Boolean includeHolograms,
-                                    Boolean includeColorCamera)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="includeHolograms"></param>
+        /// <param name="includeColorCamera"></param>
+        /// <param name="includeMicrophone"></param>
+        /// <param name="includeAudio"></param>
+        /// <returns></returns>
+        public async Task StartMrcRecording(Boolean includeHolograms = true,
+                                        Boolean includeColorCamera = true,
+                                        Boolean includeMicrophone = true,
+                                        Boolean includeAudio = true)
         {
-            throw new NotImplementedException();   
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            String payload = String.Format("holo={0}&pv={1}&mic={2}&loopback={3}",
+                                        includeHolograms, includeColorCamera,
+                                        includeMicrophone, includeAudio).ToLower();
+
+            await Post(_mrcStartRecordingApi,
+                    payload);
+        }
+        
+        public async Task StopMrcRecording()
+        {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            await Post(_mrcStopRecordingApi);
         }
 
+        public async Task TakeMrcPhoto(Boolean includeHolograms = true,
+                                    Boolean includeColorCamera = true)
+        {
+            if (Platform != DevicePortalPlatforms.HoloLens)
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            await Post(_mrcPhotoApi,
+                    String.Format("holo={0}&pv={1}",includeHolograms, includeColorCamera).ToLower());
+        }
     }
 
     #region Data contract
@@ -98,75 +193,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
     }
 
-    // BUGBUG
-    [DataContract]
-    public class SettingKeyValuePair
-    {
-        [DataMember(Name = "Setting")]
-        public String Key { get; set; }
-
-        [DataMember(Name = "Value")]
-        public Object Value { get; set; }
-
-        public SettingKeyValuePair()
-        { }
-
-        public SettingKeyValuePair(String key, Object value)
-        {
-            Key = key;
-            Value = value;
-        }
-    }
-
-    public class MrcOptions
-    {
-        public Boolean Audio { get; set; }
-
-        public Boolean ColorCamera { get; set; }
-        
-        public Boolean Holograms { get; set; }
-
-        public Boolean Microphone { get; set; }
-
-        public MrcOptions()
-        {
-            Audio = true;
-            ColorCamera = true;
-            Holograms = true;
-            Microphone = true;   
-        }
-    }
-
-    [DataContract]
-    public class MrcSettings
-    {
-        [DataMember(Name = "MrcSettings")]
-        public List<SettingKeyValuePair> Settings { get; set; }
-
-        public MrcSettings()
-        { 
-            Settings = new List<SettingKeyValuePair>();
-        }
-
-        public MrcSettings(MrcOptions options) : this()
-        {
-            Settings.Add(new SettingKeyValuePair("EnableCamera", options.ColorCamera));
-            Settings.Add(new SettingKeyValuePair("EnableHolograms", options.Holograms));
-            Settings.Add(new SettingKeyValuePair("EnableSystemAudio", options.Audio));
-            Settings.Add(new SettingKeyValuePair("EnableMicrophone", options.Microphone));
-        }
-
-        public MrcSettings(MrcOptions options, Int32 stabilizationBuffer) : this(options)
-        {
-            Settings.Add(new SettingKeyValuePair("VideoStabilizationBuffer", stabilizationBuffer));
-        }
-    }
-
     [DataContract]
     public class MrcStatus
     {
-        [DataMember(Name="CreationTime")]
-        public Int64 CreationTimeRaw { get; set; }
+        [DataMember(Name="IsRecording")]
+        public Boolean IsRecording { get; set; }
 
         [DataMember(Name="ProcessStatus")]
         public ProcessStatus Status { get; set; }
@@ -177,7 +208,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public class ProcessStatus
     {
         [DataMember(Name="MrcProcess")]
-        public String MrcProcess { get; set; }  // BUGBUG this should be an enum
+        public String MrcProcess { get; set; }  // TODO this should be an enum
        
     }
     #endregion Data contract

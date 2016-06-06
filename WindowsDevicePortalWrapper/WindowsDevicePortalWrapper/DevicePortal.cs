@@ -42,34 +42,42 @@ namespace Microsoft.Tools.WindowsDevicePortal
             _deviceConnection = connection;    
         }
 
+        /// <summary>
+        /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
+        /// </summary>
+        /// <param name="ssid"></param>
+        /// <param name="ssidKey"></param>
+        /// <param name="updateConnection"></param>
+        /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
+        /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         public async Task Connect(String ssid = null,
                                 String ssidKey = null,
                                 Boolean updateConnection = true)
         {
-            String connectionPhase = String.Empty;
+            String connectionPhaseDescription = String.Empty;
 
-            // BUGBUG - add status event. this can take a LONG time
+            // TODO - add status event. this can take a LONG time
             try 
             {
                 // Get the device certificate
-                connectionPhase = String.Format("Acquiring device certificate");
+                connectionPhaseDescription = "Acquiring device certificate";
                 SendConnectionStatus(DeviceConnectionStatus.Connecting,
                                     DeviceConnectionPhase.AcquiringCertificate,
-                                    connectionPhase);
+                                    connectionPhaseDescription);
                 _deviceConnection.SetDeviceCertificate(await GetDeviceCertificate());
 
                 // Get the operating system information.
-                connectionPhase = String.Format("Requesting operating system information");
+                connectionPhaseDescription = "Requesting operating system information";
                 SendConnectionStatus(DeviceConnectionStatus.Connecting,
                                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
-                                    connectionPhase);
+                                    connectionPhaseDescription);
                 _deviceConnection.OsInfo = await GetOperatingSystemInformation();
 
-                Boolean requiresHttps = true;  // BUGBUG - is this the correct default?
+                Boolean requiresHttps = true;  // TODO - is this the correct default?
                 if (_deviceConnection.OsInfo.Platform != DevicePortalPlatforms.XboxOne) // TODO: need a better check.
                 {
                     // Check to see if HTTPS is required to communicate with this device.
-                    connectionPhase = String.Format("Checking secure connection requirements");
+                    connectionPhaseDescription = "Checking secure connection requirements";
                     
                     try
                     {
@@ -82,15 +90,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Connect the device to the specified network.
                 if (!String.IsNullOrWhiteSpace(ssid))
                 {
-                    connectionPhase = String.Format("Connecting to {0} network", ssid);
+                    connectionPhaseDescription = String.Format("Connecting to {0} network", ssid);
                     SendConnectionStatus(DeviceConnectionStatus.Connecting,
                                         DeviceConnectionPhase.ConnectingToTargetNetwork,
-                                        connectionPhase);
+                                        connectionPhaseDescription);
                     WifiInterfaces wifiInterfaces = await GetWifiInterfaces();
-                    // BUGBUG - consider what to do if there is more than one wifi interface on a device
+                    // TODO - consider what to do if there is more than one wifi interface on a device
                     await ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
 
-                    // BUGBUG - note that in some instances, the hololens was receiving a KeepAlive exception, yet the network connection succeeded. 
+                    // TODO - note that in some instances, the hololens was receiving a KeepAlive exception, yet the network connection succeeded. 
                     // this COULD have been an RTM bug that is now fixed, or it could have been the fault of the access point
                     // some investigation and defensive measures should be implemented here to avoid excessive noise / false failures
                 }
@@ -98,10 +106,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Get the device's IP configuration and update the connection as appropriate.
                 if (updateConnection)
                 {
-                    connectionPhase = String.Format("Updating device connection");
+                    connectionPhaseDescription = "Updating device connection";
                     SendConnectionStatus(DeviceConnectionStatus.Connecting,
                                         DeviceConnectionPhase.UpdatingDeviceAddress,
-                                        connectionPhase);
+                                        connectionPhaseDescription);
                     _deviceConnection.UpdateConnection(await GetIpConfig(), requiresHttps);
                 }
 
@@ -123,7 +131,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 SendConnectionStatus(DeviceConnectionStatus.Failed,
                                     DeviceConnectionPhase.Idle,
-                                    String.Format("Device connection failed: {0}", connectionPhase));
+                                    String.Format("Device connection failed: {0}", connectionPhaseDescription));
             }
         }
 

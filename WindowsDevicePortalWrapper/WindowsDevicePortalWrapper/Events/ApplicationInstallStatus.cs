@@ -21,13 +21,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// 
         /// </summary>
-        public AppInstallStatus Status
+        public ApplicationInstallStatus Status
         { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public AppInstallPhase Phase
+        public ApplicationInstallPhase Phase
         { get; private set; }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="status"></param>
         /// <param name="phase"></param>
         /// <param name="message"></param>
-        internal ApplicationInstallStatusEventArgs(AppInstallStatus status,
-                                                AppInstallPhase phase,
+        internal ApplicationInstallStatusEventArgs(ApplicationInstallStatus status,
+                                                ApplicationInstallPhase phase,
                                                 String message = "")
         {
             Status = status;
@@ -52,7 +52,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
     }
 
-    public enum AppInstallStatus
+    public enum ApplicationInstallStatus
     {
         None,
         InProgress,
@@ -60,7 +60,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         Failed
     }
 
-    public enum AppInstallPhase
+    public enum ApplicationInstallPhase
     {
         Idle,
         UninstallingPreviousVersion,

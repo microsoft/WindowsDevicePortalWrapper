@@ -57,15 +57,15 @@ namespace TestApp
 
                 if (arg.StartsWith("ip:"))
                 {
-                    _ipAddress = GetArgData(arg);
+                    _ipAddress = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("user:"))
                 {
-                    _userName = GetArgData(arg);
+                    _userName = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("pwd:"))
                 {
-                    _password = GetArgData(arg);
+                    _password = GetArgData(args[i]);
                 }
                 // TODO: ssid, networkKey
                 else
