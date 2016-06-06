@@ -11,6 +11,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
     {
         private static readonly String _getSmbShareInfo = "/ext/smb/developerfolder";
 
+        /// <summary>
+        /// Gets the SMB Share info for the device
+        /// </summary>
+        /// <returns>SmbInfo class containing the SMB path, username, and password.</returns>
         public async Task<SmbInfo> GetSmbShareInfo()
         {
             return await Get<SmbInfo>(_getSmbShareInfo);
