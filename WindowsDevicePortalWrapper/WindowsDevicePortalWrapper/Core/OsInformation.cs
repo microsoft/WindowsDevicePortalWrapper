@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 await Reboot();
             }
 
-            // BUGBUG - wait until device has rebooted, then update the device name (osinfo and qualified name too?)
+            // TODO - wait until device has rebooted, then update the device name (osinfo and qualified name too?)
         }
     }
 
@@ -118,7 +118,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     {
         Unknown = -1,
 
-        // BUGBUG are these the correct names?
+        // TODO are these the correct names?
         Windows = 0,
         Mobile,
         IoT,

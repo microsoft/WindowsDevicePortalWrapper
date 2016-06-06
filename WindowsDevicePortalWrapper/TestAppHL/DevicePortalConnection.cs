@@ -92,7 +92,7 @@ namespace TestApp
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
                         newConnection = new Uri(String.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
-                        // BUGBUG qualified name
+                        // TODO qualified name
                         break;
                     }
                 }

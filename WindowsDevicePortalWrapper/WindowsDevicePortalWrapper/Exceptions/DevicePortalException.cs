@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Security;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    [Serializable]    
     public class DevicePortalException : Exception
     {
         public HttpStatusCode StatusCode { get; private set; }
@@ -31,6 +34,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             StatusCode = statusCode;
             Reason = reason;
             RequestUri = requestUri;
+        }
+
+        [SecurityCritical]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            // TODO - look at an example of how this function is implemented
+            base.GetObjectData(info, context);
         }
     }
 }

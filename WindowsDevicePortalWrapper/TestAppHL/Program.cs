@@ -1,14 +1,11 @@
 ﻿using Microsoft.Tools.WindowsDevicePortal;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace TestApp
 {
-    class Program
+    class Program : IDisposable
     {
         private String _ipAddress = null;
         private String _userName = null;
@@ -34,7 +31,7 @@ namespace TestApp
             }
 
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(app._ipAddress, app._userName, app._password));
-            portal.ConnectionStatus += app.ConnectionStatus;
+            portal.ConnectionStatus += app.ConnectionStatusHandler;
 
             app._mreConnected.Reset();
             Console.WriteLine("Connecting...");
@@ -107,6 +104,38 @@ namespace TestApp
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            { 
+                _mreConnected?.Dispose();
+                _mreConnected = null;
+            }
+        }
+
+        private void ConnectionStatusHandler(Object sender, DeviceConnectionStatusEventArgs args)
+        {
+            Console.WriteLine(args.Message);
+
+            if ((args.Status == DeviceConnectionStatus.Connected) ||
+                (args.Status == DeviceConnectionStatus.Failed))
+            {
+                _mreConnected.Set();
+            }
+        }
+
+        private String GetArgData(String arg)
+        {
+            Int32 idx = arg.IndexOf(':');
+            return arg.Substring(idx+1);
+        }
+
         private void ParseCommandLine(String[] args)
         {
             for (Int32 i = 0; i < args.Length; i++)
@@ -149,23 +178,6 @@ namespace TestApp
             if (String.IsNullOrWhiteSpace(_userName) || String.IsNullOrWhiteSpace(_password))
             {
                     throw new Exception("You must specify a user name and a password");
-            }
-        }
-
-        private String GetArgData(String arg)
-        {
-            Int32 idx = arg.IndexOf(':');
-            return arg.Substring(idx+1);
-        }
-
-        private void ConnectionStatus(Object sender, DeviceConnectionStatusEventArgs args)
-        {
-            Console.WriteLine(args.Message);
-
-            if ((args.Status == DeviceConnectionStatus.Connected) ||
-                (args.Status == DeviceConnectionStatus.Failed))
-            {
-                _mreConnected.Set();
             }
         }
     }

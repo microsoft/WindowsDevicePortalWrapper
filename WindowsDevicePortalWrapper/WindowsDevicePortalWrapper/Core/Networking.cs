@@ -86,7 +86,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataMember(Name="DHCP")]
         public Dhcp Dhcp { get; set; }
 
-        // BUGBUG - WINS
+        // TODO - WINS
 
         [DataMember(Name="Gateways")]
         public List<IpAddressInfo> Gateways { get; set; }
