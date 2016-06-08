@@ -71,6 +71,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataMember(Name = "EmailAddress", EmitDefaultValue = false)]
         public string EmailAddress { get; set; }
 
+        [DataMember(Name = "Password", EmitDefaultValue = false)]
+        public string Password { get; set; }
+
         [DataMember(Name = "AutoSignIn", EmitDefaultValue = false)]
         public bool? AutoSignIn { get; set; }
 
@@ -80,6 +83,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataMember(Name = "SignedIn", EmitDefaultValue = false)]
         public bool? SignedIn { get; set; }
 
+        [DataMember(Name = "Delete", EmitDefaultValue = false)]
+        public bool? Delete { get; set; }
+
         [DataMember(Name = "SponsoredUser", EmitDefaultValue = false)]
         public bool? SponsoredUser { get; set; }
 
@@ -88,7 +94,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         public override string ToString()
         {
-            return EmailAddress + " : " + Gamertag;
+            return "Id: " + UserId + "\n" +
+                    (SponsoredUser != true ? "    Email: " + EmailAddress + "\n" : "    Sponsored User\n") +
+                    "    Gamertag: " + Gamertag + "\n" +
+                    "    XboxUserId: " + XboxUserId + "\n" +
+                    "    SignedIn: " + (SignedIn == true ? "yes" : "no") + "\n" +
+                    (SponsoredUser != true ? "    AutoSignIn: " + (AutoSignIn == true ? "yes" : "no") + "\n" : "");
         }
     }
     #endregion // Data contract
