@@ -7,8 +7,8 @@
     <ProjectGuid>{1F3CA46B-1E52-418E-A293-23F3FA3BD213}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestAppHL</RootNamespace>
-    <AssemblyName>TestAppHL</AssemblyName>
+    <RootNamespace>TestAppXbox</RootNamespace>
+    <AssemblyName>TestAppXbox</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
