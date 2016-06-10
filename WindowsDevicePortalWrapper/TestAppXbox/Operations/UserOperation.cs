@@ -31,7 +31,7 @@ namespace TestApp
 
             String opType = parameters.GetParameterValue("subop");
 
-            if (opType == null)
+            if (String.IsNullOrWhiteSpace(opType))
             {
                 Console.WriteLine("Missing subop parameter");
                 Console.WriteLine();
@@ -114,7 +114,7 @@ namespace TestApp
                     }
                     else
                     {
-                        Console.WriteLine("autosignin operation requires the state(/ on or / off).");
+                        Console.WriteLine("autosignin operation requires the state (/on or /off).");
                         Console.WriteLine();
                         Console.WriteLine(XblUserUsageMessage);
                         return;
