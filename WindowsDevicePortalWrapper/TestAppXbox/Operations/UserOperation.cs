@@ -8,37 +8,47 @@ namespace TestApp
     internal class UserOperation
     {
         private const String XblUserUsageMessage = "Usage:\n" +
-            "  list\n" +
+            "  /subop:list\n" +
             "        Lists all Xbox Live Users on the console\n" +
-            "  signin <msa or id> [<password>]\n" +
+            "  /subop:signin <user identifier (/msa:<msa> or /id:<id>)> [/msapwd:<password>]\n" +
             "        Signs in the given user, adding them to the console if necessary\n" +
-            "  signout <msa or id>\n" +
+            "  /subop:signout <user identifier (/msa:<msa> or /id:<id>)>\n" +
             "        Signs the given user out of the console\n" +
-            "  addsponsored\n" +
+            "  /subop:addsponsored\n" +
             "        Adds a sponsored user to the console\n" +
-            "  autosignin <msa or id> <on or off>\n" +
+            "  /subop:autosignin <user identifier (/msa:<msa> or /id:<id>)> <state (/on or /off)>\n" +
             "        Turns autosignin on or off for a given user\n" +
-            "  delete <msa or id>\n" +
+            "  /subop:delete <user identifier (/msa:<msa> or /id:<id>)>\n" +
             "        Deletes the given user from the console\n";
 
-        internal static void HandleOperation(DevicePortal portal, List<String> operationArgs)
+        internal static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
         {
-            if (operationArgs.Count == 0)
+            if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {
                 Console.WriteLine(XblUserUsageMessage);
                 return;
             }
 
-            String arg = operationArgs[0].ToLower();
+            String opType = parameters.GetParameterValue("subop");
 
-            if (arg.Equals("list"))
+            if (opType == null)
+            {
+                Console.WriteLine("Missing subop parameter");
+                Console.WriteLine();
+                Console.WriteLine(XblUserUsageMessage);
+                return;
+            }
+
+            opType = opType.ToLowerInvariant();
+
+            if (opType.Equals("list"))
             {
                 Task<UserList> getUsers = portal.GetXboxLiveUsers();
 
                 getUsers.Wait();
                 Console.WriteLine(getUsers.Result);
             }
-            else if (arg.Equals("addsponsored"))
+            else if (opType.Equals("addsponsored"))
             {
                 UserInfo user = new UserInfo();
 
@@ -50,64 +60,64 @@ namespace TestApp
                 Task updateUsers = portal.UpdateXboxLiveUsers(userList);
                 updateUsers.Wait();
             }
-            else if (arg.Equals("signin") || arg.Equals("signout") || arg.Equals("delete") || arg.Equals("autosignin"))
+            else if (opType.Equals("signin") || opType.Equals("signout") || opType.Equals("delete") || opType.Equals("autosignin"))
             {
-                if (operationArgs.Count < 2)
-                {
-                    throw new Exception("Not enough params to user operation.\n" + XblUserUsageMessage);
-                }
-
                 UserInfo user = new UserInfo();
 
-                String userIdentifier = operationArgs[1];
-                uint userId;
-                if (UInt32.TryParse(userIdentifier, out userId))
+                if (parameters.HasParameter("id"))
                 {
+                    uint userId = 0;
+                    if (!UInt32.TryParse(parameters.GetParameterValue("id"), out userId))
+                    {
+                        Console.WriteLine(String.Format("Failed to parse id to an unsigned integer: {0}", parameters.GetParameterValue("id")));
+                        return;
+                    }
                     user.UserId = userId;
                 }
                 else
                 {
-                    user.EmailAddress = userIdentifier;
+                    user.EmailAddress = parameters.GetParameterValue("msa");
+
+                    if (user.EmailAddress == null)
+                    {
+                        Console.WriteLine("Must provide either msa or id to this operation");
+                        Console.WriteLine();
+                        Console.WriteLine(XblUserUsageMessage);
+                        return;
+                    }
                 }
 
-                if (arg.Equals("signin"))
+                if (opType.Equals("signin"))
                 {
-                    if (operationArgs.Count >= 3)
-                    {
-                        user.Password = operationArgs[2];
-                    }
+                    // Optional password (only used on first signin)
+                    user.Password = parameters.GetParameterValue("msapwd");
 
                     user.SignedIn = true;
                 }
-                else if (arg.Equals("signout"))
+                else if (opType.Equals("signout"))
                 {
                     user.SignedIn = false;
                 }
-                else if (arg.Equals("delete"))
+                else if (opType.Equals("delete"))
                 {
                     user.Delete = true;
                 }
-                else if (arg.Equals("autosignin"))
+                else if (opType.Equals("autosignin"))
                 {
-                    if (operationArgs.Count >= 3)
+                    if (parameters.HasFlag("on"))
                     {
-                        String autoSignin = operationArgs[2].ToLower();
-                        if (autoSignin.Equals("on"))
-                        {
-                            user.AutoSignIn = true;
-                        }
-                        else if (autoSignin.Equals("off"))
-                        {
-                            user.AutoSignIn = false;
-                        }
-                        else
-                        {
-                            throw new Exception("Final param to autosignin must be on or off.\n" + XblUserUsageMessage);
-                        }
+                        user.AutoSignIn = true;
+                    }
+                    else if (parameters.HasFlag("off"))
+                    {
+                        user.AutoSignIn = false;
                     }
                     else
                     {
-                        throw new Exception("Not enough params to autosignin operation.\n" + XblUserUsageMessage);
+                        Console.WriteLine("autosignin operation requires the state(/ on or / off).");
+                        Console.WriteLine();
+                        Console.WriteLine(XblUserUsageMessage);
+                        return;
                     }
                 }
 
@@ -118,7 +128,10 @@ namespace TestApp
             }
             else
             {
-                throw new Exception(String.Format("Unrecognized argument: {0}\n{1}", arg, XblUserUsageMessage));
+                Console.WriteLine(String.Format("Unrecognized subop: {0}", opType));
+                Console.WriteLine();
+                Console.WriteLine(XblUserUsageMessage);
+                return;
             }
         }
     }
