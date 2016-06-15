@@ -123,8 +123,30 @@ namespace TestApp
 
                 UserList userList = new UserList();
                 userList.Add(user);
-                Task updateUsers = portal.UpdateXboxLiveUsers(userList);
-                updateUsers.Wait();
+
+                try
+                {
+                    Task updateUsers = portal.UpdateXboxLiveUsers(userList);
+                    updateUsers.Wait();
+                }
+                catch (AggregateException e)
+                {
+                    if (e.InnerException is DevicePortalException)
+                    {
+                        DevicePortalException innerException = e.InnerException as DevicePortalException;
+
+                        Console.WriteLine(String.Format("Exception encountered: 0x{0:X} : {1}", innerException.HResult, innerException.Reason));
+                    }
+                    else if (e.InnerException is OperationCanceledException)
+                    {
+                        Console.WriteLine("The operation was cancelled.");
+                    }
+                    else
+                    {
+                        Console.WriteLine(String.Format("Unexpected exception encountered: {0}", e.Message));
+                    }
+                    return;
+                }
             }
             else
             {
