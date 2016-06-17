@@ -45,7 +45,7 @@
     <Compile Include="Core\DeviceManager.cs" />
     <Compile Include="Core\DumpCollection.cs" />
     <Compile Include="Core\Etw.cs" />
-    <Compile Include="Core\FileSystem.cs" />
+    <Compile Include="Core\AppFileExplorer.cs" />
     <Compile Include="Core\Networking.cs" />
     <Compile Include="Core\OsInformation.cs" />
     <Compile Include="Core\PerformanceData.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="Core\RemoteControl.cs" />
     <Compile Include="Core\TaskManager.cs" />
     <Compile Include="Core\WiFiManagement.cs" />
+    <Compile Include="Core\WindowsErrorReporting.cs" />
     <Compile Include="Core\WindowsPerformanceRecorder.cs" />
     <Compile Include="DevicePortal.cs" />
     <Compile Include="Core\Dns-Sd.cs" />
