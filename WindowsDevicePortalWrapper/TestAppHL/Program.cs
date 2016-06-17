@@ -1,5 +1,6 @@
 ﻿using Microsoft.Tools.WindowsDevicePortal;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace TestApp
         private String _key = null;
 
         private ManualResetEvent _mreConnected = new ManualResetEvent(false);
+        private ManualResetEvent _mreAppInstall = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
@@ -32,6 +34,7 @@ namespace TestApp
 
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(app._ipAddress, app._userName, app._password));
             portal.ConnectionStatus += app.ConnectionStatusHandler;
+            portal.AppInstallStatus += app.AppInstallStatusHandler;
 
             app._mreConnected.Reset();
             Console.WriteLine("Connecting...");
@@ -57,7 +60,7 @@ namespace TestApp
             Task<PowerState> powerTask = portal.GetPowerState();
             powerTask.Wait();
             Console.WriteLine("In low power state: " + powerTask.Result.InLowPowerState);
-
+                
             Task photoTask = portal.TakeMrcPhoto();
             photoTask.Wait();
             photoTask = portal.TakeMrcPhoto(includeColorCamera: false);
@@ -116,6 +119,9 @@ namespace TestApp
             { 
                 _mreConnected?.Dispose();
                 _mreConnected = null;
+
+                _mreAppInstall?.Dispose();
+                _mreAppInstall = null;
             }
         }
 
@@ -127,6 +133,16 @@ namespace TestApp
                 (args.Status == DeviceConnectionStatus.Failed))
             {
                 _mreConnected.Set();
+            }
+        }
+
+        private void AppInstallStatusHandler(Object sender, ApplicationInstallStatusEventArgs args)
+        {
+            Console.WriteLine(args.Message);
+
+            if (args.Status != ApplicationInstallStatus.InProgress)
+            {
+                _mreAppInstall.Set();
             }
         }
 
