@@ -61,6 +61,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
                 else if (e is NullReferenceException)
                 {
+                    // When an installation is in progress, the REST API returns no data.
                     status = ApplicationInstallStatus.InProgress;
                 }
                 else
@@ -88,12 +89,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="packageFileName"></param>
         /// <param name="dependencyFileNames"></param>
         /// <param name="stateCheckIntervalMs"></param>
+        /// <param name="timeoutInMinutes"></param>
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         public async Task InstallApplication(String appName,
                                             String packageFileName, 
                                             List<String> dependencyFileNames,
-                                            Int16 stateCheckIntervalMs = 500)
+                                            Int16 stateCheckIntervalMs = 500,
+                                            Int16 timeoutInMinutes = 15)
         {
             String installPhaseDescription = String.Empty;
 
@@ -134,7 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 request.Method = "POST";
                 request.SendChunked = true;
                 request.ServerCertificateValidationCallback = ServerCertificateValidation;
-                request.Timeout = 15 * 60 * 1000;   // Fifteen minutes.
+                request.Timeout = timeoutInMinutes * 60 * 1000;
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
