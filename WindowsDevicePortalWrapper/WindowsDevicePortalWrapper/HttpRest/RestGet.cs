@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new InvalidOperationException();
+                        throw new DevicePortalException(response);
                     }
 
                     using (HttpContent content = response.Content)

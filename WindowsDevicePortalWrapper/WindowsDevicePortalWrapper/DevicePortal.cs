@@ -16,6 +16,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         public DeviceConnectionStatusEventHandler ConnectionStatus;
 
+        public HttpStatusCode ConnectionHttpStatusCode = HttpStatusCode.OK;
+
         public String Address 
         {
             get { return _deviceConnection.Connection.Authority; }
@@ -121,12 +123,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 DevicePortalException dpe = e as DevicePortalException;
 
-                HttpStatusCode status = (HttpStatusCode)0;
-                Uri request = null;
                 if (dpe != null)
                 {
-                    status = dpe.StatusCode;
-                    request = dpe.RequestUri;
+                    ConnectionHttpStatusCode = dpe.StatusCode;
+                }
+                else
+                {
+                    ConnectionHttpStatusCode = (HttpStatusCode)0;
                 }
 
                 SendConnectionStatus(DeviceConnectionStatus.Failed,
