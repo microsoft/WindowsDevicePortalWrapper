@@ -48,25 +48,39 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 
-            try
+            Uri uri = Utilities.BuildEndpoint(_deviceConnection.Connection,
+                                            _installStateApi);
+
+            WebRequestHandler handler = new WebRequestHandler();
+            handler.UseDefaultCredentials = false;
+            handler.Credentials = _deviceConnection.Credentials;
+            handler.ServerCertificateValidationCallback = ServerCertificateValidation;
+
+            using (HttpClient client = new HttpClient(handler))
             {
-                InstallState state = await Get<InstallState>(_installStateApi);
-                status = (state.WasSuccessful) ? ApplicationInstallStatus.Completed : ApplicationInstallStatus.Failed;
-            }
-            catch(Exception e)
-            {
-                if (e is WebException)
+                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
+                await getTask.ConfigureAwait(false);
+                getTask.Wait();
+
+                using (HttpResponseMessage response = getTask.Result)
                 {
-                    status = ApplicationInstallStatus.None;
-                }
-                else if (e is NullReferenceException)
-                {
-                    // When an installation is in progress, the REST API returns no data.
-                    status = ApplicationInstallStatus.InProgress;
-                }
-                else
-                {
-                    status = ApplicationInstallStatus.Failed;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Status code: 200
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            status = ApplicationInstallStatus.Completed;
+                        }
+                        // Status code: 204
+                        else if (response.StatusCode == HttpStatusCode.NoContent)
+                        {
+                            status = ApplicationInstallStatus.InProgress;
+                        }
+                    }
+                    else
+                    {
+                        status = ApplicationInstallStatus.Failed; 
+                    }
                 }
             }
 
@@ -103,7 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             try
             {
                 // Uninstall the application's previous version, if one exists.
-                installPhaseDescription = "Uninstalling previous app version";
+                installPhaseDescription = String.Format("Uninstalling previous version of {0}", appName);
                 SendAppInstallStatus(ApplicationInstallStatus.InProgress,
                                     ApplicationInstallPhase.UninstallingPreviousVersion,
                                     installPhaseDescription);
