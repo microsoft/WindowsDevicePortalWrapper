@@ -1,63 +1,98 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE.TXT in the project root license information.
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="MixedRealityCapture.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Threading.Tasks;
+
+    /// <content>
+    /// Wrappers for Mixed reality capture methods
+    /// </content>
     public partial class DevicePortal
     {
-        private static readonly String _mrcFileApi = "api/holographic/mrc/file";
-        private static readonly String _mrcFileListApi = "api/holographic/mrc/files";
-        private static readonly String _mrcPhotoApi = "api/holographic/mrc/photo";
-        private static readonly String _mrcStartRecordingApi = "api/holographic/mrc/video/control/start";
-        private static readonly String _mrcStatusApi = "api/holographic/mrc/status";
-        private static readonly String _mrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
-        private static readonly String _mrcThumbnailApi = "api/holographic/mrc/thumbnail";
+        /// <summary>
+        ///  API for getting or deleting the mixed reality capture file
+        /// </summary>
+        private static readonly string MrcFileApi = "api/holographic/mrc/file";
+
+        /// <summary>
+        /// API for getting the list of mixed reality capture files
+        /// </summary>
+        private static readonly string MrcFileListApi = "api/holographic/mrc/files";
+
+        /// <summary>
+        /// API for taking a mixed reality capture photo 
+        /// </summary>
+        private static readonly string MrcPhotoApi = "api/holographic/mrc/photo";
+
+        /// <summary>
+        /// API for starting a video recording
+        /// </summary>
+        private static readonly string MrcStartRecordingApi = "api/holographic/mrc/video/control/start";
+
+        /// <summary>
+        /// API for getting the recording status
+        /// </summary>
+        private static readonly string MrcStatusApi = "api/holographic/mrc/status";
+
+        /// <summary>
+        /// API for stopping the recording
+        /// </summary>
+        private static readonly string MrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
+
+        /// <summary>
+        /// API for getting a mixed reality capture thumbnail
+        /// </summary>
+        private static readonly string MrcThumbnailApi = "api/holographic/mrc/thumbnail";
 
         /// <summary>
         /// Removes a Mixed Reality Capture file from the device's local storage.
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
-        public async Task DeleteMrcFile(String fileName)
+        /// <returns>Task tracking the deletion request</returns>
+        public async Task DeleteMrcFile(string fileName)
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await Delete(_mrcFileApi, 
-                        String.Format("filename={0}", Utilities.Hex64Encode(fileName)));
+            await Delete(
+                MrcFileApi,
+                string.Format("filename={0}", Utilities.Hex64Encode(fileName)));
         }
 
         /// <summary>
-        /// 
+        /// Gets the capture file data
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="isThumbnailRequest"></param>
-        /// <returns></returns>
-        public async Task<Byte[]> GetMrcFileData(String fileName,
-                                                Boolean isThumbnailRequest = false)
+        /// <param name="fileName">Name of the file to retrieve</param>
+        /// <param name="isThumbnailRequest">Whether or not we just want a thumbnail</param>
+        /// <returns>The raw capture data</returns>
+        public async Task<byte[]> GetMrcFileData(
+            string fileName,
+            bool isThumbnailRequest = false)
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            Byte[] dataBytes = null;
+            byte[] dataBytes = null;
 
-            String apiPath = isThumbnailRequest ? _mrcThumbnailApi : _mrcFileApi;
+            string apiPath = isThumbnailRequest ? MrcThumbnailApi : MrcFileApi;
 
-            using (MemoryStream data = await Get<MemoryStream>(apiPath,
-                                                        String.Format("filename={0}", Utilities.Hex64Encode(fileName))))
+            using (MemoryStream data = await Get<MemoryStream>(
+                apiPath,
+                string.Format("filename={0}", Utilities.Hex64Encode(fileName))))
             {
-                dataBytes = new Byte[data.Length];
+                dataBytes = new byte[data.Length];
                 data.Read(dataBytes, 0, dataBytes.Length);
             }
 
@@ -65,9 +100,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// 
+        /// Gets the list of capture files
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of the capture files</returns>
         public async Task<MrcFileList> GetMrcFileList()
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
@@ -75,25 +110,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            MrcFileList mrcFileList = await Get<MrcFileList>(_mrcFileListApi);
+            MrcFileList mrcFileList = await Get<MrcFileList>(MrcFileListApi);
 
             foreach (MrcFileInformation mfi in mrcFileList.Files)
             {
                 try 
                 {
-                    mfi.Thumbnail = await GetMrcThumbnailData(mfi.FileName);
+                    mfi.Thumbnail = await this.GetMrcThumbnailData(mfi.FileName);
                 }
                 catch
-                { }
+                {
+                }
             }
 
             return mrcFileList;
         }
 
         /// <summary>
-        /// 
+        /// Gets the status of the reality capture
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Status of the capture</returns>
         public async Task<MrcStatus> GetMrcStatus()
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
@@ -101,46 +137,53 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            return await Get<MrcStatus>(_mrcStatusApi);
+            return await Get<MrcStatus>(MrcStatusApi);
         }
 
         /// <summary>
-        /// 
+        /// Gets thumbnail data for the capture
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public async Task<Byte[]> GetMrcThumbnailData(String fileName)
+        /// <param name="fileName">Name of the capture file</param>
+        /// <returns>Thumbnail data</returns>
+        public async Task<byte[]> GetMrcThumbnailData(string fileName)
         {
             // GetMrcFileData checks for the appropriate platform. We do not need to duplicate the check here.
-            return await GetMrcFileData(fileName, true);
+            return await this.GetMrcFileData(fileName, true);
         }
 
         /// <summary>
-        /// 
+        /// Starts a reality capture recording
         /// </summary>
-        /// <param name="includeHolograms"></param>
-        /// <param name="includeColorCamera"></param>
-        /// <param name="includeMicrophone"></param>
-        /// <param name="includeAudio"></param>
-        /// <returns></returns>
-        public async Task StartMrcRecording(Boolean includeHolograms = true,
-                                        Boolean includeColorCamera = true,
-                                        Boolean includeMicrophone = true,
-                                        Boolean includeAudio = true)
+        /// <param name="includeHolograms">Whether to include holograms</param>
+        /// <param name="includeColorCamera">Whether to include the color camera</param>
+        /// <param name="includeMicrophone">Whether to include microphone data</param>
+        /// <param name="includeAudio">Whether to include audio data</param>
+        /// <returns>Task tracking the start recording request</returns>
+        public async Task StartMrcRecording(
+            bool includeHolograms = true,
+            bool includeColorCamera = true,
+            bool includeMicrophone = true,
+            bool includeAudio = true)
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            String payload = String.Format("holo={0}&pv={1}&mic={2}&loopback={3}",
-                                        includeHolograms, includeColorCamera,
-                                        includeMicrophone, includeAudio).ToLower();
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeColorCamera,
+                includeAudio).ToLower();
 
-            await Post(_mrcStartRecordingApi,
-                    payload);
+            await Post(
+                MrcStartRecordingApi,
+                payload);
         }
         
+        /// <summary>
+        /// Stops the capture recording
+        /// </summary>
+        /// <returns>Task tracking the stop request</returns>
         public async Task StopMrcRecording()
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
@@ -148,68 +191,113 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await Post(_mrcStopRecordingApi);
+            await Post(MrcStopRecordingApi);
         }
 
-        public async Task TakeMrcPhoto(Boolean includeHolograms = true,
-                                    Boolean includeColorCamera = true)
+        /// <summary>
+        /// Take a capture photo
+        /// </summary>
+        /// <param name="includeHolograms">Whether to include holograms</param>
+        /// <param name="includeColorCamera">Whether to include the color camera</param>
+        /// <returns>Task tracking the photo request</returns>
+        public async Task TakeMrcPhoto(
+            bool includeHolograms = true,
+            bool includeColorCamera = true)
         {
             if (Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await Post(_mrcPhotoApi,
-                    String.Format("holo={0}&pv={1}",includeHolograms, includeColorCamera).ToLower());
+            await Post(
+                MrcPhotoApi,
+                string.Format("holo={0}&pv={1}", includeHolograms, includeColorCamera).ToLower());
         }
-    }
 
-    #region Data contract
+        #region Data contract
 
-    [DataContract]
-    public class MrcFileList
-    {
-        [DataMember(Name="MrcRecordings")]
-        public List<MrcFileInformation> Files { get; set; }
-    }
-
-    [DataContract]
-    public class MrcFileInformation
-    {
-        [DataMember(Name="CreationTime")]
-        public Int64 CreationTimeRaw { get; set; }
-
-        [DataMember(Name="FileName")]
-        public String FileName { get; set; }
-
-        [DataMember(Name="FileSize")]
-        public UInt32 FileSize { get; set; }
-
-        public Byte[] Thumbnail { get; internal set; }
-
-        public DateTime Created
+        /// <summary>
+        /// Object representation of the capture file list
+        /// </summary>
+        [DataContract]
+        public class MrcFileList
         {
-            get { return new DateTime(CreationTimeRaw); }
+            /// <summary>
+            /// Gets or sets the list of files
+            /// </summary>
+            [DataMember(Name = "MrcRecordings")]
+            public List<MrcFileInformation> Files { get; set; }
         }
-    }
 
-    [DataContract]
-    public class MrcStatus
-    {
-        [DataMember(Name="IsRecording")]
-        public Boolean IsRecording { get; set; }
+        /// <summary>
+        /// Object representation of an individual capture file
+        /// </summary>
+        [DataContract]
+        public class MrcFileInformation
+        {
+            /// <summary>
+            /// Gets or sets the raw creation time
+            /// </summary>
+            [DataMember(Name = "CreationTime")]
+            public long CreationTimeRaw { get; set; }
 
-        [DataMember(Name="ProcessStatus")]
-        public ProcessStatus Status { get; set; }
-        
-    }
+            /// <summary>
+            /// Gets or sets the filename
+            /// </summary>
+            [DataMember(Name = "FileName")]
+            public string FileName { get; set; }
 
-    [DataContract]
-    public class ProcessStatus
-    {
-        [DataMember(Name="MrcProcess")]
-        public String MrcProcess { get; set; }  // TODO this should be an enum
-       
+            /// <summary>
+            /// Gets or sets the file size
+            /// </summary>
+            [DataMember(Name = "FileSize")]
+            public uint FileSize { get; set; }
+
+            /// <summary>
+            /// Gets the thumbnail
+            /// </summary>
+            public byte[] Thumbnail { get; internal set; }
+
+            /// <summary>
+            /// Gets the creation time
+            /// </summary>
+            public DateTime Created
+            {
+                get { return new DateTime(this.CreationTimeRaw); }
+            }
+        }
+
+        /// <summary>
+        /// Object representation of the Capture status
+        /// </summary>
+        [DataContract]
+        public class MrcStatus
+        {
+            /// <summary>
+            /// Gets or sets a value indicating whether the device is recording
+            /// </summary>
+            [DataMember(Name = "IsRecording")]
+            public bool IsRecording { get; set; }
+
+            /// <summary>
+            /// Gets or sets the recording status
+            /// </summary>
+            [DataMember(Name = "ProcessStatus")]
+            public ProcessStatus Status { get; set; }
+        }
+
+        /// <summary>
+        /// Object representation of the recording process status
+        /// </summary>
+        [DataContract]
+        public class ProcessStatus
+        {
+            /// <summary>
+            /// Gets or sets the process status
+            /// </summary>
+            [DataMember(Name = "MrcProcess")]
+            public string MrcProcess { get; set; }  // TODO this should be an enum
+        }
+        #endregion Data contract
     }
-    #endregion Data contract
 }

@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="Utilities.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+
+    /// <summary>
+    /// Utility class for common functions
+    /// </summary>
     internal static class Utilities
     {
         /// <summary>
@@ -15,12 +21,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="path">The path to the REST API method (ex: api/control/restart).</param>
         /// <param name="payload">Parameterized data required by the REST API.</param>
         /// <returns>Uri object containing the complete path and query string required to issue the REST API call.</returns>
-        public static Uri BuildEndpoint(Uri baseUri,
-                                        String path,
-                                        String payload = null)
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "api/control/restart is an example REST api and is spelled correctly.")]
+        public static Uri BuildEndpoint(
+            Uri baseUri,
+            string path,
+            string payload = null)
         {
-            String relativePart = !String.IsNullOrWhiteSpace(payload) ?
-                                    String.Format("{0}?{1}", path, payload) : path;
+            string relativePart = !string.IsNullOrWhiteSpace(payload) ?
+                                    string.Format("{0}?{1}", path, payload) : path;
             return new Uri(baseUri, relativePart);
         }
 
@@ -29,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="str">The string to encode.</param>
         /// <returns>Base64 encoded version of the string data.</returns>
-        internal static String Hex64Encode(String str)
+        internal static string Hex64Encode(string str)
         {
             return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(str));
         }

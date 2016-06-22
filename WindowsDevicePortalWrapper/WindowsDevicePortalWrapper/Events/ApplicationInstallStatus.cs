@@ -1,70 +1,104 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="ApplicationInstallStatus.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// 
+    /// Application install status event handler
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
-    public delegate void ApplicationInstallStatusEventHandler(Object sender, ApplicationInstallStatusEventArgs args);
+    /// <param name="sender">sender object</param>
+    /// <param name="args">install args</param>
+    public delegate void ApplicationInstallStatusEventHandler(object sender, ApplicationInstallStatusEventArgs args);
 
     /// <summary>
-    /// 
+    /// Application install status
+    /// </summary>
+    public enum ApplicationInstallStatus
+    {
+        /// <summary>
+        /// No install status
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Installation is in progress
+        /// </summary>
+        InProgress,
+
+        /// <summary>
+        /// Installation is completed
+        /// </summary>
+        Completed,
+
+        /// <summary>
+        /// Installation failed
+        /// </summary>
+        Failed
+    }
+
+    /// <summary>
+    /// Install phase
+    /// </summary>
+    public enum ApplicationInstallPhase
+    {
+        /// <summary>
+        /// Idle phase
+        /// </summary>
+        Idle,
+
+        /// <summary>
+        /// Uninstalling the previous version
+        /// </summary>
+        UninstallingPreviousVersion,
+
+        /// <summary>
+        /// Copying the package file
+        /// </summary>
+        CopyingFile,
+
+        /// <summary>
+        /// Installing the package
+        /// </summary>
+        Installing
+    }
+
+    /// <summary>
+    /// Application install status event args
     /// </summary>
     public class ApplicationInstallStatusEventArgs
     {
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="ApplicationInstallStatusEventArgs"/> class.
         /// </summary>
-        public ApplicationInstallStatus Status
-        { get; private set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public ApplicationInstallPhase Phase
-        { get; private set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public String Message
-        { get; private set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="status"></param>
-        /// <param name="phase"></param>
-        /// <param name="message"></param>
-        internal ApplicationInstallStatusEventArgs(ApplicationInstallStatus status,
-                                                ApplicationInstallPhase phase,
-                                                String message = "")
+        /// <param name="status">Install status</param>
+        /// <param name="phase">Install phase</param>
+        /// <param name="message">Install message</param>
+        internal ApplicationInstallStatusEventArgs(
+            ApplicationInstallStatus status,
+            ApplicationInstallPhase phase,
+            string message = "")
         {
-            Status = status;
-            Phase = phase;
-            Message = message;
+            this.Status = status;
+            this.Phase = phase;
+            this.Message = message;
         }
-    }
 
-    public enum ApplicationInstallStatus
-    {
-        None,
-        InProgress,
-        Completed,
-        Failed
-    }
+        /// <summary>
+        /// Gets the install status
+        /// </summary>
+        public ApplicationInstallStatus Status { get; private set; }
 
-    public enum ApplicationInstallPhase
-    {
-        Idle,
-        UninstallingPreviousVersion,
-        CopyingFile,
-        Installing
+        /// <summary>
+        /// Gets the install phase
+        /// </summary>
+        public ApplicationInstallPhase Phase { get; private set; }
+
+        /// <summary>
+        /// Gets the install message
+        /// </summary>
+        public string Message { get; private set; }
     }
 }

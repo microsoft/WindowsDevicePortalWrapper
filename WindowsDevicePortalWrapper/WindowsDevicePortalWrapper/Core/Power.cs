@@ -1,19 +1,29 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE.TXT in the project root license information.
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="Power.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    using System;
+    using System.Runtime.Serialization;
+    using System.Threading.Tasks;
+
+    /// <content>
+    /// Wrappers for Power methods
+    /// </content>
     public partial class DevicePortal
     {
-        private static readonly String _batteryStateApi = "api/power/battery";
-        private static readonly String _powerStateApi = "api/power/state";
+        /// <summary>
+        /// API for getting battery state
+        /// </summary>
+        private static readonly string BatteryStateApi = "api/power/battery";
+
+        /// <summary>
+        /// API for controlling power state
+        /// </summary>
+        private static readonly string PowerStateApi = "api/power/state";
 
         /// <summary>
         /// Returns the current state of the device's battery.
@@ -21,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>BatteryState object containing details such as the current battery level.</returns>
         public async Task<BatteryState> GetBatteryState()
         {
-            return await Get<BatteryState>(_batteryStateApi);
+            return await Get<BatteryState>(BatteryStateApi);
         }
 
         /// <summary>
@@ -30,60 +40,93 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>PowerState object containing details such as whether or not the device is in low power mode.</returns>
         public async Task<PowerState> GetPowerState()
         {
-            return await Get<PowerState>(_powerStateApi);
+            return await Get<PowerState>(PowerStateApi);
         }
-    }
 
-#region Data contract
-
-    [DataContract]
-    public class BatteryState
-    {
-        [DataMember(Name="AcOnline")]
-        public Boolean IsOnAcPower { get; set; }
-
-        [DataMember(Name="BatteryPresent")]
-        public Boolean IsBatteryPresent { get; set; }
-
-        [DataMember(Name="Charging")]
-        public Boolean IsCharging { get; set; }
-
-        [DataMember(Name="DefaultAlert1")]
-        public Int32 DefaultAlert1 { get; set; }
-
-        [DataMember(Name="DefaultAlert2")]
-        public Int32 DefaultAlert2 { get; set; }
-
-        [DataMember(Name="EstimatedTime")]
-        public UInt32 EstimatedTimeRaw { get; set; }
-
-        [DataMember(Name="MaximumCapacity")]
-        public UInt32 MaximumCapacity { get; set; }
-
-        [DataMember(Name="RemainingCapacity")]
-        public Int32 RemainingCapacity { get; set; }
+        #region Data contract
 
         /// <summary>
-        /// Returns the battery level as a percentage of the maximum capacity.
+        /// Battery state
         /// </summary>
-        /// <returns>
-        /// Current battery level.
-        /// </returns>
-        public Single Level
+        [DataContract]
+        public class BatteryState
         {
-            get { return 100.0f * ((Single)RemainingCapacity/(Single)MaximumCapacity); }
+            /// <summary>
+            /// Gets or sets a value indicating whether the device is on AC power
+            /// </summary>
+            [DataMember(Name = "AcOnline")]
+            public bool IsOnAcPower { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether a battery is present
+            /// </summary>
+            [DataMember(Name = "BatteryPresent")]
+            public bool IsBatteryPresent { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the device is charging
+            /// </summary>
+            [DataMember(Name = "Charging")]
+            public bool IsCharging { get; set; }
+
+            /// <summary>
+            /// Gets or sets the a default alert
+            /// </summary>
+            [DataMember(Name = "DefaultAlert1")]
+            public int DefaultAlert1 { get; set; }
+            
+            /// <summary>
+            /// Gets or sets the a default alert
+            /// </summary>
+            [DataMember(Name = "DefaultAlert2")]
+            public int DefaultAlert2 { get; set; }
+
+            /// <summary>
+            /// Gets or sets estimated battery time
+            /// </summary>
+            [DataMember(Name = "EstimatedTime")]
+            public uint EstimatedTimeRaw { get; set; }
+
+            /// <summary>
+            /// Gets or sets maximum capacity
+            /// </summary>
+            [DataMember(Name = "MaximumCapacity")]
+            public uint MaximumCapacity { get; set; }
+
+            /// <summary>
+            /// Gets or sets remaining capacity
+            /// </summary>
+            [DataMember(Name = "RemainingCapacity")]
+            public int RemainingCapacity { get; set; }
+
+            /// <summary>
+            /// Gets the battery level as a percentage of the maximum capacity.
+            /// </summary>
+            public float Level
+            {
+                get { return 100.0f * ((float)this.RemainingCapacity / this.MaximumCapacity); }
+            }
         }
+
+        /// <summary>
+        /// Power state
+        /// </summary>
+        [DataContract]
+        public class PowerState
+        {
+            /// <summary>
+            /// Gets or sets a value indicating whether the device is in a lower power mode
+            /// </summary>
+            [DataMember(Name = "LowPowerState")]
+            public bool InLowPowerState { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the device supports a lower power mode
+            /// </summary>
+            [DataMember(Name = "LowPowerStateAvailable")]
+            public bool IsLowPowerStateAvailable { get; set; }
+        }
+
+        #endregion // Data contract
     }
-
-    [DataContract]
-    public class PowerState
-    {
-        [DataMember(Name="LowPowerState")]
-        public Boolean InLowPowerState { get; set; }
-
-        [DataMember(Name="LowPowerStateAvailable")]
-        public Boolean IsLowPowerStateAvailable { get; set; }
-    }
-
-#endregion // Data contract
 }

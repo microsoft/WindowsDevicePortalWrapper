@@ -1,82 +1,134 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="DevicePortal.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// DevicePortal object
+    /// </summary>
     public partial class DevicePortal
     {
-        public static readonly String DevicePortalCertificateIssuer = "Microsoft Windows Web Management";
+        /// <summary>
+        /// Issuer for our Certificate
+        /// </summary>
+        public static readonly string DevicePortalCertificateIssuer = "Microsoft Windows Web Management";
 
-        private static readonly String _rootCertificateEndpoint = "config/rootcertificate";
-        private IDevicePortalConnection _deviceConnection;
+        /// <summary>
+        /// Endpoint for the certificate
+        /// </summary>
+        private static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
-        public DeviceConnectionStatusEventHandler ConnectionStatus;
+        /// <summary>
+        /// Device connection object
+        /// </summary>
+        private IDevicePortalConnection deviceConnection;
 
-        public HttpStatusCode ConnectionHttpStatusCode = HttpStatusCode.OK;
-
-        public String Address 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortal" /> class.
+        /// </summary>
+        /// <param name="connection">Implementation of a connection object</param>
+        public DevicePortal(IDevicePortalConnection connection)
         {
-            get { return _deviceConnection.Connection.Authority; }
+            this.deviceConnection = connection;
+        }
+
+        /// <summary>
+        /// Gets or sets handler for reporting connection status
+        /// </summary>
+        public DeviceConnectionStatusEventHandler ConnectionStatus
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the status code for establishing our connection.
+        /// </summary>
+        public HttpStatusCode ConnectionHttpStatusCode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the device address
+        /// </summary>
+        public string Address 
+        {
+            get { return this.deviceConnection.Connection.Authority; }
         }
         
-        public String OperatingSystemVersion
+        /// <summary>
+        /// Gets the Operating System Version
+        /// </summary>
+        public string OperatingSystemVersion
         {
             get
             {
-                return (_deviceConnection.OsInfo != null) ? _deviceConnection.OsInfo.OsVersionString : "";
+                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.OsVersionString : string.Empty;
             }
         }
 
+        /// <summary>
+        /// Gets the platform
+        /// </summary>
         public DevicePortalPlatforms Platform
         {
             get
             {
-                return (_deviceConnection.OsInfo != null) ? _deviceConnection.OsInfo.Platform : DevicePortalPlatforms.Unknown;
+                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.Platform : DevicePortalPlatforms.Unknown;
             }
-        }
-        
-        public DevicePortal(IDevicePortalConnection connection)
-        {
-            _deviceConnection = connection;    
         }
 
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
         /// </summary>
-        /// <param name="ssid"></param>
-        /// <param name="ssidKey"></param>
-        /// <param name="updateConnection"></param>
+        /// <param name="ssid">Network SSID if desired</param>
+        /// <param name="ssidKey">Network key if desired</param>
+        /// <param name="updateConnection">Whether we should update this connection with SSID info</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
-        public async Task Connect(String ssid = null,
-                                String ssidKey = null,
-                                Boolean updateConnection = true)
+        /// <returns>Task for tracking the connect.</returns>
+        public async Task Connect(
+            string ssid = null,
+            string ssidKey = null,
+            bool updateConnection = true)
         {
-            String connectionPhaseDescription = String.Empty;
+            this.ConnectionHttpStatusCode = HttpStatusCode.OK;
+            string connectionPhaseDescription = string.Empty;
 
             // TODO - add status event. this can take a LONG time
             try 
             {
                 // Get the device certificate
                 connectionPhaseDescription = "Acquiring device certificate";
-                SendConnectionStatus(DeviceConnectionStatus.Connecting,
-                                    DeviceConnectionPhase.AcquiringCertificate,
-                                    connectionPhaseDescription);
-                _deviceConnection.SetDeviceCertificate(await GetDeviceCertificate());
+                this.SendConnectionStatus(
+                    DeviceConnectionStatus.Connecting,
+                    DeviceConnectionPhase.AcquiringCertificate,
+                    connectionPhaseDescription);
+                this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
 
                 // Get the operating system information.
                 connectionPhaseDescription = "Requesting operating system information";
-                SendConnectionStatus(DeviceConnectionStatus.Connecting,
-                                    DeviceConnectionPhase.RequestingOperatingSystemInformation,
-                                    connectionPhaseDescription);
-                _deviceConnection.OsInfo = await GetOperatingSystemInformation();
+                this.SendConnectionStatus(
+                    DeviceConnectionStatus.Connecting,
+                    DeviceConnectionPhase.RequestingOperatingSystemInformation,
+                    connectionPhaseDescription);
+                this.deviceConnection.OsInfo = await GetOperatingSystemInformation();
 
-                Boolean requiresHttps = true;  // TODO - is this the correct default?
-                if (_deviceConnection.OsInfo.Platform != DevicePortalPlatforms.XboxOne) // TODO: need a better check.
+                bool requiresHttps = true;  // TODO - is this the correct default?
+
+                // TODO: need a better check.
+                if (this.deviceConnection.OsInfo.Platform != DevicePortalPlatforms.XboxOne)
                 {
                     // Check to see if HTTPS is required to communicate with this device.
                     connectionPhaseDescription = "Checking secure connection requirements";
@@ -86,17 +138,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         requiresHttps = await GetIsHttpsRequired();
                     }
                     catch (NotSupportedException)
-                    { }
+                    {
+                    }
                 }
 
                 // Connect the device to the specified network.
-                if (!String.IsNullOrWhiteSpace(ssid))
+                if (!string.IsNullOrWhiteSpace(ssid))
                 {
-                    connectionPhaseDescription = String.Format("Connecting to {0} network", ssid);
-                    SendConnectionStatus(DeviceConnectionStatus.Connecting,
-                                        DeviceConnectionPhase.ConnectingToTargetNetwork,
-                                        connectionPhaseDescription);
+                    connectionPhaseDescription = string.Format("Connecting to {0} network", ssid);
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.ConnectingToTargetNetwork,
+                        connectionPhaseDescription);
                     WifiInterfaces wifiInterfaces = await GetWifiInterfaces();
+
                     // TODO - consider what to do if there is more than one wifi interface on a device
                     await ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
 
@@ -109,42 +164,45 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if (updateConnection)
                 {
                     connectionPhaseDescription = "Updating device connection";
-                    SendConnectionStatus(DeviceConnectionStatus.Connecting,
-                                        DeviceConnectionPhase.UpdatingDeviceAddress,
-                                        connectionPhaseDescription);
-                    _deviceConnection.UpdateConnection(await GetIpConfig(), requiresHttps);
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.UpdatingDeviceAddress,
+                        connectionPhaseDescription);
+                    this.deviceConnection.UpdateConnection(await GetIpConfig(), requiresHttps);
                 }
 
-                SendConnectionStatus(DeviceConnectionStatus.Connected,
-                                    DeviceConnectionPhase.Idle,
-                                    "Device connection established");
+                this.SendConnectionStatus(
+                    DeviceConnectionStatus.Connected,
+                    DeviceConnectionPhase.Idle,
+                    "Device connection established");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 DevicePortalException dpe = e as DevicePortalException;
 
                 if (dpe != null)
                 {
-                    ConnectionHttpStatusCode = dpe.StatusCode;
+                    this.ConnectionHttpStatusCode = dpe.StatusCode;
                 }
                 else
                 {
-                    ConnectionHttpStatusCode = (HttpStatusCode)0;
+                    this.ConnectionHttpStatusCode = (HttpStatusCode)0;
                 }
 
-                SendConnectionStatus(DeviceConnectionStatus.Failed,
-                                    DeviceConnectionPhase.Idle,
-                                    String.Format("Device connection failed: {0}", connectionPhaseDescription));
+                this.SendConnectionStatus(
+                    DeviceConnectionStatus.Failed,
+                    DeviceConnectionPhase.Idle,
+                    string.Format("Device connection failed: {0}", connectionPhaseDescription));
             }
         }
 
         /// <summary>
-        /// 
+        /// Gets the device certificate as a byte array
         /// </summary>
-        /// <returns></returns>
-        private async Task<Byte[]> GetDeviceCertificate()
+        /// <returns>Raw device certificate</returns>
+        private async Task<byte[]> GetDeviceCertificate()
         {
-            Byte[] certificateData = null;
+            byte[] certificateData = null;
             bool useHttps = true;
 
             // try https then http
@@ -154,12 +212,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 if (useHttps)
                 {
-                    uri = Utilities.BuildEndpoint(_deviceConnection.Connection, _rootCertificateEndpoint);
+                    uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
                 }
                 else
                 {
-                    Uri baseUri = new Uri(String.Format("http://{0}", _deviceConnection.Connection.Authority));
-                    uri = Utilities.BuildEndpoint(baseUri, _rootCertificateEndpoint);
+                    Uri baseUri = new Uri(string.Format("http://{0}", this.deviceConnection.Connection.Authority));
+                    uri = Utilities.BuildEndpoint(baseUri, RootCertificateEndpoint);
                 }
 
                 try
@@ -168,17 +226,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         using (BinaryReader reader = new BinaryReader(stream))
                         {
-                            Byte[] certData = reader.ReadBytes((Int32)stream.Length);
+                            byte[] certData = reader.ReadBytes((int)stream.Length);
 
                             // Validate the issuer.
                             X509Certificate2 cert = new X509Certificate2(certData);
                             if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
                             {
-                                throw new DevicePortalException((HttpStatusCode)0,
-                                                                "Invalid certificate issuer",
-                                                                uri,
-                                                                "Failed to get device certificate");
+                                throw new DevicePortalException(
+                                    (HttpStatusCode)0,
+                                    "Invalid certificate issuer",
+                                    uri,
+                                    "Failed to get device certificate");
                             }
+
                             certificateData = certData;
                         }
                     }
@@ -187,7 +247,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
                 catch (Exception e)
                 {
-                    if(useHttps)
+                    if (useHttps)
                     {
                         useHttps = false;
                     }
@@ -200,17 +260,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// 
+        /// Sends the connection status back to the caller
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="phase"></param>
-        /// <param name="message"></param>
-        private void SendConnectionStatus(DeviceConnectionStatus status,
-                                        DeviceConnectionPhase phase,
-                                        String message = "")
+        /// <param name="status">Status of the operation</param>
+        /// <param name="phase">What phase the operation is on</param>
+        /// <param name="message">Optional message</param>
+        private void SendConnectionStatus(
+            DeviceConnectionStatus status,
+            DeviceConnectionPhase phase,
+            string message = "")
         {
-            ConnectionStatus?.Invoke(this, 
-                                    new DeviceConnectionStatusEventArgs(status, phase, message));
+            this.ConnectionStatus?.Invoke(this, new DeviceConnectionStatusEventArgs(status, phase, message));
         }
     }
 }

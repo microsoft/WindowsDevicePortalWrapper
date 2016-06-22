@@ -8,11 +8,11 @@ namespace TestApp
 {
     class Program : IDisposable
     {
-        private String _ipAddress = null;
-        private String _userName = null;
-        private String _password = null;
-        private String _ssid = null;
-        private String _key = null;
+        private string _ipAddress = null;
+        private string _userName = null;
+        private string _password = null;
+        private string _ssid = null;
+        private string _key = null;
 
         private ManualResetEvent _mreConnected = new ManualResetEvent(false);
         private ManualResetEvent _mreAppInstall = new ManualResetEvent(false);
@@ -45,7 +45,7 @@ namespace TestApp
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
             Console.WriteLine("Platform: " + portal.Platform.ToString());
 
-            Task <String> getNameTask = portal.GetDeviceName();
+            Task <string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
 
@@ -53,11 +53,11 @@ namespace TestApp
             getIpdTask.Wait();
             Console.WriteLine("IPD: " + getIpdTask.Result.ToString());
 
-            Task<BatteryState> batteryTask = portal.GetBatteryState();
+            Task<DevicePortal.BatteryState> batteryTask = portal.GetBatteryState();
             batteryTask.Wait();
             Console.WriteLine("Battery level: " + batteryTask.Result.Level);
 
-            Task<PowerState> powerTask = portal.GetPowerState();
+            Task<DevicePortal.PowerState> powerTask = portal.GetPowerState();
             powerTask.Wait();
             Console.WriteLine("In low power state: " + powerTask.Result.InLowPowerState);
                 
@@ -86,13 +86,13 @@ namespace TestApp
             stopTask = portal.StopMrcRecording();
             stopTask.Wait();
 
-            Task<MrcFileList> fileListTask = portal.GetMrcFileList();
+            Task<DevicePortal.MrcFileList> fileListTask = portal.GetMrcFileList();
             fileListTask.Wait();
-            MrcFileList mrcFileList = fileListTask.Result;
-            Console.WriteLine(String.Format("Found {0} MRC files on your device", mrcFileList.Files.Count));
-            foreach (MrcFileInformation fileInfo in mrcFileList.Files)
+            DevicePortal.MrcFileList mrcFileList = fileListTask.Result;
+            Console.WriteLine(string.Format("Found {0} MRC files on your device", mrcFileList.Files.Count));
+            foreach (DevicePortal.MrcFileInformation fileInfo in mrcFileList.Files)
             {
-                Console.WriteLine(String.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
+                Console.WriteLine(string.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
 
                 // TODO: Save the thumbnail
                 // TODO: Download / save the file
@@ -146,20 +146,20 @@ namespace TestApp
             }
         }
 
-        private String GetArgData(String arg)
+        private string GetArgData(string arg)
         {
             Int32 idx = arg.IndexOf(':');
             return arg.Substring(idx+1);
         }
 
-        private void ParseCommandLine(String[] args)
+        private void ParseCommandLine(string[] args)
         {
             for (Int32 i = 0; i < args.Length; i++)
             {
-                String arg = args[i].ToLower();
+                string arg = args[i].ToLower();
                 if (!arg.StartsWith("/'") && !arg.StartsWith("-"))
                 {
-                    throw new Exception(String.Format("Unrecognized argument: {0}", args[i]));
+                    throw new Exception(string.Format("Unrecognized argument: {0}", args[i]));
                 }
 
                 arg = arg.Substring(1);
@@ -186,12 +186,12 @@ namespace TestApp
                 }
                 else
                 {
-                    throw new Exception(String.Format("Unrecognized argument: {0}", args[i]));
+                    throw new Exception(string.Format("Unrecognized argument: {0}", args[i]));
                 }
             }
 
             // We require at least a user name and password to proceed.
-            if (String.IsNullOrWhiteSpace(_userName) || String.IsNullOrWhiteSpace(_password))
+            if (string.IsNullOrWhiteSpace(_userName) || string.IsNullOrWhiteSpace(_password))
             {
                     throw new Exception("You must specify a user name and a password");
             }

@@ -19,13 +19,13 @@ namespace TestApp
         public NetworkCredential Credentials
         { get; private set; }
 
-        public String Name
+        public string Name
         { get; set; }
 
-        public OperatingSystemInformation OsInfo
+        public DevicePortal.OperatingSystemInformation OsInfo
         { get; set; }
 
-        public String QualifiedName
+        public string QualifiedName
         { get; private set; }
 
         /// <summary>
@@ -35,16 +35,16 @@ namespace TestApp
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public DevicePortalConnection(String address,
-                                    String userName,
-                                    String password)
+        public DevicePortalConnection(string address,
+                                    string userName,
+                                    string password)
         {
-            if (String.IsNullOrWhiteSpace(address))
+            if (string.IsNullOrWhiteSpace(address))
             {
                 address = "localhost:10080";
             }
 
-            Connection = new Uri(String.Format("{0}://{1}", GetUriScheme(address), address));
+            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(address), address));
             Credentials = new NetworkCredential(userName, password);
         }
 
@@ -76,22 +76,22 @@ namespace TestApp
 
         public void UpdateConnection(Boolean requiresHttps)
         {
-            Connection = new Uri(String.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
+            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
         }
 
-        public void UpdateConnection(IpConfiguration ipConfig,
+        public void UpdateConnection(DevicePortal.IpConfiguration ipConfig,
                                     Boolean requiresHttps = false)
         {
             Uri newConnection = null;
 
-            foreach (NetworkAdapterInfo adapter in ipConfig.Adapters)
+            foreach (DevicePortal.NetworkAdapterInfo adapter in ipConfig.Adapters)
             {
-                foreach (IpAddressInfo addressInfo in adapter.IpAddresses)
+                foreach (DevicePortal.IpAddressInfo addressInfo in adapter.IpAddresses)
                 {
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(String.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        newConnection = new Uri(string.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
                         // TODO qualified name
                         break;
                     }
@@ -111,7 +111,7 @@ namespace TestApp
         /// <param name="address"></param>
         /// <param name="requiresHttps"></param>
         /// <returns></returns>
-        private String GetUriScheme(String address,
+        private string GetUriScheme(string address,
                                     Boolean requiresHttps = true)
         {
             return (address.Contains("127.0.0.1") || 

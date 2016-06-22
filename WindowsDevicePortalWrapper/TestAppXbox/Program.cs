@@ -1,26 +1,47 @@
-﻿using Microsoft.Tools.WindowsDevicePortal;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace TestApp
 {
-    class Program
-    {
-        private bool _verbose = false;
+    using System;
+    using System.Net;
+    using System.Threading.Tasks;
+    using Microsoft.Tools.WindowsDevicePortal;
 
+    /// <summary>
+    /// Main entry point for the test command line class.
+    /// </summary>
+    public class Program
+    {
+        /// <summary>
+        /// Usage string
+        /// </summary>
+        private const string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
+
+        /// <summary>
+        /// Operation types
+        /// </summary>
         private enum OperationType
         {
+            /// <summary>
+            /// Info operation
+            /// </summary>
             InfoOperation,
+
+            /// <summary>
+            /// User operation
+            /// </summary>
             UserOperation,
         }
 
-        private const String GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
-
-        static void Main(string[] args)
+        /// <summary>
+        /// Main entry point
+        /// </summary>
+        /// <param name="args">command line args</param>
+        public static void Main(string[] args)
         {
             ParameterHelper parameters = new ParameterHelper();
             Program app = new Program();
@@ -62,8 +83,6 @@ namespace TestApp
                 return;
             }
 
-            app._verbose = parameters.HasFlag(ParameterHelper.VerboseFlag);
-
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
 
             Task connectTask = portal.Connect(null, null, false);
@@ -73,7 +92,7 @@ namespace TestApp
             {
                 if (portal.ConnectionHttpStatusCode != 0)
                 {
-                    Console.WriteLine(String.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
+                    Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
                 }
                 else
                 {
@@ -85,7 +104,7 @@ namespace TestApp
                 Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
                 Console.WriteLine("Platform: " + portal.Platform.ToString());
 
-                Task<String> getNameTask = portal.GetDeviceName();
+                Task<string> getNameTask = portal.GetDeviceName();
                 getNameTask.Wait();
                 Console.WriteLine("Device name: " + getNameTask.Result);
             }
@@ -95,6 +114,11 @@ namespace TestApp
             }
         }
 
+        /// <summary>
+        /// Helper for converting from operation string to enum
+        /// </summary>
+        /// <param name="operation">string representation of the operation type.</param>
+        /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
             if (operation.Equals("info", StringComparison.InvariantCultureIgnoreCase))

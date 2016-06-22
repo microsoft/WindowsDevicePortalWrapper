@@ -1,13 +1,24 @@
-﻿using System;
-using Microsoft.Tools.WindowsDevicePortal;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="UserOperation.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
 namespace TestApp
 {
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.Tools.WindowsDevicePortal;
+
+    /// <summary>
+    /// Helper for Xbox Live User related operations
+    /// </summary>
     internal class UserOperation
     {
-        private const String XblUserUsageMessage = "Usage:\n" +
+        /// <summary>
+        /// Usage message for this operation
+        /// </summary>
+        private const string XblUserUsageMessage = "Usage:\n" +
             "  /subop:list\n" +
             "        Lists all Xbox Live Users on the console\n" +
             "  /subop:signin <user identifier (/msa:<msa> or /id:<id>)> [/msapwd:<password>]\n" +
@@ -21,6 +32,11 @@ namespace TestApp
             "  /subop:delete <user identifier (/msa:<msa> or /id:<id>)>\n" +
             "        Deletes the given user from the console\n";
 
+        /// <summary>
+        /// Main entry point for handling a user operation
+        /// </summary>
+        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="parameters">Parsed command line parameters.</param>
         internal static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
@@ -29,9 +45,9 @@ namespace TestApp
                 return;
             }
 
-            String opType = parameters.GetParameterValue("subop");
+            string operationType = parameters.GetParameterValue("subop");
 
-            if (String.IsNullOrWhiteSpace(opType))
+            if (string.IsNullOrWhiteSpace(operationType))
             {
                 Console.WriteLine("Missing subop parameter");
                 Console.WriteLine();
@@ -39,39 +55,40 @@ namespace TestApp
                 return;
             }
 
-            opType = opType.ToLowerInvariant();
+            operationType = operationType.ToLowerInvariant();
 
-            if (opType.Equals("list"))
+            if (operationType.Equals("list"))
             {
-                Task<UserList> getUsers = portal.GetXboxLiveUsers();
+                Task<DevicePortal.UserList> getUsers = portal.GetXboxLiveUsers();
 
                 getUsers.Wait();
                 Console.WriteLine(getUsers.Result);
             }
-            else if (opType.Equals("addsponsored"))
+            else if (operationType.Equals("addsponsored"))
             {
-                UserInfo user = new UserInfo();
+                DevicePortal.UserInfo user = new DevicePortal.UserInfo();
 
                 user.SponsoredUser = true;
                 user.SignedIn = true;
 
-                UserList userList = new UserList();
+                DevicePortal.UserList userList = new DevicePortal.UserList();
                 userList.Add(user);
-                Task updateUsers = portal.UpdateXboxLiveUsers(userList);
-                updateUsers.Wait();
+
+                UpdateXboxLiveUsers(portal, userList);
             }
-            else if (opType.Equals("signin") || opType.Equals("signout") || opType.Equals("delete") || opType.Equals("autosignin"))
+            else if (operationType.Equals("signin") || operationType.Equals("signout") || operationType.Equals("delete") || operationType.Equals("autosignin"))
             {
-                UserInfo user = new UserInfo();
+                DevicePortal.UserInfo user = new DevicePortal.UserInfo();
 
                 if (parameters.HasParameter("id"))
                 {
                     uint userId = 0;
-                    if (!UInt32.TryParse(parameters.GetParameterValue("id"), out userId))
+                    if (!uint.TryParse(parameters.GetParameterValue("id"), out userId))
                     {
-                        Console.WriteLine(String.Format("Failed to parse id to an unsigned integer: {0}", parameters.GetParameterValue("id")));
+                        Console.WriteLine(string.Format("Failed to parse id to an unsigned integer: {0}", parameters.GetParameterValue("id")));
                         return;
                     }
+
                     user.UserId = userId;
                 }
                 else
@@ -87,22 +104,22 @@ namespace TestApp
                     }
                 }
 
-                if (opType.Equals("signin"))
+                if (operationType.Equals("signin"))
                 {
                     // Optional password (only used on first signin)
                     user.Password = parameters.GetParameterValue("msapwd");
 
                     user.SignedIn = true;
                 }
-                else if (opType.Equals("signout"))
+                else if (operationType.Equals("signout"))
                 {
                     user.SignedIn = false;
                 }
-                else if (opType.Equals("delete"))
+                else if (operationType.Equals("delete"))
                 {
                     user.Delete = true;
                 }
-                else if (opType.Equals("autosignin"))
+                else if (operationType.Equals("autosignin"))
                 {
                     if (parameters.HasFlag("on"))
                     {
@@ -121,38 +138,49 @@ namespace TestApp
                     }
                 }
 
-                UserList userList = new UserList();
+                DevicePortal.UserList userList = new DevicePortal.UserList();
                 userList.Add(user);
 
-                try
-                {
-                    Task updateUsers = portal.UpdateXboxLiveUsers(userList);
-                    updateUsers.Wait();
-                }
-                catch (AggregateException e)
-                {
-                    if (e.InnerException is DevicePortalException)
-                    {
-                        DevicePortalException innerException = e.InnerException as DevicePortalException;
-
-                        Console.WriteLine(String.Format("Exception encountered: 0x{0:X} : {1}", innerException.HResult, innerException.Reason));
-                    }
-                    else if (e.InnerException is OperationCanceledException)
-                    {
-                        Console.WriteLine("The operation was cancelled.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(String.Format("Unexpected exception encountered: {0}", e.Message));
-                    }
-                    return;
-                }
+                UpdateXboxLiveUsers(portal, userList);
             }
             else
             {
-                Console.WriteLine(String.Format("Unrecognized subop: {0}", opType));
+                Console.WriteLine(string.Format("Unrecognized subop: {0}", operationType));
                 Console.WriteLine();
                 Console.WriteLine(XblUserUsageMessage);
+                return;
+            }
+        }
+
+        /// <summary>
+        ///  Helper to make the REST call and handle exceptions.
+        /// </summary>
+        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="userList">UserList object for updating the remote device.</param>
+        private static void UpdateXboxLiveUsers(DevicePortal portal, DevicePortal.UserList userList)
+        {
+            try
+            {
+                Task updateUsers = portal.UpdateXboxLiveUsers(userList);
+                updateUsers.Wait();
+            }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is DevicePortalException)
+                {
+                    DevicePortalException innerException = e.InnerException as DevicePortalException;
+
+                    Console.WriteLine(string.Format("Exception encountered: 0x{0:X} : {1}", innerException.HResult, innerException.Reason));
+                }
+                else if (e.InnerException is OperationCanceledException)
+                {
+                    Console.WriteLine("The operation was cancelled.");
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
+                }
+
                 return;
             }
         }
