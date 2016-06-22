@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </returns>
         public async Task Reboot()
         {
-            await Post(RebootApi);
+            await this.Post(RebootApi);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </returns>
         public async Task Shutdown()
         {
-            await Post(ShutdownApi);
+            await this.Post(ShutdownApi);
         }
     }
 }

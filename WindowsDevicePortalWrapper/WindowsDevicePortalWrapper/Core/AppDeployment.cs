@@ -53,13 +53,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 
             Uri uri = Utilities.BuildEndpoint(
-                deviceConnection.Connection,
+                this.deviceConnection.Connection,
                 InstallStateApi);
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
-            handler.Credentials = deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = ServerCertificateValidation;
+            handler.Credentials = this.deviceConnection.Credentials;
+            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))
             {
@@ -98,7 +98,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>AppPackages object containing the list of installed application packages.</returns>
         public async Task<AppPackages> GetInstalledAppPackages()
         {
-            return await Get<AppPackages>(InstalledPackagesApi);
+            return await this.Get<AppPackages>(InstalledPackagesApi);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Create the API endpoint and generate a unique boundary string.
                 FileInfo fi = new FileInfo(packageFileName);
                 Uri uri = Utilities.BuildEndpoint(
-                    deviceConnection.Connection,
+                    this.deviceConnection.Connection,
                     PackageManagerApi,
                     string.Format("package={0}", fi.Name));
                 string boundaryString = Guid.NewGuid().ToString();
@@ -151,14 +151,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
                 request.AllowWriteStreamBuffering = false;
                 request.ContentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
-                request.Credentials = deviceConnection.Credentials;
+                request.Credentials = this.deviceConnection.Credentials;
                 request.Headers[HttpRequestHeader.Authorization] = string.Format(
                     "Basic {0}",
-                    Utilities.Hex64Encode(string.Format("{0}:{1}", deviceConnection.Credentials.UserName, deviceConnection.Credentials.Password)));
+                    Utilities.Hex64Encode(string.Format("{0}:{1}", this.deviceConnection.Credentials.UserName, this.deviceConnection.Credentials.Password)));
                 request.KeepAlive = true;
                 request.Method = "POST";
                 request.SendChunked = true;
-                request.ServerCertificateValidationCallback = ServerCertificateValidation;
+                request.ServerCertificateValidationCallback = this.ServerCertificateValidation;
                 request.Timeout = timeoutInMinutes * 60 * 1000;
 
                 using (Stream requestStream = request.GetRequestStream())
@@ -245,7 +245,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     request = dpe.RequestUri;
                 }
 
-                SendConnectionStatus(
+                this.SendConnectionStatus(
                     DeviceConnectionStatus.Failed,
                     DeviceConnectionPhase.Idle,
                     string.Format("Device connection failed: {0}", installPhaseDescription));
@@ -259,7 +259,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task tracking the uninstall operation.</returns>
         public async Task UninstallApplication(string packageName)
         {
-            await Delete(
+            await this.Delete(
                 PackageManagerApi,
                 //// NOTE: When uninstalling an app package, the package name is not Hex64 encoded.
                 string.Format("package={0}", packageName));

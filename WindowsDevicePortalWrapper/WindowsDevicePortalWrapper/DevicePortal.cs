@@ -123,7 +123,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
-                this.deviceConnection.OsInfo = await GetOperatingSystemInformation();
+                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
                 bool requiresHttps = true;  // TODO - is this the correct default?
 
@@ -135,7 +135,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     
                     try
                     {
-                        requiresHttps = await GetIsHttpsRequired();
+                        requiresHttps = await this.GetIsHttpsRequired();
                     }
                     catch (NotSupportedException)
                     {
@@ -150,10 +150,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.ConnectingToTargetNetwork,
                         connectionPhaseDescription);
-                    WifiInterfaces wifiInterfaces = await GetWifiInterfaces();
+                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfaces();
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
-                    await ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
+                    await this.ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
 
                     // TODO - note that in some instances, the hololens was receiving a KeepAlive exception, yet the network connection succeeded. 
                     // this COULD have been an RTM bug that is now fixed, or it could have been the fault of the access point
@@ -168,7 +168,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.UpdatingDeviceAddress,
                         connectionPhaseDescription);
-                    this.deviceConnection.UpdateConnection(await GetIpConfig(), requiresHttps);
+                    this.deviceConnection.UpdateConnection(await this.GetIpConfig(), requiresHttps);
                 }
 
                 this.SendConnectionStatus(
@@ -222,7 +222,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 try
                 {
-                    using (Stream stream = await Get(uri, false))
+                    using (Stream stream = await this.Get(uri, false))
                     {
                         using (BinaryReader reader = new BinaryReader(stream))
                         {

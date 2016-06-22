@@ -34,12 +34,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary and HoloLens are spelled correctly.")]
         public async Task<float> GetInterPupilaryDistance()
         {
-            if (Platform != DevicePortalPlatforms.HoloLens)
+            if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            InterPupilaryDistance ipd = await Get<InterPupilaryDistance>(IpdApi);
+            InterPupilaryDistance ipd = await this.Get<InterPupilaryDistance>(IpdApi);
             return ipd.Ipd;
         }
 
@@ -52,16 +52,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
         public async Task SetIsHttpsRequired(bool httpsRequired)
         {
-            if (Platform != DevicePortalPlatforms.HoloLens)
+            if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await Post(
+            await this.Post(
                 WebManagementHttpSettingsApi,
                 string.Format("required={0}", httpsRequired));
 
-            deviceConnection.UpdateConnection(httpsRequired);
+            this.deviceConnection.UpdateConnection(httpsRequired);
         }
 
         /// <summary>
@@ -73,14 +73,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary is spelled correctly.")]
         public async Task SetInterPupilaryDistance(float ipd)
         {
-            if (Platform != DevicePortalPlatforms.HoloLens)
+            if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
             string payload = string.Format("ipd={0}", (int)(ipd * 1000.0f));
 
-            await Post(
+            await this.Post(
                 IpdApi,
                 payload);
         }
@@ -95,13 +95,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             try
             {
-                if ((Platform != DevicePortalPlatforms.Unknown) &&
-                    (Platform != DevicePortalPlatforms.HoloLens))
+                if ((this.Platform != DevicePortalPlatforms.Unknown) &&
+                    (this.Platform != DevicePortalPlatforms.HoloLens))
                 {
                     throw new NotSupportedException("This method is only supported on HoloLens.");
                 }
 
-                WebManagementHttpSettings httpSettings = await Get<WebManagementHttpSettings>(WebManagementHttpSettingsApi);
+                WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(WebManagementHttpSettingsApi);
                 return httpSettings.IsHttpsRequired;
             }
             catch (Exception e)

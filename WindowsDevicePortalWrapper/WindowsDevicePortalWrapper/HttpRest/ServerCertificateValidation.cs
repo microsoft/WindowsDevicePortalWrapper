@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             //// TODO - really need a GOOD (read: secure) way to do this for .net. uwp already handles nicely
 
-            byte[] deviceCertData = deviceConnection.GetDeviceCertificateData();
+            byte[] deviceCertData = this.deviceConnection.GetDeviceCertificateData();
 
             if (deviceCertData == null)
             {

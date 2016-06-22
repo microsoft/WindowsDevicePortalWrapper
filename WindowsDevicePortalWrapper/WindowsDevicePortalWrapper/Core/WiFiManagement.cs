@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Utilities.Hex64Encode(ssid),
                 Utilities.Hex64Encode(networkKey));
 
-            await Post(
+            await this.Post(
                 WifiNetworkApi,
                 payload);
         }
@@ -60,7 +60,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>List of WiFi interfaces</returns>
         public async Task<WifiInterfaces> GetWifiInterfaces()
         {
-            return await Get<WifiInterfaces>(WifiInterfacesApi);
+            return await this.Get<WifiInterfaces>(WifiInterfacesApi);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>List of available networks</returns>
         public async Task<WifiNetworks> GetWifiNetworks(Guid interfaceGuid)
         {
-            return await Get<WifiNetworks>(
+            return await this.Get<WifiNetworks>(
                 WifiNetworksApi,
                 string.Format("interface={0}", interfaceGuid.ToString()));
         }

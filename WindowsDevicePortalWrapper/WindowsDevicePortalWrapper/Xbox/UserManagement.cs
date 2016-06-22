@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>UserList object containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task<UserList> GetXboxLiveUsers()
         {
-            return await Get<UserList>(UserApi);
+            return await this.Get<UserList>(UserApi);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task UpdateXboxLiveUsers(UserList users)
         {
-            await Put(UserApi, users);
+            await this.Put(UserApi, users);
         }
 
         #region Data contract

@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>String containing the device's name.</returns>
         public async Task<string> GetDeviceName()
         {
-            DeviceName deviceName = await Get<DeviceName>(MachineNameApi);
+            DeviceName deviceName = await this.Get<DeviceName>(MachineNameApi);
             return deviceName.Name;
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>OperatingSystemInformation object containing details of the installed operating system.</returns>
         public async Task<OperatingSystemInformation> GetOperatingSystemInformation()
         {
-            return await Get<OperatingSystemInformation>(OsInfoApi);
+            return await this.Get<OperatingSystemInformation>(OsInfoApi);
         }
 
         /// <summary>
@@ -93,14 +93,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string name,
             bool reboot = true)
         {
-            await Post(
+            await this.Post(
                 MachineNameApi,
                 string.Format("name={0}", Utilities.Hex64Encode(name)));
 
             // Names do not take effect until after a reboot.
             if (reboot)
             {
-                await Reboot();
+                await this.Reboot();
             }
 
             // TODO - wait until device has rebooted, then update the device name (osinfo and qualified name too?)

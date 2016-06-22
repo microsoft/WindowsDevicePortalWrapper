@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The SMB path, username, and password.</returns>
         public async Task<SmbInfo> GetSmbShareInfo()
         {
-            return await Get<SmbInfo>(GetSmbShareInfoApi);
+            return await this.Get<SmbInfo>(GetSmbShareInfoApi);
         }
 
         #region Data contract

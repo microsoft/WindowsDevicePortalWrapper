@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task RegisterApplication(string folderName)
         {
-            await Post(
+            await this.Post(
                 RegisterPackageApi,
                 string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
         }

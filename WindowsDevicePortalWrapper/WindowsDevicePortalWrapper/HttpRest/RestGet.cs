@@ -29,14 +29,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
-            handler.Credentials = deviceConnection.Credentials;
+            handler.Credentials = this.deviceConnection.Credentials;
             if (validateCertificate)
             {
-                handler.ServerCertificateValidationCallback = ServerCertificateValidation;
+                handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
             }
             else
             {
-                handler.ServerCertificateValidationCallback = ServerCertificateNonValidation;
+                handler.ServerCertificateValidationCallback = this.ServerCertificateNonValidation;
             }
 
             using (HttpClient client = new HttpClient(handler))
@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             T data = default(T);
             
             Uri uri = Utilities.BuildEndpoint(
-                deviceConnection.Connection,
+                this.deviceConnection.Connection,
                 apiPath, 
                 payload);
 

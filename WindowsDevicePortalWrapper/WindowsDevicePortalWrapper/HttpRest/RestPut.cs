@@ -30,8 +30,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
-            handler.Credentials = deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = ServerCertificateValidation;
+            handler.Credentials = this.deviceConnection.Credentials;
+            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))
             {
@@ -61,7 +61,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = null)
         {
             Uri uri = Utilities.BuildEndpoint(
-                deviceConnection.Connection,
+                this.deviceConnection.Connection,
                 apiPath, 
                 payload);
 
@@ -82,7 +82,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = null)
         {
             Uri uri = Utilities.BuildEndpoint(
-                deviceConnection.Connection,
+                this.deviceConnection.Connection,
                 apiPath, 
                 payload);
 

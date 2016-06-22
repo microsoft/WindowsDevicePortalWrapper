@@ -34,11 +34,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Utilities.Hex64Encode(appid), 
                 Utilities.Hex64Encode(packageName));
 
-            await Post(
+            await this.Post(
                 TaskManagerApi, 
                 payload);
 
-            RunningProcesses runningApps = await GetRunningProcesses();
+            RunningProcesses runningApps = await this.GetRunningProcesses();
 
             int processId = 0;
             foreach (DeviceProcessInfo process in runningApps.Processes)    
@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </returns>
         public async Task TerminateApplication(string packageName)
         {
-            await Delete(
+            await this.Delete(
                 TaskManagerApi,
                 string.Format("package={0}", Utilities.Hex64Encode(packageName)));
         }

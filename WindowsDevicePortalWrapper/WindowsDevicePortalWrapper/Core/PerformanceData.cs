@@ -32,7 +32,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>RunningProcesses object containing the list of running processes.</returns>
         public async Task<RunningProcesses> GetRunningProcesses()
         {
-            return await Get<RunningProcesses>(RunningProcessApi);
+            return await this.Get<RunningProcesses>(RunningProcessApi);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>SystemPerformanceInformation object containing information such as memory usage.</returns>
         public async Task<SystemPerformanceInformation> GetSystemPerf()
         {
-            return await Get<SystemPerformanceInformation>(SystemPerfApi);
+            return await this.Get<SystemPerformanceInformation>(SystemPerfApi);
         }
 
         #region Device contract

@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>BatteryState object containing details such as the current battery level.</returns>
         public async Task<BatteryState> GetBatteryState()
         {
-            return await Get<BatteryState>(BatteryStateApi);
+            return await this.Get<BatteryState>(BatteryStateApi);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>PowerState object containing details such as whether or not the device is in low power mode.</returns>
         public async Task<PowerState> GetPowerState()
         {
-            return await Get<PowerState>(PowerStateApi);
+            return await this.Get<PowerState>(PowerStateApi);
         }
 
         #region Data contract

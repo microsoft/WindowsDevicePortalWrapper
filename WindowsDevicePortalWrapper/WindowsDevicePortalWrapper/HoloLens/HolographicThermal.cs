@@ -55,12 +55,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
         public async Task<ThermalStages> GetThermalStage()
         {
-            if (Platform != DevicePortalPlatforms.HoloLens)
+            if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            ThermalStage thermalStage = await Get<ThermalStage>(ThermalStageApi);
+            ThermalStage thermalStage = await this.Get<ThermalStage>(ThermalStageApi);
             return thermalStage.Stage;
         }
 
