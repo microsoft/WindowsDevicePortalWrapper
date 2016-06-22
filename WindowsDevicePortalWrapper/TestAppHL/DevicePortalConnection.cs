@@ -1,17 +1,14 @@
-﻿using Microsoft.Tools.WindowsDevicePortal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
     public class DevicePortalConnection : IDevicePortalConnection
     {
-        private X509Certificate2 _deviceCertificate = null;
+        private X509Certificate2 deviceCertificate = null;
 
         public Uri Connection
         { get; private set; }
@@ -19,13 +16,13 @@ namespace TestApp
         public NetworkCredential Credentials
         { get; private set; }
 
-        public String Name
+        public string Name
         { get; set; }
 
         public OperatingSystemInformation OsInfo
         { get; set; }
 
-        public String QualifiedName
+        public string QualifiedName
         { get; private set; }
 
         /// <summary>
@@ -35,16 +32,16 @@ namespace TestApp
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public DevicePortalConnection(String address,
-                                    String userName,
-                                    String password)
+        public DevicePortalConnection(string address,
+                                    string userName,
+                                    string password)
         {
-            if (String.IsNullOrWhiteSpace(address))
+            if (string.IsNullOrWhiteSpace(address))
             {
                 address = "localhost:10080";
             }
 
-            Connection = new Uri(String.Format("{0}://{1}", GetUriScheme(address), address));
+            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(address), address));
             Credentials = new NetworkCredential(userName, password);
         }
 
@@ -54,7 +51,7 @@ namespace TestApp
         /// <returns></returns>
         public Byte[] GetDeviceCertificateData()
         {
-            return _deviceCertificate.GetRawCertData();
+            return deviceCertificate.GetRawCertData();
         }
 
         /// <summary>
@@ -64,19 +61,19 @@ namespace TestApp
         public void SetDeviceCertificate(Byte[] certificateData)
         {
             X509Certificate2 cert = new X509Certificate2(certificateData);
-            if (!cert.IssuerName.Name.Contains(DevicePortal.DevicePortalCertificateIssuer))
+            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
                 throw new DevicePortalException((HttpStatusCode)0,
                                                 "Invalid certificate issuer",
                                                 null,
                                                 "Failed to download device certificate");
             }
-            _deviceCertificate = cert;
+            deviceCertificate = cert;
         }
 
         public void UpdateConnection(Boolean requiresHttps)
         {
-            Connection = new Uri(String.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
+            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
         }
 
         public void UpdateConnection(IpConfiguration ipConfig,
@@ -91,7 +88,7 @@ namespace TestApp
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(String.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        newConnection = new Uri(string.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
                         // TODO qualified name
                         break;
                     }
@@ -111,7 +108,7 @@ namespace TestApp
         /// <param name="address"></param>
         /// <param name="requiresHttps"></param>
         /// <returns></returns>
-        private String GetUriScheme(String address,
+        private string GetUriScheme(string address,
                                     Boolean requiresHttps = true)
         {
             return (address.Contains("127.0.0.1") || 

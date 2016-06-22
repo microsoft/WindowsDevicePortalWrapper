@@ -1,22 +1,33 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="XboxAppDeployment.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    /// <content>
+    /// Register Application Wrappers
+    /// </content>
     public partial class DevicePortal
     {
-        private static readonly String _registerPackageApi = "api/app/packagemanager/register";
+        /// <summary>
+        /// REST endpoint for registering a package from a loose folder
+        /// </summary>
+        private static readonly string RegisterPackageApi = "api/app/packagemanager/register";
 
         /// <summary>
         /// Registers a loose app on the console
         /// </summary>
+        /// <param name="folderName">Relative folder path where the app can be found.</param>
+        /// <returns>Task for tracking async completion.</returns>
         public async Task RegisterApplication(string folderName)
         {
-            await Post(_registerPackageApi,
-                        String.Format("folder={0}", Utilities.Hex64Encode(folderName)));
+            await this.Post(
+                RegisterPackageApi,
+                string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
         }
     }
 }

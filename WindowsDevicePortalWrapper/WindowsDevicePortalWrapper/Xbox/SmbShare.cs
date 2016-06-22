@@ -1,45 +1,68 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="SmbShare.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 
-using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    /// <content>
+    /// SMBShare Wrappers
+    /// </content>
     public partial class DevicePortal
     {
-        private static readonly String _getSmbShareInfo = "/ext/smb/developerfolder";
+        /// <summary>
+        /// Endpoint for SMB share info
+        /// </summary>
+        private static readonly string GetSmbShareInfoApi = "/ext/smb/developerfolder";
 
         /// <summary>
         /// Gets the SMB Share info for the device
         /// </summary>
-        /// <returns>SmbInfo class containing the SMB path, username, and password.</returns>
+        /// <returns>The SMB path, username, and password.</returns>
         public async Task<SmbInfo> GetSmbShareInfo()
         {
-            return await Get<SmbInfo>(_getSmbShareInfo);
+            return await this.Get<SmbInfo>(GetSmbShareInfoApi);
         }
-    }
 
-    #region Data contract
+        #region Data contract
 
-    [DataContract]
-    public class SmbInfo
-    {
-        [DataMember(Name = "Path")]
-        public string Path { get; set; }
-
-        [DataMember(Name = "Username")]
-        public string Username { get; set; }
-
-        [DataMember(Name = "Password")]
-        public string Password { get; set; }
-
-        public override string ToString()
+        /// <summary>
+        /// SMB Info representation
+        /// </summary>
+        [DataContract]
+        public class SmbInfo
         {
-            return Path;
-        }
-    }
-    #endregion // Data contract
-}
+            /// <summary>
+            /// Gets or sets path
+            /// </summary>
+            [DataMember(Name = "Path")]
+            public string Path { get; set; }
 
+            /// <summary>
+            /// Gets or sets Username
+            /// </summary>
+            [DataMember(Name = "Username")]
+            public string Username { get; set; }
+
+            /// <summary>
+            /// Gets or sets Password
+            /// </summary>
+            [DataMember(Name = "Password")]
+            public string Password { get; set; }
+
+            /// <summary>
+            /// Returns a string representation of this SMB info object
+            /// </summary>
+            /// <returns>String representation of the SMB Info object</returns>
+            public override string ToString()
+            {
+                return this.Path;
+            }
+        }
+        #endregion // Data contract
+    }
+}
