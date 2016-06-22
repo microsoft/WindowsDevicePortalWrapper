@@ -3,13 +3,13 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <content>
     /// Wrappers for Holographic OS methods
     /// </content>

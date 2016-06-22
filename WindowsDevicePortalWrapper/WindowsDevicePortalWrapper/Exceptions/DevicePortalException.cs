@@ -4,14 +4,14 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Security;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime.Serialization;
-    using System.Security;
-
     /// <summary>
     /// Base exception class for a Device Portal exception
     /// </summary>

@@ -4,10 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System.Threading.Tasks;
-
     /// <content>
     /// Register Application Wrappers
     /// </content>

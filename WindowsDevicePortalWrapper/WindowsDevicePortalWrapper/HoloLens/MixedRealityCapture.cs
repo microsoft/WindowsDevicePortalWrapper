@@ -4,14 +4,14 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <content>
     /// Wrappers for Mixed reality capture methods
     /// </content>

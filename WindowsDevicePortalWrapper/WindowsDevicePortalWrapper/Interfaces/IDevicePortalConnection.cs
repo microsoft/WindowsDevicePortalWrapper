@@ -4,12 +4,13 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Net;
-
     /// <summary>
     /// Interface for creating a connection with the device portal.
     /// </summary>
@@ -34,7 +35,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets or sets information describing the operating system installed on the device.
         /// </summary>
-        DevicePortal.OperatingSystemInformation OsInfo { get; set; }
+        OperatingSystemInformation OsInfo { get; set; }
 
         /// <summary>
         /// Get the raw data of the device's root certificate.
@@ -61,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ipConfig">Object that describes the current network configuration.</param>
         /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
         void UpdateConnection(
-            DevicePortal.IpConfiguration ipConfig,
+            IpConfiguration ipConfig,
             bool requiresHttps);
     }
 }

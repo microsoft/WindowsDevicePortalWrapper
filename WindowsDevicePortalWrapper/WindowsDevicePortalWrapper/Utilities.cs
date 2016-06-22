@@ -4,11 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Utility class for common functions
     /// </summary>

@@ -4,12 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <content>
     /// Wrappers for Power methods
     /// </content>

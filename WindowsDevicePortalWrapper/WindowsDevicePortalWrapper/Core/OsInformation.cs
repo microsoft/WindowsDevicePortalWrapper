@@ -4,13 +4,13 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Wrappers for OS Information
     /// </summary>

@@ -1,17 +1,14 @@
-﻿using Microsoft.Tools.WindowsDevicePortal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
     public class DevicePortalConnection : IDevicePortalConnection
     {
-        private X509Certificate2 _deviceCertificate = null;
+        private X509Certificate2 deviceCertificate = null;
 
         public Uri Connection
         { get; private set; }
@@ -22,7 +19,7 @@ namespace TestApp
         public string Name
         { get; set; }
 
-        public DevicePortal.OperatingSystemInformation OsInfo
+        public OperatingSystemInformation OsInfo
         { get; set; }
 
         public string QualifiedName
@@ -54,7 +51,7 @@ namespace TestApp
         /// <returns></returns>
         public Byte[] GetDeviceCertificateData()
         {
-            return _deviceCertificate.GetRawCertData();
+            return deviceCertificate.GetRawCertData();
         }
 
         /// <summary>
@@ -64,14 +61,14 @@ namespace TestApp
         public void SetDeviceCertificate(Byte[] certificateData)
         {
             X509Certificate2 cert = new X509Certificate2(certificateData);
-            if (!cert.IssuerName.Name.Contains(DevicePortal.DevicePortalCertificateIssuer))
+            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
                 throw new DevicePortalException((HttpStatusCode)0,
                                                 "Invalid certificate issuer",
                                                 null,
                                                 "Failed to download device certificate");
             }
-            _deviceCertificate = cert;
+            deviceCertificate = cert;
         }
 
         public void UpdateConnection(Boolean requiresHttps)
@@ -79,14 +76,14 @@ namespace TestApp
             Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
         }
 
-        public void UpdateConnection(DevicePortal.IpConfiguration ipConfig,
+        public void UpdateConnection(IpConfiguration ipConfig,
                                     Boolean requiresHttps = false)
         {
             Uri newConnection = null;
 
-            foreach (DevicePortal.NetworkAdapterInfo adapter in ipConfig.Adapters)
+            foreach (NetworkAdapterInfo adapter in ipConfig.Adapters)
             {
-                foreach (DevicePortal.IpAddressInfo addressInfo in adapter.IpAddresses)
+                foreach (IpAddressInfo addressInfo in adapter.IpAddresses)
                 {
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))

@@ -4,13 +4,13 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
+
 namespace TestApp
 {
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using Microsoft.Tools.WindowsDevicePortal;
-
     /// <summary>
     /// Main entry point for the test command line class.
     /// </summary>

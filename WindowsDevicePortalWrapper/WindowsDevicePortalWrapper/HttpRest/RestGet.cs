@@ -4,14 +4,14 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.IO;
-    using System.Net.Http;
-    using System.Runtime.Serialization.Json;
-    using System.Threading.Tasks;
-
     /// <content>
     /// HTTP GET Wrapper
     /// </content>

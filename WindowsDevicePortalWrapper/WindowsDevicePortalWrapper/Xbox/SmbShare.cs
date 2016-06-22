@@ -4,11 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-
     /// <content>
     /// SMBShare Wrappers
     /// </content>

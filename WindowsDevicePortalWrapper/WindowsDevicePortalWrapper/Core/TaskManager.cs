@@ -4,11 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Threading.Tasks;
-
     /// <content>
     /// Wrappers for Task Manager methods
     /// </content>

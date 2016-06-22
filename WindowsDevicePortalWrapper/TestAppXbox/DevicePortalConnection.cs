@@ -4,13 +4,14 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+
 namespace TestApp
 {
-    using System;
-    using System.Net;
-    using System.Security.Cryptography.X509Certificates;
-    using Microsoft.Tools.WindowsDevicePortal;
-
     /// <summary>
     /// IDevicePortalConnection implementation for Xbox test project
     /// </summary>
@@ -66,7 +67,7 @@ namespace TestApp
         /// <summary>
         /// Gets or sets device OS Info
         /// </summary>
-        public DevicePortal.OperatingSystemInformation OsInfo
+        public OperatingSystemInformation OsInfo
         {
             get;
             set;
@@ -97,7 +98,7 @@ namespace TestApp
         public void SetDeviceCertificate(byte[] certificateData)
         {
             X509Certificate2 cert = new X509Certificate2(certificateData);
-            if (!cert.IssuerName.Name.Contains(DevicePortal.DevicePortalCertificateIssuer))
+            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
                 throw new DevicePortalException(
                     (HttpStatusCode)0,
@@ -123,7 +124,7 @@ namespace TestApp
         /// </summary>
         /// <param name="ipConfig">IP info</param>
         /// <param name="requiresHttps">https required</param>
-        public void UpdateConnection(DevicePortal.IpConfiguration ipConfig, bool requiresHttps)
+        public void UpdateConnection(IpConfiguration ipConfig, bool requiresHttps)
         {
             throw new NotImplementedException();
         }

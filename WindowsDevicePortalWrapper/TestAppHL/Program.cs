@@ -1,8 +1,8 @@
 ﻿using Microsoft.Tools.WindowsDevicePortal;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
@@ -53,11 +53,11 @@ namespace TestApp
             getIpdTask.Wait();
             Console.WriteLine("IPD: " + getIpdTask.Result.ToString());
 
-            Task<DevicePortal.BatteryState> batteryTask = portal.GetBatteryState();
+            Task<BatteryState> batteryTask = portal.GetBatteryState();
             batteryTask.Wait();
             Console.WriteLine("Battery level: " + batteryTask.Result.Level);
 
-            Task<DevicePortal.PowerState> powerTask = portal.GetPowerState();
+            Task<PowerState> powerTask = portal.GetPowerState();
             powerTask.Wait();
             Console.WriteLine("In low power state: " + powerTask.Result.InLowPowerState);
                 
@@ -86,11 +86,11 @@ namespace TestApp
             stopTask = portal.StopMrcRecording();
             stopTask.Wait();
 
-            Task<DevicePortal.MrcFileList> fileListTask = portal.GetMrcFileList();
+            Task<MrcFileList> fileListTask = portal.GetMrcFileList();
             fileListTask.Wait();
-            DevicePortal.MrcFileList mrcFileList = fileListTask.Result;
+            MrcFileList mrcFileList = fileListTask.Result;
             Console.WriteLine(string.Format("Found {0} MRC files on your device", mrcFileList.Files.Count));
-            foreach (DevicePortal.MrcFileInformation fileInfo in mrcFileList.Files)
+            foreach (MrcFileInformation fileInfo in mrcFileList.Files)
             {
                 Console.WriteLine(string.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
 

@@ -4,17 +4,17 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <content>
     /// Wrappers for App Deployment methods
     /// </content>

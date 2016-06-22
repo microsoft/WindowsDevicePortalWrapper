@@ -4,12 +4,13 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+
 namespace TestApp
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Tools.WindowsDevicePortal;
-
     /// <summary>
     /// Helper for Xbox Live User related operations
     /// </summary>
@@ -59,26 +60,26 @@ namespace TestApp
 
             if (operationType.Equals("list"))
             {
-                Task<DevicePortal.UserList> getUsers = portal.GetXboxLiveUsers();
+                Task<UserList> getUsers = portal.GetXboxLiveUsers();
 
                 getUsers.Wait();
                 Console.WriteLine(getUsers.Result);
             }
             else if (operationType.Equals("addsponsored"))
             {
-                DevicePortal.UserInfo user = new DevicePortal.UserInfo();
+                UserInfo user = new UserInfo();
 
                 user.SponsoredUser = true;
                 user.SignedIn = true;
 
-                DevicePortal.UserList userList = new DevicePortal.UserList();
+                UserList userList = new UserList();
                 userList.Add(user);
 
                 UpdateXboxLiveUsers(portal, userList);
             }
             else if (operationType.Equals("signin") || operationType.Equals("signout") || operationType.Equals("delete") || operationType.Equals("autosignin"))
             {
-                DevicePortal.UserInfo user = new DevicePortal.UserInfo();
+                UserInfo user = new UserInfo();
 
                 if (parameters.HasParameter("id"))
                 {
@@ -138,7 +139,7 @@ namespace TestApp
                     }
                 }
 
-                DevicePortal.UserList userList = new DevicePortal.UserList();
+                UserList userList = new UserList();
                 userList.Add(user);
 
                 UpdateXboxLiveUsers(portal, userList);
@@ -157,7 +158,7 @@ namespace TestApp
         /// </summary>
         /// <param name="portal">DevicePortal reference for communicating with the device.</param>
         /// <param name="userList">UserList object for updating the remote device.</param>
-        private static void UpdateXboxLiveUsers(DevicePortal portal, DevicePortal.UserList userList)
+        private static void UpdateXboxLiveUsers(DevicePortal portal, UserList userList)
         {
             try
             {

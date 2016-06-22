@@ -4,12 +4,12 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-
     /// <content>
     /// HTTP POST Wrapper
     /// </content>

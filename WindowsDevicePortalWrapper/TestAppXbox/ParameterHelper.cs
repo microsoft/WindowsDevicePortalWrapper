@@ -4,11 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 namespace TestApp
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Class for parsing command line parameters
     /// </summary>

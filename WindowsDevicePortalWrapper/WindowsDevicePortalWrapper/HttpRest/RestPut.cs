@@ -4,15 +4,15 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    using System;
-    using System.IO;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Runtime.Serialization.Json;
-    using System.Threading.Tasks;
-
     /// <content>
     /// HTTP PUT Wrapper
     /// </content>
