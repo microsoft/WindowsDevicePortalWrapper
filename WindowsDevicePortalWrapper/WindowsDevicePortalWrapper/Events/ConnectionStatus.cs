@@ -4,6 +4,8 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:FileHeaderFileNameDocumentationMustMatchTypeName", Justification = "Filename matches the enum better than the EventArgs class.")]
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
