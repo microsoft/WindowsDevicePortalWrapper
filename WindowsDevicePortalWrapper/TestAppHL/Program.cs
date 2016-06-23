@@ -1,21 +1,21 @@
 ﻿using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
     class Program : IDisposable
     {
-        private string _ipAddress = null;
-        private string _userName = null;
-        private string _password = null;
-        private string _ssid = null;
-        private string _key = null;
+        private string ipAddress = null;
+        private string userName = null;
+        private string password = null;
+        private string ssid = null;
+        private string key = null;
 
-        private ManualResetEvent _mreConnected = new ManualResetEvent(false);
-        private ManualResetEvent _mreAppInstall = new ManualResetEvent(false);
+        private ManualResetEvent mreConnected = new ManualResetEvent(false);
+        private ManualResetEvent mreAppInstall = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
@@ -32,22 +32,23 @@ namespace TestApp
                 return;
             }
 
-            DevicePortal portal = new DevicePortal(new DevicePortalConnection(app._ipAddress, app._userName, app._password));
+            DevicePortal portal = new DevicePortal(new DevicePortalConnection(app.ipAddress, app.userName, app.password));
             portal.ConnectionStatus += app.ConnectionStatusHandler;
             portal.AppInstallStatus += app.AppInstallStatusHandler;
 
-            app._mreConnected.Reset();
+            app.mreConnected.Reset();
             Console.WriteLine("Connecting...");
-            Task t = portal.Connect(app._ssid, app._key);
-            app._mreConnected.WaitOne();
+            Task t = portal.Connect(app.ssid, app.key);
+            app.mreConnected.WaitOne();
 
             Console.WriteLine("Connected to: " + portal.Address);
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
+            Console.WriteLine("Device family: " + portal.DeviceFamily);
+//            Console.WriteLine("Device name: " + portal.GetDeviceName)
             Console.WriteLine("Platform: " + portal.Platform.ToString());
 
             Task <string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
-            Console.WriteLine("Device name: " + getNameTask.Result);
 
             Task <Single> getIpdTask = portal.GetInterPupilaryDistance();
             getIpdTask.Wait();
@@ -60,7 +61,11 @@ namespace TestApp
             Task<PowerState> powerTask = portal.GetPowerState();
             powerTask.Wait();
             Console.WriteLine("In low power state: " + powerTask.Result.InLowPowerState);
-                
+
+            Task<Guid> activeSchemeTask = portal.GetActivePowerScheme();
+            activeSchemeTask.Wait();
+            Console.WriteLine("Active power scheme id: " + activeSchemeTask.Result.ToString());
+
             Task photoTask = portal.TakeMrcPhoto();
             photoTask.Wait();
             photoTask = portal.TakeMrcPhoto(includeColorCamera: false);
@@ -117,11 +122,11 @@ namespace TestApp
         {
             if (disposing)
             { 
-                _mreConnected?.Dispose();
-                _mreConnected = null;
+                this.mreConnected?.Dispose();
+                this.mreConnected = null;
 
-                _mreAppInstall?.Dispose();
-                _mreAppInstall = null;
+                this.mreAppInstall?.Dispose();
+                this.mreAppInstall = null;
             }
         }
 
@@ -132,7 +137,7 @@ namespace TestApp
             if ((args.Status == DeviceConnectionStatus.Connected) ||
                 (args.Status == DeviceConnectionStatus.Failed))
             {
-                _mreConnected.Set();
+               this.mreConnected.Set();
             }
         }
 
@@ -142,7 +147,7 @@ namespace TestApp
 
             if (args.Status != ApplicationInstallStatus.InProgress)
             {
-                _mreAppInstall.Set();
+                this.mreAppInstall.Set();
             }
         }
 
@@ -166,23 +171,23 @@ namespace TestApp
 
                 if (arg.StartsWith("ip:"))
                 {
-                    _ipAddress = GetArgData(args[i]);
+                    this.ipAddress = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("user:"))
                 {
-                    _userName = GetArgData(args[i]);
+                    this.userName = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("pwd:"))
                 {
-                    _password = GetArgData(args[i]);
+                    this.password = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("ssid:"))
                 {
-                    _ssid = GetArgData(args[i]);
+                    this.ssid = GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("key:"))
                 {
-                    _key = GetArgData(args[i]);
+                    this.key = GetArgData(args[i]);
                 }
                 else
                 {
@@ -191,9 +196,9 @@ namespace TestApp
             }
 
             // We require at least a user name and password to proceed.
-            if (string.IsNullOrWhiteSpace(_userName) || string.IsNullOrWhiteSpace(_password))
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
             {
-                    throw new Exception("You must specify a user name and a password");
+                throw new Exception("You must specify a user name and a password");
             }
         }
     }

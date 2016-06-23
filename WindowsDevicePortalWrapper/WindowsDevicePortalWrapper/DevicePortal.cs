@@ -41,6 +41,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             this.deviceConnection = connection;
         }
 
+
+        /// <summary>
+        /// Gets the device address
+        /// </summary>
+        public string Address 
+        {
+            get { return this.deviceConnection.Connection.Authority; }
+        }
+        
         /// <summary>
         /// Gets or sets handler for reporting connection status
         /// </summary>
@@ -60,15 +69,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets the device address
+        /// Gets the device operating system family.
         /// </summary>
-        public string Address 
+        public string DeviceFamily
         {
-            get { return this.deviceConnection.Connection.Authority; }
+            get
+            {
+                return (this.deviceConnection.Family != null) ? this.deviceConnection.Family : string.Empty;
+            }
         }
-        
+
         /// <summary>
-        /// Gets the Operating System Version
+        /// Gets the operating system version.
         /// </summary>
         public string OperatingSystemVersion
         {
@@ -117,12 +129,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     connectionPhaseDescription);
                 this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
 
-                // Get the operating system information.
+                // Get the device family and operating system information.
                 connectionPhaseDescription = "Requesting operating system information";
                 this.SendConnectionStatus(
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
+                this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
                 bool requiresHttps = true;  // TODO - is this the correct default?
@@ -262,9 +275,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sends the connection status back to the caller
         /// </summary>
-        /// <param name="status">Status of the operation</param>
-        /// <param name="phase">What phase the operation is on</param>
-        /// <param name="message">Optional message</param>
+        /// <param name="status">Status of the connect attempt.</param>
+        /// <param name="phase">Current phase of the connection attempt.</param>
+        /// <param name="message">Optional message describing the connection status.</param>
         private void SendConnectionStatus(
             DeviceConnectionStatus status,
             DeviceConnectionPhase phase,

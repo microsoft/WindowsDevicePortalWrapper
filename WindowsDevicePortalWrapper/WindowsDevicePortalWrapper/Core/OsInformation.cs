@@ -12,17 +12,22 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// Wrappers for OS Information
+    /// Wrappers for OS Information.
     /// </summary>
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting the machine name
+        /// API for getting the device family.
+        /// </summary>
+        private static readonly string DeviceFamilyApi = "api/os/devicefamily";
+
+        /// <summary>
+        /// API for getting the machine name.
         /// </summary>
         private static readonly string MachineNameApi = "api/os/machinename";
 
         /// <summary>
-        /// API for getting the OS information
+        /// API for getting the OS information.
         /// </summary>
         private static readonly string OsInfoApi = "api/os/info";
 
@@ -61,6 +66,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Xbox One Platform
             /// </summary>
             XboxOne
+        }
+
+        /// <summary>
+        /// Gets the family name (ex: Windows.Holographic) of the device.
+        /// </summary>
+        /// <returns>String containing the device's family.</returns>
+        public async Task<string> GetDeviceFamily()
+        {
+            DeviceOsFamily deviceFamily = await this.Get<DeviceOsFamily>(DeviceFamilyApi);
+            return deviceFamily.Family;
         }
 
         /// <summary>
@@ -103,32 +118,45 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 await this.Reboot();
             }
 
-            // TODO - wait until device has rebooted, then update the device name (osinfo and qualified name too?)
+            // TODO - wait until device has rebooted then reconnect
         }
 
         #region Data contract
 
         /// <summary>
-        /// Device name object
+        /// Device name object.
         /// </summary>
         [DataContract]
         public class DeviceName
         {
             /// <summary>
-            /// Gets or sets the name
+            /// Gets or sets the name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
             public string Name { get; set; }
         }
 
         /// <summary>
-        /// Operating system information
+        /// Device family object.
+        /// </summary>
+        [DataContract]
+        public class DeviceOsFamily
+        {
+            /// <summary>
+            /// Gets or sets the device family name.
+            /// </summary>
+            [DataMember(Name = "DeviceType")]
+            public string Family { get; set; }
+        }
+
+        /// <summary>
+        /// Operating system information.
         /// </summary>
         [DataContract]
         public class OperatingSystemInformation
         {
             /// <summary>
-            ///  Gets or sets the OS name
+            ///  Gets or sets the OS name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
             public string Name { get; set; }

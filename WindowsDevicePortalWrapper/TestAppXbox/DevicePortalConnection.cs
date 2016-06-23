@@ -56,7 +56,16 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Gets or sets device name
+        /// Gets or sets device family
+        /// </summary>
+        public string Family
+        { 
+            get; 
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the device name
         /// </summary>
         public string Name
         {
@@ -74,12 +83,12 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Gets Device Qualified Name
+        /// Gets or sets the device's qualified name
         /// </summary>
         public string QualifiedName
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>

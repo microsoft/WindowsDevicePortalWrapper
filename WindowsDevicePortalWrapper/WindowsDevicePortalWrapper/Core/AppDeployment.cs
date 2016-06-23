@@ -16,27 +16,27 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for App Deployment methods
+    /// Wrappers for App Deployment methods.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// Packages GET API
+        /// API to retrieve list of installed packaged.
         /// </summary>
         private static readonly string InstalledPackagesApi = "api/app/packagemanager/packages";
 
         /// <summary>
-        /// Install state API
+        /// Install state API.
         /// </summary>
         private static readonly string InstallStateApi = "api/app/packagemanager/state";
 
         /// <summary>
-        /// API for package management
+        /// API for package management.
         /// </summary>
         private static readonly string PackageManagerApi = "api/app/packagemanager/package";
 
         /// <summary>
-        /// Gets or sets install status handler
+        /// Gets or sets install status handler.
         /// </summary>
         public ApplicationInstallStatusEventHandler AppInstallStatus
         {
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// API for getting installation status
+        /// API for getting installation status.
         /// </summary>
         /// <returns>The status</returns>
         public async Task<ApplicationInstallStatus> GetInstallStatus()
@@ -104,11 +104,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Installs an application
         /// </summary>
-        /// <param name="appName">PFN of the application</param>
-        /// <param name="packageFileName">Name of the file</param>
-        /// <param name="dependencyFileNames">List of any dependency files</param>
-        /// <param name="stateCheckIntervalMs">How frequently we should check the installation state</param>
-        /// <param name="timeoutInMinutes">Operation timeout</param>
+        /// <param name="appName">Frienly name (ex: Holo World) of the application.</param>
+        /// <param name="packageFileName">Full name of the application package (.appx or .appxbundle) file.</param>
+        /// <param name="dependencyFileNames">List containing the full names of required dependency files.</param>
+        /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
+        /// <param name="timeoutInMinutes">Operation timeout.</param>
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         /// <returns>Task for tracking completion of install initialization.</returns>
@@ -266,11 +266,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Sends app status (invokes the handler)
+        /// Sends application install status.
         /// </summary>
-        /// <param name="status">status to send</param>
-        /// <param name="phase">current phase of installation</param>
-        /// <param name="message">an optional message</param>
+        /// <param name="status">Status of the installation.</param>
+        /// <param name="phase">Current installation phase (ex: Uninstalling previous version)</param>
+        /// <param name="message">Optional error message describing the install status.</param>
         private void SendAppInstallStatus(
             ApplicationInstallStatus status,
             ApplicationInstallPhase phase,
@@ -282,10 +282,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Helper to copy a file to a stream
+        /// Copies a file to the specified stream and prepends the necessary content information
+        /// required to be part of a multipart form data request.
         /// </summary>
-        /// <param name="file">file object</param>
-        /// <param name="stream">destination stream</param>
+        /// <param name="file">The file to be copied.</param>
+        /// <param name="stream">The stream to which the file will be copied.</param>
         private void CopyInstallationFileToStream(
             FileInfo file,
             Stream stream)

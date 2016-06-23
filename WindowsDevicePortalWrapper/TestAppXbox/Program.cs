@@ -4,10 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Tools.WindowsDevicePortal;
 
 namespace TestApp
 {

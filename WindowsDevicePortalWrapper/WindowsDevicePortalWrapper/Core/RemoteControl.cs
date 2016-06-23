@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for Remote Control methods
+    /// Wrappers for Remote Control methods.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for rebooting the device
+        /// API for rebooting the device.
         /// </summary>
         private static readonly string RebootApi = "api/control/restart";
 
         /// <summary>
-        /// API for shutting down the device
+        /// API for shutting down the device.
         /// </summary>
         private static readonly string ShutdownApi = "api/control/shutdown";
 
@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Reboots the device.
         /// </summary>
         /// <returns>
-        /// Task tracking reboot completion
+        /// Task tracking reboot completion.
         /// </returns>
         public async Task Reboot()
         {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Shuts down the device.
         /// </summary>
         /// <returns>
-        /// Task tracking shutdown completion
+        /// Task tracking shutdown completion.
         /// </returns>
         public async Task Shutdown()
         {

@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for Networking methods
+    /// Wrappers for Networking methods.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting IP config data
+        /// API for getting IP config data.
         /// </summary>
         private static readonly string IpConfigApi = "api/networking/ipconfig";
 
@@ -33,31 +33,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
         #region Data contract
 
         /// <summary>
-        /// DHCP object
+        /// DHCP object.
         /// </summary>
         [DataContract]
         public class Dhcp
         {
             /// <summary>
-            ///  Gets or sets the raw lease expiration
+            ///  Gets or sets the time at which the lease will expire, in ticks.
             /// </summary>
             [DataMember(Name = "LeaseExpires")]
             public long LeaseExpiresRaw { get; set; }
 
             /// <summary>
-            /// Gets or sets the raw lease obtained
+            /// Gets or sets the time at which the lease was obtained, in ticks.
             /// </summary>
             [DataMember(Name = "LeaseObtained")]
             public long LeaseObtainedRaw { get; set; }
 
             /// <summary>
-            /// Gets or sets the name
+            /// Gets or sets the name.
             /// </summary>
             [DataMember(Name = "Address")]
             public IpAddressInfo Address { get; set; }
 
             /// <summary>
-            /// Gets the lease expiration time
+            /// Gets the lease expiration time.
             /// </summary>
             public DateTimeOffset LeaseExpires
             {
@@ -65,7 +65,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             /// <summary>
-            /// Gets the lease obtained time
+            /// Gets the lease obtained time.
             /// </summary>
             public DateTimeOffset LeaseObtained
             {

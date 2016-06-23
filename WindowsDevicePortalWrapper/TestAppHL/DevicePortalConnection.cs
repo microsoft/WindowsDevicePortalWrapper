@@ -16,6 +16,9 @@ namespace TestApp
         public NetworkCredential Credentials
         { get; private set; }
 
+        public string Family
+        { get; set; }
+
         public string Name
         { get; set; }
 
@@ -23,7 +26,7 @@ namespace TestApp
         { get; set; }
 
         public string QualifiedName
-        { get; private set; }
+        { get; set; }
 
         /// <summary>
         /// 
