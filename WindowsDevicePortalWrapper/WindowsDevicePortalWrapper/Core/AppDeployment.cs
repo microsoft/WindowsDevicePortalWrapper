@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API to retrieve list of installed packaged.
+        /// API to retrieve list of installed packages.
         /// </summary>
         private static readonly string InstalledPackagesApi = "api/app/packagemanager/packages";
 

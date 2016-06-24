@@ -7,9 +7,14 @@
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for device management methods
+    /// Wrappers for device management methods.
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// API to retrieve list of installed devices.
+        /// </summary>
+        private static readonly string InstalledDevicesApi = "api/devicemanager/devices";
+
     }
 }
