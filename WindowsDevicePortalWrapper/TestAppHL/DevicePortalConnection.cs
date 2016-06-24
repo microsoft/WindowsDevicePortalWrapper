@@ -1,4 +1,11 @@
-﻿using System;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="DevicePortalConnection.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Tools.WindowsDevicePortal;
@@ -6,81 +13,139 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
+    /// <summary>
+    /// IDevicePortalConnection implementation for the HoloLens test project
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
     public class DevicePortalConnection : IDevicePortalConnection
     {
+        /// <summary>
+        /// The device's root certificate.
+        /// </summary>
         private X509Certificate2 deviceCertificate = null;
 
-        public Uri Connection
-        { get; private set; }
-
-        public NetworkCredential Credentials
-        { get; private set; }
-
-        public string Family
-        { get; set; }
-
-        public string Name
-        { get; set; }
-
-        public OperatingSystemInformation OsInfo
-        { get; set; }
-
-        public string QualifiedName
-        { get; set; }
-
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="DevicePortalConnection" /> class.
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="userName"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public DevicePortalConnection(string address,
-                                    string userName,
-                                    string password)
+        /// <param name="address">The address of the device.</param>
+        /// <param name="userName">The user name used in the connection credentials.</param>
+        /// <param name="password">The password used in the connection credentials.</param>
+        public DevicePortalConnection(
+            string address,
+            string userName,
+            string password)
         {
             if (string.IsNullOrWhiteSpace(address))
             {
                 address = "localhost:10080";
             }
 
-            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(address), address));
-            Credentials = new NetworkCredential(userName, password);
+            this.Connection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(address), address));
+            this.Credentials = new NetworkCredential(userName, password);
         }
 
         /// <summary>
-        /// 
+        /// Gets the URI used to connect to the device.
         /// </summary>
-        /// <returns></returns>
-        public Byte[] GetDeviceCertificateData()
+        public Uri Connection
         {
-            return deviceCertificate.GetRawCertData();
+            get;
+            private set;
         }
 
         /// <summary>
-        /// 
+        /// Gets the credentials used to connect to the device.
         /// </summary>
-        /// <param name="certificateData"></param>
-        public void SetDeviceCertificate(Byte[] certificateData)
+        public NetworkCredential Credentials
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets or sets the device's operating system family.
+        /// </summary>
+        public string Family
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the device name.
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the operating system information.
+        /// </summary>
+        public OperatingSystemInformation OsInfo
+        {
+            get;
+            set;
+        }
+
+        // TODO: consider adding support for the fully qualified device name 
+        // public string QualifiedName
+        // { get; set; }
+
+        /// <summary>
+        /// Gets the raw device certificate.
+        /// </summary>
+        /// <returns>Byte array containing the raw certificate data.</returns>
+        public byte[] GetDeviceCertificateData()
+        {
+            return this.deviceCertificate.GetRawCertData();
+        }
+
+        /// <summary>
+        /// Creates and sets the device certificate from the raw data.
+        /// </summary>
+        /// <param name="certificateData">Raw device certificate data.</param>
+        public void SetDeviceCertificate(byte[] certificateData)
         {
             X509Certificate2 cert = new X509Certificate2(certificateData);
             if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
-                throw new DevicePortalException((HttpStatusCode)0,
-                                                "Invalid certificate issuer",
-                                                null,
-                                                "Failed to download device certificate");
+                throw new DevicePortalException(
+                    (HttpStatusCode)0,
+                    "Invalid certificate issuer",
+                    null,
+                    "Failed to download device certificate");
             }
-            deviceCertificate = cert;
+
+            this.deviceCertificate = cert;
         }
 
-        public void UpdateConnection(Boolean requiresHttps)
+        /// <summary>
+        /// Updates the device's connection Uri.
+        /// </summary>
+        /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
+        public void UpdateConnection(bool requiresHttps)
         {
-            Connection = new Uri(string.Format("{0}://{1}", GetUriScheme(Connection.Authority, requiresHttps), Connection.Authority));
+            string uriScheme = this.GetUriScheme(
+                this.Connection.Authority, 
+                requiresHttps);
+
+            this.Connection = new Uri(
+                string.Format(
+                    "{0}://{1}", 
+                    uriScheme, 
+                    this.Connection.Authority));
         }
 
-        public void UpdateConnection(IpConfiguration ipConfig,
-                                    Boolean requiresHttps = false)
+        /// <summary>
+        /// Updates the device's connection Uri.
+        /// </summary>
+        /// <param name="ipConfig">The device's IP configuration data.</param>
+        /// <param name="requiresHttps">Indicates whether or not the connection should always be secure.</param>
+        public void UpdateConnection(
+            IpConfiguration ipConfig,
+            bool requiresHttps = false)
         {
             Uri newConnection = null;
 
@@ -91,28 +156,29 @@ namespace TestApp
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(string.Format("{0}://{1}", GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
-                        // TODO qualified name
+                        newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        //// TODO qualified name
                         break;
                     }
                 }
 
                 if (newConnection != null)
                 {
-                    Connection = newConnection;
+                    this.Connection = newConnection;
                     break;
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Gets the URI scheme based on the specified address.
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="requiresHttps"></param>
-        /// <returns></returns>
-        private string GetUriScheme(string address,
-                                    Boolean requiresHttps = true)
+        /// <param name="address">The address of the device.</param>
+        /// <param name="requiresHttps">True if a secure connection should always be required.</param>
+        /// <returns>A string containing the URI scheme.</returns>
+        private string GetUriScheme(
+            string address,
+            bool requiresHttps = true)
         {
             return (address.Contains("127.0.0.1") || 
                     address.Contains("localhost") || 

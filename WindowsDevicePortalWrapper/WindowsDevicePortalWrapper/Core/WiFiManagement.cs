@@ -164,7 +164,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "CipherAlgorithm")]
             public string CipherAlgorithm { get; set; }
 
-            /// <summary>.
+            /// <summary>
             /// Gets or sets a value indicating whether this network is connectable
             /// </summary>
             [DataMember(Name = "Connectable")]

@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The power scheme identifier.</returns>
         public async Task<Guid> GetActivePowerScheme()
         {
-            ActivePowerScheme activeScheme = await Get<ActivePowerScheme>(ActivePowerSchemeApi);
+            ActivePowerScheme activeScheme = await this.Get<ActivePowerScheme>(ActivePowerSchemeApi);
             return activeScheme.Id;
         }
 

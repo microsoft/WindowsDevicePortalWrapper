@@ -33,7 +33,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         string Name { get; }
 
         /// <summary>
-        /// Gets the family of the device (ex: Windows.Holographic).
+        /// Gets or sets the family of the device (ex: Windows.Holographic).
         /// </summary>
         string Family { get; set; }
 

@@ -1,23 +1,62 @@
-﻿using Microsoft.Tools.WindowsDevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
-    class Program : IDisposable
+    /// <summary>
+    /// Application class.
+    /// </summary>
+    internal class Program : IDisposable
     {
+        /// <summary>
+        /// The IP address of the device.
+        /// </summary>
         private string ipAddress = null;
+
+        /// <summary>
+        /// The user name used when connecting to the device.
+        /// </summary>
         private string userName = null;
+
+        /// <summary>
+        /// The password used when connecting to the device.
+        /// </summary>
         private string password = null;
+
+        /// <summary>
+        /// The network access point to which the device should be connected.
+        /// </summary>
         private string ssid = null;
+
+        /// <summary>
+        /// The security key to use when connecting to the network access point.
+        /// </summary>
         private string key = null;
 
+        /// <summary>
+        /// Event used to indicate that the connection process is complete.
+        /// </summary>
         private ManualResetEvent mreConnected = new ManualResetEvent(false);
+
+        /// <summary>
+        /// Event used to indicate that the application install process is complete.
+        /// </summary>
         private ManualResetEvent mreAppInstall = new ManualResetEvent(false);
 
-        static void Main(string[] args)
+        /// <summary>
+        /// The application entry point.
+        /// </summary>
+        /// <param name="args">Array of command line arguments.</param>
+        public static void Main(string[] args)
         {
             Program app = new Program();
 
@@ -25,7 +64,7 @@ namespace TestApp
             {
                 app.ParseCommandLine(args);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // TODO: Make a usage display
                 Console.WriteLine(e.Message);
@@ -44,13 +83,13 @@ namespace TestApp
             Console.WriteLine("Connected to: " + portal.Address);
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
             Console.WriteLine("Device family: " + portal.DeviceFamily);
-//            Console.WriteLine("Device name: " + portal.GetDeviceName)
+////            Console.WriteLine("Device name: " + portal.GetDeviceName)
             Console.WriteLine("Platform: " + portal.Platform.ToString());
 
-            Task <string> getNameTask = portal.GetDeviceName();
+            Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
 
-            Task <Single> getIpdTask = portal.GetInterPupilaryDistance();
+            Task<float> getIpdTask = portal.GetInterPupilaryDistance();
             getIpdTask.Wait();
             Console.WriteLine("IPD: " + getIpdTask.Result.ToString());
 
@@ -78,14 +117,16 @@ namespace TestApp
             System.Threading.Thread.Sleep(5000);
             Task stopTask = portal.StopMrcRecording();
             stopTask.Wait();
-            startTask = portal.StartMrcRecording(includeMicrophone: false,
-                                                includeAudio: false);
+            startTask = portal.StartMrcRecording(
+                includeMicrophone: false,
+                includeAudio: false);
             startTask.Wait();
             System.Threading.Thread.Sleep(5000);
             stopTask = portal.StopMrcRecording();
             stopTask.Wait();
-            startTask = portal.StartMrcRecording(includeColorCamera: false,
-                                                includeAudio: false);
+            startTask = portal.StartMrcRecording(
+                includeColorCamera: false,
+                includeAudio: false);
             startTask.Wait();
             System.Threading.Thread.Sleep(5000);
             stopTask = portal.StopMrcRecording();
@@ -99,26 +140,33 @@ namespace TestApp
             {
                 Console.WriteLine(string.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
 
-                // TODO: Save the thumbnail
-                // TODO: Download / save the file
+                //// TODO: Save the thumbnail
+                //// TODO: Download / save the file
 
                 Task deleteTask = portal.DeleteMrcFile(fileInfo.FileName);
                 deleteTask.Wait();
             }
 
-            while(true)
+            while (true)
             {
                 System.Threading.Thread.Sleep(0);
             }
         }
 
+        /// <summary>
+        /// Cleans up the object's data.
+        /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(Boolean disposing)
+        /// <summary>
+        /// Cleans up the object's data.
+        /// </summary>
+        /// <param name="disposing">True if managed objects should be disposed.</param>
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             { 
@@ -130,7 +178,31 @@ namespace TestApp
             }
         }
 
-        private void ConnectionStatusHandler(Object sender, DeviceConnectionStatusEventArgs args)
+        /// <summary>
+        /// Handler for the ApplicationInstallStatus event.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void AppInstallStatusHandler(
+            object sender, 
+            ApplicationInstallStatusEventArgs args)
+        {
+            Console.WriteLine(args.Message);
+
+            if (args.Status != ApplicationInstallStatus.InProgress)
+            {
+                this.mreAppInstall.Set();
+            }
+        }
+
+        /// <summary>
+        /// Handler for the ConnectionStatus event.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void ConnectionStatusHandler(
+            object sender, 
+            DeviceConnectionStatusEventArgs args)
         {
             Console.WriteLine(args.Message);
 
@@ -141,25 +213,24 @@ namespace TestApp
             }
         }
 
-        private void AppInstallStatusHandler(Object sender, ApplicationInstallStatusEventArgs args)
-        {
-            Console.WriteLine(args.Message);
-
-            if (args.Status != ApplicationInstallStatus.InProgress)
-            {
-                this.mreAppInstall.Set();
-            }
-        }
-
+        /// <summary>
+        /// Gets the value from a key:value command line argument.
+        /// </summary>
+        /// <param name="arg">A key:value command line argument.</param>
+        /// <returns>String containing the argument value.</returns>
         private string GetArgData(string arg)
         {
-            Int32 idx = arg.IndexOf(':');
-            return arg.Substring(idx+1);
+            int idx = arg.IndexOf(':');
+            return arg.Substring(idx + 1);
         }
 
+        /// <summary>
+        /// Parses the application's command line.
+        /// </summary>
+        /// <param name="args">Array of command line arguments.</param>
         private void ParseCommandLine(string[] args)
         {
-            for (Int32 i = 0; i < args.Length; i++)
+            for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i].ToLower();
                 if (!arg.StartsWith("/'") && !arg.StartsWith("-"))
@@ -171,23 +242,23 @@ namespace TestApp
 
                 if (arg.StartsWith("ip:"))
                 {
-                    this.ipAddress = GetArgData(args[i]);
+                    this.ipAddress = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("user:"))
                 {
-                    this.userName = GetArgData(args[i]);
+                    this.userName = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("pwd:"))
                 {
-                    this.password = GetArgData(args[i]);
+                    this.password = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("ssid:"))
                 {
-                    this.ssid = GetArgData(args[i]);
+                    this.ssid = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("key:"))
                 {
-                    this.key = GetArgData(args[i]);
+                    this.key = this.GetArgData(args[i]);
                 }
                 else
                 {
@@ -196,7 +267,7 @@ namespace TestApp
             }
 
             // We require at least a user name and password to proceed.
-            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(this.userName) || string.IsNullOrWhiteSpace(this.password))
             {
                 throw new Exception("You must specify a user name and a password");
             }

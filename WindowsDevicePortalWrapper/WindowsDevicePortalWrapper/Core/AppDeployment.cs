@@ -104,8 +104,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Installs an application
         /// </summary>
-        /// <param name="appName">Frienly name (ex: Holo World) of the application.</param>
-        /// <param name="packageFileName">Full name of the application package (.appx or .appxbundle) file.</param>
+        /// <param name="appName">Friendly name (ex: Hello World) of the application.</param>
+        /// <param name="packageFileName">Full name of the application package file.</param>
         /// <param name="dependencyFileNames">List containing the full names of required dependency files.</param>
         /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
         /// <param name="timeoutInMinutes">Operation timeout.</param>

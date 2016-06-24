@@ -13,37 +13,36 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// DevicePortal object
+    /// DevicePortal object.
     /// </summary>
     public partial class DevicePortal
     {
         /// <summary>
-        /// Issuer for our Certificate
+        /// Issuer for the device certificate.
         /// </summary>
         public static readonly string DevicePortalCertificateIssuer = "Microsoft Windows Web Management";
 
         /// <summary>
-        /// Endpoint for the certificate
+        /// Endpoint used to access the certificate.
         /// </summary>
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
-        /// Device connection object
+        /// Device connection object.
         /// </summary>
         private IDevicePortalConnection deviceConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortal" /> class.
         /// </summary>
-        /// <param name="connection">Implementation of a connection object</param>
+        /// <param name="connection">Implementation of a connection object.</param>
         public DevicePortal(IDevicePortalConnection connection)
         {
             this.deviceConnection = connection;
         }
 
-
         /// <summary>
-        /// Gets the device address
+        /// Gets the device address.
         /// </summary>
         public string Address 
         {
@@ -51,7 +50,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
         
         /// <summary>
-        /// Gets or sets handler for reporting connection status
+        /// Gets or sets handler for reporting connection status.
         /// </summary>
         public DeviceConnectionStatusEventHandler ConnectionStatus
         {
@@ -91,7 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets the platform
+        /// Gets the device platform.
         /// </summary>
         public DevicePortalPlatforms Platform
         {
@@ -104,9 +103,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
         /// </summary>
-        /// <param name="ssid">Network SSID if desired</param>
-        /// <param name="ssidKey">Network key if desired</param>
-        /// <param name="updateConnection">Whether we should update this connection with SSID info</param>
+        /// <param name="ssid">Optional network SSID.</param>
+        /// <param name="ssidKey">Optional network key.</param>
+        /// <param name="updateConnection">Indicates whether we should update this connection's IP address after connecting.</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
