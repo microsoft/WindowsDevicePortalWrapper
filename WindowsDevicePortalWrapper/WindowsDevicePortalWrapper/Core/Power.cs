@@ -4,25 +4,41 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for Power methods
+    /// Wrappers for Power methods.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting battery state
+        /// API for getting the currently active power scheme.
+        /// </summary>
+        private static readonly string ActivePowerSchemeApi = "api/power/activecfg";
+
+        /// <summary>
+        /// API for getting battery state.
         /// </summary>
         private static readonly string BatteryStateApi = "api/power/battery";
 
         /// <summary>
-        /// API for controlling power state
+        /// API for controlling power state.
         /// </summary>
         private static readonly string PowerStateApi = "api/power/state";
+
+        /// <summary>
+        /// Returns the current active power scheme.
+        /// </summary>
+        /// <returns>The power scheme identifier.</returns>
+        public async Task<Guid> GetActivePowerScheme()
+        {
+            ActivePowerScheme activeScheme = await this.Get<ActivePowerScheme>(ActivePowerSchemeApi);
+            return activeScheme.Id;
+        }
 
         /// <summary>
         /// Returns the current state of the device's battery.
@@ -45,55 +61,68 @@ namespace Microsoft.Tools.WindowsDevicePortal
         #region Data contract
 
         /// <summary>
-        /// Battery state
+        /// Battery state.
+        /// </summary>
+        [DataContract]
+        public class ActivePowerScheme
+        {
+            /// <summary>
+            /// Gets or sets the active power scheme identifier.
+            /// </summary>
+            [DataMember(Name = "ActivePowerScheme")]
+            public Guid Id { get; set; }
+        }
+
+        /// <summary>
+        /// Battery state.
         /// </summary>
         [DataContract]
         public class BatteryState
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the device is on AC power
+            /// Gets or sets a value indicating whether the device is on AC power.
             /// </summary>
             [DataMember(Name = "AcOnline")]
             public bool IsOnAcPower { get; set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether a battery is present
+            /// Gets or sets a value indicating whether a battery is present.
             /// </summary>
             [DataMember(Name = "BatteryPresent")]
             public bool IsBatteryPresent { get; set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether the device is charging
+            /// Gets or sets a value indicating whether the device is charging.
             /// </summary>
             [DataMember(Name = "Charging")]
             public bool IsCharging { get; set; }
 
             /// <summary>
-            /// Gets or sets the a default alert
+            /// Gets or sets the default alert.
             /// </summary>
             [DataMember(Name = "DefaultAlert1")]
             public int DefaultAlert1 { get; set; }
             
             /// <summary>
-            /// Gets or sets the a default alert
+            /// Gets or sets the default alert.
             /// </summary>
             [DataMember(Name = "DefaultAlert2")]
             public int DefaultAlert2 { get; set; }
 
             /// <summary>
-            /// Gets or sets estimated battery time
+            /// Gets or sets estimated battery time.
             /// </summary>
             [DataMember(Name = "EstimatedTime")]
             public uint EstimatedTimeRaw { get; set; }
 
             /// <summary>
-            /// Gets or sets maximum capacity
+            /// Gets or sets maximum capacity.
             /// </summary>
             [DataMember(Name = "MaximumCapacity")]
             public uint MaximumCapacity { get; set; }
 
             /// <summary>
-            /// Gets or sets remaining capacity
+            /// Gets or sets remaining capacity.
             /// </summary>
             [DataMember(Name = "RemainingCapacity")]
             public int RemainingCapacity { get; set; }

@@ -1,16 +1,40 @@
-﻿using Microsoft.Tools.WindowsDevicePortal;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+
 using System;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal;
 
 namespace TestApp
 {
-    class Program
+    /// <summary>
+    /// Application class.
+    /// </summary>
+    internal class Program
     {
-        private string _ipAddress = null;
-        private string _userName = null;
-        private string _password = null;
+        /// <summary>
+        /// The IP address of the device.
+        /// </summary>
+        private string ipAddress = null;
 
-        static void Main(string[] args)
+        /// <summary>
+        /// The user name used when connecting to the device.
+        /// </summary>
+        private string userName = null;
+
+        /// <summary>
+        /// The password used when connecting to the device.
+        /// </summary>
+        private string password = null;
+
+        /// <summary>
+        /// The application entry point.
+        /// </summary>
+        /// <param name="args">Array of command line arguments.</param>
+        public static void Main(string[] args)
         {
             Program app = new Program();
 
@@ -18,14 +42,14 @@ namespace TestApp
             {
                 app.ParseCommandLine(args);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // TODO: Make a usage display
                 Console.WriteLine(e.Message);
                 return;
             }
 
-            DevicePortal portal = new DevicePortal(new DevicePortalConnection(app._ipAddress, app._userName, app._password)); 
+            DevicePortal portal = new DevicePortal(new DevicePortalConnection(app.ipAddress, app.userName, app.password)); 
             Console.WriteLine("Connecting...");
             Task connectTask = portal.Connect();
             connectTask.Wait();
@@ -33,19 +57,23 @@ namespace TestApp
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
             Console.WriteLine("Platform: " + portal.Platform.ToString());
 
-            Task <string> getNameTask = portal.GetDeviceName();
+            Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
 
-            while(true)
+            while (true)
             {
                 System.Threading.Thread.Sleep(0);
             }
         }
 
+        /// <summary>
+        /// Parses the application's command line.
+        /// </summary>
+        /// <param name="args">Array of command line arguments.</param>
         private void ParseCommandLine(string[] args)
         {
-            for (Int32 i = 0; i < args.Length; i++)
+            for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i].ToLower();
                 if (!arg.StartsWith("/'") && !arg.StartsWith("-"))
@@ -57,17 +85,16 @@ namespace TestApp
 
                 if (arg.StartsWith("ip:"))
                 {
-                    _ipAddress = GetArgData(args[i]);
+                    this.ipAddress = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("user:"))
                 {
-                    _userName = GetArgData(args[i]);
+                    this.userName = this.GetArgData(args[i]);
                 }
                 else if (arg.StartsWith("pwd:"))
                 {
-                    _password = GetArgData(args[i]);
+                    this.password = this.GetArgData(args[i]);
                 }
-                // TODO: ssid, networkKey
                 else
                 {
                     throw new Exception(string.Format("Unrecognized argument: {0}", args[i]));
@@ -75,16 +102,21 @@ namespace TestApp
             }
 
             // We require at least a user name and password to proceed.
-            if (string.IsNullOrWhiteSpace(_userName) || string.IsNullOrWhiteSpace(_password))
+            if (string.IsNullOrWhiteSpace(this.userName) || string.IsNullOrWhiteSpace(this.password))
             {
-                    throw new Exception("You must specify a user name and a password");
+                throw new Exception("You must specify a user name and a password");
             }
         }
 
+        /// <summary>
+        /// Gets the value from a key:value command line argument.
+        /// </summary>
+        /// <param name="arg">A key:value command line argument.</param>
+        /// <returns>String containing the argument value.</returns>
         private string GetArgData(string arg)
         {
-            Int32 idx = arg.IndexOf(':');
-            return arg.Substring(idx+1);
+            int idx = arg.IndexOf(':');
+            return arg.Substring(idx + 1);
         }
     }
 }
