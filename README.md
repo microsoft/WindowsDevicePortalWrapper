@@ -46,3 +46,5 @@ Please see the [Windows Device Portal Core API reference](https://msdn.microsoft
 Please see the [HoloLens Device Portal API reference](https://developer.microsoft.com/en-us/windows/holographic/device_portal_api_reference) for additional information.
 
 # Xbox One specific methods
+
+Please see the [Xbox Device Portal API reference](https://msdn.microsoft.com/en-us/windows/uwp/xbox-apps/reference) for additional information.
