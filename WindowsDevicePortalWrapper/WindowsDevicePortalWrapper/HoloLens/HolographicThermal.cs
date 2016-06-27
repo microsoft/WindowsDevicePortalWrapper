@@ -5,7 +5,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -52,7 +51,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>ThermalStages enum value.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
         public async Task<ThermalStages> GetThermalStage()
         {
             if (this.Platform != DevicePortalPlatforms.HoloLens)

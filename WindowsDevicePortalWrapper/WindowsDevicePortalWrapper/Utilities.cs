@@ -5,7 +5,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -21,7 +20,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="path">The path to the REST API method (ex: api/control/restart).</param>
         /// <param name="payload">Parameterized data required by the REST API.</param>
         /// <returns>Uri object containing the complete path and query string required to issue the REST API call.</returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "api/control/restart is an example REST api and is spelled correctly.")]
         public static Uri BuildEndpoint(
             Uri baseUri,
             string path,
