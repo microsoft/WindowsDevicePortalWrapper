@@ -105,21 +105,6 @@ namespace TestApp
             activeSchemeTask.Wait();
             Console.WriteLine("Active power scheme id: " + activeSchemeTask.Result.ToString());
 
-            Task<MrcFileList> fileListTask = portal.GetMrcFileList();
-            fileListTask.Wait();
-            MrcFileList mrcFileList = fileListTask.Result;
-            Console.WriteLine(string.Format("Found {0} MRC files on your device", mrcFileList.Files.Count));
-            foreach (MrcFileInformation fileInfo in mrcFileList.Files)
-            {
-                Console.WriteLine(string.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
-
-                //// TODO: Save the thumbnail
-                //// TODO: Download / save the file
-
-                Task deleteTask = portal.DeleteMrcFile(fileInfo.FileName);
-                deleteTask.Wait();
-            }
-
             while (true)
             {
                 System.Threading.Thread.Sleep(0);
