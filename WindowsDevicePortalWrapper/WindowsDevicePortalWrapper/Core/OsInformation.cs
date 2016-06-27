@@ -137,7 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets the language
             /// </summary>
             [DataMember(Name = "Language")]
-            public string Languasge { get; set; }
+            public string Language { get; set; }
 
             /// <summary>
             /// Gets or sets the edition
