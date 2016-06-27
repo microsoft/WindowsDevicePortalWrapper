@@ -1,9 +1,12 @@
 # WindowsDevicePortalWrapper
 A client library that wraps the Windows Device Portal REST APIs.
 
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
 # Source layout
 
 The Windows Device Portal Wrapper source code has the following layout.
+
 ## \
 The project root folder contains the Visual Studio 2015 solution (.sln) and all sub-folders that make up the project.
 
@@ -36,6 +39,10 @@ The TestApp* folders contain source code for simple applications showing how to 
 
 # Core methods
 
+Please see the [Windows Device Portal Core API reference](https://msdn.microsoft.com/en-us/windows/uwp/debug-test-perf/device-portal-api-core) for additional information.
+
 # HoloLens specific methods
+
+Please see the [HoloLens Device Portal API reference](https://developer.microsoft.com/en-us/windows/holographic/device_portal_api_reference) for additional information.
 
 # Xbox One specific methods

@@ -4,16 +4,12 @@ The Windows Device Portal Wrapper welcomes contributions from the community.
 
 # Process
 
-0. Code of conduct
 1. [Make a proposal](https://github.com/Microsoft/WindowsDevicePortalWrapper/issues) (either new, or for one of the elements in our backlog)
 2. Implement the proposal and its tests.
-3. Rebase commits to tell a compelling story.
-4. Start a pull request & address comments.
-5. Merge.
-
-# Code of conduct
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+3. Run StyleCop and ensure compliance.
+4. Rebase commits to tell a compelling story.
+5. Start a pull request & address comments.
+6. Merge.
 
 # Proposal
 
@@ -33,6 +29,17 @@ Note:  If you wish to work on something that already exists on our backlog, you 
 4. Make small and frequent commits that include tests which could be a unity scene showing usage of your feature.
 5. Make sure that all existing tests continue to pass.
 6. Ensure you update the [README](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/README.md) with additional documentation as needed.
+
+# Run StyleCop
+
+The Windows Device Portal Wrapper uses the [StyleCop](http://stylecop.codeplex.com) code analysis tool to ensure code consistency and readability. This step is required for the WindowsDevicePortalWrapper folder and is optional (though highly recommended) for test applications.
+
+1. Download and install the latest version of StyleCop.
+2. Run StyleCop analysis on the project (In Visual Studio 2015, select Tools > Run StyleCop).
+3. Update the source code to address detected issues.
+4. Repeat steps 2 and 3 until analysis detects no issues.
+
+If there is a StyleCop issue that you believe does not need to be enforced, please add the suppression entry either to your code or the Settings.StyleCop file in the appropriate folder. This will highlight the rule change and allow the community to comment.
 
 # Rebase commits
 
