@@ -161,6 +161,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 request.ServerCertificateValidationCallback = this.ServerCertificateValidation;
                 request.Timeout = timeoutInMinutes * 60 * 1000;
 
+                // Set the CSRF-Token if we have one
+                if (!string.IsNullOrEmpty(this.csrfToken))
+                {
+                    request.Headers.Add("X-" + CsrfTokenName, this.csrfToken);
+                }
+
                 using (Stream requestStream = request.GetRequestStream())
                 {
                     byte[] data;
