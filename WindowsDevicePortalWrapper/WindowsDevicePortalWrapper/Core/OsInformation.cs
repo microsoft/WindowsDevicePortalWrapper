@@ -59,7 +59,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             /// HoloLens platform
             /// </summary>
-            [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is the product name.")]
             HoloLens,
 
             /// <summary>

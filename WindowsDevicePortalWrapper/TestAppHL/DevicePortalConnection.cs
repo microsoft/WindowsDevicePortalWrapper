@@ -5,7 +5,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Tools.WindowsDevicePortal;
@@ -16,7 +15,6 @@ namespace TestApp
     /// <summary>
     /// IDevicePortalConnection implementation for the HoloLens test project
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
     public class DevicePortalConnection : IDevicePortalConnection
     {
         /// <summary>

@@ -19,7 +19,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets the base uri (ex: http://localhost) used to communicate with the device.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "localhost is a valid word.")]
         Uri Connection { get; }
 
         /// <summary>

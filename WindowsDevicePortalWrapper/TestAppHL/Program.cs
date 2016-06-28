@@ -105,48 +105,6 @@ namespace TestApp
             activeSchemeTask.Wait();
             Console.WriteLine("Active power scheme id: " + activeSchemeTask.Result.ToString());
 
-            Task photoTask = portal.TakeMrcPhoto();
-            photoTask.Wait();
-            photoTask = portal.TakeMrcPhoto(includeColorCamera: false);
-            photoTask.Wait();
-            photoTask = portal.TakeMrcPhoto(includeHolograms: false);
-            photoTask.Wait();
-
-            Task startTask = portal.StartMrcRecording();
-            startTask.Wait();
-            System.Threading.Thread.Sleep(5000);
-            Task stopTask = portal.StopMrcRecording();
-            stopTask.Wait();
-            startTask = portal.StartMrcRecording(
-                includeMicrophone: false,
-                includeAudio: false);
-            startTask.Wait();
-            System.Threading.Thread.Sleep(5000);
-            stopTask = portal.StopMrcRecording();
-            stopTask.Wait();
-            startTask = portal.StartMrcRecording(
-                includeColorCamera: false,
-                includeAudio: false);
-            startTask.Wait();
-            System.Threading.Thread.Sleep(5000);
-            stopTask = portal.StopMrcRecording();
-            stopTask.Wait();
-
-            Task<MrcFileList> fileListTask = portal.GetMrcFileList();
-            fileListTask.Wait();
-            MrcFileList mrcFileList = fileListTask.Result;
-            Console.WriteLine(string.Format("Found {0} MRC files on your device", mrcFileList.Files.Count));
-            foreach (MrcFileInformation fileInfo in mrcFileList.Files)
-            {
-                Console.WriteLine(string.Format("{0} : {1} {2} bytes", fileInfo.FileName, fileInfo.Created, fileInfo.FileSize));
-
-                //// TODO: Save the thumbnail
-                //// TODO: Download / save the file
-
-                Task deleteTask = portal.DeleteMrcFile(fileInfo.FileName);
-                deleteTask.Wait();
-            }
-
             while (true)
             {
                 System.Threading.Thread.Sleep(0);

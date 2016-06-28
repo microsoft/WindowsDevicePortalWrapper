@@ -4,7 +4,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,9 +15,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting or setting InterPupilaryDistance
+        /// API for getting or setting Interpupilary distance
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary is spelled correctly.")]
         private static readonly string IpdApi = "api/holographic/os/settings/ipd";
 
         /// <summary>
@@ -31,7 +29,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>Interpupilary distance, in millimeters.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary and HoloLens are spelled correctly.")]
         public async Task<float> GetInterPupilaryDistance()
         {
             if (this.Platform != DevicePortalPlatforms.HoloLens)
@@ -49,7 +46,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="httpsRequired">Desired value for HTTPS communication</param>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
         public async Task SetIsHttpsRequired(bool httpsRequired)
         {
             if (this.Platform != DevicePortalPlatforms.HoloLens)
@@ -70,7 +66,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ipd">Interpupilary distance, in millimeters.</param>
         /// <returns>Task for tracking the POST call</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary is spelled correctly.")]
         public async Task SetInterPupilaryDistance(float ipd)
         {
             if (this.Platform != DevicePortalPlatforms.HoloLens)
@@ -90,7 +85,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "HoloLens is spelled correctly.")]
         private async Task<bool> GetIsHttpsRequired()
         {
             try
@@ -133,9 +127,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Object representation for Interpupilary Distance
+        /// Object representation for Interpupilary distance
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Interpupilary is spelled correctly.")]
         [DataContract]
         public class InterPupilaryDistance
         {
