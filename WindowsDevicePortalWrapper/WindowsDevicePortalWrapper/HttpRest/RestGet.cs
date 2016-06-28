@@ -5,8 +5,10 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
@@ -41,6 +43,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
+                HttpRequestHeaders headers = client.DefaultRequestHeaders;
+
+                if (string.IsNullOrEmpty(this.csrfToken))
+                {
+                    headers.Add(CsrfTokenName, "Fetch");
+                }
+                else
+                {
+                    headers.Add(CsrfTokenName, this.csrfToken);
+                }
+
                 Task<HttpResponseMessage> getTask = client.GetAsync(uri);
                 await getTask.ConfigureAwait(false);
                 getTask.Wait();
@@ -50,6 +63,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     if (!response.IsSuccessStatusCode)
                     {
                         throw new DevicePortalException(response);
+                    }
+
+                    // If the response sets a CSRF token, store that for future requests
+                    IEnumerable<string> cookies;
+                    bool hasCookies = response.Headers.TryGetValues("Set-Cookie", out cookies);
+
+                    if (hasCookies)
+                    {
+                        foreach (string cookie in cookies)
+                        {
+                            string csrfTokenNameWithEquals = CsrfTokenName + "=";
+                            if (cookie.StartsWith(csrfTokenNameWithEquals))
+                            {
+                                this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
+                            }
+                        }
                     }
 
                     using (HttpContent content = response.Content)

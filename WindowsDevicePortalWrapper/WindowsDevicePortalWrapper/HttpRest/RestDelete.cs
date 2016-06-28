@@ -6,6 +6,7 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -29,6 +30,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
+                // Set the CSRF-Token if we have one
+                if (!string.IsNullOrEmpty(this.csrfToken))
+                {
+                    HttpRequestHeaders headers = client.DefaultRequestHeaders;
+                    headers.Add("X-" + CsrfTokenName, this.csrfToken);
+                }
+
                 Task<HttpResponseMessage> deleteTask = client.DeleteAsync(uri);
                 await deleteTask.ConfigureAwait(false);
                 deleteTask.Wait();
