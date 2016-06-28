@@ -55,7 +55,8 @@ namespace TestApp
             connectTask.Wait();
             Console.WriteLine("Connected to: " + portal.Address);
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
-            Console.WriteLine("Platform: " + portal.Platform.ToString());
+            Console.WriteLine("Device family: " + portal.DeviceFamily);
+            Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
 
             Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();

@@ -102,7 +102,7 @@ namespace TestApp
             else if (operation == OperationType.InfoOperation)
             {
                 Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
-                Console.WriteLine("Platform: " + portal.Platform.ToString());
+                Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
 
                 Task<string> getNameTask = portal.GetDeviceName();
                 getNameTask.Wait();
