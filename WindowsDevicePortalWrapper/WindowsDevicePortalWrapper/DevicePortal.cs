@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
         /// This token is intended to prevent a security vulnerability from cross site forgery.
         /// </summary>
-        private string csrfToken = String.Empty;
+        private string csrfToken = string.Empty;
 
         /// <summary>
         /// Device connection object.
