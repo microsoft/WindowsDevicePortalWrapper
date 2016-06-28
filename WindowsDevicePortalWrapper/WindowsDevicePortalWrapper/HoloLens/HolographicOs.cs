@@ -15,14 +15,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// API for getting a list of HoloLens specific ETW providers that are not registered with the system.
+        /// </summary>
+        private static readonly string HolographicEtwCustomProvidersApi = "api/holographic/os/etw/customproviders";
+
+        /// <summary>
         /// API for getting or setting Interpupilary distance
         /// </summary>
-        private static readonly string IpdApi = "api/holographic/os/settings/ipd";
+        private static readonly string HolographicIpdApi = "api/holographic/os/settings/ipd";
+
+        /// <summary>
+        /// API for getting a list of running HoloLens specific services.
+        /// </summary>
+        private static readonly string HolographicServicesApi = "api/holographic/os/services";
 
         /// <summary>
         /// API for getting or setting HTTPS setting
         /// </summary>
-        private static readonly string WebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
+        private static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
 
         /// <summary>
         /// Gets the interpupilary distance registered on the device.
@@ -36,7 +46,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            InterPupilaryDistance ipd = await this.Get<InterPupilaryDistance>(IpdApi);
+            InterPupilaryDistance ipd = await this.Get<InterPupilaryDistance>(HolographicIpdApi);
             return ipd.Ipd;
         }
 
@@ -54,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             await this.Post(
-                WebManagementHttpSettingsApi,
+                HolographicWebManagementHttpSettingsApi,
                 string.Format("required={0}", httpsRequired));
 
             this.deviceConnection.UpdateConnection(httpsRequired);
@@ -76,7 +86,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = string.Format("ipd={0}", (int)(ipd * 1000.0f));
 
             await this.Post(
-                IpdApi,
+                HolographicIpdApi,
                 payload);
         }
 
@@ -95,7 +105,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     throw new NotSupportedException("This method is only supported on HoloLens.");
                 }
 
-                WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(WebManagementHttpSettingsApi);
+                WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
                 return httpSettings.IsHttpsRequired;
             }
             catch (Exception e)

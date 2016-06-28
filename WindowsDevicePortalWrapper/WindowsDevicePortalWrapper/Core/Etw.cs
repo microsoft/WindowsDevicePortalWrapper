@@ -11,5 +11,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// API to create a realtime ETW session.
+        /// </summary>
+        private static readonly string CreateRealtimeEtwSessionApi = "api/etw/session/realtime";
+
+        /// <summary>
+        /// API to getthe list of registered custom ETW providers.
+        /// </summary>
+        private static readonly string GetCustomEtwProvidersApi = "api/etw/customproviders";
+
+        /// <summary>
+        /// API to getthe list of registered ETW providers.
+        /// </summary>
+        private static readonly string GetEtwProvidersApi = "api/etw/providers";
     }
 }

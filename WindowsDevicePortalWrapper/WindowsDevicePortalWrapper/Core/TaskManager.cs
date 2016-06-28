@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for managing app state
+        /// API for starting or stopping a modern application.
         /// </summary>
         private static readonly string TaskManagerApi = "api/taskmanager/app";
 
