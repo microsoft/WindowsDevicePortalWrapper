@@ -83,8 +83,7 @@ namespace TestApp
             Console.WriteLine("Connected to: " + portal.Address);
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
             Console.WriteLine("Device family: " + portal.DeviceFamily);
-////            Console.WriteLine("Device name: " + portal.GetDeviceName)
-            Console.WriteLine("Platform: " + portal.Platform.ToString());
+            Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
 
             Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
@@ -100,10 +99,6 @@ namespace TestApp
             Task<PowerState> powerTask = portal.GetPowerState();
             powerTask.Wait();
             Console.WriteLine("In low power state: " + powerTask.Result.InLowPowerState);
-
-            Task<Guid> activeSchemeTask = portal.GetActivePowerScheme();
-            activeSchemeTask.Wait();
-            Console.WriteLine("Active power scheme id: " + activeSchemeTask.Result.ToString());
 
             while (true)
             {

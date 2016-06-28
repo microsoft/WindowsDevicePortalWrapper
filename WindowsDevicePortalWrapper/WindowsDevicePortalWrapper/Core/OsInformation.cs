@@ -52,19 +52,34 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Mobile,
 
             /// <summary>
-            /// IOT platform
-            /// </summary>
-            IoT,
-
-            /// <summary>
             /// HoloLens platform
             /// </summary>
             HoloLens,
 
             /// <summary>
-            /// Xbox One Platform
+            /// Xbox One platform
             /// </summary>
-            XboxOne
+            XboxOne,
+
+            /// <summary>
+            /// Windows IoT on Dragonboard 410c
+            /// </summary>
+            IoTDragonboard410c,
+
+            /// <summary>
+            /// Windows IoT on Minnowboard Max
+            /// </summary>
+            IoTMinnowboardMax,
+
+            /// <summary>
+            /// Windows IoT on Raspberry Pi 2
+            /// </summary>
+            IoTRaspberryPi2,
+
+            /// <summary>
+            /// Windows IoT on Raspberry Pi 3
+            /// </summary>
+            IoTRaspberryPi3,
         }
 
         /// <summary>
@@ -188,7 +203,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets the raw platform type
             /// </summary>
             [DataMember(Name = "Platform")]
-            public string PlatformRaw { get; set; }
+            public string PlatformName { get; set; }
 
             /// <summary>
             /// Gets the platform
@@ -201,14 +216,30 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     try
                     {
-                        switch (this.PlatformRaw)
+                        switch (this.PlatformName)
                         {
                             case "Xbox One":
                                 platform = DevicePortalPlatforms.XboxOne;
                                 break;
 
+                            case "Dragonboard 401c":
+                                platform = DevicePortalPlatforms.IoTDragonboard410c;
+                                break;
+
+                            case "Minnowboard Max":
+                                platform = DevicePortalPlatforms.IoTMinnowboardMax;
+                                break;
+
+                            case "Raspberry Pi 2":
+                                platform = DevicePortalPlatforms.IoTRaspberryPi2;
+                                break;
+
+                            case "Raspberry Pi 3":
+                                platform = DevicePortalPlatforms.IoTRaspberryPi3;
+                                break;
+
                             default:
-                                platform = (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformRaw);
+                                platform = (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);
                                 break;
                         }
                     }

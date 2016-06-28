@@ -100,6 +100,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+        public string PlatformName
+        {
+            get
+            {
+                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.PlatformName : "Unknown";
+            }
+        }
+
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
         /// </summary>
@@ -121,12 +129,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
             try 
             {
                 // Get the device certificate
-                connectionPhaseDescription = "Acquiring device certificate";
-                this.SendConnectionStatus(
-                    DeviceConnectionStatus.Connecting,
-                    DeviceConnectionPhase.AcquiringCertificate,
-                    connectionPhaseDescription);
-                this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+                try
+                {
+                    connectionPhaseDescription = "Acquiring device certificate";
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.AcquiringCertificate,
+                        connectionPhaseDescription);
+                    this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+                }
+                catch
+                {
+                    // This device does not support the root certificate endpoint.
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.AcquiringCertificate,
+                        "No device certificate available");
+                }
 
                 // Get the device family and operating system information.
                 connectionPhaseDescription = "Requesting operating system information";

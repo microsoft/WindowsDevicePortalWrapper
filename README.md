@@ -156,5 +156,3 @@ Please see the [HoloLens Device Portal API reference](https://developer.microsof
 Please see the [Xbox Device Portal API reference](https://msdn.microsoft.com/en-us/windows/uwp/xbox-apps/reference) for additional information.
 
 ---
-##### [Go back to the top of this file.](https://github.com/Microsoft/WindowsDevicePortalWrapper#WindowsDevicePortalWrapper)
----
