@@ -24,6 +24,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API to retrieve the list of accessible top-level folders.
         /// </summary>
-        private static readonly string KnownFoldersApi = "api/filesystem/apps/knownfilders";
+        private static readonly string KnownFoldersApi = "api/filesystem/apps/knownfolders";
     }
 }
