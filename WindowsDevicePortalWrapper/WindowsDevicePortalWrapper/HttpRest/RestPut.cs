@@ -35,6 +35,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
+                // Set the CSRF-Token if we have one
+                if (!string.IsNullOrEmpty(this.csrfToken))
+                {
+                    HttpRequestHeaders headers = client.DefaultRequestHeaders;
+                    headers.Add("X-" + CsrfTokenName, this.csrfToken);
+                }
+
                 // Send the request
                 Task<HttpResponseMessage> putTask = client.PutAsync(uri, body);
                 await putTask.ConfigureAwait(false);
