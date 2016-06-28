@@ -11,5 +11,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// API for downloading a Windows error reporting file.
+        /// </summary>
+        private static readonly string WindowsErrorReportingFileApi = "api/wer/report/file";
+
+        /// <summary>
+        /// API for getting the list of files in a Windows error report.
+        /// </summary>
+        private static readonly string WindowsErrorReportingFilesApi = "api/wer/report/files";
+
+        /// <summary>
+        /// API for getting the list of Windows error reports.
+        /// </summary>
+        private static readonly string WindowsErrorReportsApi = "api/wer/reports";
     }
 }

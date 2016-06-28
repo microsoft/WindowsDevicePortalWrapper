@@ -18,34 +18,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        ///  API for getting or deleting the mixed reality capture file
+        ///  API for getting or deleting a Mixed Reality Capture file
         /// </summary>
         private static readonly string MrcFileApi = "api/holographic/mrc/file";
 
         /// <summary>
-        /// API for getting the list of mixed reality capture files
+        /// API for getting the list of Holographic Mixed Reality Capture files
         /// </summary>
         private static readonly string MrcFileListApi = "api/holographic/mrc/files";
 
         /// <summary>
-        /// API for taking a mixed reality capture photo 
+        /// API for taking a Mixed Reality Capture photo 
         /// </summary>
         private static readonly string MrcPhotoApi = "api/holographic/mrc/photo";
 
         /// <summary>
-        /// API for starting a video recording
+        /// API for starting a Holographic Mixed Reality Capture recording.
         /// </summary>
         private static readonly string MrcStartRecordingApi = "api/holographic/mrc/video/control/start";
 
         /// <summary>
-        /// API for getting the recording status
+        /// API for getting the Holographic Mixed Reality Capture status.
         /// </summary>
         private static readonly string MrcStatusApi = "api/holographic/mrc/status";
 
         /// <summary>
-        /// API for stopping the recording
+        /// API for stopping a Holographic Mixed Reality Capture recording.
         /// </summary>
         private static readonly string MrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
+
+        /// <summary>
+        /// API for getting a live Holographic Mixed Reality Capture stream.
+        /// </summary>
+        private static readonly string MrcLiveStreamApi = "api/holographic/stream/live.mp4";
+
+        /// <summary>
+        /// API for getting a high resolution live Holographic Mixed Reality Capture stream.
+        /// </summary>
+        private static readonly string MrcLiveStreamHighwResApi = "api/holographic/stream/live_high.mp4";
+
+        /// <summary>
+        /// API for getting a low resolution live Holographic Mixed Reality Capture stream.
+        /// </summary>
+        private static readonly string MrcLiveStreamLowResApi = "api/holographic/stream/live_low.mp4";
+
+        /// <summary>
+        /// API for getting a medium resolution live Holographic Mixed Reality Capture stream.
+        /// </summary>
+        private static readonly string MrcLiveStreamMediumResApi = "api/holographic/stream/live_med.mp4";
 
         /// <summary>
         /// API for getting a mixed reality capture thumbnail

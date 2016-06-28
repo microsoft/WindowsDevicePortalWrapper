@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting the currently active power scheme.
+        /// API for getting or setting the active power scheme.
         /// </summary>
         private static readonly string ActivePowerSchemeApi = "api/power/activecfg";
 
@@ -26,9 +26,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly string BatteryStateApi = "api/power/battery";
 
         /// <summary>
+        /// API for getting or setting a power scheme's sub-value.
+        /// </summary>
+        private static readonly string PowerSchemeSubValueApi = "api/power/cfg";
+
+        /// <summary>
         /// API for controlling power state.
         /// </summary>
         private static readonly string PowerStateApi = "api/power/state";
+
+        /// <summary>
+        /// API for getting a sleep study report.
+        /// </summary>
+        private static readonly string SleepStudyReportApi = "api/power/sleepstudy/report";
+
+        /// <summary>
+        /// API for getting the list of sleep study reports.
+        /// </summary>
+        private static readonly string SleepStudyReportsApi = "api/power/sleepstudy/reports";
+
+        /// <summary>
+        /// API for getting a sleep study report.
+        /// </summary>
+        private static readonly string SleepStudyTransformApi = "api/power/sleepstudy/transform";
 
         /// <summary>
         /// Returns the current active power scheme.

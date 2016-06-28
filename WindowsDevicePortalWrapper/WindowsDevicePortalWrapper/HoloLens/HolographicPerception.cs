@@ -11,5 +11,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// API for getting or setting the Holographic Perception Simulation control mode.
+        /// </summary>
+        private static readonly string HolographicSimulationModeApi = "api/holographic/simulation/control/mode";
+
+        /// <summary>
+        /// API for controlling the Holographic Perception Simulation control stream.
+        /// </summary>
+        private static readonly string HolographicSimulationStreamApi = "api/holographic/simulation/control/Stream";
     }
 }
