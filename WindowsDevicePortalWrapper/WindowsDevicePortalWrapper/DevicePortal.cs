@@ -169,20 +169,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
+                // Default to using HTTPS if we were successful in acquiring the device's root certificate.
                 bool requiresHttps = certificateAcquired;
 
+                // HoloLens is the only device that supports the GetIsHttpsRequired method.
                 if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
                 {
                     // Check to see if HTTPS is required to communicate with this device.
                     connectionPhaseDescription = "Checking secure connection requirements";
-                    
-                    try
-                    {
-                        requiresHttps = await this.GetIsHttpsRequired();
-                    }
-                    catch (NotSupportedException)
-                    {
-                    }
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.DeterminingConnectionRequirements,
+                        connectionPhaseDescription);
+                    requiresHttps = await this.GetIsHttpsRequired();
                 }
 
                 // Connect the device to the specified network.
