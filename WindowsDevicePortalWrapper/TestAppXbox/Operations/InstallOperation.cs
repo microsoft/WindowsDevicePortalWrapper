@@ -94,7 +94,6 @@ namespace TestApp
                 Console.WriteLine(XblInstallUsageMessage);
                 return;
             }
-
         }
 
         /// <summary>
