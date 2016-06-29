@@ -140,6 +140,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             try 
             {
                 // Get the device certificate
+                bool certificateAcquired = false;
                 try
                 {
                     connectionPhaseDescription = "Acquiring device certificate";
@@ -148,6 +149,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionPhase.AcquiringCertificate,
                         connectionPhaseDescription);
                     this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+                    certificateAcquired = true;
                 }
                 catch
                 {
@@ -167,10 +169,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
-                bool requiresHttps = true;  // TODO - is this the correct default?
+                bool requiresHttps = certificateAcquired;
 
-                // TODO: need a better check.
-                if (this.deviceConnection.OsInfo.Platform != DevicePortalPlatforms.XboxOne)
+                if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
                 {
                     // Check to see if HTTPS is required to communicate with this device.
                     connectionPhaseDescription = "Checking secure connection requirements";
