@@ -143,6 +143,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             try 
             {
                 // Get the device certificate
+                bool certificateAcquired = false;
                 try
                 {
                     connectionPhaseDescription = "Acquiring device certificate";
@@ -151,6 +152,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionPhase.AcquiringCertificate,
                         connectionPhaseDescription);
                     this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+                    certificateAcquired = true;
                 }
                 catch
                 {
@@ -170,21 +172,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
-                bool requiresHttps = true;  // TODO - is this the correct default?
+                // Default to using HTTPS if we were successful in acquiring the device's root certificate.
+                bool requiresHttps = certificateAcquired;
 
-                // TODO: need a better check.
-                if (this.deviceConnection.OsInfo.Platform != DevicePortalPlatforms.XboxOne)
+                // HoloLens is the only device that supports the GetIsHttpsRequired method.
+                if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
                 {
                     // Check to see if HTTPS is required to communicate with this device.
                     connectionPhaseDescription = "Checking secure connection requirements";
-                    
-                    try
-                    {
-                        requiresHttps = await this.GetIsHttpsRequired();
-                    }
-                    catch (NotSupportedException)
-                    {
-                    }
+                    this.SendConnectionStatus(
+                        DeviceConnectionStatus.Connecting,
+                        DeviceConnectionPhase.DeterminingConnectionRequirements,
+                        connectionPhaseDescription);
+                    requiresHttps = await this.GetIsHttpsRequired();
                 }
 
                 // Connect the device to the specified network.
