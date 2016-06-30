@@ -111,6 +111,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+        /// <summary>
+        /// Gets the device platform name.
+        /// </summary>
         public string PlatformName
         {
             get

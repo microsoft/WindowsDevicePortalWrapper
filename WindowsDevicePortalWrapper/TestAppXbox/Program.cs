@@ -35,6 +35,16 @@ namespace TestApp
             /// User operation
             /// </summary>
             UserOperation,
+
+            /// <summary>
+            /// Install Appx Package or loose folder operation
+            /// </summary>
+            InstallOperation,
+
+            /// <summary>
+            /// Reboot console operation
+            /// </summary>
+            RebootOperation,
         }
 
         /// <summary>
@@ -112,6 +122,16 @@ namespace TestApp
             {
                 UserOperation.HandleOperation(portal, parameters);
             }
+            else if (operation == OperationType.InstallOperation)
+            {
+                InstallOperation.HandleOperation(portal, parameters);
+            }
+            else if (operation == OperationType.RebootOperation)
+            {
+                Task rebootTask = portal.Reboot();
+                rebootTask.Wait();
+                Console.WriteLine("Rebooting device.");
+            }
         }
 
         /// <summary>
@@ -128,6 +148,14 @@ namespace TestApp
             else if (operation.Equals("xbluser", StringComparison.InvariantCultureIgnoreCase))
             {
                 return OperationType.UserOperation;
+            }
+            else if (operation.Equals("install", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return OperationType.InstallOperation;
+            }
+            else if (operation.Equals("reboot", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return OperationType.RebootOperation;
             }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +

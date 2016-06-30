@@ -104,9 +104,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Installs an application
         /// </summary>
-        /// <param name="appName">Friendly name (ex: Hello World) of the application.</param>
+        /// <param name="appName">Friendly name (ex: Hello World) of the application. If this parameter is not provided, the name of the package is assumed to be the app name.</param>
         /// <param name="packageFileName">Full name of the application package file.</param>
         /// <param name="dependencyFileNames">List containing the full names of required dependency files.</param>
+        /// <param name="certificateFileName">Full name of the optional certificate file.</param>
         /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
         /// <param name="timeoutInMinutes">Operation timeout.</param>
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
@@ -116,6 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string appName,
             string packageFileName, 
             List<string> dependencyFileNames,
+            string certificateFileName = null,
             short stateCheckIntervalMs = 500,
             short timeoutInMinutes = 15)
         {
@@ -123,6 +125,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             try
             {
+                FileInfo fi = new FileInfo(packageFileName);
+
+                // If appName was not provided, use the package file name
+                if (string.IsNullOrEmpty(appName))
+                {
+                    appName = fi.Name;
+                }
+
                 // Uninstall the application's previous version, if one exists.
                 installPhaseDescription = string.Format("Uninstalling previous version of {0}", appName);
                 this.SendAppInstallStatus(
@@ -140,7 +150,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
 
                 // Create the API endpoint and generate a unique boundary string.
-                FileInfo fi = new FileInfo(packageFileName);
                 Uri uri = Utilities.BuildEndpoint(
                     this.deviceConnection.Connection,
                     PackageManagerApi,
@@ -185,6 +194,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     foreach (string dependencyFile in dependencyFileNames)
                     {
                         fi = new FileInfo(dependencyFile);
+                        installPhaseDescription = string.Format("Uploading: {0}", fi.Name);
+                        this.SendAppInstallStatus(
+                            ApplicationInstallStatus.InProgress,
+                            ApplicationInstallPhase.CopyingFile,
+                            installPhaseDescription);
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                        requestStream.Write(data, 0, data.Length);
+                        this.CopyInstallationFileToStream(fi, requestStream);
+                    }
+
+                    // Upload the certificate file if provided
+                    if (!string.IsNullOrEmpty(certificateFileName))
+                    {
+                        fi = new FileInfo(certificateFileName);
                         installPhaseDescription = string.Format("Uploading: {0}", fi.Name);
                         this.SendAppInstallStatus(
                             ApplicationInstallStatus.InProgress,
