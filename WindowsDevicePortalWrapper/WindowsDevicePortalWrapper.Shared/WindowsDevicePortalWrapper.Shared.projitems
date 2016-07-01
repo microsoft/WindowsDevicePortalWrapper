@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\PerformanceData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Power.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\RemoteControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\TaskManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WiFiManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsErrorReporting.cs" />
@@ -27,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ApplicationInstallStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ConnectionStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\WebSocketMessageReceivedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\DevicePortalException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicOs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicPerception.cs" />
@@ -39,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestPost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestPut.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\ServerCertificateValidation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpRest\WebSocket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\SmbShare.cs" />

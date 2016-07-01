@@ -22,6 +22,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         Uri Connection { get; }
 
         /// <summary>
+        /// Gets the base uri (ex: ws://localhost) used to communicate with web sockets on the device.
+        /// </summary>
+        Uri WebSocketConnection { get; }
+
+        /// <summary>
         /// Gets the credentials used when communicating with the device.
         /// </summary>
         NetworkCredential Credentials { get; }

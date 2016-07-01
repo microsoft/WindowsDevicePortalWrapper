@@ -46,6 +46,31 @@ namespace TestAppIoT
         }
 
         /// <summary>
+        /// Gets Web Socket Connection property
+        /// </summary>
+        public Uri WebSocketConnection
+        {
+            get
+            {
+                if (this.Connection == null)
+                {
+                    return null;
+                }
+
+                string absoluteUri = this.Connection.AbsoluteUri;
+
+                if (absoluteUri.StartsWith("https"))
+                {
+                    return new Uri(absoluteUri.Replace("https", "wss"));
+                }
+                else
+                {
+                    return new Uri(absoluteUri.Replace("http", "ws"));
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the credentials used to connect to the device.
         /// </summary>
         public NetworkCredential Credentials
