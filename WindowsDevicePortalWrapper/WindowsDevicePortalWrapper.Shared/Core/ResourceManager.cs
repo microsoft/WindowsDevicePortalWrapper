@@ -16,12 +16,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting processes currently running on the deivce.
+        /// API for getting processes currently running on the device.
         /// </summary>
         private static readonly string ProcessesApi = "/api/resourcemanager/processes";
 
         /// <summary>
-        /// Web socket to get the processes currently running on the deivce.
+        /// Web socket to get the processes currently running on the device.
         /// </summary>
         private WebSocket<DeviceProcesses> deviceProcessesWebSocket;
 
@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Starts listening for the running processes on the device with them being retruned via the ProcessesMessageReceived event handler.
+        /// Starts listening for the running processes on the device with them being returned via the ProcessesMessageReceived event handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
         public async Task StartListeningForProcesses()

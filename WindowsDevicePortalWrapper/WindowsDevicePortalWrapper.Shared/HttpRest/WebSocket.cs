@@ -120,7 +120,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.websocket.State != WebSocketState.Closed)
             {
                 await this.websocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                this.StopListeningForMessages();
+
+                // Wait for web socket to no longer be receiving messages.
+                if (this.IsListeningForMessages)
+                {
+                    this.stoppedReceivingMessages.WaitOne();
+                    this.stoppedReceivingMessages.Reset();
+                }
 
                 //Reset websocket as WDP will abort the connection once it receives the close message.
                 this.websocket = new ClientWebSocket();
@@ -203,18 +209,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.stoppedReceivingMessages.Set();
                 this.IsListeningForMessages = false;
-            }
-        }
-
-        /// <summary>
-        /// If the web socket is listneing for messages then wait until it has stopped listening for messages.
-        /// </summary>
-        internal void StopListeningForMessages()
-        {
-            if (this.IsListeningForMessages)
-            {
-                this.stoppedReceivingMessages.WaitOne();
-                this.stoppedReceivingMessages.Reset();
             }
         }
     }

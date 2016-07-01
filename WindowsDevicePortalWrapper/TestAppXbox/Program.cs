@@ -157,6 +157,9 @@ namespace TestApp
 
                 app.processesReceived.WaitOne();
 
+                Task stopListeningForProcessesTask = portal.StopListeningForProcesses();
+                stopListeningForProcessesTask.Wait();
+
                 foreach (DevicePortal.ProcessInfo process in app.deviceProcesses.Processes)
                 {
                     if (!string.IsNullOrEmpty(process.ImageName))
@@ -164,9 +167,6 @@ namespace TestApp
                         Console.WriteLine(process.ImageName);
                     }
                 }
-
-                Task stopListeningForProcessesTask = portal.StopListeningForProcesses();
-                stopListeningForProcessesTask.Wait();
             }
         }
 
@@ -214,11 +214,8 @@ namespace TestApp
         {
             if (args.Message != null)
             {
-                if (this.deviceProcesses == null)
-                {
-                    this.deviceProcesses = args.Message;
-                    this.processesReceived.Set();
-                }
+                this.deviceProcesses = args.Message;
+                this.processesReceived.Set();
             }
         }
     }
