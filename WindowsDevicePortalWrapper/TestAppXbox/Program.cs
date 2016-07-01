@@ -58,9 +58,9 @@ namespace TestApp
             RebootOperation,
 
             /// <summary>
-            /// Processes operation
+            /// List processes operation
             /// </summary>
-            ProcessesOperation,
+            ListProcessesOperation,
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace TestApp
                 rebootTask.Wait();
                 Console.WriteLine("Rebooting device.");
             }
-            else if (operation == OperationType.ProcessesOperation)
+            else if (operation == OperationType.ListProcessesOperation)
             {
                 portal.ProcessesMessageReceived += app.ProcessesReceivedHandler;
 
@@ -195,7 +195,7 @@ namespace TestApp
             }
             else if (operation.Equals("processes", StringComparison.InvariantCultureIgnoreCase))
             {
-                return OperationType.ProcessesOperation;
+                return OperationType.ListProcessesOperation;
             }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +

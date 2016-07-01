@@ -128,7 +128,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     this.stoppedReceivingMessages.Reset();
                 }
 
-                //Reset websocket as WDP will abort the connection once it receives the close message.
+                // Reset websocket as WDP will abort the connection once it receives the close message.
                 this.websocket = new ClientWebSocket();
             }
         }

@@ -107,7 +107,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// object representing the process information
+        /// Object representing the process information
         /// </summary>
         [DataContract]
         public class ProcessInfo

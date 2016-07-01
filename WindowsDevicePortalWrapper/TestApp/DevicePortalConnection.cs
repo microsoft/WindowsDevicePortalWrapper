@@ -7,6 +7,7 @@
 using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
@@ -65,13 +66,13 @@ namespace TestApp
 
                 string absoluteUri = this.Connection.AbsoluteUri;
 
-                if (absoluteUri.StartsWith("https"))
+                if (absoluteUri.StartsWith("https", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return new Uri(absoluteUri.Replace("https", "wss"));
+                    return new Uri(Regex.Replace(absoluteUri, "https", "wss", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
                 }
                 else
                 {
-                    return new Uri(absoluteUri.Replace("http", "ws"));
+                    return new Uri(Regex.Replace(absoluteUri, "http", "ws", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
                 }
             }
         }
