@@ -35,7 +35,7 @@ namespace TestApp
         {
             if (string.IsNullOrWhiteSpace(address))
             {
-                address = "localhost:10080";
+                address = "localhost:50443";
             }
 
             this.Connection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(address), address));
@@ -178,9 +178,8 @@ namespace TestApp
             string address,
             bool requiresHttps = true)
         {
-            return (address.Contains("127.0.0.1") || 
-                    address.Contains("localhost") || 
-                    !requiresHttps) ? "http" : "https";
+            return "https"; // Desktop always uses https. 
+                            //TODO: Replace with DNS-SD call. 
         }
     }
 }
