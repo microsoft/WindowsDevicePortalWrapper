@@ -75,10 +75,25 @@ namespace TestApp
             }
             Console.WriteLine("");
 
+            testDeviceList(portal);
+
             while(true)
             {
                 System.Threading.Thread.Sleep(0);
             }
+        }
+
+        /// <summary>
+        /// Tests the DeviceManager APIs
+        /// </summary
+        private static void testDeviceList(DevicePortal portal)
+        {
+            Task<List<DevicePortal.Device>> getdeviceListTask = portal.GetDeviceList();
+            getdeviceListTask.Wait();
+            List<DevicePortal.Device> deviceList = getdeviceListTask.Result;
+
+            DevicePortal.Device device = deviceList.Find(x => x.FriendlyName!=null); //not all Devices come with a friendly name 
+            Console.WriteLine("First Device: {0}", device.Description);
         }
 
         /// <summary>
