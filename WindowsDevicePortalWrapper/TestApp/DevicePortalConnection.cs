@@ -131,7 +131,7 @@ namespace TestApp
 
             this.Connection = new Uri(
                 string.Format(
-                    "{0}://{1}", 
+                    "{0}://{1}:50443", 
                     uriScheme, 
                     this.Connection.Authority));
         }
@@ -154,7 +154,7 @@ namespace TestApp
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        newConnection = new Uri(string.Format("{0}://{1}:50443", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
                         //// TODO qualified name
                         break;
                     }
