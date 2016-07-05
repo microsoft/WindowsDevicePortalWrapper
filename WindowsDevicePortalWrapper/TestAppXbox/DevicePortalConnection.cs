@@ -7,6 +7,7 @@
 using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
@@ -44,6 +45,31 @@ namespace TestApp
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets Web Socket Connection property
+        /// </summary>
+        public Uri WebSocketConnection
+        {
+            get
+            {
+                if (this.Connection == null)
+                {
+                    return null;
+                }
+
+                string absoluteUri = this.Connection.AbsoluteUri;
+
+                if (absoluteUri.StartsWith("https", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return new Uri(Regex.Replace(absoluteUri, "https", "wss", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+                }
+                else
+                {
+                    return new Uri(Regex.Replace(absoluteUri, "http", "ws", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+                }
+            }
         }
 
         /// <summary>

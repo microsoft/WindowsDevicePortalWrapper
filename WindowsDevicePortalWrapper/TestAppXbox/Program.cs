@@ -6,6 +6,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 
@@ -20,6 +21,16 @@ namespace TestApp
         /// Usage string
         /// </summary>
         private const string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
+
+        /// <summary>
+        /// Event used to indicate that the running processes on the device have been received.
+        /// </summary>
+        private ManualResetEvent processesReceived = new ManualResetEvent(false);
+
+        /// <summary>
+        /// The security key to use when connecting to the network access point.
+        /// </summary>
+        private DevicePortal.DeviceProcesses deviceProcesses = null;
 
         /// <summary>
         /// Operation types
@@ -45,6 +56,11 @@ namespace TestApp
             /// Reboot console operation
             /// </summary>
             RebootOperation,
+
+            /// <summary>
+            /// List processes operation
+            /// </summary>
+            ListProcessesOperation,
         }
 
         /// <summary>
@@ -132,6 +148,26 @@ namespace TestApp
                 rebootTask.Wait();
                 Console.WriteLine("Rebooting device.");
             }
+            else if (operation == OperationType.ListProcessesOperation)
+            {
+                portal.ProcessesMessageReceived += app.ProcessesReceivedHandler;
+
+                Task startListeningForProcessesTask = portal.StartListeningForProcesses();
+                startListeningForProcessesTask.Wait();
+
+                app.processesReceived.WaitOne();
+
+                Task stopListeningForProcessesTask = portal.StopListeningForProcesses();
+                stopListeningForProcessesTask.Wait();
+
+                foreach (DevicePortal.ProcessInfo process in app.deviceProcesses.Processes)
+                {
+                    if (!string.IsNullOrEmpty(process.ImageName))
+                    {
+                        Console.WriteLine(process.ImageName);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -157,10 +193,30 @@ namespace TestApp
             {
                 return OperationType.RebootOperation;
             }
+            else if (operation.Equals("processes", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return OperationType.ListProcessesOperation;
+            }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +
                 "info\n" +
                 "xbluser\n");
+        }
+
+        /// <summary>
+        /// Handler for the ProcessesMessageReceived event.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void ProcessesReceivedHandler(
+            object sender,
+            WebSocketMessageReceivedEventArgs<DevicePortal.DeviceProcesses> args)
+        {
+            if (args.Message != null)
+            {
+                this.deviceProcesses = args.Message;
+                this.processesReceived.Set();
+            }
         }
     }
 }
