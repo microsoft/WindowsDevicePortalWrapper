@@ -25,12 +25,22 @@ namespace TestApp
         /// <summary>
         /// Event used to indicate that the running processes on the device have been received.
         /// </summary>
-        private ManualResetEvent processesReceived = new ManualResetEvent(false);
+        private ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
 
         /// <summary>
-        /// The security key to use when connecting to the network access point.
+        /// The running processes on the device.
         /// </summary>
-        private DevicePortal.DeviceProcesses deviceProcesses = null;
+        private DevicePortal.RunningProcesses runningProcesses = null;
+
+        /// <summary>
+        /// Event used to indicate that the system perf on the device have been received.
+        /// </summary>
+        private ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
+
+        /// <summary>
+        /// The system perf of the device.
+        /// </summary>
+        private DevicePortal.SystemPerformanceInformation systemPerf = null;
 
         /// <summary>
         /// Operation types
@@ -61,6 +71,11 @@ namespace TestApp
             /// List processes operation
             /// </summary>
             ListProcessesOperation,
+
+            /// <summary>
+            /// Get the system performance operation
+            /// </summary>
+            GetSystemPerfOperation,
         }
 
         /// <summary>
@@ -109,6 +124,16 @@ namespace TestApp
                 return;
             }
 
+            bool listen = false;
+            if (parameters.HasParameter(ParameterHelper.Listen))
+            {
+                bool parsedValue = false;
+                if (bool.TryParse(parameters.GetParameterValue(ParameterHelper.Listen), out parsedValue))
+                {
+                    listen = parsedValue;
+                }
+            }
+
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
 
             Task connectTask = portal.Connect(null, null, false);
@@ -150,23 +175,70 @@ namespace TestApp
             }
             else if (operation == OperationType.ListProcessesOperation)
             {
-                portal.ProcessesMessageReceived += app.ProcessesReceivedHandler;
-
-                Task startListeningForProcessesTask = portal.StartListeningForProcesses();
-                startListeningForProcessesTask.Wait();
-
-                app.processesReceived.WaitOne();
-
-                Task stopListeningForProcessesTask = portal.StopListeningForProcesses();
-                stopListeningForProcessesTask.Wait();
-
-                foreach (DevicePortal.ProcessInfo process in app.deviceProcesses.Processes)
+                DevicePortal.RunningProcesses deviceProcesses = null;
+                if (listen)
                 {
-                    if (!string.IsNullOrEmpty(process.ImageName))
+                    portal.RunningProcessesMessageReceived += app.ProcessesReceivedHandler;
+
+                    Task startListeningForProcessesTask = portal.StartListeningForRunningProcesses();
+                    startListeningForProcessesTask.Wait();
+
+                    app.runningProcessesReceived.WaitOne();
+
+                    Task stopListeningForProcessesTask = portal.StopListeningForRunningProcesses();
+                    stopListeningForProcessesTask.Wait();
+
+                    deviceProcesses = app.runningProcesses;
+                }
+                else
+                {
+                    Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcesses();
+                    deviceProcesses = getRunningProcessesTask.Result;
+                }
+
+                foreach (DevicePortal.DeviceProcessInfo process in deviceProcesses.Processes)
+                {
+                    if (!string.IsNullOrEmpty(process.Name))
                     {
-                        Console.WriteLine(process.ImageName);
+                        Console.WriteLine(process.Name);
                     }
                 }
+            }
+            else if (operation == OperationType.GetSystemPerfOperation)
+            {
+                DevicePortal.SystemPerformanceInformation systemPerformanceInformation = null;
+                if (listen)
+                {
+                    portal.SystemPerfMessageReceived += app.SystemPerfReceivedHandler;
+
+                    Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerf();
+                    startListeningForSystemPerfTask.Wait();
+
+                    app.systemPerfReceived.WaitOne();
+
+                    Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcesses();
+                    stopListeningForSystemPerfTask.Wait();
+
+                    systemPerformanceInformation = app.systemPerf;
+                }
+                else
+                {
+                    Task<DevicePortal.SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
+                    systemPerformanceInformation = getRunningProcessesTask.Result;
+                }
+
+                Console.WriteLine("Available Pages: " + systemPerformanceInformation.AvailablePages);
+                Console.WriteLine("Commit Limit: " + systemPerformanceInformation.CommitLimit);
+                Console.WriteLine("Commited Pages: " + systemPerformanceInformation.CommittedPages);
+                Console.WriteLine("CPU Load: " + systemPerformanceInformation.CpuLoad);
+                Console.WriteLine("IoOther Speed: " + systemPerformanceInformation.IoOtherSpeed);
+                Console.WriteLine("IoRead Speed: " + systemPerformanceInformation.IoReadSpeed);
+                Console.WriteLine("IoWrite Speed: " + systemPerformanceInformation.IoWriteSpeed);
+                Console.WriteLine("Non-paged Pool Pages: " + systemPerformanceInformation.NonPagedPoolPages);
+                Console.WriteLine("Paged Pool Pages: " + systemPerformanceInformation.PagedPoolPages);
+                Console.WriteLine("Page Size: " + systemPerformanceInformation.PageSize);
+                Console.WriteLine("Total Installed Kb: " + systemPerformanceInformation.TotalInstalledKb);
+                Console.WriteLine("Total Pages: " + systemPerformanceInformation.TotalPages);
             }
         }
 
@@ -197,6 +269,10 @@ namespace TestApp
             {
                 return OperationType.ListProcessesOperation;
             }
+            else if (operation.Equals("systemPerf", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return OperationType.GetSystemPerfOperation;
+            }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +
                 "info\n" +
@@ -210,12 +286,28 @@ namespace TestApp
         /// <param name="args">The event data.</param>
         private void ProcessesReceivedHandler(
             object sender,
-            WebSocketMessageReceivedEventArgs<DevicePortal.DeviceProcesses> args)
+            WebSocketMessageReceivedEventArgs<DevicePortal.RunningProcesses> args)
         {
             if (args.Message != null)
             {
-                this.deviceProcesses = args.Message;
-                this.processesReceived.Set();
+                this.runningProcesses = args.Message;
+                this.runningProcessesReceived.Set();
+            }
+        }
+
+        /// <summary>
+        /// Handler for the SystemPerfMessageReceived event.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void SystemPerfReceivedHandler(
+            object sender,
+            WebSocketMessageReceivedEventArgs<DevicePortal.SystemPerformanceInformation> args)
+        {
+            if (args.Message != null)
+            {
+                this.systemPerf = args.Message;
+                this.systemPerfReceived.Set();
             }
         }
     }

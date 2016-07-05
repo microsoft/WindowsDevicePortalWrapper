@@ -17,10 +17,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Etw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Networking.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\OsInformation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\PerformanceData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Power.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\RemoteControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\ResourceManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PerformanceData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\TaskManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WiFiManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsErrorReporting.cs" />

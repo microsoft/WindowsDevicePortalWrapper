@@ -91,6 +91,17 @@ namespace TestApp
         }
 
         /// <summary>
+        /// Gets listen (use web socket) identifier string
+        /// </summary>
+        public static string Listen
+        {
+            get
+            {
+                return "listen";
+            }
+        }
+
+        /// <summary>
         /// Helper for getting a parameter value for a key
         /// </summary>
         /// <param name="key">parameter key</param>
