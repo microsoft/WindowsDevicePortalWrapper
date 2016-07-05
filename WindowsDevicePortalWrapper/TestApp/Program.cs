@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 
@@ -44,8 +45,10 @@ namespace TestApp
             }
             catch (Exception e)
             {
-                // TODO: Make a usage display
                 Console.WriteLine(e.Message);
+                Console.WriteLine("Usage: TestApp.exe [-ip:IP_ADDRESS:PORT] -user:USERNAME -pwd:PASSWORD");
+                Console.WriteLine("\t TestApp.exe connects by default to localhost:50443");
+                Console.WriteLine("\t -ip:IP_ADDRESS:PORT, connect to Device Portal running at the specified address.");
                 return;
             }
 
@@ -61,11 +64,36 @@ namespace TestApp
             Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
+            
+            Task<string[]> getTagsTask = portal.GetServiceTags();
+            getTagsTask.Wait();
+            Console.Write("Service Tags: ");
+            if (getTagsTask.Result.Length == 0) Console.Write("<none>");
+            foreach (string s in getTagsTask.Result)
+            {
+                Console.Write(s + ", ");
+            }
+            Console.WriteLine("");
 
-            while (true)
+            testDeviceList(portal);
+
+            while(true)
             {
                 System.Threading.Thread.Sleep(0);
             }
+        }
+
+        /// <summary>
+        /// Tests the DeviceManager APIs
+        /// </summary
+        private static void testDeviceList(DevicePortal portal)
+        {
+            Task<List<DevicePortal.Device>> getdeviceListTask = portal.GetDeviceList();
+            getdeviceListTask.Wait();
+            List<DevicePortal.Device> deviceList = getdeviceListTask.Result;
+
+            DevicePortal.Device device = deviceList.Find(x => x.FriendlyName!=null); //not all Devices come with a friendly name 
+            Console.WriteLine("First Device: {0}", device.Description);
         }
 
         /// <summary>
