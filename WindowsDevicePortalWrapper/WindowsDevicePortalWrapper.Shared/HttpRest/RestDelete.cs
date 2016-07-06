@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     headers.Add("X-" + CsrfTokenName, this.csrfToken);
                 }
 
-                Task<HttpResponseMessage> deleteTask = client.DeleteAsync(uri);
+                Task<HttpResponseMessage> deleteTask = HttpWrapper.DeleteAsync(client, uri);
                 await deleteTask.ConfigureAwait(false);
                 deleteTask.Wait();
 

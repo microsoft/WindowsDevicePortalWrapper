@@ -20,6 +20,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// Http Wrapper to enable replacing the web layer with mocks.
+        /// </summary>
+        public static HttpWrapper HttpWrapper = new DefaultHttpWrapper();
+
+        /// <summary>
         /// Submits the http get request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
@@ -54,7 +59,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     headers.Add(CsrfTokenName, this.csrfToken);
                 }
 
-                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
+                Task<HttpResponseMessage> getTask = HttpWrapper.GetAsync(client, uri);
                 await getTask.ConfigureAwait(false);
                 getTask.Wait();
 

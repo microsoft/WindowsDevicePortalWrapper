@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
 
                 // Send the request
-                Task<HttpResponseMessage> putTask = client.PutAsync(uri, body);
+                Task<HttpResponseMessage> putTask = HttpWrapper.PutAsync(client, uri, body);
                 await putTask.ConfigureAwait(false);
                 putTask.Wait();
 

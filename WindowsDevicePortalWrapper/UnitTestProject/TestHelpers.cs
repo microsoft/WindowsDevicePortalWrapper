@@ -25,6 +25,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         public static void EstablishMockConnection()
         {
+            DevicePortal.HttpWrapper = new MockHttpWrapper();
+
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 
             Task connectTask = TestHelpers.Portal.Connect(null, null, false);

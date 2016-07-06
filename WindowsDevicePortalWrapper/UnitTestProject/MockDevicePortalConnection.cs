@@ -1,79 +1,136 @@
-﻿using System;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="MockDevicePortalConnection.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+
+using System;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
-    internal class MockDevicePortalConnection : IDevicePortalConnection
+    /// <summary>
+    /// Mock implementation of IDevicePortalConnection
+    /// </summary>
+    public class MockDevicePortalConnection : IDevicePortalConnection
     {
+        /// <summary>
+        /// Device Certificate
+        /// </summary>
+        private X509Certificate2 deviceCertificate = null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockDevicePortalConnection"/> class.
+        /// </summary>
+        public MockDevicePortalConnection()
+        {
+        }
+
+        /// <summary>
+        /// Gets Connection property
+        /// </summary>
         public Uri Connection
         {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets Web Socket Connection property
+        /// </summary>
+        public Uri WebSocketConnection
+        {
             get
             {
-                throw new NotImplementedException();
+                return null;
             }
         }
 
+        /// <summary>
+        /// Gets Credentials property
+        /// </summary>
         public NetworkCredential Credentials
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            private set;
         }
 
+        /// <summary>
+        /// Gets or sets device family
+        /// </summary>
         public string Family
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Gets or sets the device name
+        /// </summary>
         public string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
-        public DevicePortal.OperatingSystemInformation OsInfo
+        /// <summary>
+        /// Gets or sets device OS Info
+        /// </summary>
+        public OperatingSystemInformation OsInfo
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Gets or sets the device's qualified name
+        /// </summary>
+        public string QualifiedName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Returns certificate data
+        /// </summary>
+        /// <returns>certificate data</returns>
         public byte[] GetDeviceCertificateData()
         {
-            throw new NotImplementedException();
+            return this.deviceCertificate.GetRawCertData();
         }
 
+        /// <summary>
+        /// Sets certificate data
+        /// </summary>
+        /// <param name="certificateData">certificate data</param>
         public void SetDeviceCertificate(byte[] certificateData)
         {
-            throw new NotImplementedException();
+            X509Certificate2 cert = new X509Certificate2(certificateData);
+            this.deviceCertificate = cert;
         }
 
+        /// <summary>
+        /// Xbox will never update the connection.
+        /// </summary>
+        /// <param name="requiresHttps">https required</param>
         public void UpdateConnection(bool requiresHttps)
         {
-            throw new NotImplementedException();
+            return;
         }
 
-        public void UpdateConnection(DevicePortal.IpConfiguration ipConfig, bool requiresHttps)
+        /// <summary>
+        ///  Xbox will never update the connection.
+        /// </summary>
+        /// <param name="ipConfig">IP info</param>
+        /// <param name="requiresHttps">https required</param>
+        public void UpdateConnection(IpConfiguration ipConfig, bool requiresHttps)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }
