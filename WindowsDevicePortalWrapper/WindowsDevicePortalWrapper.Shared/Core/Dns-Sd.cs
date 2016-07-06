@@ -26,6 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         private static readonly string TagsApi = "api/dns-sd/tags";
 
+        /// <summary>
         /// Gets the name of the device.
         /// </summary>
         /// <returns>Array of strings, each one an individual tag.</returns>
@@ -65,7 +66,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             await this.Delete(
                 TagApi,
-                String.Format("tagValue={0}", tagValue));
+                string.Format("tagValue={0}", tagValue));
         }
 
         #region Data contract
@@ -77,16 +78,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ServiceTags
         {
             /// <summary>
-            /// Gets the DNS-SD service tags
-            /// </summary
+            /// Gets or sets the DNS-SD service tags
+            /// </summary>
             [DataMember(Name = "tags")]
-            public List<String> Tags
+            public List<string> Tags
             {
                 get; set;
             }
 
             #endregion Data contract
-
         }
     }
 }

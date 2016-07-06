@@ -65,39 +65,49 @@ namespace TestApp
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
 
-            testTagListing(portal);
+            TestTagListing(portal);
 
-            testDeviceList(portal);
+            TestDeviceList(portal);
 
-            while(true)
+            while (true)
             {
                 System.Threading.Thread.Sleep(0);
             }
         }
 
-        private static void testTagListing(DevicePortal portal)
+        /// <summary>
+        /// Tests the DNS-SD APIs
+        /// </summary>
+        /// <param name="portal">DevicePortal object used for testing</param>
+        private static void TestTagListing(DevicePortal portal)
         {
-            Task<List<String>> getTagsTask = portal.GetServiceTags();
+            Task<List<string>> getTagsTask = portal.GetServiceTags();
             getTagsTask.Wait();
             Console.Write("Service Tags: ");
-            if (getTagsTask.Result.Count == 0) Console.Write("<none>");
+            if (getTagsTask.Result.Count == 0)
+            {
+                Console.Write("<none>");
+            }
+
             foreach (string s in getTagsTask.Result)
             {
                 Console.Write(s + ", ");
             }
-            Console.WriteLine("");
+
+            Console.WriteLine(string.Empty);
         }
 
         /// <summary>
         /// Tests the DeviceManager APIs
-        /// </summary
-        private static void testDeviceList(DevicePortal portal)
+        /// </summary>
+        /// <param name="portal">DevicePortal object used for testing</param>
+        private static void TestDeviceList(DevicePortal portal)
         {
             Task<List<DevicePortal.Device>> getdeviceListTask = portal.GetDeviceList();
             getdeviceListTask.Wait();
             List<DevicePortal.Device> deviceList = getdeviceListTask.Result;
 
-            DevicePortal.Device device = deviceList.Find(x => x.FriendlyName!=null); //not all Devices come with a friendly name 
+            DevicePortal.Device device = deviceList.Find(x => x.FriendlyName != null); //not all Devices come with a friendly name 
             Console.WriteLine("First Device: {0}", device.Description);
         }
 
