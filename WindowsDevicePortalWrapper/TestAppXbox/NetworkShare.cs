@@ -40,7 +40,7 @@ namespace TestApp
             nr.Comment = string.Empty;
             nr.Provider = string.Empty;
 
-            //Create the share
+            // Create the share
             return WNetUseConnection(IntPtr.Zero, ref nr, password, username, 0, null, null, null);
         }
 

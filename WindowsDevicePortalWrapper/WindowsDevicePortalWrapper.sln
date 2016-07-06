@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsDevicePortalWrapper", "WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj", "{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppXbox", "TestAppXbox\TestAppXbox.csproj", "{1F3CA46B-1E52-418E-A293-23F3FA3BD213}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppIoT", "TestAppIoT\TestAppIoT.csproj", "{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,22 @@ Global
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x64.Build.0 = Release|Any CPU
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x86.ActiveCfg = Release|Any CPU
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x86.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|ARM.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x64.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
