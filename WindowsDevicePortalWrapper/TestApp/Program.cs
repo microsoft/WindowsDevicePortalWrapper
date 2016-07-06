@@ -64,7 +64,19 @@ namespace TestApp
             Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
-            
+
+            testTagListing(portal);
+
+            testDeviceList(portal);
+
+            while(true)
+            {
+                System.Threading.Thread.Sleep(0);
+            }
+        }
+
+        private static void testTagListing(DevicePortal portal)
+        {
             Task<List<String>> getTagsTask = portal.GetServiceTags();
             getTagsTask.Wait();
             Console.Write("Service Tags: ");
@@ -74,13 +86,6 @@ namespace TestApp
                 Console.Write(s + ", ");
             }
             Console.WriteLine("");
-
-            testDeviceList(portal);
-
-            while(true)
-            {
-                System.Threading.Thread.Sleep(0);
-            }
         }
 
         /// <summary>
