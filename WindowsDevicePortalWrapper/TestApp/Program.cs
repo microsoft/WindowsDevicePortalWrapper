@@ -65,10 +65,10 @@ namespace TestApp
             getNameTask.Wait();
             Console.WriteLine("Device name: " + getNameTask.Result);
             
-            Task<string[]> getTagsTask = portal.GetServiceTags();
+            Task<List<String>> getTagsTask = portal.GetServiceTags();
             getTagsTask.Wait();
             Console.Write("Service Tags: ");
-            if (getTagsTask.Result.Length == 0) Console.Write("<none>");
+            if (getTagsTask.Result.Count == 0) Console.Write("<none>");
             foreach (string s in getTagsTask.Result)
             {
                 Console.Write(s + ", ");

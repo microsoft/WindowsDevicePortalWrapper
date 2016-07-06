@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the name of the device.
         /// </summary>
         /// <returns>Array of strings, each one an individual tag.</returns>
-        public async Task<string[]> GetServiceTags()
+        public async Task<List<string>> GetServiceTags()
         {
             ServiceTags tags = await this.Get<ServiceTags>(TagsApi);
             return tags.Tags;
@@ -79,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the DNS-SD service tags
             /// </summary
             [DataMember(Name = "tags")]
-            public string[] Tags
+            public List<String> Tags
             {
                 get; set;
             }
