@@ -41,48 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AppDeployment.cs" />
-    <Compile Include="Core\DeviceManager.cs" />
-    <Compile Include="Core\DumpCollection.cs" />
-    <Compile Include="Core\Etw.cs" />
-    <Compile Include="Core\AppFileExplorer.cs" />
-    <Compile Include="Core\Networking.cs" />
-    <Compile Include="Core\OsInformation.cs" />
-    <Compile Include="Core\PerformanceData.cs" />
-    <Compile Include="Core\Power.cs" />
-    <Compile Include="Core\RemoteControl.cs" />
-    <Compile Include="Core\TaskManager.cs" />
-    <Compile Include="Core\WiFiManagement.cs" />
-    <Compile Include="Core\WindowsErrorReporting.cs" />
-    <Compile Include="Core\WindowsPerformanceRecorder.cs" />
-    <Compile Include="DevicePortal.cs" />
-    <Compile Include="Core\Dns-Sd.cs" />
-    <Compile Include="Events\ApplicationInstallStatus.cs">
-      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Events\ConnectionStatus.cs" />
-    <Compile Include="Exceptions\DevicePortalException.cs" />
-    <Compile Include="HoloLens\HolographicOs.cs" />
-    <Compile Include="HoloLens\HolographicPerception.cs" />
-    <Compile Include="HoloLens\HolographicThermal.cs" />
-    <Compile Include="HoloLens\MixedRealityCapture.cs" />
-    <Compile Include="HoloLens\PerceptionSimulationPlayback.cs" />
-    <Compile Include="HoloLens\PerceptionSimulationRecording.cs" />
-    <Compile Include="HttpRest\RestPut.cs" />
-    <Compile Include="HttpRest\ServerCertificateValidation.cs" />
-    <Compile Include="HttpRest\RestDelete.cs" />
-    <Compile Include="HttpRest\RestGet.cs" />
-    <Compile Include="HttpRest\RestPost.cs" />
-    <Compile Include="Interfaces\IDevicePortalConnection.cs">
-      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="Xbox\SmbShare.cs" />
-    <Compile Include="Xbox\UserManagement.cs" />
-    <Compile Include="Xbox\XboxAppDeployment.cs" />
   </ItemGroup>
   <ItemGroup />
+  <Import Project="..\WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

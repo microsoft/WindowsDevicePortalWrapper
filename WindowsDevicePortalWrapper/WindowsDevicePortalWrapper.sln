@@ -13,9 +13,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppXbox", "TestAppXbox\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppIoT", "TestAppIoT\TestAppIoT.csproj", "{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsDevicePortalWrapper.UniversalWindows", "WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.csproj", "{F2D8B145-A737-494E-AEF4-508F9D02E0D7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WindowsDevicePortalWrapper.Shared", "WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.shproj", "{AF72A46D-5D30-4FB4-8D3E-B516ED19F9A4}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{6a9e862e-5cda-4a8a-bbc0-56e9ea921e39}*SharedItemsImports = 4
+		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{af72a46d-5d30-4fb4-8d3e-b516ed19f9a4}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -107,6 +115,22 @@ Global
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x64.Build.0 = Release|Any CPU
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x86.ActiveCfg = Release|Any CPU
 		{1053A1E3-BA27-4916-A94D-3DD7FEB6F463}.Release|x86.Build.0 = Release|Any CPU
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|ARM.Build.0 = Debug|ARM
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x64.ActiveCfg = Debug|x64
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x64.Build.0 = Debug|x64
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x86.ActiveCfg = Debug|x86
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x86.Build.0 = Debug|x86
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|ARM.ActiveCfg = Release|ARM
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|ARM.Build.0 = Release|ARM
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x64.ActiveCfg = Release|x64
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x64.Build.0 = Release|x64
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x86.ActiveCfg = Release|x86
+		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x86.Build.0 = Release|x86
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.ActiveCfg = Debug|Any CPU
