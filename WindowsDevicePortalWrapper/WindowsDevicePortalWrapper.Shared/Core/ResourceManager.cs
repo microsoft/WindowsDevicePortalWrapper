@@ -173,7 +173,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public double WorkingSetSize { get; set; }
 
             /// <summary>
-            /// Gets or sets is running
+            /// Gets or sets a value indicating whether the process is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
             public bool IsRunning { get; set; }
@@ -203,7 +203,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public ProcessVersion Version { get; set; }
 
             /// <summary>
-            /// Gets or sets is XAP
+            /// Gets or sets a value indicating whether this is a XAP package.
             /// </summary>
             [DataMember(Name = "IsXAP")]
             public bool IsXAP { get; set; }

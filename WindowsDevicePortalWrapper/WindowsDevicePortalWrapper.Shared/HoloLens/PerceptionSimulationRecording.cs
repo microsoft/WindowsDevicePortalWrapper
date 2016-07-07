@@ -28,6 +28,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         private static readonly string StopHolographicSimulationRecordingApi = "api/holographic/simulation/recording/stop";
 
+        /// <summary>
+        /// Determines if we are doing a holographic simulation recording
+        /// </summary>
+        /// <returns>Whether a holographic simulation is being recorded.</returns>
         public async Task<bool> IsHolographicSimulationRecording()
         {
             // TODO: implement the datacontract and return the "recording" value

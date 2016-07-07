@@ -5,12 +5,10 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
-using System.IO;
-using System.Collections.Generic;
 
 namespace MockDataGenerator
 {
@@ -27,7 +25,8 @@ namespace MockDataGenerator
         /// <summary>
         /// Endpoints for REST calls to populate
         /// </summary>
-        private static readonly string[] Endpoints = {
+        private static readonly string[] Endpoints = 
+        {
             DevicePortal.DeviceFamilyApi,
             DevicePortal.MachineNameApi,
             DevicePortal.OsInfoApi,
@@ -84,6 +83,7 @@ namespace MockDataGenerator
                 {
                     Console.WriteLine("Failed to connect to WDP for unknown reason.");
                 }
+
                 return;
             }
 

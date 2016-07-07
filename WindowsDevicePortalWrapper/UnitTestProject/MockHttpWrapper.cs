@@ -1,10 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="MockHttpWrapper.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -69,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public override async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
 
             return await task;
@@ -84,7 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public override async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
 
             return await task;
@@ -99,7 +105,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public override async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
 
             return await task;
@@ -113,7 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public override async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
 
             return await task;
@@ -122,6 +128,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Http Stored Response.
         /// </summary>
+        /// <param name="state">The URI we are looking for a canned response for.</param>
         /// <returns>An HttpResponseMessage previously stored for this URI.</returns>
         private HttpResponseMessage HttpStoredResponse(object state)
         {
@@ -129,7 +136,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.IsNotNull(uri);
 
-            foreach(KeyValuePair<string, HttpResponseMessage> storedResponse in this.mockResponses)
+            foreach (KeyValuePair<string, HttpResponseMessage> storedResponse in this.mockResponses)
             {
                 if (uri.AbsolutePath.Contains(storedResponse.Key))
                 {

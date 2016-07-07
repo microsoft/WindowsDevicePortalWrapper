@@ -7,8 +7,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Net.Http;
-using System.IO;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -33,12 +31,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public static void EstablishMockConnection()
         {
             TestHelpers.MockHttpWrapper = new MockHttpWrapper();
-            DevicePortal.HttpWrapper = TestHelpers.MockHttpWrapper;
-
             TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.DeviceFamilyApi);
             TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.OsInfoApi);
 
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
+            TestHelpers.Portal.HttpWrapper = TestHelpers.MockHttpWrapper;
 
             Task connectTask = TestHelpers.Portal.Connect(updateConnection: false);
             connectTask.Wait();

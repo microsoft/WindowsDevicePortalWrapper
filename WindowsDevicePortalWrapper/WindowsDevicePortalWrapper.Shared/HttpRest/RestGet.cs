@@ -20,9 +20,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// Http Wrapper to enable replacing the web layer with mocks.
+        /// Gets or sets the Http Wrapper to enable replacing the web layer with mocks.
         /// </summary>
-        public static HttpWrapper HttpWrapper = new DefaultHttpWrapper();
+        public HttpWrapper HttpWrapper { get; set; }
 
         /// <summary>
         /// Submits the http get request to the specified uri.
