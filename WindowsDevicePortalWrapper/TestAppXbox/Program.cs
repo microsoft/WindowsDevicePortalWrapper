@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
+using System.IO;
 
 namespace TestApp
 {
@@ -109,9 +110,10 @@ namespace TestApp
                 return;
             }
 
-            DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
+            DevicePortalConnection connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+            DevicePortal portal = new DevicePortal(connection);
 
-            Task connectTask = portal.Connect(null, null, false);
+            Task connectTask = portal.Connect(updateConnection: false);
             connectTask.Wait();
 
             if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)

@@ -21,9 +21,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
+        public override async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
         {
-            return client.GetAsync(uri);
+            return await client.GetAsync(uri);
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        public override async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
         {
-            return client.PostAsync(uri, content);
+            return await client.PostAsync(uri, content);
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        public override async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
         {
-            return client.PutAsync(uri, content);
+            return await client.PutAsync(uri, content);
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        public override async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
         {
-            return client.DeleteAsync(uri);
+            return await client.DeleteAsync(uri);
         }
     }
 }

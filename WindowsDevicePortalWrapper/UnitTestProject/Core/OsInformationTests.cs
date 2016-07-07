@@ -27,17 +27,28 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Cleanup which should run after each test.
+        /// </summary>
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            TestHelpers.MockHttpWrapper.ResetMockResponses();
+        }
+
+        /// <summary>
         /// First basic test.
         /// </summary>
         [TestMethod]
         public void OsInformationTest()
         {
-            Console.WriteLine("OS version: " + TestHelpers.Portal.OperatingSystemVersion);
-            Console.WriteLine("Platform: " + TestHelpers.Portal.PlatformName + " (" + TestHelpers.Portal.Platform.ToString() + ")");
+            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.MachineNameApi);
 
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();
-            Console.WriteLine("Device name: " + getNameTask.Result);
+
+            Assert.IsNotNull(TestHelpers.Portal.OperatingSystemVersion);
+            Assert.IsNotNull(TestHelpers.Portal.Platform);
+            Assert.IsNotNull(getNameTask.Result);
         }
     }
 }

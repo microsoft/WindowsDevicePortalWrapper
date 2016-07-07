@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// REST endpoint for registering a package from a loose folder
         /// </summary>
-        private static readonly string RegisterPackageApi = "api/app/packagemanager/register";
+        public static readonly string RegisterPackageApi = "api/app/packagemanager/register";
 
         /// <summary>
         /// Registers a loose app on the console

@@ -1,29 +1,145 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
-    internal class MockHttpWrapper : HttpWrapper
+    /// <summary>
+    /// Mock implementation of HttpWrapper.
+    /// </summary>
+    public class MockHttpWrapper : HttpWrapper
     {
-        public override Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        /// <summary>
+        /// Dictionary of mock responses from endpoints to the stored response message
+        /// </summary>
+        private Dictionary<string, HttpResponseMessage> mockResponses = new Dictionary<string, HttpResponseMessage>();
+
+        /// <summary>
+        /// Clears all mock responses. Used between tests to ensure mocks don't interfere with other tests.
+        /// </summary>
+        public void ResetMockResponses()
         {
-            throw new NotImplementedException();
+            this.mockResponses.Clear();
         }
 
-        public override Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
+        /// <summary>
+        /// Adds a given response as a mock for the endpoint.
+        /// </summary>
+        /// <param name="endpoint">The endpoint to be mocked.</param>
+        /// <param name="response">The response to return.</param>
+        public void AddMockResponse(string endpoint, HttpResponseMessage response)
         {
-            throw new NotImplementedException();
+            this.mockResponses.Add(endpoint, response);
         }
 
-        public override Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        /// <summary>
+        /// Adds a default response for this endpoint, device agnostic.
+        /// </summary>
+        /// <param name="endpoint">Endpoint we are mocking.</param>
+        public void AddMockResponse(string endpoint)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+
+            // Add the Content from the default file if one exists.
+            string filepath = Path.Combine("MockData", "Defaults", endpoint.Replace('/', '-') + "_Default.dat");
+            if (File.Exists(filepath))
+            {
+                using (var fileStream = File.OpenRead(filepath))
+                {
+                    MemoryStream stream = new MemoryStream();
+                    fileStream.Seek(0, SeekOrigin.Begin);
+                    fileStream.CopyTo(stream);
+
+                    response.Content = new ByteArrayContent(stream.ToArray());
+                }
+            }
+
+            this.mockResponses.Add(endpoint, response);
         }
 
-        public override Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        /// <summary>
+        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// </summary>
+        /// <param name="client">HTTP Client object.</param>
+        /// <param name="uri">The target URI.</param>
+        /// <returns>Async task returning the response.</returns>
+        public override async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
         {
-            throw new NotImplementedException();
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            task.Start();
+
+            return await task;
+        }
+
+        /// <summary>
+        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// </summary>
+        /// <param name="client">HTTP Client object.</param>
+        /// <param name="uri">The target URI.</param>
+        /// <param name="content">The HTTP body of the request.</param>
+        /// <returns>Async task returning the response.</returns>
+        public override async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        {
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            task.Start();
+
+            return await task;
+        }
+
+        /// <summary>
+        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// </summary>
+        /// <param name="client">HTTP Client object.</param>
+        /// <param name="uri">The target URI.</param>
+        /// <param name="content">The HTTP body of the request.</param>
+        /// <returns>Async task returning the response.</returns>
+        public override async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        {
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            task.Start();
+
+            return await task;
+        }
+
+        /// <summary>
+        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// </summary>
+        /// <param name="client">HTTP Client object.</param>
+        /// <param name="uri">The target URI.</param>
+        /// <returns>Async task returning the response.</returns>
+        public override async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        {
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(HttpStoredResponse, uri);
+            task.Start();
+
+            return await task;
+        }
+
+        /// <summary>
+        /// Http Stored Response.
+        /// </summary>
+        /// <returns>An HttpResponseMessage previously stored for this URI.</returns>
+        private HttpResponseMessage HttpStoredResponse(object state)
+        {
+            Uri uri = state as Uri;
+
+            Assert.IsNotNull(uri);
+
+            foreach(KeyValuePair<string, HttpResponseMessage> storedResponse in this.mockResponses)
+            {
+                if (uri.AbsolutePath.Contains(storedResponse.Key))
+                {
+                    return storedResponse.Value;
+                }
+            }
+
+            Assert.Fail(string.Format("Failed to find a stored response for {0}", uri.AbsolutePath));
+
+            return null;
         }
     }
 }

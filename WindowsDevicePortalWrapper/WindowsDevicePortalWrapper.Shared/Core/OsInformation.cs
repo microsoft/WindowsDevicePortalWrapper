@@ -19,17 +19,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting the device family.
         /// </summary>
-        private static readonly string DeviceFamilyApi = "api/os/devicefamily";
+        public static readonly string DeviceFamilyApi = "api/os/devicefamily";
 
         /// <summary>
         /// API for getting the machine name.
         /// </summary>
-        private static readonly string MachineNameApi = "api/os/machinename";
+        public static readonly string MachineNameApi = "api/os/machinename";
 
         /// <summary>
         /// API for getting the OS information.
         /// </summary>
-        private static readonly string OsInfoApi = "api/os/info";
+        public static readonly string OsInfoApi = "api/os/info";
 
         /// <summary>
         /// Device portal platforms

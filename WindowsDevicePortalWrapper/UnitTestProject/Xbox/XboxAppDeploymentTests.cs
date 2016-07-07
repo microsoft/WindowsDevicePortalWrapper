@@ -32,12 +32,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void XboxAppDeploymentTest()
         {
-            Console.WriteLine("OS version: " + TestHelpers.Portal.OperatingSystemVersion);
-            Console.WriteLine("Platform: " + TestHelpers.Portal.PlatformName + " (" + TestHelpers.Portal.Platform.ToString() + ")");
+            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.RegisterPackageApi);
 
-            Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
-            getNameTask.Wait();
-            Console.WriteLine("Device name: " + getNameTask.Result);
+            Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
+            registerTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, registerTask.Status);
         }
     }
 }
