@@ -276,7 +276,11 @@ namespace TestApp
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +
                 "info\n" +
-                "xbluser\n");
+                "xbluser\n" +
+                "install\n" +
+                "reboot\n" +
+                "processes\n" +
+                "systemPerf\n");
         }
 
         /// <summary>
