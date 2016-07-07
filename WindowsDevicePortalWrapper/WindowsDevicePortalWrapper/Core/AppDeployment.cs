@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
-                this.SetCrsfToken(client, "GET");
+                this.ApplyCsrfToken(client, "GET");
 
                 Task<HttpResponseMessage> getTask = client.GetAsync(uri);
                 await getTask.ConfigureAwait(false);

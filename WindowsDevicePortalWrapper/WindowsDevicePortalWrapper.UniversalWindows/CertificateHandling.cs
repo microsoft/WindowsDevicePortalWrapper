@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Cryptography.Certificates;
@@ -48,7 +49,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     using (HttpClient client = new HttpClient())
                     {
                         IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
-                        while (responseOperation.Status != AsyncStatus.Completed)
+                        TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
+                        while (!responseAwaiter.IsCompleted)
                         { 
                         }
 
@@ -57,7 +59,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             using (IHttpContent messageContent = response.Content)
                             {
                                 IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                                while (bufferOperation.Status != AsyncStatus.Completed)
+                                TaskAwaiter<IBuffer> readBufferAwaiter = bufferOperation.GetAwaiter();
+                                while (!readBufferAwaiter.IsCompleted)
                                 { 
                                 }
 

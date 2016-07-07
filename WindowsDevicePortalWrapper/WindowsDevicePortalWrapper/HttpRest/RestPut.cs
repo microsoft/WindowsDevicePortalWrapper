@@ -32,7 +32,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.SetCrsfToken(client, "PUT");
+                this.ApplyCsrfToken(client, "PUT");
 
                 // Send the request
                 Task<HttpResponseMessage> putTask = client.PutAsync(uri, body);

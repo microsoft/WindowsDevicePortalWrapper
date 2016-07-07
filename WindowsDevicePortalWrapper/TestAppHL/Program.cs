@@ -105,6 +105,9 @@ namespace TestApp
             getIpdTask.Wait();
             Console.WriteLine("IPD: " + getIpdTask.Result.ToString());
 
+            Task setIpdTask = portal.SetInterPupilaryDistance(67.5f);
+            setIpdTask.Wait();
+
             Task<BatteryState> batteryTask = portal.GetBatteryState();
             batteryTask.Wait();
             Console.WriteLine("Battery level: " + batteryTask.Result.Level);

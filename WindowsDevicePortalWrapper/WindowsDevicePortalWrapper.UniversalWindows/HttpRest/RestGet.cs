@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Credentials;
@@ -38,10 +39,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.SetCrsfToken(client, "GET");
+                this.ApplyCsrfToken(client, "GET");
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
-                while (responseOperation.Status != AsyncStatus.Completed)
+                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
+                while (!responseAwaiter.IsCompleted)
                 { 
                 }
 
@@ -52,18 +54,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         throw new DevicePortalException(response);
                     }
 
-                    // If the response sets a CSRF token, store that for future requests
-                    string cookie;
-                    bool hasCookie = response.Headers.TryGetValue("Set-Cookie", out cookie);
-
-                    if (hasCookie)
-                    {
-                        string csrfTokenNameWithEquals = CsrfTokenName + "=";
-                        if (cookie.StartsWith(csrfTokenNameWithEquals))
-                        {
-                            this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
-                        }
-                    }
+                    this.RetrieveCsrfToken(response);
 
                     using (IHttpContent messageContent = response.Content)
                     {

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Credentials;
@@ -34,10 +35,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.SetCrsfToken(client, "DELETE");
+                this.ApplyCsrfToken(client, "DELETE");
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.DeleteAsync(uri);
-                while (responseOperation.Status != AsyncStatus.Completed)
+                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
+                while (!responseAwaiter.IsCompleted)
                 { 
                 }
 

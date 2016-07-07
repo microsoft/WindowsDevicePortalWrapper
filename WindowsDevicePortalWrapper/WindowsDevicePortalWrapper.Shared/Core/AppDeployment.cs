@@ -134,7 +134,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                                              
                 using (HttpClient client = new HttpClient(requestSettings))
                 {
-                    this.SetCrsfToken(client, "POST");
+                    this.ApplyCsrfToken(client, "POST");
 
                     using (MemoryStream dataStream = new MemoryStream())
                     {
@@ -193,7 +193,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             content.Headers.TryAppendWithoutValidation(contentTypeHeaderName, contentType);
 
                             IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, null);
-                            while (responseOperation.Status != AsyncStatus.Completed)
+                            System.Runtime.CompilerServices.TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
+                            while (!responseAwaiter.IsCompleted)
                             { 
                             }
 

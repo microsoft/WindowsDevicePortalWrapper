@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Credentials;
@@ -37,11 +38,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.SetCrsfToken(client, "PUT");
+                this.ApplyCsrfToken(client, "PUT");
 
                 // Send the request
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PutAsync(uri, null);
-                while (responseOperation.Status != AsyncStatus.Completed)
+                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
+                while (!responseAwaiter.IsCompleted)
                 { 
                 }
 

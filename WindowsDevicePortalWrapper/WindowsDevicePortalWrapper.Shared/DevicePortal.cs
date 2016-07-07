@@ -32,17 +32,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
-        /// Header name for a CSRF-Token
-        /// </summary>
-        private static readonly string CsrfTokenName = "CSRF-Token";
-        
-        /// <summary>
-        /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
-        /// This token is intended to prevent a security vulnerability from cross site forgery.
-        /// </summary>
-        private string csrfToken = string.Empty;
-
-        /// <summary>
         /// Device connection object.
         /// </summary>
         private IDevicePortalConnection deviceConnection;

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 #if !WINDOWS_UWP
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 #else
@@ -20,11 +21,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// Sets the CSRF Token header
+        /// Header name for a CSRF-Token
         /// </summary>
-        /// <param name="client">The client on which to have the header set.</param>
+        private static readonly string CsrfTokenName = "CSRF-Token";
+        
+        /// <summary>
+        /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
+        /// This token is intended to prevent a security vulnerability from cross site forgery.
+        /// </summary>
+        private string csrfToken = string.Empty;
+
+        /// <summary>
+        /// Applies the CSRF token to the HTTP client.
+        /// </summary>
+        /// <param name="client">The HTTP client on which to have the header set.</param>
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
-        public void SetCrsfToken(
+        public void ApplyCsrfToken(
             HttpClient client,
             string method)
         {
@@ -44,6 +56,39 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
 
             headers.Add(headerName, headerValue);
+        }
+
+        /// <summary>
+        /// Retrieves the CSRF token from the HTTP response and stores it.
+        /// </summary>
+        /// <param name="client">The HTTP client on which to have the header set.</param>
+        public void RetrieveCsrfToken(HttpResponseMessage response)
+        {
+            // If the response sets a CSRF token, store that for future requests.
+#if WINDOWS_UWP
+                    string cookie;
+                    if (response.Headers.TryGetValue("Set-Cookie", out cookie))
+                    {
+                        string csrfTokenNameWithEquals = CsrfTokenName + "=";
+                        if (cookie.StartsWith(csrfTokenNameWithEquals))
+                        {
+                            this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
+                        }
+                    }
+#else
+                    IEnumerable<string> cookies;
+                    if (response.Headers.TryGetValues("Set-Cookie", out cookies))
+                    {
+                        foreach (string cookie in cookies)
+                        {
+                            string csrfTokenNameWithEquals = CsrfTokenName + "=";
+                            if (cookie.StartsWith(csrfTokenNameWithEquals))
+                            {
+                                this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
+                            }
+                        }
+                    }
+#endif
         }
     }
 }

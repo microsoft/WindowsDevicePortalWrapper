@@ -5,7 +5,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -43,7 +42,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
-                this.SetCrsfToken(client, "GET");
+                this.ApplyCsrfToken(client, "GET");
 
                 Task<HttpResponseMessage> getTask = client.GetAsync(uri);
                 await getTask.ConfigureAwait(false);
@@ -56,21 +55,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         throw new DevicePortalException(response);
                     }
 
-                    // If the response sets a CSRF token, store that for future requests
-                    IEnumerable<string> cookies;
-                    bool hasCookies = response.Headers.TryGetValues("Set-Cookie", out cookies);
-
-                    if (hasCookies)
-                    {
-                        foreach (string cookie in cookies)
-                        {
-                            string csrfTokenNameWithEquals = CsrfTokenName + "=";
-                            if (cookie.StartsWith(csrfTokenNameWithEquals))
-                            {
-                                this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
-                            }
-                        }
-                    }
+                    this.RetrieveCsrfToken(response);
 
                     using (HttpContent content = response.Content)
                     {
