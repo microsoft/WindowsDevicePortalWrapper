@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
@@ -17,6 +18,11 @@ namespace TestApp
     /// </summary>
     internal class Program : IDisposable
     {
+        /// <summary>
+        /// Usage string
+        /// </summary>
+        private const string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/ssid:<network ssid> /key:<network key>]";
+
         /// <summary>
         /// The IP address of the device.
         /// </summary>
@@ -66,18 +72,25 @@ namespace TestApp
             }
             catch (Exception e)
             {
-                // TODO: Make a usage display
                 Console.WriteLine(e.Message);
+                Console.WriteLine();
+                Console.WriteLine(GeneralUsageMessage);
                 return;
             }
 
-            DevicePortal portal = new DevicePortal(new DevicePortalConnection(app.ipAddress, app.userName, app.password));
+            DevicePortal portal = new DevicePortal(
+                new DevicePortalConnection(
+                    app.ipAddress, 
+                    app.userName, 
+                    app.password));
             portal.ConnectionStatus += app.ConnectionStatusHandler;
             portal.AppInstallStatus += app.AppInstallStatusHandler;
 
             app.mreConnected.Reset();
             Console.WriteLine("Connecting...");
-            Task t = portal.Connect(app.ssid, app.key);
+            Task t = portal.Connect(
+                app.ssid, 
+                app.key);
             app.mreConnected.WaitOne();
 
             Console.WriteLine("Connected to: " + portal.Address);

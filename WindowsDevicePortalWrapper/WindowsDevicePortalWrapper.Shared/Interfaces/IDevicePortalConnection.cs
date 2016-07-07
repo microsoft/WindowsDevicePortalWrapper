@@ -53,12 +53,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         byte[] GetDeviceCertificateData();
 
         /// <summary>
-        /// Provides the raw data of the device's root certificate.
+        /// Validates and sets the device certificate.
         /// </summary>
-        /// <param name="certificateData">Byte array containing the certificate data.</param>
+        /// <param name="certificate">The device's root certificate.</param>
         /// <remarks>How this data is used and/or stored is implementation specific.</remarks>
-        void SetDeviceCertificate(byte[] certificateData);
-
+#if WINDOWS_UWP
+        void SetDeviceCertificate(Windows.Security.Cryptography.Certificates.Certificate certificate);
+#else
+        void SetDeviceCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2 certificate);
+#endif
         /// <summary>
         /// Updates the http security requirements for device communication.
         /// </summary>

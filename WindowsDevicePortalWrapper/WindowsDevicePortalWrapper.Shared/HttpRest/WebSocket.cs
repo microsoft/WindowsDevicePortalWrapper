@@ -4,6 +4,8 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+// TODO: enable this once the rest of the code is UWP friendly
+#if !WINDOWS_UWP 
 using System;
 using System.IO;
 using System.Net;
@@ -213,3 +215,4 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
     }
 }
+#endif // !WINDOWS_UWP

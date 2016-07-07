@@ -20,6 +20,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         private static readonly string ProcessesApi = "/api/resourcemanager/processes";
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Web socket to get the processes currently running on the device.
         /// </summary>
@@ -90,6 +91,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             args);
             }
         }
+#endif // !WINDOWS_UWP
 
         #region Data contract
 
@@ -173,7 +175,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public double WorkingSetSize { get; set; }
 
             /// <summary>
-            /// Gets or sets is running
+            /// Gets or sets a value indicating whether or not the process is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
             public bool IsRunning { get; set; }
@@ -203,7 +205,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public ProcessVersion Version { get; set; }
 
             /// <summary>
-            /// Gets or sets is XAP
+            /// Gets or sets a value indicating whether or not the package is a XAP package
             /// </summary>
             [DataMember(Name = "IsXAP")]
             public bool IsXAP { get; set; }

@@ -52,7 +52,7 @@ namespace TestAppIoT
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(app.ipAddress, app.userName, app.password)); 
 
             Console.WriteLine("Connecting...");
-            Task t = portal.Connect(updateConnection : false);
+            Task t = portal.Connect(updateConnection: false);
             t.Wait();
             Console.WriteLine("Connected to: " + portal.Address);
             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);

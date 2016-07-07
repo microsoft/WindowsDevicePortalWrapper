@@ -7,11 +7,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if !WINDOWS_UWP
 using System.Net;
 using System.Net.Http;
+#endif // !WINDOWS_UWP
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+#if WINDOWS_UWP
+using Windows.Foundation;
+using Windows.Security.Credentials;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using Windows.Web.Http.Headers;
+#endif
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -45,54 +54,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// API for getting installation status.
-        /// </summary>
-        /// <returns>The status</returns>
-        public async Task<ApplicationInstallStatus> GetInstallStatus()
-        {
-            ApplicationInstallStatus status = ApplicationInstallStatus.None;
-
-            Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
-                InstallStateApi);
-
-            WebRequestHandler handler = new WebRequestHandler();
-            handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-            using (HttpClient client = new HttpClient(handler))
-            {
-                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
-                await getTask.ConfigureAwait(false);
-                getTask.Wait();
-
-                using (HttpResponseMessage response = getTask.Result)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            // Status code: 200
-                            status = ApplicationInstallStatus.Completed;
-                        }
-                        else if (response.StatusCode == HttpStatusCode.NoContent)
-                        {
-                            // Status code: 204
-                            status = ApplicationInstallStatus.InProgress;
-                        }
-                    }
-                    else
-                    {
-                        status = ApplicationInstallStatus.Failed; 
-                    }
-                }
-            }
-
-            return status;
-        }
-
-        /// <summary>
         /// Gets the collection of applications installed on the device.
         /// </summary>
         /// <returns>AppPackages object containing the list of installed application packages.</returns>
@@ -106,7 +67,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="appName">Friendly name (ex: Hello World) of the application. If this parameter is not provided, the name of the package is assumed to be the app name.</param>
         /// <param name="packageFileName">Full name of the application package file.</param>
-        /// <param name="dependencyFileNames">List containing the full names of required dependency files.</param>
+        /// <param name="dependencyFileNames">List containing the full names of any required dependency files.</param>
         /// <param name="certificateFileName">Full name of the optional certificate file.</param>
         /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
         /// <param name="timeoutInMinutes">Operation timeout.</param>
@@ -125,12 +86,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             try
             {
-                FileInfo fi = new FileInfo(packageFileName);
+                FileInfo packageFile = new FileInfo(packageFileName);
 
                 // If appName was not provided, use the package file name
                 if (string.IsNullOrEmpty(appName))
                 {
-                    appName = fi.Name;
+                    appName = packageFile.Name;
                 }
 
                 // Uninstall the application's previous version, if one exists.
@@ -150,117 +111,137 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
 
                 // Create the API endpoint and generate a unique boundary string.
-                Uri uri = Utilities.BuildEndpoint(
-                    this.deviceConnection.Connection,
-                    PackageManagerApi,
-                    string.Format("package={0}", fi.Name));
-                string boundaryString = Guid.NewGuid().ToString();
+                Uri uri;
+                string boundaryString;
+                this.CreateAppInstallEndpointAndBoundaryString(
+                    packageFile.Name,
+                    out uri,
+                    out boundaryString);
 
-                // Create the install request.
-                HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
-                request.AllowWriteStreamBuffering = false;
-                request.ContentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
-                request.Credentials = this.deviceConnection.Credentials;
-                request.Headers[HttpRequestHeader.Authorization] = string.Format(
-                    "Basic {0}",
-                    Utilities.Hex64Encode(string.Format("{0}:{1}", this.deviceConnection.Credentials.UserName, this.deviceConnection.Credentials.Password)));
-                request.KeepAlive = true;
-                request.Method = "POST";
-                request.SendChunked = true;
-                request.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-                request.Timeout = timeoutInMinutes * 60 * 1000;
-
-                // Set the CSRF-Token if we have one
-                if (!string.IsNullOrEmpty(this.csrfToken))
+                // Create the request
+#if WINDOWS_UWP
+                HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
+                requestSettings.AllowUI = false;
+                requestSettings.ServerCredential = new PasswordCredential();
+                requestSettings.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
+                requestSettings.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+#else
+                WebRequestHandler requestSettings = new WebRequestHandler();
+                requestSettings.UseDefaultCredentials = false;
+                requestSettings.Credentials = this.deviceConnection.Credentials;
+                requestSettings.ServerCertificateValidationCallback = this.ServerCertificateValidation;
+#endif // WINDOWS_UWP   
+                                                             
+                using (HttpClient client = new HttpClient(requestSettings))
                 {
-                    request.Headers.Add("X-" + CsrfTokenName, this.csrfToken);
-                }
+                    this.SetCrsfToken(client, "POST");
 
-                using (Stream requestStream = request.GetRequestStream())
-                {
-                    byte[] data;
-
-                    // Upload the application package.
-                    installPhaseDescription = string.Format("Uploading: {0}", fi.Name);
-                    this.SendAppInstallStatus(
-                        ApplicationInstallStatus.InProgress,
-                        ApplicationInstallPhase.CopyingFile,
-                        installPhaseDescription);
-                    data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
-                    requestStream.Write(data, 0, data.Length);
-                    this.CopyInstallationFileToStream(fi, requestStream);
-
-                    // Upload the dependency file(s).
-                    foreach (string dependencyFile in dependencyFileNames)
+                    using (MemoryStream dataStream = new MemoryStream())
                     {
-                        fi = new FileInfo(dependencyFile);
-                        installPhaseDescription = string.Format("Uploading: {0}", fi.Name);
+                        byte[] data;
+
+                        // Copy the application package.
+                        installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
                         this.SendAppInstallStatus(
                             ApplicationInstallStatus.InProgress,
                             ApplicationInstallPhase.CopyingFile,
                             installPhaseDescription);
-                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                        requestStream.Write(data, 0, data.Length);
-                        this.CopyInstallationFileToStream(fi, requestStream);
-                    }
+                        data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
+                        dataStream.Write(data, 0, data.Length);
+                        this.CopyInstallationFileToStream(packageFile, dataStream);
 
-                    // Upload the certificate file if provided
-                    if (!string.IsNullOrEmpty(certificateFileName))
-                    {
-                        fi = new FileInfo(certificateFileName);
-                        installPhaseDescription = string.Format("Uploading: {0}", fi.Name);
+                        // Copy dependency files, if any.
+                        foreach (string dependencyFile in dependencyFileNames)
+                        {
+                            FileInfo fi = new FileInfo(dependencyFile);
+                            installPhaseDescription = string.Format("Copying: {0}", fi.Name);
+                            this.SendAppInstallStatus(
+                                ApplicationInstallStatus.InProgress,
+                                ApplicationInstallPhase.CopyingFile,
+                                installPhaseDescription);
+                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                            dataStream.Write(data, 0, data.Length);
+                            this.CopyInstallationFileToStream(fi, dataStream);
+                        }
+
+                        // Copy the certificate file, if provided.
+                        if (!string.IsNullOrEmpty(certificateFileName))
+                        {
+                            FileInfo fi = new FileInfo(certificateFileName);
+                            installPhaseDescription = string.Format("Copying: {0}", fi.Name);
+                            this.SendAppInstallStatus(
+                                ApplicationInstallStatus.InProgress,
+                                ApplicationInstallPhase.CopyingFile,
+                                installPhaseDescription);
+                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                            dataStream.Write(data, 0, data.Length);
+                            this.CopyInstallationFileToStream(fi, dataStream);
+                        }
+
+                        // Close the installation request data.
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
+                        dataStream.Write(data, 0, data.Length);
+
+                        dataStream.Position = 0;
+                        string contentTypeHeaderName = "Content-Type";
+                        string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
+
+#if WINDOWS_UWP
+                        using (HttpStreamContent content = new HttpStreamContent(dataStream.AsInputStream()))
+                        {                        
+                            content.Headers.Remove(contentTypeHeaderName);
+                            content.Headers.TryAppendWithoutValidation(contentTypeHeaderName, contentType);
+
+                            IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, null);
+                            while (responseOperation.Status != AsyncStatus.Completed)
+                            { 
+                            }
+
+                            using (HttpResponseMessage response = responseOperation.GetResults())
+                            {
+#else
+                        using (StreamContent content = new StreamContent(dataStream))
+                        {
+                            content.Headers.Remove(contentTypeHeaderName);
+                            content.Headers.TryAddWithoutValidation(contentTypeHeaderName, contentType);
+
+                            using (HttpResponseMessage response = await client.PostAsync(uri, content))
+                            {
+#endif // WINDOWS_UWP
+                                if (response.StatusCode != HttpStatusCode.Accepted)
+                                {
+                                    throw new DevicePortalException(
+                                        response.StatusCode,
+                                        response.StatusCode.ToString(),
+                                        uri,
+                                        "Failed to upload installation package");
+                                }
+                            }
+                        }
+
+                        // Poll the status until complete.
+                        ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
+                        do
+                        {
+                            installPhaseDescription = string.Format("Installing {0}", appName);
+                            this.SendAppInstallStatus(
+                                ApplicationInstallStatus.InProgress,
+                                ApplicationInstallPhase.Installing,
+                                installPhaseDescription);
+
+                            await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
+
+                            status = await this.GetInstallStatus();
+                        }
+                        while (status == ApplicationInstallStatus.InProgress);
+
+                        installPhaseDescription = string.Format("{0} installed successfully", appName);
                         this.SendAppInstallStatus(
-                            ApplicationInstallStatus.InProgress,
-                            ApplicationInstallPhase.CopyingFile,
+                            ApplicationInstallStatus.Completed,
+                            ApplicationInstallPhase.Idle,
                             installPhaseDescription);
-                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                        requestStream.Write(data, 0, data.Length);
-                        this.CopyInstallationFileToStream(fi, requestStream);
-                    }
-
-                    // Close the installation request data.
-                    data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
-                    requestStream.Write(data, 0, data.Length);
-                }
-
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
-                {
-                    using (Stream responseStream = response.GetResponseStream())
-                    {
-                        // This ensures the response stream is disposed properly.
-                    }
-
-                    if (response.StatusCode != HttpStatusCode.Accepted)
-                    {
-                        throw new DevicePortalException(
-                            response.StatusCode,
-                            response.StatusCode.ToString(),
-                            uri,
-                            "Failed to upload installation package");
                     }
                 }
-
-                // Poll the status until complete.
-                ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
-                do
-                {
-                    installPhaseDescription = string.Format("Installing {0}", appName);
-                    this.SendAppInstallStatus(
-                        ApplicationInstallStatus.InProgress,
-                        ApplicationInstallPhase.Installing,
-                        installPhaseDescription);
-
-                    System.Threading.Thread.Sleep(stateCheckIntervalMs);
-
-                    status = await this.GetInstallStatus();
-                }
-                while (status == ApplicationInstallStatus.InProgress);
-
-                installPhaseDescription = string.Format("{0} installed successfully", appName);
-                this.SendAppInstallStatus(
-                    ApplicationInstallStatus.Completed,
-                    ApplicationInstallPhase.Idle,
-                    installPhaseDescription);
             }
             catch (Exception e)
             {
@@ -274,10 +255,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     request = dpe.RequestUri;
                 }
 
-                this.SendConnectionStatus(
-                    DeviceConnectionStatus.Failed,
-                    DeviceConnectionPhase.Idle,
-                    string.Format("Device connection failed: {0}", installPhaseDescription));
+                this.SendAppInstallStatus(
+                    ApplicationInstallStatus.Failed,
+                    ApplicationInstallPhase.Idle,
+                    string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
             }
         }
 
@@ -292,22 +273,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 PackageManagerApi,
                 //// NOTE: When uninstalling an app package, the package name is not Hex64 encoded.
                 string.Format("package={0}", packageName));
-        }
-
-        /// <summary>
-        /// Sends application install status.
-        /// </summary>
-        /// <param name="status">Status of the installation.</param>
-        /// <param name="phase">Current installation phase (ex: Uninstalling previous version)</param>
-        /// <param name="message">Optional error message describing the install status.</param>
-        private void SendAppInstallStatus(
-            ApplicationInstallStatus status,
-            ApplicationInstallPhase phase,
-            string message = "")
-        {
-            this.AppInstallStatus?.Invoke(
-                this,
-                new ApplicationInstallStatusEventArgs(status, phase, message));
         }
 
         /// <summary>
@@ -334,6 +299,41 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 fs.CopyTo(stream);
             }
+        }
+
+        /// <summary>
+        /// Builds the application installation Uri and generates a unique boundary string for the multipart form data.
+        /// </summary>
+        /// <param name="packageName">The name of the application package.</param>
+        /// <param name="uri">The endpoint for the install request.</param>
+        /// <param name="boundaryString">Unique string used to separate the parts of the multipart form data.</param>
+        private void CreateAppInstallEndpointAndBoundaryString(
+            string packageName,
+            out Uri uri,
+            out string boundaryString)           
+        {
+            uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                PackageManagerApi,
+                string.Format("package={0}", packageName));
+
+            boundaryString = Guid.NewGuid().ToString();
+        }
+
+        /// <summary>
+        /// Sends application install status.
+        /// </summary>
+        /// <param name="status">Status of the installation.</param>
+        /// <param name="phase">Current installation phase (ex: Uninstalling previous version)</param>
+        /// <param name="message">Optional error message describing the install status.</param>
+        private void SendAppInstallStatus(
+            ApplicationInstallStatus status,
+            ApplicationInstallPhase phase,
+            string message = "")
+        {
+            this.AppInstallStatus?.Invoke(
+                this,
+                new ApplicationInstallStatusEventArgs(status, phase, message));
         }
 
         #region Data contract
