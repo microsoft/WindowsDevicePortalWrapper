@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void XboxAppDeploymentTest()
         {
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.RegisterPackageApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi);
 
             Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
             registerTask.Wait();

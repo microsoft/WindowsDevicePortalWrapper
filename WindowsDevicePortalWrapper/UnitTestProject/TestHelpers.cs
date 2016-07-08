@@ -23,19 +23,18 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Gets a static mock HTTP wrapper for setting response overrides.
         /// </summary>
-        public static MockHttpWrapper MockHttpWrapper { get; private set; }
+        public static MockHttpResponder MockHttpResponder { get; private set; }
 
         /// <summary>
         /// Helper for establishing a mock connection to a DevicePortal object.
         /// </summary>
         public static void EstablishMockConnection()
         {
-            TestHelpers.MockHttpWrapper = new MockHttpWrapper();
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.DeviceFamilyApi);
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.OsInfoApi);
+            TestHelpers.MockHttpResponder = new MockHttpResponder();
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi);
 
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
-            TestHelpers.Portal.HttpWrapper = TestHelpers.MockHttpWrapper;
 
             Task connectTask = TestHelpers.Portal.Connect(updateConnection: false);
             connectTask.Wait();

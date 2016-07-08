@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestCleanup]
         public void TestCleanup()
         {
-            TestHelpers.MockHttpWrapper.ResetMockResponses();
+            TestHelpers.MockHttpResponder.ResetMockResponses();
         }
     }
 }

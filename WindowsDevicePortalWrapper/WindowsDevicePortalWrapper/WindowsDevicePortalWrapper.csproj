@@ -42,6 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CertificateHandling.cs" />
+    <Compile Include="Core\AppDeployment.cs" />
+    <Compile Include="HttpRest\RestPost.cs" />
+    <Compile Include="HttpRest\RestPut.cs" />
+    <Compile Include="HttpRest\RestDelete.cs" />
+    <Compile Include="HttpRest\RestGet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

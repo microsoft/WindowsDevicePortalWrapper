@@ -127,6 +127,24 @@ namespace MockDataGenerator
         }
 
         /// <summary>
+        /// Validates and sets the device certificate.
+        /// </summary>
+        /// <param name="certificate">The device's root certificate.</param>
+        public void SetDeviceCertificate(X509Certificate2 certificate)
+        {
+            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
+            {
+                throw new DevicePortalException(
+                    (HttpStatusCode)0,
+                    "Invalid certificate issuer",
+                    null,
+                    "Failed to download device certificate");
+            }
+
+            this.deviceCertificate = certificate;
+        }
+
+        /// <summary>
         /// Sets certificate data
         /// </summary>
         /// <param name="certificateData">certificate data</param>

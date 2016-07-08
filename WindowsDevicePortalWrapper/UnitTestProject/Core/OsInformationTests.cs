@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void OsInformationTest()
         {
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.MachineNameApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi);
 
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();

@@ -6,10 +6,21 @@
 
 using System;
 using System.IO;
+#if !WINDOWS_UWP
 using System.Net.Http;
 using System.Net.Http.Headers;
+#endif // !WINDOWS_UWP
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
+#if WINDOWS_UWP
+using Windows.Foundation;
+using Windows.Networking;
+using Windows.Security.Credentials;
+using Windows.Storage.Streams;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using Windows.Web.Http.Headers;
+#endif // WINDOWS_UWP
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -18,45 +29,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
-        /// <summary>
-        /// Submits the http put request to the specified uri.
-        /// </summary>
-        /// <param name="uri">The uri to which the put request will be issued.</param>
-        /// <param name="body">The HTTP content comprising the body of the request.</param>
-        /// <returns>Task tracking the PUT completion.</returns>
-        private async Task Put(
-            Uri uri,
-            HttpContent body = null)
-        {
-            WebRequestHandler handler = new WebRequestHandler();
-            handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-            using (HttpClient client = new HttpClient(handler))
-            {
-                // Set the CSRF-Token if we have one
-                if (!string.IsNullOrEmpty(this.csrfToken))
-                {
-                    HttpRequestHeaders headers = client.DefaultRequestHeaders;
-                    headers.Add("X-" + CsrfTokenName, this.csrfToken);
-                }
-
-                // Send the request
-                Task<HttpResponseMessage> putTask = this.HttpWrapper.PutAsync(client, uri, body);
-                await putTask.ConfigureAwait(false);
-                putTask.Wait();
-
-                using (HttpResponseMessage response = putTask.Result)
-                {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new DevicePortalException(response);
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Calls the specified API with the provided payload.
         /// </summary>
@@ -69,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
-                apiPath, 
+                apiPath,
                 payload);
 
             await this.Put(uri);
@@ -90,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
-                apiPath, 
+                apiPath,
                 payload);
 
             // Serialize the body to a JSON stream
@@ -99,10 +71,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             serializer.WriteObject(stream, bodyData);
 
             stream.Seek(0, SeekOrigin.Begin);
+#if WINDOWS_UWP
+            HttpStreamContent streamContent = new HttpStreamContent(stream.AsInputStream());
+            streamContent.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+#else
             StreamContent streamContent = new StreamContent(stream);
             streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+#endif // WINDOWS_UWP
 
             await this.Put(uri, streamContent);
         }
     }
 }
+

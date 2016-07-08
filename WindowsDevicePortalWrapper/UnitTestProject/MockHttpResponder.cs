@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="MockHttpWrapper.cs" company="Microsoft Corporation">
+// <copyright file="MockHttpResponder.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     /// <summary>
     /// Mock implementation of HttpWrapper.
     /// </summary>
-    public class MockHttpWrapper : IHttpWrapper
+    public class MockHttpResponder
     {
         /// <summary>
         /// Dictionary of mock responses from endpoints to the stored response message
@@ -68,12 +68,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// Abstract method Mock Implementation
         /// </summary>
-        /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> GetAsync(Uri uri)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -82,13 +81,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// Abstract method Mock Implementation
         /// </summary>
-        /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PostAsync(Uri uri, HttpContent content)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -97,13 +95,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// Abstract method Mock Implementation
         /// </summary>
-        /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PutAsync(Uri uri, HttpContent content)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -112,12 +109,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Abstract method Mock Implementation (pass-through to HttpClient)
+        /// Abstract method Mock Implementation
         /// </summary>
-        /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> DeleteAsync(Uri uri)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();

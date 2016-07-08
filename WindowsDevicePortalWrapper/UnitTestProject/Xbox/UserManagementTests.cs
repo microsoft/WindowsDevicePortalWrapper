@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetXboxLiveUserListTest()
         {
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.XboxLiveUserApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi);
 
             Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsers();
             getUserTask.Wait();
@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void UpdateXboxLiveUsersTest()
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpWrapper.AddMockResponse(DevicePortal.XboxLiveUserApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi);
 
             UserList users = new UserList();
             UserInfo user = new UserInfo();

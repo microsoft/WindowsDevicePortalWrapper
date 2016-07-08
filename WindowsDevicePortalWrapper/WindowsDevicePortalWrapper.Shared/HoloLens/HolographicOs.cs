@@ -4,6 +4,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -97,29 +98,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         private async Task<bool> GetIsHttpsRequired()
         {
-            try
+            if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
-                if ((this.Platform != DevicePortalPlatforms.Unknown) &&
-                    (this.Platform != DevicePortalPlatforms.HoloLens))
-                {
-                    throw new NotSupportedException("This method is only supported on HoloLens.");
-                }
-
-                WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
-                return httpSettings.IsHttpsRequired;
+                throw new NotSupportedException("This method is only supported on HoloLens.");
             }
-            catch (Exception e)
-            {
-                DevicePortalException dpe = e as DevicePortalException;
 
-                if ((dpe != null) &&
-                    (dpe.StatusCode != System.Net.HttpStatusCode.NotFound))
-                {
-                    throw new NotSupportedException("This method is only supported on HoloLens.");
-                }
-
-                throw;
-            }
+            WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
+            return httpSettings.IsHttpsRequired;
         }
 
         #region Data contract

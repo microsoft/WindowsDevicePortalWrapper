@@ -5,10 +5,15 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+#if !WINDOWS_UWP
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
+#endif // !WINDOWS_UWP
 using System.Threading.Tasks;
+#if WINDOWS_UWP
+using Windows.Web.Http;
+#endif // WINDOWS_UWP
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -20,23 +25,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Issuer for the device certificate.
         /// </summary>
-        public static readonly string DevicePortalCertificateIssuer = "Microsoft Windows Web Management";
+        public static readonly string DevicePortalCertificateIssuer = "CN=Microsoft Windows Web Management";
 
         /// <summary>
         /// Endpoint used to access the certificate.
         /// </summary>
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
-
-        /// <summary>
-        /// Header name for a CSRF-Token
-        /// </summary>
-        private static readonly string CsrfTokenName = "CSRF-Token";
-        
-        /// <summary>
-        /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
-        /// This token is intended to prevent a security vulnerability from cross site forgery.
-        /// </summary>
-        private string csrfToken = string.Empty;
 
         /// <summary>
         /// Device connection object.
@@ -50,8 +44,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public DevicePortal(IDevicePortalConnection connection)
         {
             this.deviceConnection = connection;
-
-            this.HttpWrapper = new DefaultHttpWrapper();
         }
 
         /// <summary>
@@ -138,7 +130,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string ssidKey = null,
             bool updateConnection = true)
         {
+#if WINDOWS_UWP
+            this.ConnectionHttpStatusCode = HttpStatusCode.Ok;
+#else
             this.ConnectionHttpStatusCode = HttpStatusCode.OK;
+#endif // WINDOWS_UWP
             string connectionPhaseDescription = string.Empty;
 
             // TODO - add status event. this can take a LONG time
@@ -152,8 +148,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     this.SendConnectionStatus(
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.AcquiringCertificate,
-                        connectionPhaseDescription);
+                        connectionPhaseDescription);                  
+#if WINDOWS_UWP
+                    this.SetDeviceCertificate(await this.GetDeviceCertificate());
+#else
                     this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+#endif
                     certificateAcquired = true;
                 }
                 catch
@@ -263,69 +263,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     dataStream.Seek(0, SeekOrigin.Begin);
                     dataStream.CopyTo(fileStream);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the device certificate as a byte array
-        /// </summary>
-        /// <returns>Raw device certificate</returns>
-        private async Task<byte[]> GetDeviceCertificate()
-        {
-            byte[] certificateData = null;
-            bool useHttps = true;
-
-            // try https then http
-            while (true)
-            {
-                Uri uri = null;
-
-                if (useHttps)
-                {
-                    uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
-                }
-                else
-                {
-                    Uri baseUri = new Uri(string.Format("http://{0}", this.deviceConnection.Connection.Authority));
-                    uri = Utilities.BuildEndpoint(baseUri, RootCertificateEndpoint);
-                }
-
-                try
-                {
-                    using (Stream stream = await this.Get(uri, false))
-                    {
-                        using (BinaryReader reader = new BinaryReader(stream))
-                        {
-                            byte[] certData = reader.ReadBytes((int)stream.Length);
-
-                            // Validate the issuer.
-                            X509Certificate2 cert = new X509Certificate2(certData);
-                            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
-                            {
-                                throw new DevicePortalException(
-                                    (HttpStatusCode)0,
-                                    "Invalid certificate issuer",
-                                    uri,
-                                    "Failed to get device certificate");
-                            }
-
-                            certificateData = certData;
-                        }
-                    }
-
-                    return certificateData;
-                }
-                catch (Exception e)
-                {
-                    if (useHttps)
-                    {
-                        useHttps = false;
-                    }
-                    else
-                    {
-                        throw e;
-                    }
                 }
             }
         }
