@@ -17,7 +17,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     /// <summary>
     /// Mock implementation of HttpWrapper.
     /// </summary>
-    public class MockHttpWrapper : HttpWrapper
+    public class MockHttpWrapper : IHttpWrapper
     {
         /// <summary>
         /// Dictionary of mock responses from endpoints to the stored response message
@@ -73,7 +73,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -88,7 +88,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -103,7 +103,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();
@@ -117,7 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
         {
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
             task.Start();

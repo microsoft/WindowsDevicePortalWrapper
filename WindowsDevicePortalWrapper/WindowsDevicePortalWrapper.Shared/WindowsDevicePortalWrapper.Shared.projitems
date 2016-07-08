@@ -37,7 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationPlayback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationRecording.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\DefaultHttpWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HttpRest\HttpWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpRest\IHttpWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestDelete.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestGet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestPost.cs" />

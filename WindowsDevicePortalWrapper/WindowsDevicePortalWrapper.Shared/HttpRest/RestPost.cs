@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     headers.Add("X-" + CsrfTokenName, this.csrfToken);
                 }
 
-                Task<HttpResponseMessage> postTask = HttpWrapper.PostAsync(client, uri, null);
+                Task<HttpResponseMessage> postTask = this.HttpWrapper.PostAsync(client, uri, null);
                 await postTask.ConfigureAwait(false);
                 postTask.Wait();
 

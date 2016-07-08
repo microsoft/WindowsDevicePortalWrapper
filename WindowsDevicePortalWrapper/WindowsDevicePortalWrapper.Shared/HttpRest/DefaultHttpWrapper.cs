@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Default HTTP Wrapper class passing through directly to the HttpClient.
     /// </summary>
-    public class DefaultHttpWrapper : HttpWrapper
+    public class DefaultHttpWrapper : IHttpWrapper
     {
         /// <summary>
         /// Abstract method Implementation (pass-through to HttpClient)
@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> GetAsync(HttpClient client, Uri uri)
         {
             return await client.GetAsync(uri);
         }
@@ -33,7 +33,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PostAsync(HttpClient client, Uri uri, HttpContent content)
         {
             return await client.PostAsync(uri, content);
         }
@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The target URI.</param>
         /// <param name="content">The HTTP body of the request.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
+        public async Task<HttpResponseMessage> PutAsync(HttpClient client, Uri uri, HttpContent content)
         {
             return await client.PutAsync(uri, content);
         }
@@ -56,7 +56,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="client">HTTP Client object.</param>
         /// <param name="uri">The target URI.</param>
         /// <returns>Async task returning the response.</returns>
-        public override async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
+        public async Task<HttpResponseMessage> DeleteAsync(HttpClient client, Uri uri)
         {
             return await client.DeleteAsync(uri);
         }
