@@ -127,13 +127,12 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Creates and sets the device certificate from the raw data.
+        /// Validates and sets the device certificate.
         /// </summary>
-        /// <param name="certificateData">Raw device certificate data.</param>
-        public void SetDeviceCertificate(byte[] certificateData)
+        /// <param name="certificate">The device's root certificate.</param>
+        public void SetDeviceCertificate(X509Certificate2 certificate)
         {
-            X509Certificate2 cert = new X509Certificate2(certificateData);
-            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
+            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
                 throw new DevicePortalException(
                     (HttpStatusCode)0,
@@ -142,7 +141,7 @@ namespace TestApp
                     "Failed to download device certificate");
             }
 
-            this.deviceCertificate = cert;
+            this.deviceCertificate = certificate;
         }
 
         /// <summary>

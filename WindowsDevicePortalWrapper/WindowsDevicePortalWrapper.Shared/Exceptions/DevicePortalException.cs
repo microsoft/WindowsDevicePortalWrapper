@@ -5,17 +5,24 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+#if !WINDOWS_UWP
 using System.Net;
 using System.Net.Http;
+#endif // !WINDOWS_UWP
 using System.Runtime.Serialization;
 using System.Security;
+#if WINDOWS_UWP
+using Windows.Web.Http;
+#endif // WINDOWS_UWP
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
     /// Base exception class for a Device Portal exception
     /// </summary>
+#if !WINDOWS_UWP
     [Serializable]    
+#endif // !WINDOWS_UWP
     public class DevicePortalException : Exception
     {
         /// <summary>
@@ -73,6 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public Uri RequestUri { get; private set; }
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Get object data override
         /// </summary>
@@ -84,5 +92,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             // TODO - look at an example of how this function is implemented
             base.GetObjectData(info, context);
         }
+#endif // !WINDOWS_UWP
     }
 }
