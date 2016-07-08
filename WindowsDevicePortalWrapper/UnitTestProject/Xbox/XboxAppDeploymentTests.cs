@@ -4,7 +4,6 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,18 +13,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     /// Test class for XboxAppDeployment APIs
     /// </summary>
     [TestClass]
-    public class XboxAppDeploymentTests
+    public class XboxAppDeploymentTests : BaseTests
     {
-        /// <summary>
-        /// Shared class initialization (establishes Mock Device Portal Connection).
-        /// </summary>
-        /// <param name="context">Test Context.</param>
-        [ClassInitialize]
-        public static void EstablishMockConnection(TestContext context)
-        {
-            TestHelpers.EstablishMockConnection();
-        }
-
         /// <summary>
         /// First basic test.
         /// </summary>

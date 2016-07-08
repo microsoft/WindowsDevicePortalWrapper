@@ -30,6 +30,7 @@ namespace MockDataGenerator
             DevicePortal.DeviceFamilyApi,
             DevicePortal.MachineNameApi,
             DevicePortal.OsInfoApi,
+            DevicePortal.XboxLiveUserApi,
         };
 
         /// <summary>
