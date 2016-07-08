@@ -15,6 +15,41 @@ namespace TestApp
     public class ParameterHelper
     {
         /// <summary>
+        /// Help Flag identifier string
+        /// </summary>
+        public static readonly string HelpFlag = "?";
+
+        /// <summary>
+        /// Verbose Flag identifier string
+        /// </summary>
+        public static readonly string VerboseFlag = "v";
+
+        /// <summary>
+        /// Operation type identifier string
+        /// </summary>
+        public static readonly string Operation = "op";
+
+        /// <summary>
+        /// Device Identifier identifier string
+        /// </summary>
+        public static readonly string IpOrHostname = "ip";
+
+        /// <summary>
+        /// WDP Username identifier string
+        /// </summary>
+        public static readonly string WdpUser = "user";
+
+        /// <summary>
+        /// WDP Password identifier string
+        /// </summary>
+        public static readonly string WdpPassword = "pwd";
+
+        /// <summary>
+        /// Listen (use web socket) identifier string
+        /// </summary>
+        public static readonly string Listen = "listen";
+
+        /// <summary>
         /// List for storing parsed command line parameters as key value pairs.
         /// </summary>
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -23,72 +58,6 @@ namespace TestApp
         /// List for storing parsed command line flags.
         /// </summary>
         private List<string> flags = new List<string>();
-
-        /// <summary>
-        /// Gets Help Flag identifier string
-        /// </summary>
-        public static string HelpFlag
-        {
-            get
-            {
-                return "?";
-            }
-        }
-
-        /// <summary>
-        /// Gets Verbose Flag identifier string
-        /// </summary>
-        public static string VerboseFlag
-        {
-            get
-            {
-                return "v";
-            }
-        }
-
-        /// <summary>
-        /// Gets Operation type identifier string
-        /// </summary>
-        public static string Operation
-        {
-            get
-            {
-                return "op";
-            }
-        }
-
-        /// <summary>
-        /// Gets Device Identifier identifier string
-        /// </summary>
-        public static string IpOrHostname
-        {
-            get
-            {
-                return "ip";
-            }
-        }
-
-        /// <summary>
-        /// Gets WDP Username identifier string
-        /// </summary>
-        public static string WdpUser
-        {
-            get
-            {
-                return "user";
-            }
-        }
-
-        /// <summary>
-        /// Gets WDP Password identifier string
-        /// </summary>
-        public static string WdpPassword
-        {
-            get
-            {
-                return "pwd";
-            }
-        }
 
         /// <summary>
         /// Helper for getting a parameter value for a key

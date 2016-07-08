@@ -19,12 +19,43 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting all running processes
         /// </summary>
-        public static readonly string RunningProcessApi = "api/resourcemanager/processes";
+        private static readonly string RunningProcessApi = "api/resourcemanager/processes";
 
         /// <summary>
         /// API for getting system performance
         /// </summary>
-        public static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
+        private static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
+
+#if !WINDOWS_UWP
+        /// <summary>
+        /// Web socket to get running processes.
+        /// </summary>
+        private WebSocket<RunningProcesses> deviceProcessesWebSocket;
+
+        /// <summary>
+        /// Web socket to get the system perf of the device.
+        /// </summary>
+        private WebSocket<SystemPerformanceInformation> systemPerfWebSocket;
+
+        /// <summary>
+        /// Gets or sets the running processes message received handler.
+        /// </summary>
+        public WebSocketMessageReceivedEventHandler<RunningProcesses> RunningProcessesMessageReceived
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the system perf message received handler.
+        /// </summary>
+        public WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> SystemPerfMessageReceived
+        {
+            get;
+            set;
+        }
+
+#endif // !WINDOWS_UWP
 
         /// <summary>
         /// Gets the collection of processes running on the device.
@@ -35,6 +66,48 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<RunningProcesses>(RunningProcessApi);
         }
 
+#if !WINDOWS_UWP
+        /// <summary>
+        /// Starts listening for the running processes on the device with them being returned via the RunningProcessesMessageReceived event handler.
+        /// </summary>
+        /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
+        public async Task StartListeningForRunningProcesses()
+        {
+            if (this.deviceProcessesWebSocket == null)
+            {
+                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.deviceConnection, this.ServerCertificateValidation);
+
+                this.deviceProcessesWebSocket.WebSocketMessageReceived += this.RunningProcessesReceivedHandler;
+            }
+            else
+            {
+                if (this.deviceProcessesWebSocket.IsListeningForMessages)
+                {
+                    return;
+                }
+            }
+
+            await this.deviceProcessesWebSocket.OpenConnection(RunningProcessApi);
+
+            // Do not await on the actual listening.
+            Task listenTask = this.deviceProcessesWebSocket.StartListeningForMessages();
+        }
+
+        /// <summary>
+        /// Stop listening for the running processes on the device.
+        /// </summary>
+        /// <returns>Task for stop listening for processes and disconnecting from the websocket .</returns>
+        public async Task StopListeningForRunningProcesses()
+        {
+            if (this.deviceProcessesWebSocket == null || !this.deviceProcessesWebSocket.IsListeningForMessages)
+            {
+                return;
+            }
+
+            await this.deviceProcessesWebSocket.CloseConnection();
+        }
+#endif // !WINDOWS_UWP
+
         /// <summary>
         /// Gets system performance information for the device.
         /// </summary>
@@ -44,7 +117,114 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<SystemPerformanceInformation>(SystemPerfApi);
         }
 
+#if !WINDOWS_UWP
+        /// <summary>
+        /// Starts listening for the system performance information for the device with it being returned via the SystemPerfMessageReceived event handler.
+        /// </summary>
+        /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
+        public async Task StartListeningForSystemPerf()
+        {
+            if (this.systemPerfWebSocket == null)
+            {
+                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection, this.ServerCertificateValidation);
+
+                this.systemPerfWebSocket.WebSocketMessageReceived += this.SystemPerfMessageReceived;
+            }
+            else
+            {
+                if (this.systemPerfWebSocket.IsListeningForMessages)
+                {
+                    return;
+                }
+            }
+
+            await this.systemPerfWebSocket.OpenConnection(SystemPerfApi);
+
+            // Do not await on the actual listening.
+            Task listenTask = this.systemPerfWebSocket.StartListeningForMessages();
+        }
+
+        /// <summary>
+        /// Stop listening for the system performance information for the device.
+        /// </summary>
+        /// <returns>Task for stop listening for system perf and disconnecting from the websocket .</returns>
+        public async Task StopListeningForSystemPerf()
+        {
+            if (this.systemPerfWebSocket == null || !this.systemPerfWebSocket.IsListeningForMessages)
+            {
+                return;
+            }
+
+            await this.systemPerfWebSocket.CloseConnection();
+        }
+
+        /// <summary>
+        /// Handler for the processes received event that passes the event to the RunningProcessesMessageReceived handler.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void RunningProcessesReceivedHandler(
+            object sender,
+            WebSocketMessageReceivedEventArgs<RunningProcesses> args)
+        {
+            if (args.Message != null)
+            {
+                this.RunningProcessesMessageReceived?.Invoke(
+                            this,
+                            args);
+            }
+        }
+
+        /// <summary>
+        /// Handler for the system performance information received event that passes the event to the SystemPerfMessageReceived handler.
+        /// </summary>
+        /// <param name="sender">The object sending the event.</param>
+        /// <param name="args">The event data.</param>
+        private void SystemPerfReceivedHandler(
+            object sender,
+            WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> args)
+        {
+            if (args.Message != null)
+            {
+                this.SystemPerfMessageReceived?.Invoke(
+                            this,
+                            args);
+            }
+        }
+
+#endif // !WINDOWS_UWP
         #region Device contract
+
+        /// <summary>
+        /// Object representing the process version.
+        /// </summary>
+        [DataContract]
+        public class ProcessVersion
+        {
+            /// <summary>
+            /// Gets or sets the major version number
+            /// </summary>
+            [DataMember(Name = "Major")]
+            public uint Major { get; set; }
+
+            /// <summary>
+            /// Gets or sets the minor version number
+            /// </summary>
+            [DataMember(Name = "Minor")]
+            public uint Minor { get; set; }
+
+            /// <summary>
+            /// Gets or sets the build number
+            /// </summary>
+            [DataMember(Name = "Build")]
+            public uint Build { get; set; }
+
+            /// <summary>
+            /// Gets or sets the revision number
+            /// </summary>
+            [DataMember(Name = "Revision")]
+            public uint Revision { get; set; }
+        }
 
         /// <summary>
         /// Process Info
@@ -99,6 +279,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "WorkingSetSize")]
             public uint WorkingSet { get; set; }
+
+            /// <summary>
+            /// Gets or sets package working set
+            /// </summary>
+            [DataMember(Name = "PrivateWorkingSet")]
+            public double PrivateWorkingSet { get; set; }
+
+            /// <summary>
+            /// Gets or sets session id
+            /// </summary>
+            [DataMember(Name = "SessionId")]
+            public uint SessionId { get; set; }
+
+            /// <summary>
+            /// Gets or sets total commit
+            /// </summary>
+            [DataMember(Name = "TotalCommit")]
+            public double TotalCommit { get; set; }
+
+            /// <summary>
+            /// Gets or sets virtual size
+            /// </summary>
+            [DataMember(Name = "VirtualSize")]
+            public double VirtualSize { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not the process is running
+            /// </summary>
+            [DataMember(Name = "IsRunning")]
+            public bool IsRunning { get; set; }
+
+            /// <summary>
+            /// Gets or sets publisher
+            /// </summary>
+            [DataMember(Name = "Publisher")]
+            public string Publisher { get; set; }
+
+            /// <summary>
+            /// Gets or sets version
+            /// </summary>
+            [DataMember(Name = "Version")]
+            public ProcessVersion Version { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not the package is a XAP package
+            /// </summary>
+            [DataMember(Name = "IsXAP")]
+            public bool IsXAP { get; set; }
 
             /// <summary>
             /// String representation of a process
