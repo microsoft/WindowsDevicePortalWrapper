@@ -121,10 +121,10 @@ namespace TestAppIoT
         }
 
         /// <summary>
-        /// Creates and sets the device certificate from the raw data.
+        /// Validates and sets the device certificate.
         /// </summary>
-        /// <param name="certificateData">Raw device certificate data.</param>
-        public void SetDeviceCertificate(byte[] certificateData)
+        /// <param name="certificate">The device's root certificate.</param>
+        public void SetDeviceCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2 certificate)
         {
             throw new NotSupportedException("The current version of TestAppIoT does not support device certificates");
         }

@@ -36,7 +36,7 @@ namespace TestApp
         {
             if (string.IsNullOrWhiteSpace(address))
             {
-                address = "localhost:10080";
+                address = "localhost:50443";
             }
 
             this.Connection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(address), address));
@@ -127,13 +127,12 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Creates and sets the device certificate from the raw data.
+        /// Validates and sets the device certificate.
         /// </summary>
-        /// <param name="certificateData">Raw device certificate data.</param>
-        public void SetDeviceCertificate(byte[] certificateData)
+        /// <param name="certificate">The device's root certificate.</param>
+        public void SetDeviceCertificate(X509Certificate2 certificate)
         {
-            X509Certificate2 cert = new X509Certificate2(certificateData);
-            if (!cert.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
+            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
             {
                 throw new DevicePortalException(
                     (HttpStatusCode)0,
@@ -142,7 +141,7 @@ namespace TestApp
                     "Failed to download device certificate");
             }
 
-            this.deviceCertificate = cert;
+            this.deviceCertificate = certificate;
         }
 
         /// <summary>
@@ -157,7 +156,7 @@ namespace TestApp
 
             this.Connection = new Uri(
                 string.Format(
-                    "{0}://{1}", 
+                    "{0}://{1}:50443", 
                     uriScheme, 
                     this.Connection.Authority));
         }
@@ -180,7 +179,7 @@ namespace TestApp
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        newConnection = new Uri(string.Format("{0}://{1}:50443", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
                         //// TODO qualified name
                         break;
                     }
@@ -204,9 +203,8 @@ namespace TestApp
             string address,
             bool requiresHttps = true)
         {
-            return (address.Contains("127.0.0.1") || 
-                    address.Contains("localhost") || 
-                    !requiresHttps) ? "http" : "https";
+            return "https"; // Desktop always uses https. 
+                            //TODO: Replace with DNS-SD call. 
         }
     }
 }

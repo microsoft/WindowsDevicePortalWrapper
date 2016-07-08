@@ -26,6 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         private static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Web socket to get running processes.
         /// </summary>
@@ -54,6 +55,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             set;
         }
 
+#endif // !WINDOWS_UWP
+
         /// <summary>
         /// Gets the collection of processes running on the device.
         /// </summary>
@@ -63,6 +66,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<RunningProcesses>(RunningProcessApi);
         }
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Starts listening for the running processes on the device with them being returned via the RunningProcessesMessageReceived event handler.
         /// </summary>
@@ -102,6 +106,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             await this.deviceProcessesWebSocket.CloseConnection();
         }
+#endif // !WINDOWS_UWP
 
         /// <summary>
         /// Gets system performance information for the device.
@@ -112,6 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<SystemPerformanceInformation>(SystemPerfApi);
         }
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Starts listening for the system performance information for the device with it being returned via the SystemPerfMessageReceived event handler.
         /// </summary>
@@ -186,6 +192,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+#endif // !WINDOWS_UWP
         #region Device contract
 
         /// <summary>
@@ -298,7 +305,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public double VirtualSize { get; set; }
 
             /// <summary>
-            /// Gets or sets is running
+            /// Gets or sets a value indicating whether or not the process is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
             public bool IsRunning { get; set; }
@@ -316,7 +323,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public ProcessVersion Version { get; set; }
 
             /// <summary>
-            /// Gets or sets is XAP
+            /// Gets or sets a value indicating whether or not the package is a XAP package
             /// </summary>
             [DataMember(Name = "IsXAP")]
             public bool IsXAP { get; set; }
