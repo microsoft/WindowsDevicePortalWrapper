@@ -4,16 +4,15 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using Microsoft.Tools.WindowsDevicePortal.Tests;
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Delete
+    /// MOCK implementation of HTTP Delete
     /// </content>
     public partial class DevicePortal
     {

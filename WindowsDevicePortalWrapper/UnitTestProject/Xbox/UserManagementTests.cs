@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {

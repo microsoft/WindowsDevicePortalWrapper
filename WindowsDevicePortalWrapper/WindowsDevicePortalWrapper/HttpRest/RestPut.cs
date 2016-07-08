@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// HTTP PUT Wrapper
+    /// .net 4.x implementation of HTTP Put
     /// </content>
     public partial class DevicePortal
     {

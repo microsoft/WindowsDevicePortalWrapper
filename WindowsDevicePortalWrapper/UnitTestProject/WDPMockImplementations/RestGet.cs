@@ -4,16 +4,16 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using Microsoft.Tools.WindowsDevicePortal.Tests;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Get
+    /// MOCK implementation of HTTP Get
     /// </content>
     public partial class DevicePortal
     {

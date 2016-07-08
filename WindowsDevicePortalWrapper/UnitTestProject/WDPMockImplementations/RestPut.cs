@@ -4,15 +4,15 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using Microsoft.Tools.WindowsDevicePortal.Tests;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// HTTP PUT Wrapper
+    /// MOCK implementation of HTTP PUT
     /// </content>
     public partial class DevicePortal
     {

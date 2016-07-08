@@ -4,16 +4,16 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using Microsoft.Tools.WindowsDevicePortal.Tests;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of App Deployment methods.
+    /// MOCK implementation of App Deployment methods.
     /// </content>
     public partial class DevicePortal
     {

@@ -83,4 +83,3 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
     }
 }
-
