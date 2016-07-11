@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of device certificate handling methods.
+    /// MOCK implementation of device certificate handling methods.
     /// </content>
     public partial class DevicePortal
     {

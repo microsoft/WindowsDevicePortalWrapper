@@ -25,48 +25,24 @@ namespace MockDataGenerator
         private List<string> flags = new List<string>();
 
         /// <summary>
-        /// Gets Help Flag identifier string
+        /// Help Flag identifier string
         /// </summary>
-        public static string HelpFlag
-        {
-            get
-            {
-                return "?";
-            }
-        }
+        public static readonly string HelpFlag = "?";
 
         /// <summary>
-        /// Gets Device Identifier identifier string
+        /// Device Identifier identifier string
         /// </summary>
-        public static string IpOrHostname
-        {
-            get
-            {
-                return "ip";
-            }
-        }
+        public static readonly string IpOrHostname = "ip";
 
         /// <summary>
-        /// Gets WDP Username identifier string
+        /// WDP Username identifier string
         /// </summary>
-        public static string WdpUser
-        {
-            get
-            {
-                return "user";
-            }
-        }
+        public static readonly string WdpUser = "user";
 
         /// <summary>
-        /// Gets WDP Password identifier string
+        /// WDP Password identifier string
         /// </summary>
-        public static string WdpPassword
-        {
-            get
-            {
-                return "pwd";
-            }
-        }
+        public static readonly string WdpPassword = "pwd";
 
         /// <summary>
         /// Helper for getting a parameter value for a key
