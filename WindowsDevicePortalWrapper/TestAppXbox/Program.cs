@@ -109,8 +109,7 @@ namespace TestApp
                 return;
             }
 
-            DevicePortalConnection connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
-            DevicePortal portal = new DevicePortal(connection);
+            DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
 
             Task connectTask = portal.Connect(updateConnection: false);
             connectTask.Wait();
