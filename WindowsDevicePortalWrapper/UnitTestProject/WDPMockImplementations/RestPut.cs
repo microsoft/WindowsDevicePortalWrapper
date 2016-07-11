@@ -7,11 +7,12 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Put
+    /// MOCK implementation of HTTP PUT
     /// </content>
     public partial class DevicePortal
     {
@@ -35,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.ApplyCsrfToken(client, "PUT");
 
                 // Send the request
-                Task<HttpResponseMessage> putTask = client.PutAsync(uri, body);
+                Task<HttpResponseMessage> putTask = TestHelpers.MockHttpResponder.PutAsync(uri, body);
                 await putTask.ConfigureAwait(false);
                 putTask.Wait();
 

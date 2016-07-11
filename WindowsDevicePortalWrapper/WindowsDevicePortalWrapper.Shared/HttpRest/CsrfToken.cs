@@ -61,7 +61,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Retrieves the CSRF token from the HTTP response and stores it.
         /// </summary>
-        /// <param name="client">The HTTP client on which to have the header set.</param>
+        /// <param name="response">The HTTP response from which to retrieve the header.</param>
         public void RetrieveCsrfToken(HttpResponseMessage response)
         {
             // If the response sets a CSRF token, store that for future requests.

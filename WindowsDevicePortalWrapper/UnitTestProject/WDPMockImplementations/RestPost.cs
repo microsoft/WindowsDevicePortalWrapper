@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="RestPut.cs" company="Microsoft Corporation">
+// <copyright file="RestPost.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -7,23 +7,21 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Put
+    /// MOCK implementation of HTTP Post
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// Submits the http put request to the specified uri.
+        /// Submits the http post request to the specified uri.
         /// </summary>
-        /// <param name="uri">The uri to which the put request will be issued.</param>
-        /// <param name="body">The HTTP content comprising the body of the request.</param>
-        /// <returns>Task tracking the PUT completion.</returns>
-        private async Task Put(
-            Uri uri,
-            HttpContent body = null)
+        /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <returns>Task tracking the completion of the POST request</returns>
+        private async Task Post(Uri uri)
         {
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
@@ -32,14 +30,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyCsrfToken(client, "PUT");
+                this.ApplyCsrfToken(client, "POST");
 
-                // Send the request
-                Task<HttpResponseMessage> putTask = client.PutAsync(uri, body);
-                await putTask.ConfigureAwait(false);
-                putTask.Wait();
+                Task<HttpResponseMessage> postTask = TestHelpers.MockHttpResponder.PostAsync(uri, null);
+                await postTask.ConfigureAwait(false);
+                postTask.Wait();
 
-                using (HttpResponseMessage response = putTask.Result)
+                using (HttpResponseMessage response = postTask.Result)
                 {
                     if (!response.IsSuccessStatusCode)
                     {

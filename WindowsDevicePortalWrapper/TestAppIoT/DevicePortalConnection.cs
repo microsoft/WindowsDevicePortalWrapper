@@ -160,6 +160,7 @@ namespace TestAppIoT
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
                         newConnection = new Uri(string.Format("{0}://{1}", "http", addressInfo.Address));
+                        
                         // TODO qualified name
                         break;
                     }

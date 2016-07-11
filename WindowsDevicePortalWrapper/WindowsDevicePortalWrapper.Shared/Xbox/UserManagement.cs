@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint for User management REST calls
         /// </summary>
-        private static readonly string UserApi = "ext/user";
+        public static readonly string XboxLiveUserApi = "ext/user";
 
         /// <summary>
         /// Gets the Xbox Live user info for all users present on the device
@@ -26,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>UserList object containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task<UserList> GetXboxLiveUsers()
         {
-            return await this.Get<UserList>(UserApi);
+            return await this.Get<UserList>(XboxLiveUserApi);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task UpdateXboxLiveUsers(UserList users)
         {
-            await this.Put(UserApi, users);
+            await this.Put(XboxLiveUserApi, users);
         }
 
         #region Data contract

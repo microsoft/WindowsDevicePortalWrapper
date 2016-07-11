@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
@@ -239,6 +240,30 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     DeviceConnectionStatus.Failed,
                     DeviceConnectionPhase.Idle,
                     string.Format("Device connection failed: {0}", connectionPhaseDescription));
+            }
+        }
+
+        /// <summary>
+        /// Helper method used for saving the content of a response to a file.
+        /// This allows unittests to easily generate real data to use as mock responses.
+        /// </summary>
+        /// <param name="endpoint">API endpoint we are calling.</param>
+        /// <param name="directory">Directory to store our file.</param>
+        /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
+        public async Task SaveEndpointResponseToFile(string endpoint, string directory)
+        {
+            Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
+
+            using (Stream dataStream = await this.Get(uri))
+            {
+                string filename = endpoint.Replace('/', '-') + "_" + this.DeviceFamily + "_" + this.OperatingSystemVersion + ".dat";
+                string filepath = Path.Combine(directory, filename);
+
+                using (var fileStream = File.Create(filepath))
+                {
+                    dataStream.Seek(0, SeekOrigin.Begin);
+                    dataStream.CopyTo(fileStream);
+                }
             }
         }
 

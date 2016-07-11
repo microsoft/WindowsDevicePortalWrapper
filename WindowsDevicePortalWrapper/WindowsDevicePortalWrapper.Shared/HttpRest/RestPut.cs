@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
-                apiPath, 
+                apiPath,
                 payload);
 
             await this.Put(uri);
@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
-                apiPath, 
+                apiPath,
                 payload);
 
             // Serialize the body to a JSON stream

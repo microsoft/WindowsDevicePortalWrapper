@@ -136,7 +136,7 @@ namespace TestApp
 
             DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
 
-            Task connectTask = portal.Connect(null, null, false);
+            Task connectTask = portal.Connect(updateConnection: false);
             connectTask.Wait();
 
             if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)

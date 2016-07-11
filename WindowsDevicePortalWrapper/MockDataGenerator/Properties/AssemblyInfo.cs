@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TestAppIoT")]
+[assembly: AssemblyTitle("MockDataGenerator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TestAppIoT")]
+[assembly: AssemblyProduct("MockDataGenerator")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1053a1e3-ba27-4916-a94d-3dd7feb6f463")]
+[assembly: Guid("c5af45ca-c804-42ed-81fd-041b9b7fdbbd")]
 
 // Version information for an assembly consists of the following four values:
 //
