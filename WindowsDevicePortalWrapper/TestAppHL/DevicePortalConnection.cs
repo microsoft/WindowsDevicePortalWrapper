@@ -66,7 +66,7 @@ namespace TestApp
 
                 string absoluteUri = this.Connection.AbsoluteUri;
 
-                if (absoluteUri.StartsWith("https", StringComparison.InvariantCultureIgnoreCase))
+                if (absoluteUri.StartsWith("https", StringComparison.OrdinalIgnoreCase))
                 {
                     return new Uri(Regex.Replace(absoluteUri, "https", "wss", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
                 }

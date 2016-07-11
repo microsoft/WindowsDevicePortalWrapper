@@ -40,7 +40,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 string rawJsonString = read.ReadToEnd();
 
                 // Recover from an error in which SystemPerformanceInformation is returned with an incorrect prefix, postfix and the message converted into JSON a second time.
-                if (rawJsonString.StartsWith(SysPerfInfoErrorPrefix, StringComparison.InvariantCultureIgnoreCase) && rawJsonString.EndsWith(SysPerfInfoErrorPostfix, StringComparison.InvariantCultureIgnoreCase))
+                if (rawJsonString.StartsWith(SysPerfInfoErrorPrefix, StringComparison.OrdinalIgnoreCase) && rawJsonString.EndsWith(SysPerfInfoErrorPostfix, StringComparison.OrdinalIgnoreCase))
                 {
                     // Remove the incorrect prefix and postfix from the JSON message.
                     rawJsonString = rawJsonString.Substring(SysPerfInfoErrorPrefix.Length, rawJsonString.Length - SysPerfInfoErrorPrefix.Length - SysPerfInfoErrorPostfix.Length);

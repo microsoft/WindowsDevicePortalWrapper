@@ -466,7 +466,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         if (string.Compare(
                                 pi.PackageFullName,
                                 packageName,
-                                caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase) == 0)
+                                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             found = true;
                             break;

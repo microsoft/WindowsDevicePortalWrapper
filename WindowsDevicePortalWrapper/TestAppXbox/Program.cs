@@ -249,27 +249,27 @@ namespace TestApp
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("info", StringComparison.InvariantCultureIgnoreCase))
+            if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.InfoOperation;
             }
-            else if (operation.Equals("xbluser", StringComparison.InvariantCultureIgnoreCase))
+            else if (operation.Equals("xbluser", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.UserOperation;
             }
-            else if (operation.Equals("install", StringComparison.InvariantCultureIgnoreCase))
+            else if (operation.Equals("install", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.InstallOperation;
             }
-            else if (operation.Equals("reboot", StringComparison.InvariantCultureIgnoreCase))
+            else if (operation.Equals("reboot", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.RebootOperation;
             }
-            else if (operation.Equals("processes", StringComparison.InvariantCultureIgnoreCase))
+            else if (operation.Equals("processes", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ListProcessesOperation;
             }
-            else if (operation.Equals("systemPerf", StringComparison.InvariantCultureIgnoreCase))
+            else if (operation.Equals("systemPerf", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.GetSystemPerfOperation;
             }
