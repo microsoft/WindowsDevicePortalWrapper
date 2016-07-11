@@ -5,11 +5,11 @@
 //----------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {

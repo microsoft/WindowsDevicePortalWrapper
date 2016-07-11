@@ -3,7 +3,9 @@
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
-    
+
+[module: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:FileHeaderFileNameDocumentationMustMatchTypeName", Justification = "Filename matches the enum better than the ApplicationInstallStatusEventArgs class.")]
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>

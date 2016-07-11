@@ -15,16 +15,6 @@ namespace MockDataGenerator
     public class ParameterHelper
     {
         /// <summary>
-        /// List for storing parsed command line parameters as key value pairs.
-        /// </summary>
-        private Dictionary<string, string> parameters = new Dictionary<string, string>();
-
-        /// <summary>
-        /// List for storing parsed command line flags.
-        /// </summary>
-        private List<string> flags = new List<string>();
-
-        /// <summary>
         /// Help Flag identifier string
         /// </summary>
         public static readonly string HelpFlag = "?";
@@ -43,6 +33,16 @@ namespace MockDataGenerator
         /// WDP Password identifier string
         /// </summary>
         public static readonly string WdpPassword = "pwd";
+
+        /// <summary>
+        /// List for storing parsed command line parameters as key value pairs.
+        /// </summary>
+        private Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+        /// <summary>
+        /// List for storing parsed command line flags.
+        /// </summary>
+        private List<string> flags = new List<string>();
 
         /// <summary>
         /// Helper for getting a parameter value for a key
