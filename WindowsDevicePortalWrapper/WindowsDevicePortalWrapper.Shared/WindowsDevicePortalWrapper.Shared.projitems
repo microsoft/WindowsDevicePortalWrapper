@@ -46,5 +46,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\SmbShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\UserManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxAppDeployment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxSettings.cs" />
   </ItemGroup>
 </Project>

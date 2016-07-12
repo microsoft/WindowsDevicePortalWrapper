@@ -40,7 +40,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="response">The response to return.</param>
         public void AddMockResponse(string endpoint, HttpResponseMessage response)
         {
-            this.mockResponses.Add(endpoint, response);
+            this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }
 
         /// <summary>
@@ -58,11 +58,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 return;
             }
 
+            Utilities.ModifyEndpointForFilename(ref endpoint);
+
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            string filepath = Path.Combine("MockData", platform.ToString(), operatingSystemVersion, endpoint.Replace('/', '_') + "_" + platform.ToString() + "_" + operatingSystemVersion + ".dat");
+            string filepath = Path.Combine("MockData", platform.ToString(), operatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + operatingSystemVersion + ".dat");
             response.Content = this.LoadContentFromFile(filepath);
 
-            this.mockResponses.Add(endpoint, response);
+            this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }
 
         /// <summary>
@@ -73,12 +75,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
+            Utilities.ModifyEndpointForFilename(ref endpoint);
+
             // Add the Content from the default file if one exists.
-            string filepath = Path.Combine("MockData", "Defaults", endpoint.Replace('/', '-') + "_Default.dat");
+            string filepath = Path.Combine("MockData", "Defaults", endpoint + "_Default.dat");
 
             response.Content = this.LoadContentFromFile(filepath);
 
-            this.mockResponses.Add(endpoint, response);
+            this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }
 
         /// <summary>
@@ -146,12 +150,18 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.IsNotNull(uri);
 
-            foreach (KeyValuePair<string, HttpResponseMessage> storedResponse in this.mockResponses)
+            string targetEndpoint = uri.AbsolutePath;
+
+            if (targetEndpoint.StartsWith("/"))
             {
-                if (uri.AbsolutePath.Contains(storedResponse.Key))
-                {
-                    return storedResponse.Value;
-                }
+                targetEndpoint = targetEndpoint.Remove(0, 1);
+            }
+
+            Utilities.ModifyEndpointForFilename(ref targetEndpoint);
+
+            if (this.mockResponses.ContainsKey(targetEndpoint.ToLowerInvariant()))
+            {
+                return this.mockResponses[targetEndpoint.ToLowerInvariant()];
             }
 
             Assert.Fail(string.Format("Failed to find a stored response for {0}", uri.AbsolutePath));

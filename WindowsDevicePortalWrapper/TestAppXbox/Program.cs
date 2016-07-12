@@ -76,6 +76,11 @@ namespace TestApp
             /// Get the system performance operation
             /// </summary>
             GetSystemPerfOperation,
+
+            /// <summary>
+            /// Get or set Xbox Settings
+            /// </summary>
+            XboxSettings,
         }
 
         /// <summary>
@@ -240,6 +245,10 @@ namespace TestApp
                 Console.WriteLine("Total Installed Kb: " + systemPerformanceInformation.TotalInstalledKb);
                 Console.WriteLine("Total Pages: " + systemPerformanceInformation.TotalPages);
             }
+            else if (operation == OperationType.XboxSettings)
+            {
+                SettingOperation.HandleOperation(portal, parameters);
+            }
         }
 
         /// <summary>
@@ -273,6 +282,10 @@ namespace TestApp
             {
                 return OperationType.GetSystemPerfOperation;
             }
+            else if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.XboxSettings;
+            }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +
                 "info\n" +
@@ -280,7 +293,8 @@ namespace TestApp
                 "install\n" +
                 "reboot\n" +
                 "processes\n" +
-                "systemPerf\n");
+                "systemPerf\n" +
+                "config\n");
         }
 
         /// <summary>

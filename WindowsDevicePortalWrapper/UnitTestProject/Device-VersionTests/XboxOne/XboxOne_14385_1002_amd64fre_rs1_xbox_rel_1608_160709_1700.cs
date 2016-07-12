@@ -68,12 +68,48 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Basic test of 
+        /// Basic test of GET for operating system info for 1508 OS.
         /// </summary>
         [TestMethod]
         public void GetOsInfo_XboxOne_1608()
         {
             XboxHelpers.VerifyOsInformation(this.OperatingSystemVersion);
+        }
+
+        /// <summary>
+        /// Basic test of the GET method. Gets a mock list of settings
+        /// and verifies it comes back as expected from the raw response
+        /// content for this 1508 OS.
+        /// </summary>
+        [TestMethod]
+        public void GetXboxSettingsTest_XboxOne_1608()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, this.PlatformType, this.OperatingSystemVersion);
+
+            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
+            getSettingsTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getSettingsTask.Status);
+
+            List<XboxSetting> settings = getSettingsTask.Result.Settings;
+
+            // Check some known things about this response.
+            Assert.AreEqual(8, settings.Count);
+
+            Assert.AreEqual("AudioBitstreamFormat", settings[0].Name);
+            Assert.AreEqual("DTS", settings[0].Value);
+            Assert.AreEqual("Audio", settings[0].Category);
+            Assert.AreEqual("No", settings[0].RequiresReboot);
+
+            Assert.AreEqual("ColorDepth", settings[1].Name);
+            Assert.AreEqual("24 bit", settings[1].Value);
+            Assert.AreEqual("Video", settings[1].Category);
+            Assert.AreEqual("Yes", settings[1].RequiresReboot);
+
+            Assert.AreEqual("TVResolution", settings[7].Name);
+            Assert.AreEqual("720p", settings[7].Value);
+            Assert.AreEqual("Video", settings[7].Category);
+            Assert.AreEqual("No", settings[7].RequiresReboot);
         }
     }
 }
