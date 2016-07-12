@@ -14,7 +14,7 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
     /// <summary>
-    /// Test class for UseManagement APIs
+    /// Test class for UserManagement APIs
     /// </summary>
     [TestClass]
     public class UserManagementTests : BaseTests

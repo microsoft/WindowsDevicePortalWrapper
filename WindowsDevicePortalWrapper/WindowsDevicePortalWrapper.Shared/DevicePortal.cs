@@ -259,9 +259,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
                 // we can create a class with the same name as this Device/OS pair for tests.
                 string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
-                filename = filename.Replace('/', '_');
-                filename = filename.Replace('-', '_');
-                filename = filename.Replace('.', '_');
+
+                Utilities.ModifyEndpointForFilename(ref filename);
+
                 filename += ".dat";
                 string filepath = Path.Combine(directory, filename);
 

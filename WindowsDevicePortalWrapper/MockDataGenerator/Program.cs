@@ -31,6 +31,7 @@ namespace MockDataGenerator
             DevicePortal.MachineNameApi,
             DevicePortal.OsInfoApi,
             DevicePortal.XboxLiveUserApi,
+            DevicePortal.XboxSettingsApi,
         };
 
         /// <summary>
@@ -109,8 +110,22 @@ namespace MockDataGenerator
             {
                 foreach (string endpoint in Endpoints)
                 {
-                    Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory);
-                    saveResponseTask.Wait();
+                    try
+                    {
+                        Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory);
+                        saveResponseTask.Wait();
+                    }
+                    catch (Exception e)
+                    {
+                        // Print an error message if possible but continue on.
+                        // Not all APIs are available on all device types.
+                        if (e.InnerException is DevicePortalException)
+                        {
+                            DevicePortalException exception = e.InnerException as DevicePortalException;
+
+                            Console.WriteLine(string.Format("Failed to generate .dat for {0} with status {1} ({2}).", endpoint, exception.HResult, exception.Reason));
+                        }
+                    }
                 }
             }
 

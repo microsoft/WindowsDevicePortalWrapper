@@ -31,6 +31,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Modifies an endpoint to match the way we store it in a file.
+        /// This involves replacing a number of characters with underscores.
+        /// </summary>
+        /// <param name="endpoint">The endpoint that is being modified.</param>
+        public static void ModifyEndpointForFilename(ref string endpoint)
+        {
+            endpoint = endpoint.Replace('\\', '_');
+            endpoint = endpoint.Replace('/', '_');
+            endpoint = endpoint.Replace('-', '_');
+            endpoint = endpoint.Replace('.', '_');
+        }
+
+        /// <summary>
         /// Encodes the specified string as a base64 value.
         /// </summary>
         /// <param name="str">The string to encode.</param>
