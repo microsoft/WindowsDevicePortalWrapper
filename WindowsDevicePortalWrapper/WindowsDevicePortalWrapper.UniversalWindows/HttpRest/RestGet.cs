@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Credentials;
@@ -68,7 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            return null;
+            return (dataBuffer != null) ? dataBuffer.AsStream() : null;
         }
 #pragma warning restore 1998
     }
