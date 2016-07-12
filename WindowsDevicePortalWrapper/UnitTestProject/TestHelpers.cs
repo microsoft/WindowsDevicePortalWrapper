@@ -7,6 +7,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -28,11 +29,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Helper for establishing a mock connection to a DevicePortal object.
         /// </summary>
-        public static void EstablishMockConnection()
+        /// <param name="platform">The platform we are pretending to connect to.</param>
+        /// <param name="operatingSystemVersion">The OS we are pretending it is running.</param>
+        public static void EstablishMockConnection(DevicePortalPlatforms platform, string operatingSystemVersion)
         {
             TestHelpers.MockHttpResponder = new MockHttpResponder();
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi, platform, operatingSystemVersion);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi, platform, operatingSystemVersion);
 
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 
