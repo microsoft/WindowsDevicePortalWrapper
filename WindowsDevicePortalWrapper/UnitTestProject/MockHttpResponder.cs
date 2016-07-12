@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -43,6 +44,28 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Adds a response for this endpoint, loading from the file matching the deviceType and OsVersion
+        /// </summary>
+        /// <param name="endpoint">Endpoint we are mocking.</param>
+        /// <param name="platform">Device platform we are testing.</param>
+        /// <param name="operatingSystemVersion">The OS Version we are testing.</param>
+        public void AddMockResponse(string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion)
+        {
+            // If no OS is provided, use the default.
+            if (operatingSystemVersion == null)
+            {
+                this.AddMockResponse(endpoint);
+                return;
+            }
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            string filepath = Path.Combine("MockData", platform.ToString(), operatingSystemVersion, endpoint.Replace('/', '_') + "_" + platform.ToString() + "_" + operatingSystemVersion + ".dat");
+            response.Content = this.LoadContentFromFile(filepath);
+
+            this.mockResponses.Add(endpoint, response);
+        }
+
+        /// <summary>
         /// Adds a default response for this endpoint, device agnostic.
         /// </summary>
         /// <param name="endpoint">Endpoint we are mocking.</param>
@@ -52,17 +75,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             // Add the Content from the default file if one exists.
             string filepath = Path.Combine("MockData", "Defaults", endpoint.Replace('/', '-') + "_Default.dat");
-            if (File.Exists(filepath))
-            {
-                using (var fileStream = File.OpenRead(filepath))
-                {
-                    MemoryStream stream = new MemoryStream();
-                    fileStream.Seek(0, SeekOrigin.Begin);
-                    fileStream.CopyTo(stream);
 
-                    response.Content = new ByteArrayContent(stream.ToArray());
-                }
-            }
+            response.Content = this.LoadContentFromFile(filepath);
 
             this.mockResponses.Add(endpoint, response);
         }
@@ -141,6 +155,28 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             }
 
             Assert.Fail(string.Format("Failed to find a stored response for {0}", uri.AbsolutePath));
+
+            return null;
+        }
+
+        /// <summary>
+        /// Load a response from a file into an HttpContent object.
+        /// </summary>
+        /// <param name="filepath">filepath to be loaded.</param>
+        /// <returns>Byte array of the mock data as read from the file.</returns>
+        private HttpContent LoadContentFromFile(string filepath)
+        {
+            if (File.Exists(filepath))
+            {
+                using (var fileStream = File.OpenRead(filepath))
+                {
+                    MemoryStream stream = new MemoryStream();
+                    fileStream.Seek(0, SeekOrigin.Begin);
+                    fileStream.CopyTo(stream);
+
+                    return new ByteArrayContent(stream.ToArray());
+                }
+            }
 
             return null;
         }

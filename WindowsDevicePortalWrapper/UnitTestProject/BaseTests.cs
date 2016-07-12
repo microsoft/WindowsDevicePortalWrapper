@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -22,7 +23,29 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         public BaseTests()
         {
-            TestHelpers.EstablishMockConnection();
+            TestHelpers.EstablishMockConnection(this.PlatformType, this.OperatingSystemVersion);
+        }
+
+        /// <summary>
+        /// Gets the overridable Platform type.
+        /// </summary>
+        protected virtual DevicePortalPlatforms PlatformType
+        {
+            get
+            {
+                return DevicePortalPlatforms.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// Gets the overridable OS Version.
+        /// </summary>
+        protected virtual string OperatingSystemVersion
+        {
+            get
+            {
+                return null;
+            }
         }
 
         /// <summary>
