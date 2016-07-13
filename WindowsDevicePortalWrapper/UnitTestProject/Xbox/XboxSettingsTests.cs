@@ -94,10 +94,20 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name));
 
-            Task udpateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
-            udpateSettingsTask.Wait();
+            Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
+            updateSettingsTask.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, udpateSettingsTask.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, updateSettingsTask.Status);
+
+            XboxSetting recievedSetting = updateSettingsTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(setting.Name, recievedSetting.Name);
+            
+            // Note this is still 720p because that's what our default mock returns.
+            Assert.AreEqual("720p", recievedSetting.Value);
+            Assert.AreEqual("Video", recievedSetting.Category);
+            Assert.AreEqual("No", recievedSetting.RequiresReboot);
         }
     }
 }

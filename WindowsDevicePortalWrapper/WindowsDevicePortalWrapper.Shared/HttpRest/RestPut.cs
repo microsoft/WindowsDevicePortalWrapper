@@ -30,56 +30,84 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// Calls the specified API with the provided payload.
+        /// Calls the specified API with the provided body. This signature leaves
+        /// off the optional response so callers who don't need a response body
+        /// don't need to specify a type for it, which also would force them
+        /// to explicitly declare their bodyData type instead of letting it
+        /// be implied implicitly.
         /// </summary>
+        /// <typeparam name="K">The type of the data for the HTTP request body.</typeparam>
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the PUT completion.</returns>
-        private async Task Put(
+        private async Task Put<K>(
             string apiPath,
-            string payload = null)
+            K bodyData,
+            string payload = null) where K : class
         {
-            Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
-                apiPath,
-                payload);
-
-            await this.Put(uri);
+            await this.Put<NullResponse, K>(apiPath, bodyData, payload);
         }
 
         /// <summary>
         /// Calls the specified API with the provided body.
         /// </summary>
-        /// <typeparam name="T">The type of the data for the HTTP request body.</typeparam>
+        /// <typeparam name="T">The type of the data for the HTTP response body (if present).</typeparam>
+        /// <typeparam name="K">The type of the data for the HTTP request body.</typeparam>
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
-        /// <returns>Task tracking the PUT completion.</returns>
-        private async Task Put<T>(
+        /// <returns>Task tracking the PUT completion, optional response body.</returns>
+        private async Task<T> Put<T, K>(
             string apiPath,
-            T bodyData,
-            string payload = null)
+            K bodyData = null,
+            string payload = null) where T : new()
+                                   where K : class
         {
+            T data = default(T);
+
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath,
                 payload);
 
-            // Serialize the body to a JSON stream
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-            Stream stream = new MemoryStream();
-            serializer.WriteObject(stream, bodyData);
-
-            stream.Seek(0, SeekOrigin.Begin);
 #if WINDOWS_UWP
-            HttpStreamContent streamContent = new HttpStreamContent(stream.AsInputStream());
-            streamContent.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+            HttpStreamContent streamContent = null;
 #else
-            StreamContent streamContent = new StreamContent(stream);
-            streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            StreamContent streamContent = null;
 #endif // WINDOWS_UWP
 
-            await this.Put(uri, streamContent);
+            if (bodyData != null)
+            {
+                // Serialize the body to a JSON stream
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(K));
+                Stream stream = new MemoryStream();
+                serializer.WriteObject(stream, bodyData);
+
+                stream.Seek(0, SeekOrigin.Begin);
+#if WINDOWS_UWP
+                streamContent = new HttpStreamContent(stream.AsInputStream());
+                streamContent.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+#else
+                streamContent = new StreamContent(stream);
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+#endif // WINDOWS_UWP
+            }
+
+            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
+
+            using (Stream dataStream = await this.Put(uri, streamContent))
+            {
+                if (dataStream != null)
+                {
+                    JsonFormatCheck<T>(dataStream);
+
+                    object response = deserializer.ReadObject(dataStream);
+                    data = (T)response;
+                }
+            }
+
+            return data;
         }
     }
 }

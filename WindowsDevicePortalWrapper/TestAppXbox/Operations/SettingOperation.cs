@@ -66,8 +66,10 @@ namespace TestApp
                     setting.Name = desiredSetting;
                     setting.Value = desiredValue;
 
-                    Task setSettingTask = portal.UpdateXboxSetting(setting);
+                    Task<XboxSetting> setSettingTask = portal.UpdateXboxSetting(setting);
                     setSettingTask.Wait();
+
+                    Console.WriteLine(setSettingTask.Result);
                 }
             }
         }
