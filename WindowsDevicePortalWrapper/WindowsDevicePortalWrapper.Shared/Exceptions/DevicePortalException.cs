@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Exception innerException = null) : this(
                                                     responseMessage.StatusCode,
                                                     responseMessage.ReasonPhrase,
-                                                    responseMessage.RequestMessage.RequestUri,
+                                                    responseMessage.RequestMessage != null? responseMessage.RequestMessage.RequestUri : null,
                                                     message,
                                                     innerException)
         {

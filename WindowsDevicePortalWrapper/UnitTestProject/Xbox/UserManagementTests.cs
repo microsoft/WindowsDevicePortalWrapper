@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -62,7 +63,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void UpdateXboxLiveUsersTest()
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, response);
 
             UserList users = new UserList();
             UserInfo user = new UserInfo();
@@ -75,6 +76,48 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             updateUsersTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, updateUsersTask.Status);
+        }
+
+        /// <summary>
+        /// Tests the failure case of trying to add a sponsored user
+        /// when the maximum number are already on the console.
+        /// </summary>
+        [TestMethod]
+        public void AddSponsoredUserTest_Failure()
+        {
+            HttpResponseMessage response = new HttpResponseMessage((HttpStatusCode)422);
+            HttpContent content = new StringContent(
+                "{\"ErrorCode\":-2136866553,\"ErrorMessage\":\"The maximum number of sponsored users are already signed in.\"}", 
+                System.Text.Encoding.UTF8, 
+                "application/json");
+
+            response.Content = content;
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, response);
+
+            UserList users = new UserList();
+            UserInfo user = new UserInfo();
+            user.SponsoredUser = true;
+            users.Add(user);
+
+            try
+            {
+                Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsers(users);
+                updateUsersTask.Wait();
+
+                Assert.Fail("Expected an exception due to mock responder returning failure HRESULT.");
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e is AggregateException);
+                Assert.IsNotNull(e.InnerException);
+                Assert.IsTrue(e.InnerException is DevicePortalException);
+
+                DevicePortalException exception = e.InnerException as DevicePortalException;
+
+                Assert.AreEqual(-2136866553, exception.HResult);
+                Assert.AreEqual("The maximum number of sponsored users are already signed in.", exception.Reason);
+            }
         }
     }
 }
