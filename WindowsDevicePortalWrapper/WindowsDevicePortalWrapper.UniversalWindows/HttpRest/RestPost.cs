@@ -5,10 +5,13 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Security.Credentials;
+using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 
@@ -25,8 +28,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the post request will be issued.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
 #pragma warning disable 1998
-        private async Task Post(Uri uri)
+        private async Task<Stream> Post(Uri uri)
         {
+            IBuffer dataBuffer = null;
+
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
             httpFilter.ServerCredential = new PasswordCredential();
@@ -49,8 +54,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         throw new DevicePortalException(response);
                     }
+
+                    if (response.Content != null)
+                    {
+                        using (IHttpContent messageContent = response.Content)
+                        {
+                            IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
+                            while (bufferOperation.Status != AsyncStatus.Completed)
+                            {
+                            }
+
+                            dataBuffer = bufferOperation.GetResults();
+                        }
+                    }
                 }
             }
+
+            return (dataBuffer != null) ? dataBuffer.AsStream() : null;
         }
 #pragma warning restore 1998
     }

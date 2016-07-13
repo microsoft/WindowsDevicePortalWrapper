@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,8 +21,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the post request will be issued.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task Post(Uri uri)
+        private async Task<Stream> Post(Uri uri)
         {
+            MemoryStream dataStream = null;
+
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
             requestSettings.Credentials = this.deviceConnection.Credentials;
@@ -41,8 +44,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         throw new DevicePortalException(response);
                     }
+
+                    if (response.Content != null)
+                    {
+                        using (HttpContent content = response.Content)
+                        {
+                            dataStream = new MemoryStream();
+
+                            Task copyTask = content.CopyToAsync(dataStream);
+                            await copyTask.ConfigureAwait(false);
+                            copyTask.Wait();
+
+                            // Ensure we return with the stream pointed at the origin.
+                            dataStream.Position = 0;
+                        }
+                    }
                 }
             }
+
+            return dataStream;
         }
     }
 }

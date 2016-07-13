@@ -45,9 +45,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="setting">Setting to be updated.</param>
         /// <returns>Task for tracking async completion.</returns>
-        public async Task UpdateXboxSetting(XboxSetting setting)
+        public async Task<XboxSetting> UpdateXboxSetting(XboxSetting setting)
         {
-            await this.Put(Path.Combine(XboxSettingsApi, setting.Name), setting);
+            return await this.Put<XboxSetting, XboxSetting>(Path.Combine(XboxSettingsApi, setting.Name), setting);
         }
 
         #region Data contract

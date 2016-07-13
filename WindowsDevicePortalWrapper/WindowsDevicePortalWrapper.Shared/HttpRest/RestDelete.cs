@@ -5,6 +5,8 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -15,7 +17,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// Calls the specified API with the provided payload.
+        /// Calls the specified API with the provided payload. This signature leaves
+        /// off the optional response so callers who don't need a response body
+        /// don't need to specify a type for it.
         /// </summary>
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
@@ -24,12 +28,41 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string apiPath,
             string payload = null)
         {
+            await this.Delete<NullResponse>(apiPath, payload);
+        }
+
+        /// <summary>
+        /// Calls the specified API with the provided payload.
+        /// </summary>
+        /// <typeparam name="T">The type of the data for the HTTP response body (if present).</typeparam>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>Task tracking the HTTP completion.</returns>
+        private async Task<T> Delete<T>(
+            string apiPath,
+            string payload = null) where T : new()
+        {
+            T data = default(T);
+
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath, 
                 payload);
 
-            await this.Delete(uri);
+            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
+
+            using (Stream dataStream = await this.Delete(uri))
+            {
+                if (dataStream != null)
+                {
+                    JsonFormatCheck<T>(dataStream);
+
+                    object response = deserializer.ReadObject(dataStream);
+                    data = (T)response;
+                }
+            }
+
+            return data;
         }
     }
 }
