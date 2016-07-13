@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.ApplyCsrfToken(client, "DELETE");
+                this.ApplyHttpHeaders(client, "DELETE");
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.DeleteAsync(uri);
                 TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();

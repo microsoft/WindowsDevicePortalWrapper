@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyCsrfToken(client, "POST");
+                this.ApplyHttpHeaders(client, "POST");
 
                 Task<HttpResponseMessage> postTask = TestHelpers.MockHttpResponder.PostAsync(uri, null);
                 await postTask.ConfigureAwait(false);

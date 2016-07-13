@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="CsrfToken.cs" company="Microsoft Corporation">
+// <copyright file="HttpHeadersHelper.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -16,15 +16,25 @@ using Windows.Web.Http.Headers;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Methods for working with CSRF tokens
+    /// Methods for working with Http headers.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// Header name for a CSRF-Token
+        /// Header name for a CSRF-Token.
         /// </summary>
         private static readonly string CsrfTokenName = "CSRF-Token";
-        
+
+        /// <summary>
+        /// Header name for a User-Agent.
+        /// </summary>
+        private static readonly string UserAgentName = "User-Agent";
+
+        /// <summary>
+        /// Header value for User-Agent for the WDPW Open Source project.
+        /// </summary>
+        private static readonly string UserAgentValue = "WindowsDevicePortalWrapper/GitHub Open Source Project";
+
         /// <summary>
         /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
         /// This token is intended to prevent a security vulnerability from cross site forgery.
@@ -32,12 +42,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private string csrfToken = string.Empty;
 
         /// <summary>
+        /// Adds the User-Agent string to a request to identify it
+        /// as coming from the WDPW Open Source project.
+        /// </summary>
+        /// <param name="client">The HTTP client on which to have the header set.</param>
+        public void ApplyUserAgentHeader(HttpClient client)
+        {
+#if WINDOWS_UWP
+            HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
+#else
+            HttpRequestHeaders headers = client.DefaultRequestHeaders;
+#endif // WINDOWS_UWP
+
+            headers.Add(UserAgentName, UserAgentValue);
+        }
+
+        /// <summary>
         /// Applies the CSRF token to the HTTP client.
         /// </summary>
         /// <param name="client">The HTTP client on which to have the header set.</param>
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
-        public void ApplyCsrfToken(
-            HttpClient client,
+        public void ApplyCSRFHeader(
+            HttpClient client, 
             string method)
         {
             string headerName = "X-" + CsrfTokenName;
@@ -56,6 +82,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
 
             headers.Add(headerName, headerValue);
+        }
+
+        /// <summary>
+        /// Applies any needed headers to the HTTP client.
+        /// </summary>
+        /// <param name="client">The HTTP client on which to have the headers set.</param>
+        /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
+        public void ApplyHttpHeaders(
+            HttpClient client,
+            string method)
+        {
+            this.ApplyCSRFHeader(client, method);
+            this.ApplyUserAgentHeader(client);
         }
 
         /// <summary>

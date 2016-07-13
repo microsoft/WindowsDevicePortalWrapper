@@ -134,7 +134,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                                              
                 using (HttpClient client = new HttpClient(requestSettings))
                 {
-                    this.ApplyCsrfToken(client, "POST");
+                    this.ApplyHttpHeaders(client, "POST");
 
                     using (MemoryStream dataStream = new MemoryStream())
                     {
