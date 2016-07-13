@@ -16,8 +16,7 @@ The Windows Device Portal Wrapper welcomes contributions from the community.
 For things like fixing typos and small bug fixes, you can skip this step.
 
 If your change is more than a simple fix, please don't just create a big pull request. 
-Instead, start by [opening an issue](https://github.com/Microsoft/HoloToolkit-Unity/issues) describing the problem you want to solve and how you plan to approach the problem. 
-This will let us have a brief discussion about the problem and, hopefully, identify some potential pitfalls before too much time is spent.
+Instead, start by [opening an issue](https://github.com/Microsoft/WindowsDevicePortalWrapper/issues) describing the problem you want to solve and how you plan to approach the problem. This will let us have a brief discussion about the problem and, hopefully, identify some potential pitfalls before too much time is spent.
 
 Note:  If you wish to work on something that already exists on our backlog, you can use that work item as your proposal.  
 
