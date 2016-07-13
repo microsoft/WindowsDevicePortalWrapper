@@ -80,14 +80,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
         /// <summary>
         /// Tests the failure case of trying to add a sponsored user
-        /// when the maximum number are already on the console.
+        /// when the maximum number is already on the console.
         /// </summary>
         [TestMethod]
         public void AddSponsoredUserTest_Failure()
         {
             HttpResponseMessage response = new HttpResponseMessage((HttpStatusCode)422);
             HttpContent content = new StringContent(
-                "{\"ErrorCode\":-2136866553,\"ErrorMessage\":\"The maximum number of sponsored users are already signed in.\"}", 
+                "{\"ErrorCode\":-2136866553,\"ErrorMessage\":\"The maximum number of sponsored users is already signed in.\"}", 
                 System.Text.Encoding.UTF8, 
                 "application/json");
 
@@ -116,7 +116,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 DevicePortalException exception = e.InnerException as DevicePortalException;
 
                 Assert.AreEqual(-2136866553, exception.HResult);
-                Assert.AreEqual("The maximum number of sponsored users are already signed in.", exception.Reason);
+                Assert.AreEqual("The maximum number of sponsored users is already signed in.", exception.Reason);
             }
         }
     }
