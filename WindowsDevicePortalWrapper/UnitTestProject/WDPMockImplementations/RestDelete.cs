@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyCsrfToken(client, "DELETE");
+                this.ApplyHttpHeaders(client, "DELETE");
 
                 Task<HttpResponseMessage> deleteTask = TestHelpers.MockHttpResponder.DeleteAsync(uri);
                 await deleteTask.ConfigureAwait(false);

@@ -33,7 +33,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyCsrfToken(client, "PUT");
+                this.ApplyHttpHeaders(client, "PUT");
 
                 // Send the request
                 Task<HttpResponseMessage> putTask = TestHelpers.MockHttpResponder.PutAsync(uri, body);

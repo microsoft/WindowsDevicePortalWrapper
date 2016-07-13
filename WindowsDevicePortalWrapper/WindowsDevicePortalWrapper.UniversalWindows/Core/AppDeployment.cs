@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.ApplyCsrfToken(client, "GET");
+                this.ApplyHttpHeaders(client, "GET");
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
                 while (responseOperation.Status != AsyncStatus.Completed)
