@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Issuer for the device certificate.
         /// </summary>
-        public static readonly string DevicePortalCertificateIssuer = "CN=Microsoft Windows Web Management";
+        public static readonly string DevicePortalCertificateIssuer = "Microsoft Windows Web Management";
 
         /// <summary>
         /// Endpoint used to access the certificate.
@@ -149,11 +149,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.AcquiringCertificate,
                         connectionPhaseDescription);                  
-#if WINDOWS_UWP
-                    this.SetDeviceCertificate(await this.GetDeviceCertificate());
-#else
+
                     this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
-#endif
+
                     certificateAcquired = true;
                 }
                 catch

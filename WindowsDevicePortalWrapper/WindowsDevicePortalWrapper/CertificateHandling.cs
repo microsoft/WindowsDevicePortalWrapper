@@ -52,7 +52,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                             // Validate the issuer.
                             certificate = new X509Certificate2(certData);
-                            if (!certificate.IssuerName.Name.StartsWith(DevicePortalCertificateIssuer))
+                            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
                             {
                                 certificate = null;
                                 throw new DevicePortalException(

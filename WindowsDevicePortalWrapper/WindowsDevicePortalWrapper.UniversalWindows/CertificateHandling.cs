@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -46,7 +47,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 try
                 {
-                    using (HttpClient client = new HttpClient())
+                    HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
+                    requestSettings.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+                    requestSettings.AllowUI = false;
+
+                    using (HttpClient client = new HttpClient(requestSettings))
                     {
                         IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
                         TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
@@ -65,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 }
 
                                 certificate = new Certificate(bufferOperation.GetResults());
-                                if (!certificate.Issuer.StartsWith(DevicePortalCertificateIssuer))
+                                if (!certificate.Issuer.Contains(DevicePortalCertificateIssuer))
                                 {
                                     certificate = null;
                                     throw new DevicePortalException(
@@ -94,27 +99,5 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 #pragma warning restore 1998
-
-        /// <summary>
-        /// Sets the device's root certificate in the certificate store. 
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        private void SetDeviceCertificate(Certificate certificate)
-        {
-            // Verify that the certificate is one we recognize.
-            if (!certificate.Issuer.StartsWith(DevicePortalCertificateIssuer))
-            {
-                certificate = null;
-                throw new DevicePortalException(
-                    (HttpStatusCode)0,
-                    "Invalid certificate issuer",
-                    null,
-                    "Failed to set the device certificate");
-            }
-
-            // Install the certificate.
-            CertificateStore trustedStore = CertificateStores.TrustedRootCertificationAuthorities;
-            trustedStore.Add(certificate);
-        }
     }
 }
