@@ -101,12 +101,12 @@ namespace TestApp
             Task<string> getNameTask = portal.GetDeviceName();
             getNameTask.Wait();
 
+            Task setIpdTask = portal.SetInterPupilaryDistance(67.5f);
+            setIpdTask.Wait();
+
             Task<float> getIpdTask = portal.GetInterPupilaryDistance();
             getIpdTask.Wait();
             Console.WriteLine("IPD: " + getIpdTask.Result.ToString());
-
-            Task setIpdTask = portal.SetInterPupilaryDistance(67.5f);
-            setIpdTask.Wait();
 
             Task<BatteryState> batteryTask = portal.GetBatteryState();
             batteryTask.Wait();

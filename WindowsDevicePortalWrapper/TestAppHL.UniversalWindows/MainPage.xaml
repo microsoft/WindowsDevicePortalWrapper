@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="TestAppHL.UniversalWindows.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestAppHL.UniversalWindows"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Width="640" Height="480
+    ">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="addressLabel" HorizontalAlignment="Left" Margin="15,18,0,0" TextWrapping="Wrap" Text="Device Address" VerticalAlignment="Top"/>
+        <TextBox x:Name="address" HorizontalAlignment="Left" Margin="128,12,0,0" TextWrapping="Wrap" Text="localhost:10080" VerticalAlignment="Top" Width="147"/>
+        <TextBlock x:Name="usernameLabel" HorizontalAlignment="Left" Margin="15,55,0,0" TextWrapping="Wrap" Text="User name" VerticalAlignment="Top"/>
+        <TextBox x:Name="username" HorizontalAlignment="Left" Margin="128,49,0,0" TextWrapping="Wrap" Text="user" VerticalAlignment="Top" Width="147"/>
+        <TextBlock x:Name="passwordLabel" HorizontalAlignment="Left" Margin="15,92,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top"/>
+        <TextBox x:Name="password" HorizontalAlignment="Left" Margin="128,86,0,0" TextWrapping="Wrap" Text="password" VerticalAlignment="Top" Width="147"/>
+        <TextBlock x:Name="ssidLabel" HorizontalAlignment="Left" Margin="310,18,0,0" TextWrapping="Wrap" Text="Network SSID" VerticalAlignment="Top"/>
+        <TextBox x:Name="ssid" HorizontalAlignment="Left" Margin="423,12,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="147"/>
+        <TextBlock x:Name="ssidKeyLabel" HorizontalAlignment="Left" Margin="310,55,0,0" TextWrapping="Wrap" Text="Network key" VerticalAlignment="Top"/>
+        <TextBox x:Name="networkKey" HorizontalAlignment="Left" Margin="423,49,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="147"/>
+        <CheckBox x:Name="updateDeviceConnection" Content="Use discovered device address" HorizontalAlignment="Left" Margin="310,81,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Button x:Name="runTests" Content="Run" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Width="620" Click="runTests_Click"/>
+        <TextBlock x:Name="testOutput" Margin="10,166,10,10" TextWrapping="Wrap" Text=""/>
+    </Grid>
+</Page>
