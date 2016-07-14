@@ -40,6 +40,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="response">The response to return.</param>
         public void AddMockResponse(string endpoint, HttpResponseMessage response)
         {
+            Utilities.ModifyEndpointForFilename(ref endpoint);
+
             this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }
 

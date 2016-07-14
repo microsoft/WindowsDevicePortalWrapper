@@ -5,13 +5,19 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 using System.Net.Http;
 #endif // !WINDOWS_UWP
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Security;
+using System.Threading.Tasks;
 #if WINDOWS_UWP
+using Windows.Foundation;
+using Windows.Storage.Streams;
 using Windows.Web.Http;
 #endif // WINDOWS_UWP
 
@@ -37,10 +43,60 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Exception innerException = null) : this(
                                                     responseMessage.StatusCode,
                                                     responseMessage.ReasonPhrase,
-                                                    responseMessage.RequestMessage.RequestUri,
+                                                    responseMessage.RequestMessage != null? responseMessage.RequestMessage.RequestUri : null,
                                                     message,
                                                     innerException)
         {
+            try
+            {
+                if (responseMessage.Content != null)
+                {
+                    Stream dataStream = null;
+#if !WINDOWS_UWP
+                using (HttpContent content = responseMessage.Content)
+                {
+                    dataStream = new MemoryStream();
+
+                    Task copyTask = content.CopyToAsync(dataStream);
+                    copyTask.ConfigureAwait(false);
+                    copyTask.Wait();
+
+                    // Ensure we point the stream at the origin.
+                    dataStream.Position = 0;
+                }
+#else // WINDOWS_UWP
+                    IBuffer dataBuffer = null;
+                    using (IHttpContent messageContent = responseMessage.Content)
+                    {
+                        IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
+                        while (bufferOperation.Status != AsyncStatus.Completed)
+                        {
+                        }
+
+                        dataBuffer = bufferOperation.GetResults();
+
+                        if (dataBuffer != null)
+                        {
+                            dataStream = dataBuffer.AsStream();
+                        }
+                    }
+#endif  // WINDOWS_UWP
+
+                    if (dataStream != null)
+                    {
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
+
+                        HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
+
+                        this.HResult = errorResponse.ErrorCode;
+                        this.Reason = errorResponse.ErrorMessage;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing if we fail to get additional error details from the response body.
+            }
         }
 
         /// <summary>
@@ -93,5 +149,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
             base.GetObjectData(info, context);
         }
 #endif // !WINDOWS_UWP
+
+        #region data contract
+
+        /// <summary>
+        /// Object containing additional error information from
+        /// an HTTP response.
+        /// </summary>
+        [DataContract]
+        private class HttpErrorResponse
+        {
+            /// <summary>
+            /// Gets or sets the ErrorCode
+            /// </summary>
+            [DataMember(Name = "ErrorCode")]
+            public int ErrorCode { get; set; }
+
+            /// <summary>
+            /// Gets or sets the ErrorMessage
+            /// </summary>
+            [DataMember(Name = "ErrorMessage")]
+            public string ErrorMessage { get; set; }
+        }
+
+        #endregion
     }
 }
