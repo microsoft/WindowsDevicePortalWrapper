@@ -127,6 +127,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 if (this.websocket != null)
                 {
+                    // Code 1000 indicates that the purpose of the connection has been fulfilled and the connection is no longer needed.
                     this.websocket.Close(1000, "Closed due to user request.");
                     this.websocket = null;
                     this.IsListeningForMessages = false;
