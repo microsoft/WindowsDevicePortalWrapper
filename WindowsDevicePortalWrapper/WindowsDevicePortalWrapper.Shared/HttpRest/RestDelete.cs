@@ -53,7 +53,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.Delete(uri))
             {
-                if (dataStream != null)
+                if ((dataStream != null) &&
+                    (dataStream.Length != 0))
                 {
                     JsonFormatCheck<T>(dataStream);
 

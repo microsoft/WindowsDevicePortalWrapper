@@ -33,29 +33,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Header value for User-Agent for the WDPW Open Source project.
         /// </summary>
-        private static readonly string UserAgentValue = "WindowsDevicePortalWrapper/GitHub Open Source Project";
+        private static readonly string UserAgentValue = "WindowsDevicePortalWrapper";
 
         /// <summary>
         /// CSRF token retrieved by GET calls and used on subsequent POST/DELETE/PUT calls.
         /// This token is intended to prevent a security vulnerability from cross site forgery.
         /// </summary>
         private string csrfToken = string.Empty;
-
-        /// <summary>
-        /// Adds the User-Agent string to a request to identify it
-        /// as coming from the WDPW Open Source project.
-        /// </summary>
-        /// <param name="client">The HTTP client on which to have the header set.</param>
-        public void ApplyUserAgentHeader(HttpClient client)
-        {
-#if WINDOWS_UWP
-            HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
-#else
-            HttpRequestHeaders headers = client.DefaultRequestHeaders;
-#endif // WINDOWS_UWP
-
-            headers.Add(UserAgentName, UserAgentValue);
-        }
 
         /// <summary>
         /// Applies the CSRF token to the HTTP client.
@@ -95,6 +79,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             this.ApplyCSRFHeader(client, method);
             this.ApplyUserAgentHeader(client);
+        }
+
+        /// <summary>
+        /// Adds the User-Agent string to a request to identify it
+        /// as coming from the WDPW Open Source project.
+        /// </summary>
+        /// <param name="client">The HTTP client on which to have the header set.</param>
+        public void ApplyUserAgentHeader(HttpClient client)
+        {
+            string userAgentValue = UserAgentValue;
+
+#if WINDOWS_UWP
+            userAgentValue += "/UWP";
+            HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
+#else
+            userAgentValue += "/dotnet";
+            HttpRequestHeaders headers = client.DefaultRequestHeaders;
+#endif // WINDOWS_UWP
+
+            headers.Add(UserAgentName, userAgentValue);
         }
 
         /// <summary>
