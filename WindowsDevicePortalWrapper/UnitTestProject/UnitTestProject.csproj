@@ -71,6 +71,7 @@
     <Compile Include="Core\OsInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
+    <Compile Include="WDPMockImplementations\WebSocket.cs" />
     <Compile Include="Xbox\UserManagementTests.cs" />
     <Compile Include="Xbox\XboxAppDeploymentTests.cs" />
     <Compile Include="Xbox\XboxSettingsTests.cs" />
