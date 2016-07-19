@@ -16,7 +16,7 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
     /// <summary>
-    /// Test class for OsInformation APIs
+    /// Test class for AppFileExplorer APIs
     /// </summary>
     [TestClass]
     public class AppFileExplorerTests : BaseTests
