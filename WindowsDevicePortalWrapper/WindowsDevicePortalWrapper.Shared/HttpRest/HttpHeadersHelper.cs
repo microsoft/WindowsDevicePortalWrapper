@@ -21,6 +21,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// Header name for Content Type of a request body.
+        /// </summary>
+        private static readonly string ContentTypeHeaderName = "Content-Type";
+
+        /// <summary>
         /// Header name for a CSRF-Token.
         /// </summary>
         private static readonly string CsrfTokenName = "CSRF-Token";

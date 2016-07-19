@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\MixedRealityCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationPlayback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationRecording.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RequestHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\ResponseHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\HttpHeadersHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestDelete.cs" />

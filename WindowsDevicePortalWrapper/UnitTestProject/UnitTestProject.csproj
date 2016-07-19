@@ -58,6 +58,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
+    <Compile Include="Core\AppFileExplorerTests.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.cs" />
     <Compile Include="MockHttpResponder.cs" />
@@ -95,6 +96,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\ext_settings_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_filesystem_apps_files_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_filesystem_apps_knownfolders_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_os_devicefamily_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
