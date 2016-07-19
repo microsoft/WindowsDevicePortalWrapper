@@ -26,7 +26,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         private static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
 
-#if !WINDOWS_UWP
         /// <summary>
         /// Web socket to get running processes.
         /// </summary>
@@ -55,8 +54,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             set;
         }
 
-#endif // !WINDOWS_UWP
-
         /// <summary>
         /// Gets the collection of processes running on the device.
         /// </summary>
@@ -66,7 +63,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<RunningProcesses>(RunningProcessApi);
         }
 
-#if !WINDOWS_UWP
         /// <summary>
         /// Starts listening for the running processes on the device with them being returned via the RunningProcessesMessageReceived event handler.
         /// </summary>
@@ -75,7 +71,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             if (this.deviceProcessesWebSocket == null)
             {
+#if WINDOWS_UWP
+                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.deviceConnection);
+#else
                 this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.deviceConnection, this.ServerCertificateValidation);
+#endif
 
                 this.deviceProcessesWebSocket.WebSocketMessageReceived += this.RunningProcessesReceivedHandler;
             }
@@ -87,10 +87,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.deviceProcessesWebSocket.OpenConnection(RunningProcessApi);
-
-            // Do not await on the actual listening.
-            Task listenTask = this.deviceProcessesWebSocket.StartListeningForMessages();
+            await this.deviceProcessesWebSocket.StartListeningForMessages(RunningProcessApi);
         }
 
         /// <summary>
@@ -104,9 +101,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 return;
             }
 
-            await this.deviceProcessesWebSocket.CloseConnection();
+            await this.deviceProcessesWebSocket.StopListeningForMessages();
         }
-#endif // !WINDOWS_UWP
 
         /// <summary>
         /// Gets system performance information for the device.
@@ -117,7 +113,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<SystemPerformanceInformation>(SystemPerfApi);
         }
 
-#if !WINDOWS_UWP
         /// <summary>
         /// Starts listening for the system performance information for the device with it being returned via the SystemPerfMessageReceived event handler.
         /// </summary>
@@ -126,7 +121,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             if (this.systemPerfWebSocket == null)
             {
+#if WINDOWS_UWP
+                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection);
+#else
                 this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection, this.ServerCertificateValidation);
+#endif
 
                 this.systemPerfWebSocket.WebSocketMessageReceived += this.SystemPerfMessageReceived;
             }
@@ -138,10 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.systemPerfWebSocket.OpenConnection(SystemPerfApi);
-
-            // Do not await on the actual listening.
-            Task listenTask = this.systemPerfWebSocket.StartListeningForMessages();
+            await this.systemPerfWebSocket.StartListeningForMessages(SystemPerfApi);
         }
 
         /// <summary>
@@ -155,7 +151,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 return;
             }
 
-            await this.systemPerfWebSocket.CloseConnection();
+            await this.systemPerfWebSocket.StopListeningForMessages();
         }
 
         /// <summary>
@@ -192,8 +188,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
-#endif // !WINDOWS_UWP
-        #region Device contract
+#region Device contract
 
         /// <summary>
         /// Object representing the process version.
@@ -569,6 +564,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public NetworkPerformanceData NetworkData { get; set; }
         }
 
-        #endregion // Device contract
+#endregion // Device contract
     }
 }
