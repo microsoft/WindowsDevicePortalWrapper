@@ -21,10 +21,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http post request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestStream">Optional stream containing data for the request body.</param>
+        /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> Post(Uri uri)
+        private async Task<Stream> Post(
+            Uri uri,
+            Stream requestStream = null,
+            string requestStreamContentType = null)
         {
+            StreamContent requestContent = null;
             MemoryStream dataStream = null;
+
+            if (requestStream != null)
+            {
+                requestContent = new StreamContent(requestStream);
+                requestContent.Headers.Remove(ContentTypeHeaderName);
+                requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
+            }
 
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
@@ -35,7 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, "POST");
 
-                Task<HttpResponseMessage> postTask = TestHelpers.MockHttpResponder.PostAsync(uri, null);
+                Task<HttpResponseMessage> postTask = TestHelpers.MockHttpResponder.PostAsync(uri, requestContent);
                 await postTask.ConfigureAwait(false);
                 postTask.Wait();
 

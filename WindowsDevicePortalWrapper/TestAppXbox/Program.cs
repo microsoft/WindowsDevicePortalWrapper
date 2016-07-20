@@ -81,6 +81,11 @@ namespace TestApp
             /// Get or set Xbox Settings
             /// </summary>
             XboxSettings,
+
+            /// <summary>
+            /// Does remote file operations.
+            /// </summary>
+            FileOperation,
         }
 
         /// <summary>
@@ -249,6 +254,10 @@ namespace TestApp
             {
                 SettingOperation.HandleOperation(portal, parameters);
             }
+            else if (operation == OperationType.FileOperation)
+            {
+                FileOperation.HandleOperation(portal, parameters);
+            }
         }
 
         /// <summary>
@@ -286,6 +295,10 @@ namespace TestApp
             {
                 return OperationType.XboxSettings;
             }
+            else if (operation.Equals("file", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.FileOperation;
+            }
 
             throw new Exception("Unknown Operation Type. Supported operations are the following:\n" +
                 "info\n" +
@@ -294,7 +307,8 @@ namespace TestApp
                 "reboot\n" +
                 "processes\n" +
                 "systemPerf\n" +
-                "config\n");
+                "config\n" +
+                "file\n");
         }
 
         /// <summary>

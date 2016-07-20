@@ -111,5 +111,130 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("Video", settings[7].Category);
             Assert.AreEqual("No", settings[7].RequiresReboot);
         }
+
+        /// <summary>
+        /// Simple test which gets a response with a couple of known folders
+        /// and verifies they are returned correctly.
+        /// </summary>
+        [TestMethod]
+        public void AppFileExplorerGetKnownFolderTest_XboxOne_1608()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.OperatingSystemVersion);
+
+            Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFolders();
+            getKnownFoldersTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getKnownFoldersTask.Status);
+
+            List<string> knownFolders = getKnownFoldersTask.Result.Folders;
+
+            // Check some known things about this response.
+            Assert.AreEqual(2, knownFolders.Count);
+            Assert.AreEqual("DevelopmentFiles", knownFolders[0]);
+            Assert.AreEqual("LocalAppData", knownFolders[1]);
+        }
+
+        /// <summary>
+        /// Tests getting the contents of a folder that is not for
+        /// an application (eg developer folder, documents folder).
+        /// </summary>
+        [TestMethod]
+        public void AppFileExplorerGetFolderContentsTest_XboxOne_1608()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, this.PlatformType, this.OperatingSystemVersion);
+
+            Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContents("DevelopmentFiles");
+            getFolderContentsTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getFolderContentsTask.Status);
+
+            List<FileOrFolderInformation> directoryContents = getFolderContentsTask.Result.Contents;
+
+            // Check some known things about this response.
+            Assert.AreEqual(9, directoryContents.Count);
+
+            int currentFileIndex = 0;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780895076062, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(2985, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("AppxManifest.xml", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("AppxManifest.xml", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780895226350, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(1952, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("resources.pri", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("resources.pri", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780895466081, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(14900, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("SamplePixelShader.cso", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("SamplePixelShader.cso", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780895599579, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(18444, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("SampleVertexShader.cso", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("SampleVertexShader.cso", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780895735331, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(1234944, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("UWP_StorageTest.exe", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("UWP_StorageTest.exe", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780896423174, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(4149884, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("UWP_StorageTest.ilk", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("UWP_StorageTest.ilk", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780897192161, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(4919296, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("UWP_StorageTest.pdb", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("UWP_StorageTest.pdb", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780898018399, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(1536, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("UWP_StorageTest.winmd", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("UWP_StorageTest.winmd", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(32, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+
+            Assert.AreEqual(@"LooseApps\LooseFolder", directoryContents[currentFileIndex].CurrentDir);
+            Assert.AreEqual(131117780894117950, directoryContents[currentFileIndex].DateCreated);
+            Assert.AreEqual(0, directoryContents[currentFileIndex].SizeInBytes);
+            Assert.AreEqual("SubFolder", directoryContents[currentFileIndex].Id);
+            Assert.AreEqual("SubFolder", directoryContents[currentFileIndex].Name);
+            Assert.AreEqual(@"LooseApps\LooseFolder\SubFolder", directoryContents[currentFileIndex].SubPath);
+            Assert.AreEqual(16, directoryContents[currentFileIndex].Type);
+            currentFileIndex++;
+        }
     }
 }

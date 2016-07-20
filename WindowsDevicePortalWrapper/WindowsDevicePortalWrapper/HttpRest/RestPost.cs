@@ -20,10 +20,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http post request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestStream">Optional stream containing data for the request body.</param>
+        /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> Post(Uri uri)
+        private async Task<Stream> Post(
+            Uri uri,
+            Stream requestStream = null,
+            string requestStreamContentType = null)
         {
-            MemoryStream dataStream = null;
+            StreamContent requestContent = null;
+            MemoryStream responseDataStream = null;
+
+            if (requestStream != null)
+            {
+                requestContent = new StreamContent(requestStream);
+                requestContent.Headers.Remove(ContentTypeHeaderName);
+                requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
+            }
 
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
@@ -34,7 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, "POST");
 
-                Task<HttpResponseMessage> postTask = client.PostAsync(uri, null);
+                Task<HttpResponseMessage> postTask = client.PostAsync(uri, requestContent);
                 await postTask.ConfigureAwait(false);
                 postTask.Wait();
 
@@ -47,22 +60,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     if (response.Content != null)
                     {
-                        using (HttpContent content = response.Content)
+                        using (HttpContent responseContent = response.Content)
                         {
-                            dataStream = new MemoryStream();
+                            responseDataStream = new MemoryStream();
 
-                            Task copyTask = content.CopyToAsync(dataStream);
+                            Task copyTask = responseContent.CopyToAsync(responseDataStream);
                             await copyTask.ConfigureAwait(false);
                             copyTask.Wait();
 
                             // Ensure we return with the stream pointed at the origin.
-                            dataStream.Position = 0;
+                            responseDataStream.Position = 0;
                         }
                     }
                 }
             }
 
-            return dataStream;
+            return responseDataStream;
         }
     }
 }
