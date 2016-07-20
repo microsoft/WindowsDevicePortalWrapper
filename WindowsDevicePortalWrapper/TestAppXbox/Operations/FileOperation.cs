@@ -23,15 +23,15 @@ namespace TestApp
         private const string XblFileUsageMessage = "Usage:\n" +
             "  /subop:knownfolders\n" +
             "        Lists all available known folder ids on the console\n" +
-            "  /subop:dir /knownfolder:<knownfolderid> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
+            "  /subop:dir /knownfolderid:<knownfolderid> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
             "        Lists the directory contents at the given knownfoldid and optionally subpath.\n" +
-            "  /subop:download /knownfolder:<knownfolderid> /filename:<name of the file to download> /destination:<filepath for storing the file> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
+            "  /subop:download /knownfolderid:<knownfolderid> /filename:<name of the file to download> /destination:<filepath for storing the file> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
             "        Downloads the requested file to the desired destination.\n" +
-            "  /subop:upload /knownfolder:<knownfolderid> /filepath:<filepath of the file to upload> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
+            "  /subop:upload /knownfolderid:<knownfolderid> /filepath:<filepath of the file to upload> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
             "        Uploads a file to the requested folder.\n" +
-            "  /subop:rename /knownfolder:<knownfolderid> /filename:<name of the file to rename> /newfilename:<new filename> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
+            "  /subop:rename /knownfolderid:<knownfolderid> /filename:<name of the file to rename> /newfilename:<new filename> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
             "        Renames a given file.\n" +
-            "  /subop:delete /knownfolder:<knownfolderid> /filename:<name of the file to delete> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
+            "  /subop:delete /knownfolderid:<knownfolderid> /filename:<name of the file to delete> [/subpath:<subpath>] [/packagefullname:<packageFullName>]\n" +
             "        Deletes the given file.\n";
 
         /// <summary>
