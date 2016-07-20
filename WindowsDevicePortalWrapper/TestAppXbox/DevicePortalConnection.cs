@@ -109,15 +109,6 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Gets or sets the device's qualified name
-        /// </summary>
-        public string QualifiedName
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Returns certificate data
         /// </summary>
         /// <returns>certificate data</returns>

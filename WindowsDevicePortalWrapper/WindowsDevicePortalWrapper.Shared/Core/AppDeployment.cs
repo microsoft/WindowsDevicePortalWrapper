@@ -80,7 +80,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             List<string> dependencyFileNames,
             string certificateFileName = null,
             short stateCheckIntervalMs = 500,
-            short timeoutInMinutes = 15)
+            short timeoutInMinutes = 15,
+            bool uninstallPreviousVersion = true)
         {
             string installPhaseDescription = string.Empty;
 
@@ -95,18 +96,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
 
                 // Uninstall the application's previous version, if one exists.
-                installPhaseDescription = string.Format("Uninstalling previous version of {0}", appName);
-                this.SendAppInstallStatus(
-                    ApplicationInstallStatus.InProgress,
-                    ApplicationInstallPhase.UninstallingPreviousVersion,
-                    installPhaseDescription);
-                AppPackages installedApps = await this.GetInstalledAppPackages();
-                foreach (PackageInfo package in installedApps.Packages)
+                if (uninstallPreviousVersion)
                 {
-                    if (package.Name == appName)
+                    installPhaseDescription = string.Format("Uninstalling previous version of {0}", appName);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.UninstallingPreviousVersion,
+                        installPhaseDescription);
+                    AppPackages installedApps = await this.GetInstalledAppPackages();
+                    foreach (PackageInfo package in installedApps.Packages)
                     {
-                        await this.UninstallApplication(package.FullName);
-                        break;
+                        if (package.Name == appName)
+                        {
+                            await this.UninstallApplication(package.FullName);
+                            break;
+                        }
                     }
                 }
 

@@ -32,14 +32,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         NetworkCredential Credentials { get; }
 
         /// <summary>
-        /// Gets the friendly name of the device (ex: LivingRoomPC).
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets or sets the family of the device (ex: Windows.Holographic).
         /// </summary>
         string Family { get; set; }
+
+        /// <summary>
+        /// Gets the friendly name of the device (ex: LivingRoomPC).
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
         /// Gets or sets information describing the operating system installed on the device.

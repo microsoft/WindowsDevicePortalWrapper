@@ -85,7 +85,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.Get(uri))
             {
-                if (dataStream != null)
+                if ((dataStream != null) &&
+                    (dataStream.Length != 0))
                 {
                     JsonFormatCheck<T>(dataStream);
  
