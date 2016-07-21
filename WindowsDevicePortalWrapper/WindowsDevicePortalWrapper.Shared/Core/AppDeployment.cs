@@ -98,7 +98,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Uninstall the application's previous version, if one exists.
                 if (uninstallPreviousVersion)
                 {
-                    installPhaseDescription = string.Format("Uninstalling previous version of {0}", appName);
+                    installPhaseDescription = string.Format("Uninstalling any previous version of {0}", appName);
                     this.SendAppInstallStatus(
                         ApplicationInstallStatus.InProgress,
                         ApplicationInstallPhase.UninstallingPreviousVersion,
