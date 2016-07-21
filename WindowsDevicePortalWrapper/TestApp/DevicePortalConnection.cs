@@ -113,10 +113,6 @@ namespace TestApp
             set;
         }
 
-        // TODO: consider adding support for the fully qualified device name 
-        // public string QualifiedName
-        // { get; set; }
-
         /// <summary>
         /// Gets the raw device certificate.
         /// </summary>

@@ -27,8 +27,13 @@ namespace TestApp
                 address = "localhost:10080";
             }
 
-            this.Connection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(address), address));
-            this.Credentials = new NetworkCredential(userName, password);
+            this.Connection = new Uri(
+                string.Format("{0}://{1}", 
+                this.GetUriScheme(address), 
+                address));
+            this.Credentials = new NetworkCredential(
+                userName, 
+                password);
         }
 
         public Uri Connection
@@ -189,8 +194,8 @@ namespace TestApp
             string address,
             bool requiresHttps = true)
         {
-            return (address.Contains("127.0.0.1") || 
-                    address.Contains("localhost") || 
+            return (address.Contains("127.0.0.1") ||
+                    address.Contains("localhost") ||
                     !requiresHttps) ? "http" : "https";
         }
     }

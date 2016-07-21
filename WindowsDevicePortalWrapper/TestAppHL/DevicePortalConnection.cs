@@ -113,10 +113,6 @@ namespace TestApp
             set;
         }
 
-        // TODO: consider adding support for the fully qualified device name 
-        // public string QualifiedName
-        // { get; set; }
-
         /// <summary>
         /// Gets the raw device certificate.
         /// </summary>
@@ -203,9 +199,10 @@ namespace TestApp
             string address,
             bool requiresHttps = true)
         {
-            return (address.Contains("127.0.0.1") || 
-                    address.Contains("localhost") || 
-                    !requiresHttps) ? "http" : "https";
+            return "http";
+            //return (address.Contains("127.0.0.1") || 
+            //        address.Contains("localhost") || 
+            //        !requiresHttps) ? "http" : "https";
         }
     }
 }

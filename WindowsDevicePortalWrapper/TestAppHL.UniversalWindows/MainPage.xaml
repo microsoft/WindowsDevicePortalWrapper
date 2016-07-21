@@ -5,8 +5,7 @@
     xmlns:local="using:TestAppHL.UniversalWindows"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Width="640" Height="480
-    ">
+    mc:Ignorable="d" Width="1024" Height="768">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="addressLabel" HorizontalAlignment="Left" Margin="15,18,0,0" TextWrapping="Wrap" Text="Device Address" VerticalAlignment="Top"/>
@@ -20,7 +19,25 @@
         <TextBlock x:Name="ssidKeyLabel" HorizontalAlignment="Left" Margin="310,55,0,0" TextWrapping="Wrap" Text="Network key" VerticalAlignment="Top"/>
         <TextBox x:Name="networkKey" HorizontalAlignment="Left" Margin="423,49,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="147"/>
         <CheckBox x:Name="updateDeviceConnection" Content="Use discovered device address" HorizontalAlignment="Left" Margin="310,81,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Button x:Name="runTests" Content="Run" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Width="620" Click="runTests_Click"/>
-        <TextBlock x:Name="testOutput" Margin="10,166,10,10" TextWrapping="Wrap" Text=""/>
+        <Button x:Name="connectToDevice" Content="Connect" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Width="560" Click="connectToDevice_Click"/>
+        <CheckBox x:Name="clearOutput" Content="Clear output for each test" HorizontalAlignment="Left" Margin="592,13,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="testOutput" Margin="592,49,10,10" TextWrapping="Wrap" Text=""/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="16,168,0,0" VerticalAlignment="Top" Width="549" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <CompositeTransform ScaleY="-1"/>
+            </Border.RenderTransform>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="580,15,0,18" Width="2" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <CompositeTransform ScaleX="-1"/>
+            </Border.RenderTransform>
+        </Border>
+
+        <Button x:Name="getName" Content="Get Device Name" HorizontalAlignment="Left" Margin="15,194,0,0" VerticalAlignment="Top" Width="144" Click="getDeviceName_Click" IsEnabled="False"/>
+        <Button x:Name="getBatteryLevel" Content="Get Battery Level" HorizontalAlignment="Left" Margin="15,231,0,0" VerticalAlignment="Top" Width="144" Click="getBatteryLevel_Click" IsEnabled="False"/>
+        <Button x:Name="getPowerState" Content="Get Power State" HorizontalAlignment="Left" Margin="15,268,0,0" VerticalAlignment="Top" Width="144" Click="getPowerState_Click" IsEnabled="False"/>
+        <Button x:Name="getIpd" Content="Get IPD" HorizontalAlignment="Left" Margin="202,194,0,0" VerticalAlignment="Top" Width="144" Click="getIpd_Click" IsEnabled="False"/>
+        <Button x:Name="setIpd" Content="Set IPD" HorizontalAlignment="Left" Margin="423,194,0,0" VerticalAlignment="Top" Width="144" Click="setIpd_Click" IsEnabled="False"/>
+        <TextBox x:Name="ipdValue" HorizontalAlignment="Left" Margin="351,194,0,0" TextWrapping="NoWrap" Text="0" VerticalAlignment="Top" Width="67" TextAlignment="Right" IsEnabled="False"/>
     </Grid>
 </Page>
