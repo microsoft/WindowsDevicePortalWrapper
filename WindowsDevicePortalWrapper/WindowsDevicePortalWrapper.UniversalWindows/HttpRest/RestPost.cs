@@ -26,11 +26,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http post request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestStream">Optional stream containing data for the request body.</param>
+        /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Post(Uri uri)
+        private async Task<Stream> Post(
+            Uri uri,
+            Stream requestStream = null,
+            string requestStreamContentType = null)
         {
+            HttpStreamContent requestContent = null;
             IBuffer dataBuffer = null;
+
+            if (requestStream != null)
+            {
+                requestContent = new HttpStreamContent(requestStream.AsInputStream());
+                requestContent.Headers.Remove(ContentTypeHeaderName);
+                requestContent.Headers.TryAppendWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
+            }
 
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
@@ -42,10 +55,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, "POST");
 
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, null);
+                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, requestContent);
                 TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
                 while (!responseAwaiter.IsCompleted)
-                { 
+                {
                 }
 
                 using (HttpResponseMessage response = responseOperation.GetResults())

@@ -122,131 +122,81 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     out uri,
                     out boundaryString);
 
-                // Create the request
-#if WINDOWS_UWP
-                HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
-                requestSettings.AllowUI = false;
-                requestSettings.ServerCredential = new PasswordCredential();
-                requestSettings.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
-                requestSettings.ServerCredential.Password = this.deviceConnection.Credentials.Password;
-#else
-                WebRequestHandler requestSettings = new WebRequestHandler();
-                requestSettings.UseDefaultCredentials = false;
-                requestSettings.Credentials = this.deviceConnection.Credentials;
-                requestSettings.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-#endif // WINDOWS_UWP   
-                                                             
-                using (HttpClient client = new HttpClient(requestSettings))
+                using (MemoryStream dataStream = new MemoryStream())
                 {
-                    this.ApplyHttpHeaders(client, "POST");
+                    byte[] data;
 
-                    using (MemoryStream dataStream = new MemoryStream())
+                    // Copy the application package.
+                    installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.CopyingFile,
+                        installPhaseDescription);
+                    data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
+                    dataStream.Write(data, 0, data.Length);
+                    CopyFileToRequestStream(packageFile, dataStream);
+
+                    // Copy dependency files, if any.
+                    foreach (string dependencyFile in dependencyFileNames)
                     {
-                        byte[] data;
-
-                        // Copy the application package.
-                        installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
+                        FileInfo fi = new FileInfo(dependencyFile);
+                        installPhaseDescription = string.Format("Copying: {0}", fi.Name);
                         this.SendAppInstallStatus(
                             ApplicationInstallStatus.InProgress,
                             ApplicationInstallPhase.CopyingFile,
                             installPhaseDescription);
-                        data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
                         dataStream.Write(data, 0, data.Length);
-                        this.CopyInstallationFileToStream(packageFile, dataStream);
-
-                        // Copy dependency files, if any.
-                        foreach (string dependencyFile in dependencyFileNames)
-                        {
-                            FileInfo fi = new FileInfo(dependencyFile);
-                            installPhaseDescription = string.Format("Copying: {0}", fi.Name);
-                            this.SendAppInstallStatus(
-                                ApplicationInstallStatus.InProgress,
-                                ApplicationInstallPhase.CopyingFile,
-                                installPhaseDescription);
-                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                            dataStream.Write(data, 0, data.Length);
-                            this.CopyInstallationFileToStream(fi, dataStream);
-                        }
-
-                        // Copy the certificate file, if provided.
-                        if (!string.IsNullOrEmpty(certificateFileName))
-                        {
-                            FileInfo fi = new FileInfo(certificateFileName);
-                            installPhaseDescription = string.Format("Copying: {0}", fi.Name);
-                            this.SendAppInstallStatus(
-                                ApplicationInstallStatus.InProgress,
-                                ApplicationInstallPhase.CopyingFile,
-                                installPhaseDescription);
-                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                            dataStream.Write(data, 0, data.Length);
-                            this.CopyInstallationFileToStream(fi, dataStream);
-                        }
-
-                        // Close the installation request data.
-                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
-                        dataStream.Write(data, 0, data.Length);
-
-                        dataStream.Position = 0;
-                        string contentTypeHeaderName = "Content-Type";
-                        string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
-
-#if WINDOWS_UWP
-                        using (HttpStreamContent content = new HttpStreamContent(dataStream.AsInputStream()))
-                        {                        
-                            content.Headers.Remove(contentTypeHeaderName);
-                            content.Headers.TryAppendWithoutValidation(contentTypeHeaderName, contentType);
-
-                            IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, null);
-                            System.Runtime.CompilerServices.TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                            while (!responseAwaiter.IsCompleted)
-                            { 
-                            }
-
-                            using (HttpResponseMessage response = responseOperation.GetResults())
-                            {
-#else
-                        using (StreamContent content = new StreamContent(dataStream))
-                        {
-                            content.Headers.Remove(contentTypeHeaderName);
-                            content.Headers.TryAddWithoutValidation(contentTypeHeaderName, contentType);
-
-                            using (HttpResponseMessage response = await client.PostAsync(uri, content))
-                            {
-#endif // WINDOWS_UWP
-                                if (response.StatusCode != HttpStatusCode.Accepted)
-                                {
-                                    throw new DevicePortalException(
-                                        response.StatusCode,
-                                        response.StatusCode.ToString(),
-                                        uri,
-                                        "Failed to upload installation package");
-                                }
-                            }
-                        }
-
-                        // Poll the status until complete.
-                        ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
-                        do
-                        {
-                            installPhaseDescription = string.Format("Installing {0}", appName);
-                            this.SendAppInstallStatus(
-                                ApplicationInstallStatus.InProgress,
-                                ApplicationInstallPhase.Installing,
-                                installPhaseDescription);
-
-                            await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
-
-                            status = await this.GetInstallStatus();
-                        }
-                        while (status == ApplicationInstallStatus.InProgress);
-
-                        installPhaseDescription = string.Format("{0} installed successfully", appName);
-                        this.SendAppInstallStatus(
-                            ApplicationInstallStatus.Completed,
-                            ApplicationInstallPhase.Idle,
-                            installPhaseDescription);
+                        CopyFileToRequestStream(fi, dataStream);
                     }
+
+                    // Copy the certificate file, if provided.
+                    if (!string.IsNullOrEmpty(certificateFileName))
+                    {
+                        FileInfo fi = new FileInfo(certificateFileName);
+                        installPhaseDescription = string.Format("Copying: {0}", fi.Name);
+                        this.SendAppInstallStatus(
+                            ApplicationInstallStatus.InProgress,
+                            ApplicationInstallPhase.CopyingFile,
+                            installPhaseDescription);
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                        dataStream.Write(data, 0, data.Length);
+                        CopyFileToRequestStream(fi, dataStream);
+                    }
+
+                    // Close the installation request data.
+                    data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
+                    dataStream.Write(data, 0, data.Length);
+
+                    dataStream.Position = 0;
+
+                    string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
+
+                    // Make the HTTP request.
+                    await this.Post(uri, dataStream, contentType);
                 }
+
+                // Poll the status until complete.
+                ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
+                do
+                {
+                    installPhaseDescription = string.Format("Installing {0}", appName);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.Installing,
+                        installPhaseDescription);
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
+
+                    status = await this.GetInstallStatus();
+                }
+                while (status == ApplicationInstallStatus.InProgress);
+
+                installPhaseDescription = string.Format("{0} installed successfully", appName);
+                this.SendAppInstallStatus(
+                    ApplicationInstallStatus.Completed,
+                    ApplicationInstallPhase.Idle,
+                    installPhaseDescription);
             }
             catch (Exception e)
             {
@@ -278,32 +228,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 PackageManagerApi,
                 //// NOTE: When uninstalling an app package, the package name is not Hex64 encoded.
                 string.Format("package={0}", packageName));
-        }
-
-        /// <summary>
-        /// Copies a file to the specified stream and prepends the necessary content information
-        /// required to be part of a multipart form data request.
-        /// </summary>
-        /// <param name="file">The file to be copied.</param>
-        /// <param name="stream">The stream to which the file will be copied.</param>
-        private void CopyInstallationFileToStream(
-            FileInfo file,
-            Stream stream)
-        {
-            byte[] data;
-            string contentDisposition = string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n", file.Name, file.Name);
-            string contentType = "Content-Type: application/octet-stream\r\n\r\n";
-
-            data = Encoding.ASCII.GetBytes(contentDisposition);
-            stream.Write(data, 0, data.Length);
-
-            data = Encoding.ASCII.GetBytes(contentType);
-            stream.Write(data, 0, data.Length);
-
-            using (FileStream fs = File.OpenRead(file.FullName))
-            {
-                fs.CopyTo(stream);
-            }
         }
 
         /// <summary>

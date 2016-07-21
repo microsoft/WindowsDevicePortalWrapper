@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="DevicePortalConnection.cs" />
     <Compile Include="NetworkShare.cs" />
+    <Compile Include="Operations\FileOperation.cs" />
     <Compile Include="Operations\SettingOperation.cs" />
     <Compile Include="Operations\InstallOperation.cs" />
     <Compile Include="ParameterHelper.cs" />

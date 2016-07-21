@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -41,6 +42,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
             endpoint = endpoint.Replace('/', '_');
             endpoint = endpoint.Replace('-', '_');
             endpoint = endpoint.Replace('.', '_');
+        }
+
+        /// <summary>
+        /// Builds a query string from key value pairs.
+        /// </summary>
+        /// <param name="payload">The key value pairs containing the query parameters.</param>
+        /// <returns>Properly formatted query string.</returns>
+        public static string BuildQueryString(Dictionary<string, string> payload)
+        {
+            string query = string.Empty;
+
+            foreach (KeyValuePair<string, string> pair in payload)
+            {
+                query += pair.Key + "=" + pair.Value + "&";
+            }
+
+            // Trim off the final ampersand.
+            query = query.Trim('&');
+
+            return query;
         }
 
         /// <summary>
