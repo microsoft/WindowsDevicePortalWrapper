@@ -71,6 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="certificateFileName">Full name of the optional certificate file.</param>
         /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
         /// <param name="timeoutInMinutes">Operation timeout.</param>
+        /// <param name="uninstallPreviousVersion">Indicate whether or not the previous app version should be uninstalled prior to installing.</param>
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         /// <returns>Task for tracking completion of install initialization.</returns>
