@@ -8,7 +8,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 #else
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 #endif // !WINDOWS_UWP
@@ -96,9 +99,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string userAgentValue = UserAgentValue;
 
 #if WINDOWS_UWP
+            Assembly asm = this.GetType().GetTypeInfo().Assembly;
+            userAgentValue += "/v" + asm.GetName().Version.ToString();
             userAgentValue += "/UWP";
             HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
 #else
+            Assembly asm = Assembly.GetExecutingAssembly();
+            userAgentValue += "/v" + asm.GetName().Version.ToString();
             userAgentValue += "/dotnet";
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
 #endif // WINDOWS_UWP
@@ -114,28 +121,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             // If the response sets a CSRF token, store that for future requests.
 #if WINDOWS_UWP
-                    string cookie;
-                    if (response.Headers.TryGetValue("Set-Cookie", out cookie))
-                    {
-                        string csrfTokenNameWithEquals = CsrfTokenName + "=";
-                        if (cookie.StartsWith(csrfTokenNameWithEquals))
-                        {
-                            this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
-                        }
-                    }
+            string cookie;
+            if (response.Headers.TryGetValue("Set-Cookie", out cookie))
+            {
+                string csrfTokenNameWithEquals = CsrfTokenName + "=";
+                if (cookie.StartsWith(csrfTokenNameWithEquals))
+                {
+                    this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
+                }
+            }
 #else
-                    IEnumerable<string> cookies;
-                    if (response.Headers.TryGetValues("Set-Cookie", out cookies))
+            IEnumerable<string> cookies;
+            if (response.Headers.TryGetValues("Set-Cookie", out cookies))
+            {
+                foreach (string cookie in cookies)
+                {
+                    string csrfTokenNameWithEquals = CsrfTokenName + "=";
+                    if (cookie.StartsWith(csrfTokenNameWithEquals))
                     {
-                        foreach (string cookie in cookies)
-                        {
-                            string csrfTokenNameWithEquals = CsrfTokenName + "=";
-                            if (cookie.StartsWith(csrfTokenNameWithEquals))
-                            {
-                                this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
-                            }
-                        }
+                        this.csrfToken = cookie.Substring(csrfTokenNameWithEquals.Length);
                     }
+                }
+            }
 #endif
         }
     }

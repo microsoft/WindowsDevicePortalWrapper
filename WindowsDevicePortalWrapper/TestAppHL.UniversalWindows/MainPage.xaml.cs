@@ -130,7 +130,7 @@ namespace TestAppHL.UniversalWindows
             this.testOutput.Text = sb.ToString();
         }
 
-        private void ConnectToDevice_Click(object sender, RoutedEventArgs e)
+        private void connectToDevice_Click(object sender, RoutedEventArgs e)
         {
             this.EnableTestControls(false);
             this.getWiFiInfo.IsEnabled = false;

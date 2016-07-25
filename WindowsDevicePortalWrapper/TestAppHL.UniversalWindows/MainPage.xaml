@@ -23,7 +23,7 @@
         <TextBlock x:Name="ssidKeyLabel" HorizontalAlignment="Left" Margin="310,55,0,0" TextWrapping="Wrap" Text="Network key" VerticalAlignment="Top"/>
         <TextBox x:Name="networkKey" HorizontalAlignment="Left" Margin="423,49,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="147"/>
         <CheckBox x:Name="updateDeviceConnection" Content="Use discovered device address" HorizontalAlignment="Left" Margin="310,81,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Button x:Name="connectToDevice" Content="Connect" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Width="265" Click="ConnectToDevice_Click"/>
+        <Button x:Name="connectToDevice" Content="Connect" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Width="265" Click="connectToDevice_Click"/>
         <Button x:Name="rebootDevice" Content="Reboot" HorizontalAlignment="Left" Margin="280,123,0,0" VerticalAlignment="Top" Width="144" Click="RebootDevice_Click" IsEnabled="False"/>
         <Button x:Name="shutdownDevice" Content="Shutdown" HorizontalAlignment="Left" Margin="429,123,0,0" VerticalAlignment="Top" Width="144" Click="ShutdownDevice_Click" IsEnabled="False"/>
         <CheckBox x:Name="clearOutput" Content="Clear output for each test" HorizontalAlignment="Left" Margin="592,13,0,0" VerticalAlignment="Top" IsChecked="True" Grid.ColumnSpan="2"/>
