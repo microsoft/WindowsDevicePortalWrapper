@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             get
             {
-                return null;
+                return new Uri("ws://localhost");
             }
         }
 

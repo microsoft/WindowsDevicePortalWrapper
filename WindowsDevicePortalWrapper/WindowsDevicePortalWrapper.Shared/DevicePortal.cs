@@ -5,11 +5,11 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
+using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
 using Windows.Web.Http;
@@ -44,6 +44,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public DevicePortal(IDevicePortalConnection connection)
         {
             this.deviceConnection = connection;
+        }
+
+        /// <summary>
+        /// HTTP Operations
+        /// </summary>
+        public enum HttpOperations
+        {
+            /// <summary>
+            /// The HTTP Get operation.
+            /// </summary>
+            Get,
+
+            /// <summary>
+            /// The HTTP Put operation.
+            /// </summary>
+            Put,
+
+            /// <summary>
+            /// The HTTP Post operation.
+            /// </summary>
+            Post,
+
+            /// <summary>
+            /// The HTTP Delete operation.
+            /// </summary>
+            Delete,
+
+            /// <summary>
+            /// The HTTP WebSocket operation.
+            /// </summary>
+            WebSocket
         }
 
         /// <summary>
@@ -247,26 +278,77 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">API endpoint we are calling.</param>
         /// <param name="directory">Directory to store our file.</param>
+        /// <param name="httpOperation">The http operation to be performed.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(string endpoint, string directory)
+        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpOperations httpOperation)
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
-            using (Stream dataStream = await this.Get(uri))
+            // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
+            // we can create a class with the same name as this Device/OS pair for tests.
+            string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
+
+            if (httpOperation != HttpOperations.Get)
             {
-                // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
-                // we can create a class with the same name as this Device/OS pair for tests.
-                string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
+                filename = httpOperation.ToString() + "_" + filename;
+            }
 
-                Utilities.ModifyEndpointForFilename(ref filename);
+            Utilities.ModifyEndpointForFilename(ref filename);
 
-                filename += ".dat";
-                string filepath = Path.Combine(directory, filename);
+            filename += ".dat";
+            string filepath = Path.Combine(directory, filename);
 
-                using (var fileStream = File.Create(filepath))
+            if (HttpOperations.WebSocket == httpOperation)
+            {
+#if WINDOWS_UWP
+                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, true);
+#else
+                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, this.ServerCertificateValidation, true);
+#endif // WINDOWS_UWP
+
+                ManualResetEvent streamReceived = new ManualResetEvent(false);
+                Stream stream = null;
+
+                WindowsDevicePortal.WebSocketMessageReceivedEventHandler<Stream> streamReceivedHandler =
+                    delegate(object sender, WebSocketMessageReceivedEventArgs<Stream> args)
                 {
-                    dataStream.Seek(0, SeekOrigin.Begin);
-                    dataStream.CopyTo(fileStream);
+                    if (args.Message != null)
+                    {
+                        stream = args.Message;
+                        streamReceived.Set();
+                    }
+                };
+
+                websocket.WebSocketStreamReceived += streamReceivedHandler;
+
+                Task startListeningForStreamTask = websocket.StartListeningForMessages(endpoint);
+                startListeningForStreamTask.Wait();
+
+                streamReceived.WaitOne();
+
+                Task stopListeningForStreamTask = websocket.StopListeningForMessages();
+                stopListeningForStreamTask.Wait();
+
+                websocket.WebSocketStreamReceived -= streamReceivedHandler;
+
+                using (stream)
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        stream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else
+            {
+                using (Stream dataStream = await this.Get(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
                 }
             }
         }

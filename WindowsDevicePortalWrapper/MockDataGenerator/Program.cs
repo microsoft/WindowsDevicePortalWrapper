@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace MockDataGenerator
 {
@@ -17,6 +18,11 @@ namespace MockDataGenerator
     /// </summary>
     public class Program
     {
+        /// <summary>
+        /// WebSocket operation prefix
+        /// </summary>
+        private const string WebSocketOpertionPrefix = "WebSocket/";
+
         /// <summary>
         /// Usage string
         /// </summary>
@@ -32,6 +38,10 @@ namespace MockDataGenerator
             DevicePortal.OsInfoApi,
             DevicePortal.XboxLiveUserApi,
             DevicePortal.XboxSettingsApi,
+            DevicePortal.SystemPerfApi,
+            DevicePortal.RunningProcessApi,
+            WebSocketOpertionPrefix + DevicePortal.SystemPerfApi,
+            WebSocketOpertionPrefix + DevicePortal.RunningProcessApi
         };
 
         /// <summary>
@@ -103,16 +113,34 @@ namespace MockDataGenerator
 
             if (parameters.HasParameter("endpoint"))
             {
-                Task saveResponseTask = portal.SaveEndpointResponseToFile(parameters.GetParameterValue("endpoint"), directory);
+                HttpOperations httpOperation = HttpOperations.Get;
+                string endpoint = parameters.GetParameterValue("endpoint");
+
+                if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    httpOperation = HttpOperations.WebSocket;
+                    endpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
+                }
+
+                Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpOperation);
                 saveResponseTask.Wait();
             }
             else
             {
                 foreach (string endpoint in Endpoints)
                 {
+                    string finalEndpoint = endpoint;
+                    HttpOperations httpOperation = HttpOperations.Get;
+
+                    if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        httpOperation = HttpOperations.WebSocket;
+                        finalEndpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
+                    }
+
                     try
                     {
-                        Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory);
+                        Task saveResponseTask = portal.SaveEndpointResponseToFile(finalEndpoint, directory, httpOperation);
                         saveResponseTask.Wait();
                     }
                     catch (Exception e)
