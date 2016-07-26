@@ -1,0 +1,228 @@
+\hypertarget{class_mock_data_generator_1_1_device_portal_connection}{}\section{Mock\+Data\+Generator.\+Device\+Portal\+Connection Class Reference}
+\label{class_mock_data_generator_1_1_device_portal_connection}\index{Mock\+Data\+Generator.\+Device\+Portal\+Connection@{Mock\+Data\+Generator.\+Device\+Portal\+Connection}}
+
+
+I\+Device\+Portal\+Connection implementation for \hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} test project  
+
+
+Inheritance diagram for Mock\+Data\+Generator.\+Device\+Portal\+Connection\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_mock_data_generator_1_1_device_portal_connection}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_mock_data_generator_1_1_device_portal_connection_ab307f38c29c4a88d27210e060e2cbc25}{Device\+Portal\+Connection} (string address, string user\+Name, string password)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \hyperlink{class_mock_data_generator_1_1_device_portal_connection}{Device\+Portal\+Connection} class. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \hyperlink{class_mock_data_generator_1_1_device_portal_connection_ad2b1eed1b227892297f509b41b26e79e}{Get\+Device\+Certificate\+Data} ()
+\begin{DoxyCompactList}\small\item\em Returns certificate data \end{DoxyCompactList}\item 
+void \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a180675ac7bd2766bcd4cf10b11e0cb75}{Set\+Device\+Certificate} (X509\+Certificate2 certificate)
+\begin{DoxyCompactList}\small\item\em Validates and sets the device certificate. \end{DoxyCompactList}\item 
+void \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a8fc9464b07a5819ec340d1bd1e75b484}{Set\+Device\+Certificate} (byte\mbox{[}$\,$\mbox{]} certificate\+Data)
+\begin{DoxyCompactList}\small\item\em Sets certificate data \end{DoxyCompactList}\item 
+void \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a7b295b9d2643633e0cccee0dd186bffc}{Update\+Connection} (bool requires\+Https)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} will never update the connection. \end{DoxyCompactList}\item 
+void \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a0f45f562b4e19e2d28c4f844bca52a90}{Update\+Connection} (Ip\+Configuration ip\+Config, bool requires\+Https)
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} will never update the connection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Uri \hyperlink{class_mock_data_generator_1_1_device_portal_connection_ad5d1380106469fa0820e0c00d27c28b4}{Connection}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets Connection property \end{DoxyCompactList}\item 
+Uri \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a73ce316c04e2eb3c26677441bf832c59}{Web\+Socket\+Connection}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets Web Socket Connection property \end{DoxyCompactList}\item 
+Network\+Credential \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a4b2457f7f387ed972ef9fa0972b93620}{Credentials}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets Credentials property \end{DoxyCompactList}\item 
+string \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a935715a8687237215e1e02816a4d462f}{Family}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets device family \end{DoxyCompactList}\item 
+string \hyperlink{class_mock_data_generator_1_1_device_portal_connection_acbc0ae9350c1884781fa94c9db7a51d6}{Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the device name \end{DoxyCompactList}\item 
+Operating\+System\+Information \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a499145c3081565d262b4bb60c6fe4e0c}{Os\+Info}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets device OS Info \end{DoxyCompactList}\item 
+string \hyperlink{class_mock_data_generator_1_1_device_portal_connection_a23c51fb6aa66c16bc370b3acb0d7c102}{Qualified\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the device\textquotesingle{}s qualified name \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+I\+Device\+Portal\+Connection implementation for \hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} test project 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Device\+Portal\+Connection@{Device\+Portal\+Connection}}
+\index{Device\+Portal\+Connection@{Device\+Portal\+Connection}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Device\+Portal\+Connection(string address, string user\+Name, string password)}{DevicePortalConnection(string address, string userName, string password)}}]{\setlength{\rightskip}{0pt plus 5cm}Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Device\+Portal\+Connection (
+\begin{DoxyParamCaption}
+\item[{string}]{address, }
+\item[{string}]{user\+Name, }
+\item[{string}]{password}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_ab307f38c29c4a88d27210e060e2cbc25}{}\label{class_mock_data_generator_1_1_device_portal_connection_ab307f38c29c4a88d27210e060e2cbc25}
+
+
+Initializes a new instance of the \hyperlink{class_mock_data_generator_1_1_device_portal_connection}{Device\+Portal\+Connection} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em address} & device identifier\\
+\hline
+{\em user\+Name} & W\+DP username\\
+\hline
+{\em password} & W\+DP password\\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Get\+Device\+Certificate\+Data@{Get\+Device\+Certificate\+Data}}
+\index{Get\+Device\+Certificate\+Data@{Get\+Device\+Certificate\+Data}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Get\+Device\+Certificate\+Data()}{GetDeviceCertificateData()}}]{\setlength{\rightskip}{0pt plus 5cm}byte \mbox{[}$\,$\mbox{]} Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Get\+Device\+Certificate\+Data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_ad2b1eed1b227892297f509b41b26e79e}{}\label{class_mock_data_generator_1_1_device_portal_connection_ad2b1eed1b227892297f509b41b26e79e}
+
+
+Returns certificate data 
+
+\begin{DoxyReturn}{Returns}
+certificate data
+\end{DoxyReturn}
+
+
+Implements \hyperlink{interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection_ad744c0610355739d44820f3bb1010f4e}{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+I\+Device\+Portal\+Connection}.
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Set\+Device\+Certificate@{Set\+Device\+Certificate}}
+\index{Set\+Device\+Certificate@{Set\+Device\+Certificate}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Set\+Device\+Certificate(\+X509\+Certificate2 certificate)}{SetDeviceCertificate(X509Certificate2 certificate)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Set\+Device\+Certificate (
+\begin{DoxyParamCaption}
+\item[{X509\+Certificate2}]{certificate}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a180675ac7bd2766bcd4cf10b11e0cb75}{}\label{class_mock_data_generator_1_1_device_portal_connection_a180675ac7bd2766bcd4cf10b11e0cb75}
+
+
+Validates and sets the device certificate. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em certificate} & The device\textquotesingle{}s root certificate.\\
+\hline
+\end{DoxyParams}
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Set\+Device\+Certificate@{Set\+Device\+Certificate}}
+\index{Set\+Device\+Certificate@{Set\+Device\+Certificate}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Set\+Device\+Certificate(byte[] certificate\+Data)}{SetDeviceCertificate(byte[] certificateData)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Set\+Device\+Certificate (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{certificate\+Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a8fc9464b07a5819ec340d1bd1e75b484}{}\label{class_mock_data_generator_1_1_device_portal_connection_a8fc9464b07a5819ec340d1bd1e75b484}
+
+
+Sets certificate data 
+
+
+\begin{DoxyParams}{Parameters}
+{\em certificate\+Data} & certificate data\\
+\hline
+\end{DoxyParams}
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Update\+Connection@{Update\+Connection}}
+\index{Update\+Connection@{Update\+Connection}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Update\+Connection(bool requires\+Https)}{UpdateConnection(bool requiresHttps)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Update\+Connection (
+\begin{DoxyParamCaption}
+\item[{bool}]{requires\+Https}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a7b295b9d2643633e0cccee0dd186bffc}{}\label{class_mock_data_generator_1_1_device_portal_connection_a7b295b9d2643633e0cccee0dd186bffc}
+
+
+\hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} will never update the connection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em requires\+Https} & https required\\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection_afcc3e9a50173560316bff9c1b0085769}{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+I\+Device\+Portal\+Connection}.
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Update\+Connection@{Update\+Connection}}
+\index{Update\+Connection@{Update\+Connection}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Update\+Connection(\+Ip\+Configuration ip\+Config, bool requires\+Https)}{UpdateConnection(IpConfiguration ipConfig, bool requiresHttps)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Update\+Connection (
+\begin{DoxyParamCaption}
+\item[{Ip\+Configuration}]{ip\+Config, }
+\item[{bool}]{requires\+Https}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a0f45f562b4e19e2d28c4f844bca52a90}{}\label{class_mock_data_generator_1_1_device_portal_connection_a0f45f562b4e19e2d28c4f844bca52a90}
+
+
+\hyperlink{namespace_mock_data_generator}{Mock\+Data\+Generator} will never update the connection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip\+Config} & IP info\\
+\hline
+{\em requires\+Https} & https required\\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection_a70508473f17f95abd516afc31a080b0d}{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+I\+Device\+Portal\+Connection}.
+
+
+
+\subsection{Property Documentation}
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Connection@{Connection}}
+\index{Connection@{Connection}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Connection}{Connection}}]{\setlength{\rightskip}{0pt plus 5cm}Uri Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Connection\hspace{0.3cm}{\ttfamily [get]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_ad5d1380106469fa0820e0c00d27c28b4}{}\label{class_mock_data_generator_1_1_device_portal_connection_ad5d1380106469fa0820e0c00d27c28b4}
+
+
+Gets Connection property 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Credentials@{Credentials}}
+\index{Credentials@{Credentials}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Credentials}{Credentials}}]{\setlength{\rightskip}{0pt plus 5cm}Network\+Credential Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Credentials\hspace{0.3cm}{\ttfamily [get]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a4b2457f7f387ed972ef9fa0972b93620}{}\label{class_mock_data_generator_1_1_device_portal_connection_a4b2457f7f387ed972ef9fa0972b93620}
+
+
+Gets Credentials property 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Family@{Family}}
+\index{Family@{Family}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Family}{Family}}]{\setlength{\rightskip}{0pt plus 5cm}string Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Family\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a935715a8687237215e1e02816a4d462f}{}\label{class_mock_data_generator_1_1_device_portal_connection_a935715a8687237215e1e02816a4d462f}
+
+
+Gets or sets device family 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Name@{Name}}
+\index{Name@{Name}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Name}{Name}}]{\setlength{\rightskip}{0pt plus 5cm}string Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Name\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_acbc0ae9350c1884781fa94c9db7a51d6}{}\label{class_mock_data_generator_1_1_device_portal_connection_acbc0ae9350c1884781fa94c9db7a51d6}
+
+
+Gets or sets the device name 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Os\+Info@{Os\+Info}}
+\index{Os\+Info@{Os\+Info}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Os\+Info}{OsInfo}}]{\setlength{\rightskip}{0pt plus 5cm}Operating\+System\+Information Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Os\+Info\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a499145c3081565d262b4bb60c6fe4e0c}{}\label{class_mock_data_generator_1_1_device_portal_connection_a499145c3081565d262b4bb60c6fe4e0c}
+
+
+Gets or sets device OS Info 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Qualified\+Name@{Qualified\+Name}}
+\index{Qualified\+Name@{Qualified\+Name}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Qualified\+Name}{QualifiedName}}]{\setlength{\rightskip}{0pt plus 5cm}string Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Qualified\+Name\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a23c51fb6aa66c16bc370b3acb0d7c102}{}\label{class_mock_data_generator_1_1_device_portal_connection_a23c51fb6aa66c16bc370b3acb0d7c102}
+
+
+Gets or sets the device\textquotesingle{}s qualified name 
+
+\index{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}!Web\+Socket\+Connection@{Web\+Socket\+Connection}}
+\index{Web\+Socket\+Connection@{Web\+Socket\+Connection}!Mock\+Data\+Generator\+::\+Device\+Portal\+Connection@{Mock\+Data\+Generator\+::\+Device\+Portal\+Connection}}
+\subsubsection[{\texorpdfstring{Web\+Socket\+Connection}{WebSocketConnection}}]{\setlength{\rightskip}{0pt plus 5cm}Uri Mock\+Data\+Generator.\+Device\+Portal\+Connection.\+Web\+Socket\+Connection\hspace{0.3cm}{\ttfamily [get]}}\hypertarget{class_mock_data_generator_1_1_device_portal_connection_a73ce316c04e2eb3c26677441bf832c59}{}\label{class_mock_data_generator_1_1_device_portal_connection_a73ce316c04e2eb3c26677441bf832c59}
+
+
+Gets Web Socket Connection property 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Windows\+Device\+Portal\+Wrapper/\+Mock\+Data\+Generator/Device\+Portal\+Connection.\+cs\end{DoxyCompactItemize}

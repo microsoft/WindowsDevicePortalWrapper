@@ -1,0 +1,146 @@
+\hypertarget{class_mock_data_generator_1_1_parameter_helper}{}\section{Mock\+Data\+Generator.\+Parameter\+Helper Class Reference}
+\label{class_mock_data_generator_1_1_parameter_helper}\index{Mock\+Data\+Generator.\+Parameter\+Helper@{Mock\+Data\+Generator.\+Parameter\+Helper}}
+
+
+Class for parsing command line parameters  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{class_mock_data_generator_1_1_parameter_helper_ac76986f4ba0225636a3a0ae6dabe458c}{Get\+Parameter\+Value} (string key)
+\begin{DoxyCompactList}\small\item\em Helper for getting a parameter value for a key \end{DoxyCompactList}\item 
+bool \hyperlink{class_mock_data_generator_1_1_parameter_helper_a15a7f2758fb3db6c6fbf045a789b84b6}{Has\+Parameter} (string key)
+\begin{DoxyCompactList}\small\item\em Helper for determining if we have a value for a parameter \end{DoxyCompactList}\item 
+bool \hyperlink{class_mock_data_generator_1_1_parameter_helper_ad6f5470bdf0c000ab8aa71911d86b2d7}{Has\+Flag} (string flag)
+\begin{DoxyCompactList}\small\item\em Helper for determining if a flag is set \end{DoxyCompactList}\item 
+void \hyperlink{class_mock_data_generator_1_1_parameter_helper_a65434df99de99645229d4ebf1f6e358d}{Parse\+Command\+Line} (string\mbox{[}$\,$\mbox{]} args)
+\begin{DoxyCompactList}\small\item\em Main entry for parsing a command line array \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static readonly string \hyperlink{class_mock_data_generator_1_1_parameter_helper_abf714b4e3c94b56cbd994db316c92d23}{Help\+Flag} = \char`\"{}?\char`\"{}
+\begin{DoxyCompactList}\small\item\em Help Flag identifier string \end{DoxyCompactList}\item 
+static readonly string \hyperlink{class_mock_data_generator_1_1_parameter_helper_a6258a253b06b4aef1a678372f6c035fa}{Ip\+Or\+Hostname} = \char`\"{}ip\char`\"{}
+\begin{DoxyCompactList}\small\item\em Device Identifier identifier string \end{DoxyCompactList}\item 
+static readonly string \hyperlink{class_mock_data_generator_1_1_parameter_helper_ad1fd80b7aebc61379fdec5cfa1164621}{Wdp\+User} = \char`\"{}user\char`\"{}
+\begin{DoxyCompactList}\small\item\em W\+DP Username identifier string \end{DoxyCompactList}\item 
+static readonly string \hyperlink{class_mock_data_generator_1_1_parameter_helper_ac751eeb8296390769e03caa6c44e3dba}{Wdp\+Password} = \char`\"{}pwd\char`\"{}
+\begin{DoxyCompactList}\small\item\em W\+DP Password identifier string \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for parsing command line parameters 
+
+
+
+\subsection{Member Function Documentation}
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Get\+Parameter\+Value@{Get\+Parameter\+Value}}
+\index{Get\+Parameter\+Value@{Get\+Parameter\+Value}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Get\+Parameter\+Value(string key)}{GetParameterValue(string key)}}]{\setlength{\rightskip}{0pt plus 5cm}string Mock\+Data\+Generator.\+Parameter\+Helper.\+Get\+Parameter\+Value (
+\begin{DoxyParamCaption}
+\item[{string}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_ac76986f4ba0225636a3a0ae6dabe458c}{}\label{class_mock_data_generator_1_1_parameter_helper_ac76986f4ba0225636a3a0ae6dabe458c}
+
+
+Helper for getting a parameter value for a key 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & parameter key\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+parameter value or null if not present
+\end{DoxyReturn}
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Has\+Flag@{Has\+Flag}}
+\index{Has\+Flag@{Has\+Flag}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Has\+Flag(string flag)}{HasFlag(string flag)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Mock\+Data\+Generator.\+Parameter\+Helper.\+Has\+Flag (
+\begin{DoxyParamCaption}
+\item[{string}]{flag}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_ad6f5470bdf0c000ab8aa71911d86b2d7}{}\label{class_mock_data_generator_1_1_parameter_helper_ad6f5470bdf0c000ab8aa71911d86b2d7}
+
+
+Helper for determining if a flag is set 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag} & flag name\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean indicating if the flag is set
+\end{DoxyReturn}
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Has\+Parameter@{Has\+Parameter}}
+\index{Has\+Parameter@{Has\+Parameter}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Has\+Parameter(string key)}{HasParameter(string key)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Mock\+Data\+Generator.\+Parameter\+Helper.\+Has\+Parameter (
+\begin{DoxyParamCaption}
+\item[{string}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_a15a7f2758fb3db6c6fbf045a789b84b6}{}\label{class_mock_data_generator_1_1_parameter_helper_a15a7f2758fb3db6c6fbf045a789b84b6}
+
+
+Helper for determining if we have a value for a parameter 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & parameter key\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean indicating if the parameter is present
+\end{DoxyReturn}
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Parse\+Command\+Line@{Parse\+Command\+Line}}
+\index{Parse\+Command\+Line@{Parse\+Command\+Line}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Parse\+Command\+Line(string[] args)}{ParseCommandLine(string[] args)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mock\+Data\+Generator.\+Parameter\+Helper.\+Parse\+Command\+Line (
+\begin{DoxyParamCaption}
+\item[{string\mbox{[}$\,$\mbox{]}}]{args}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_a65434df99de99645229d4ebf1f6e358d}{}\label{class_mock_data_generator_1_1_parameter_helper_a65434df99de99645229d4ebf1f6e358d}
+
+
+Main entry for parsing a command line array 
+
+
+\begin{DoxyParams}{Parameters}
+{\em args} & command line args\\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Help\+Flag@{Help\+Flag}}
+\index{Help\+Flag@{Help\+Flag}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Help\+Flag}{HelpFlag}}]{\setlength{\rightskip}{0pt plus 5cm}readonly string Mock\+Data\+Generator.\+Parameter\+Helper.\+Help\+Flag = \char`\"{}?\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_abf714b4e3c94b56cbd994db316c92d23}{}\label{class_mock_data_generator_1_1_parameter_helper_abf714b4e3c94b56cbd994db316c92d23}
+
+
+Help Flag identifier string 
+
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Ip\+Or\+Hostname@{Ip\+Or\+Hostname}}
+\index{Ip\+Or\+Hostname@{Ip\+Or\+Hostname}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Ip\+Or\+Hostname}{IpOrHostname}}]{\setlength{\rightskip}{0pt plus 5cm}readonly string Mock\+Data\+Generator.\+Parameter\+Helper.\+Ip\+Or\+Hostname = \char`\"{}ip\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_a6258a253b06b4aef1a678372f6c035fa}{}\label{class_mock_data_generator_1_1_parameter_helper_a6258a253b06b4aef1a678372f6c035fa}
+
+
+Device Identifier identifier string 
+
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Wdp\+Password@{Wdp\+Password}}
+\index{Wdp\+Password@{Wdp\+Password}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Wdp\+Password}{WdpPassword}}]{\setlength{\rightskip}{0pt plus 5cm}readonly string Mock\+Data\+Generator.\+Parameter\+Helper.\+Wdp\+Password = \char`\"{}pwd\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_ac751eeb8296390769e03caa6c44e3dba}{}\label{class_mock_data_generator_1_1_parameter_helper_ac751eeb8296390769e03caa6c44e3dba}
+
+
+W\+DP Password identifier string 
+
+\index{Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}!Wdp\+User@{Wdp\+User}}
+\index{Wdp\+User@{Wdp\+User}!Mock\+Data\+Generator\+::\+Parameter\+Helper@{Mock\+Data\+Generator\+::\+Parameter\+Helper}}
+\subsubsection[{\texorpdfstring{Wdp\+User}{WdpUser}}]{\setlength{\rightskip}{0pt plus 5cm}readonly string Mock\+Data\+Generator.\+Parameter\+Helper.\+Wdp\+User = \char`\"{}user\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\hypertarget{class_mock_data_generator_1_1_parameter_helper_ad1fd80b7aebc61379fdec5cfa1164621}{}\label{class_mock_data_generator_1_1_parameter_helper_ad1fd80b7aebc61379fdec5cfa1164621}
+
+
+W\+DP Username identifier string 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Windows\+Device\+Portal\+Wrapper/\+Mock\+Data\+Generator/Parameter\+Helper.\+cs\end{DoxyCompactItemize}

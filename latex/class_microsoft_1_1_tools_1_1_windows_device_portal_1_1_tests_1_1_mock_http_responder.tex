@@ -1,0 +1,219 @@
+\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder}{}\section{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder Class Reference}
+\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder}\index{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder@{Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder}}
+
+
+Mock implementation of Http\+Wrapper.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ad3d6733af37ce0cd90fba18f0bcd2be0}{Reset\+Mock\+Responses} ()
+\begin{DoxyCompactList}\small\item\em Clears all mock responses. Used between tests to ensure mocks don\textquotesingle{}t interfere with other tests. \end{DoxyCompactList}\item 
+void \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a71e8c0cb9ebdd89b8d84175829303f0d}{Add\+Mock\+Response} (string endpoint, Http\+Response\+Message response, Http\+Methods http\+Method)
+\begin{DoxyCompactList}\small\item\em Adds a given response as a mock for the endpoint. \end{DoxyCompactList}\item 
+void \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab44cb18771e48ebab84e97de0bb946ca}{Add\+Mock\+Response} (string endpoint, Device\+Portal\+Platforms platform, string operating\+System\+Version, Http\+Methods http\+Method)
+\begin{DoxyCompactList}\small\item\em Adds a response for this endpoint, loading from the file matching the device\+Type and Os\+Version \end{DoxyCompactList}\item 
+void \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab3a8c3e12380e27062759ff3d4402a0e}{Add\+Mock\+Response} (string endpoint, Http\+Methods http\+Method)
+\begin{DoxyCompactList}\small\item\em Adds a default response for this endpoint, device agnostic. \end{DoxyCompactList}\item 
+async Task$<$ Http\+Response\+Message $>$ \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a9ddff3ac2a7792f57ce28b7259135e4d}{Get\+Async} (Uri uri)
+\begin{DoxyCompactList}\small\item\em Abstract method Mock Implementation \end{DoxyCompactList}\item 
+async Task$<$ Http\+Response\+Message $>$ \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a72aca3d64c972e209d944dad1b62b2f9}{Post\+Async} (Uri uri, Http\+Content content)
+\begin{DoxyCompactList}\small\item\em Abstract method Mock Implementation \end{DoxyCompactList}\item 
+async Task$<$ Http\+Response\+Message $>$ \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a311d39119eb8a74402c5d07b278366d7}{Put\+Async} (Uri uri, Http\+Content content)
+\begin{DoxyCompactList}\small\item\em Abstract method Mock Implementation \end{DoxyCompactList}\item 
+async Task$<$ Http\+Response\+Message $>$ \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_aa65ece89e87b58c7aafc44893ef2c19d}{Delete\+Async} (Uri uri)
+\begin{DoxyCompactList}\small\item\em Abstract method Mock Implementation \end{DoxyCompactList}\item 
+async Task$<$ Http\+Response\+Message $>$ \hyperlink{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_afabc4a33cd37a539d51426ce53f0667d}{Web\+Socket\+Async} (Uri uri)
+\begin{DoxyCompactList}\small\item\em Abstract method Mock Implementation \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Mock implementation of Http\+Wrapper. 
+
+
+
+\subsection{Member Function Documentation}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Add\+Mock\+Response@{Add\+Mock\+Response}}
+\index{Add\+Mock\+Response@{Add\+Mock\+Response}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Add\+Mock\+Response(string endpoint, Http\+Response\+Message response, Http\+Methods http\+Method)}{AddMockResponse(string endpoint, HttpResponseMessage response, HttpMethods httpMethod)}}]{\setlength{\rightskip}{0pt plus 5cm}void Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Add\+Mock\+Response (
+\begin{DoxyParamCaption}
+\item[{string}]{endpoint, }
+\item[{Http\+Response\+Message}]{response, }
+\item[{Http\+Methods}]{http\+Method}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a71e8c0cb9ebdd89b8d84175829303f0d}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a71e8c0cb9ebdd89b8d84175829303f0d}
+
+
+Adds a given response as a mock for the endpoint. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em endpoint} & The endpoint to be mocked.\\
+\hline
+{\em response} & The response to return.\\
+\hline
+{\em http\+Method} & H\+T\+TP method we are mocking.\\
+\hline
+\end{DoxyParams}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Add\+Mock\+Response@{Add\+Mock\+Response}}
+\index{Add\+Mock\+Response@{Add\+Mock\+Response}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Add\+Mock\+Response(string endpoint, Device\+Portal\+Platforms platform, string operating\+System\+Version, Http\+Methods http\+Method)}{AddMockResponse(string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion, HttpMethods httpMethod)}}]{\setlength{\rightskip}{0pt plus 5cm}void Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Add\+Mock\+Response (
+\begin{DoxyParamCaption}
+\item[{string}]{endpoint, }
+\item[{Device\+Portal\+Platforms}]{platform, }
+\item[{string}]{operating\+System\+Version, }
+\item[{Http\+Methods}]{http\+Method}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab44cb18771e48ebab84e97de0bb946ca}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab44cb18771e48ebab84e97de0bb946ca}
+
+
+Adds a response for this endpoint, loading from the file matching the device\+Type and Os\+Version 
+
+
+\begin{DoxyParams}{Parameters}
+{\em endpoint} & Endpoint we are mocking.\\
+\hline
+{\em platform} & Device platform we are testing.\\
+\hline
+{\em operating\+System\+Version} & The OS Version we are testing.\\
+\hline
+{\em http\+Method} & H\+T\+TP method we are mocking.\\
+\hline
+\end{DoxyParams}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Add\+Mock\+Response@{Add\+Mock\+Response}}
+\index{Add\+Mock\+Response@{Add\+Mock\+Response}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Add\+Mock\+Response(string endpoint, Http\+Methods http\+Method)}{AddMockResponse(string endpoint, HttpMethods httpMethod)}}]{\setlength{\rightskip}{0pt plus 5cm}void Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Add\+Mock\+Response (
+\begin{DoxyParamCaption}
+\item[{string}]{endpoint, }
+\item[{Http\+Methods}]{http\+Method}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab3a8c3e12380e27062759ff3d4402a0e}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ab3a8c3e12380e27062759ff3d4402a0e}
+
+
+Adds a default response for this endpoint, device agnostic. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em endpoint} & Endpoint we are mocking.\\
+\hline
+{\em http\+Method} & H\+T\+TP method we are mocking.\\
+\hline
+\end{DoxyParams}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Delete\+Async@{Delete\+Async}}
+\index{Delete\+Async@{Delete\+Async}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Delete\+Async(\+Uri uri)}{DeleteAsync(Uri uri)}}]{\setlength{\rightskip}{0pt plus 5cm}async Task$<$Http\+Response\+Message$>$ Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Delete\+Async (
+\begin{DoxyParamCaption}
+\item[{Uri}]{uri}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_aa65ece89e87b58c7aafc44893ef2c19d}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_aa65ece89e87b58c7aafc44893ef2c19d}
+
+
+Abstract method Mock Implementation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The target U\+RI.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Async task returning the response.
+\end{DoxyReturn}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Get\+Async@{Get\+Async}}
+\index{Get\+Async@{Get\+Async}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Get\+Async(\+Uri uri)}{GetAsync(Uri uri)}}]{\setlength{\rightskip}{0pt plus 5cm}async Task$<$Http\+Response\+Message$>$ Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Get\+Async (
+\begin{DoxyParamCaption}
+\item[{Uri}]{uri}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a9ddff3ac2a7792f57ce28b7259135e4d}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a9ddff3ac2a7792f57ce28b7259135e4d}
+
+
+Abstract method Mock Implementation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The target U\+RI.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Async task returning the response.
+\end{DoxyReturn}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Post\+Async@{Post\+Async}}
+\index{Post\+Async@{Post\+Async}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Post\+Async(\+Uri uri, Http\+Content content)}{PostAsync(Uri uri, HttpContent content)}}]{\setlength{\rightskip}{0pt plus 5cm}async Task$<$Http\+Response\+Message$>$ Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Post\+Async (
+\begin{DoxyParamCaption}
+\item[{Uri}]{uri, }
+\item[{Http\+Content}]{content}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a72aca3d64c972e209d944dad1b62b2f9}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a72aca3d64c972e209d944dad1b62b2f9}
+
+
+Abstract method Mock Implementation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The target U\+RI.\\
+\hline
+{\em content} & The H\+T\+TP body of the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Async task returning the response.
+\end{DoxyReturn}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Put\+Async@{Put\+Async}}
+\index{Put\+Async@{Put\+Async}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Put\+Async(\+Uri uri, Http\+Content content)}{PutAsync(Uri uri, HttpContent content)}}]{\setlength{\rightskip}{0pt plus 5cm}async Task$<$Http\+Response\+Message$>$ Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Put\+Async (
+\begin{DoxyParamCaption}
+\item[{Uri}]{uri, }
+\item[{Http\+Content}]{content}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a311d39119eb8a74402c5d07b278366d7}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_a311d39119eb8a74402c5d07b278366d7}
+
+
+Abstract method Mock Implementation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The target U\+RI.\\
+\hline
+{\em content} & The H\+T\+TP body of the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Async task returning the response.
+\end{DoxyReturn}
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Reset\+Mock\+Responses@{Reset\+Mock\+Responses}}
+\index{Reset\+Mock\+Responses@{Reset\+Mock\+Responses}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Reset\+Mock\+Responses()}{ResetMockResponses()}}]{\setlength{\rightskip}{0pt plus 5cm}void Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Reset\+Mock\+Responses (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ad3d6733af37ce0cd90fba18f0bcd2be0}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_ad3d6733af37ce0cd90fba18f0bcd2be0}
+
+
+Clears all mock responses. Used between tests to ensure mocks don\textquotesingle{}t interfere with other tests. 
+
+\index{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}!Web\+Socket\+Async@{Web\+Socket\+Async}}
+\index{Web\+Socket\+Async@{Web\+Socket\+Async}!Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder@{Microsoft\+::\+Tools\+::\+Windows\+Device\+Portal\+::\+Tests\+::\+Mock\+Http\+Responder}}
+\subsubsection[{\texorpdfstring{Web\+Socket\+Async(\+Uri uri)}{WebSocketAsync(Uri uri)}}]{\setlength{\rightskip}{0pt plus 5cm}async Task$<$Http\+Response\+Message$>$ Microsoft.\+Tools.\+Windows\+Device\+Portal.\+Tests.\+Mock\+Http\+Responder.\+Web\+Socket\+Async (
+\begin{DoxyParamCaption}
+\item[{Uri}]{uri}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_afabc4a33cd37a539d51426ce53f0667d}{}\label{class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder_afabc4a33cd37a539d51426ce53f0667d}
+
+
+Abstract method Mock Implementation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The target U\+RI.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Async task returning the response.
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Windows\+Device\+Portal\+Wrapper/\+Unit\+Test\+Project/Mock\+Http\+Responder.\+cs\end{DoxyCompactItemize}
