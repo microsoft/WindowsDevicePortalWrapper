@@ -11,7 +11,7 @@ To start contributing, see [Contributing](https://github.com/Microsoft/WindowsDe
 ---
 ---
 
-For source code documentation, see [Code Documentation](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/html/index.html)
+For source code documentation, open \<local repository\>\\html\\index.html in a browser.
 
 ---
 ---
