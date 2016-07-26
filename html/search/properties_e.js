@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['reason',['Reason',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_install_state.html#ab782a8f83700ec79820482a7b8f3f910',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.InstallState.Reason()'],['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_exception.html#abfd9029759ac4baf34b583f94c3e175e',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortalException.Reason()']]],
+  ['remainingcapacity',['RemainingCapacity',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_battery_state.html#adad259b4fae1543afc538b98e8302ab8',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::BatteryState']]],
+  ['requesturi',['RequestUri',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_exception.html#a4e412f713f6bf7ab1c1470bcd44ebed0',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortalException']]],
+  ['requiresreboot',['RequiresReboot',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_xbox_setting.html#a0bba2f18e03f57ea5446f17fc45149b1',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::XboxSetting']]],
+  ['revision',['Revision',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_package_version.html#a23d55ab1063eff720be949ee5040d352',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.PackageVersion.Revision()'],['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_version.html#ab666b05e801c9c312bf09c06dff90fdc',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.ProcessVersion.Revision()']]],
+  ['runningprocessesmessagereceived',['RunningProcessesMessageReceived',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a89511b52daa5ca50cfff9f748bfa3959',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+];

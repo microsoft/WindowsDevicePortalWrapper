@@ -13,7 +13,7 @@ using Windows.Storage.Streams;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace TestAppHL.UniversalWindows
 {
     public class DevicePortalConnection : IDevicePortalConnection
     {

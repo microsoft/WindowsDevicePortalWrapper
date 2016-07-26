@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Helper for Install related operations
     /// </summary>
-    internal class InstallOperation : IDisposable
+    public class InstallOperation : IDisposable
     {
         /// <summary>
         /// Error value for logon failure, returned if we need an SMB password to copy files to the device.

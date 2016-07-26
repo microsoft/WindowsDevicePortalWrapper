@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Main entry point for the test command line class.

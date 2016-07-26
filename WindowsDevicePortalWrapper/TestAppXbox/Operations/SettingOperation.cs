@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Helper for Setting related operations
     /// </summary>
-    internal class SettingOperation
+    public class SettingOperation
     {
         /// <summary>
         /// Usage message for this operation

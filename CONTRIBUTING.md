@@ -25,10 +25,18 @@ Note:  If you wish to work on something that already exists on our backlog, you 
 1. Fork the repository. Click on the "Fork" button on the top right of the page and follow the flow.
 2. If your work needs more time, the consider branching off of master else just code in your fork.
 3. Ensure your changes check for the appropriate device families (ex: Windows Desktop and IoT only).
-4. Implement one or more tests to ensure the change works on the target platform(s).
-5. Make small and frequent commits that include tests which could be a unity scene showing usage of your feature.
-6. Make sure that all existing tests continue to pass.
-7. Ensure you update the [README](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/README.md) with additional documentation as needed.
+4. Implement one or more [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) to ensure the change works on the target platform(s).
+5. Make small and frequent commits that include [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) against mock data or manual tests which can be run against real devices.
+6. Make sure that all existing [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) continue to pass.
+
+# Updating code documentation
+
+The Windows Device Portal Wrapper uses [Doxygen](http://www.stack.nl/~dimitri/doxygen/download.html) to automatically generate code documentation directly from the source code. Any changes to existing or new classes or methods should also update the documentation.
+
+1. Download and install [Doxygen](http://www.stack.nl/~dimitri/doxygen/download.html) (our docs are generated using version 1.8.11).
+2. Open a CMD prompt and navigate to your git repository's root directory.
+3. Run '\<Doxygen Install Location\>\\doxygen.exe DocConfig.txt'. This will update the files under the html folder relative to the root directory.
+4. Include the updated files with your PR.
 
 # Run StyleCop
 

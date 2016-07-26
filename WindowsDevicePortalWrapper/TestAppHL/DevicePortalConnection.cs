@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace TestAppHL
 {
     /// <summary>
     /// IDevicePortalConnection implementation for the HoloLens test project
