@@ -176,7 +176,6 @@ namespace TestApp
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
                         newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
-                        //// TODO qualified name
                         break;
                     }
                 }
@@ -199,10 +198,9 @@ namespace TestApp
             string address,
             bool requiresHttps = true)
         {
-            return "http";
-            //return (address.Contains("127.0.0.1") || 
-            //        address.Contains("localhost") || 
-            //        !requiresHttps) ? "http" : "https";
+            return (address.Contains("127.0.0.1") || 
+                    address.Contains("localhost") || 
+                    !requiresHttps) ? "http" : "https";
         }
     }
 }

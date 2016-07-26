@@ -26,8 +26,8 @@ namespace TestAppHL.UniversalWindows
                     this.address.Text,
                     this.username.Text,
                     this.password.Text));
-            //portal.ConnectionStatus += DevicePortal_ConnectionStatus;
-            //portal.AppInstallStatus += DevicePortal_AppInstallStatus;
+            portal.ConnectionStatus += DevicePortal_ConnectionStatus;
+            portal.AppInstallStatus += DevicePortal_AppInstallStatus;
         }
 
         private async void ConnectToDevice()
@@ -65,12 +65,7 @@ namespace TestAppHL.UniversalWindows
                     portal.Platform.ToString()));
                 this.testOutput.Text = sb.ToString();
 
-                this.getName.IsEnabled = true;
-                this.getBatteryLevel.IsEnabled = true;
-                this.getPowerState.IsEnabled = true;
-                this.getIpd.IsEnabled = true;
-                this.setIpd.IsEnabled = true;
-                this.ipdValue.IsEnabled = true;
+                this.EnableTestControls(true);
             }
             catch(Exception ex)
             {
@@ -80,6 +75,39 @@ namespace TestAppHL.UniversalWindows
             }
 
             this.connectToDevice.IsEnabled = true;
+        }
+
+        private void EnableTestControls(bool enable)
+        {
+            this.rebootDevice.IsEnabled = enable;
+            this.shutdownDevice.IsEnabled = enable;
+            this.getName.IsEnabled = enable;
+            this.nameValue.IsEnabled = enable;
+            this.setName.IsEnabled = enable;
+            this.getIpd.IsEnabled = enable;
+            this.ipdValue.IsEnabled = enable;
+            this.setIpd.IsEnabled = enable;
+            this.getBatteryLevel.IsEnabled = enable;
+            this.getPowerState.IsEnabled = enable;
+            this.getThermalStage.IsEnabled = enable;
+            this.getIPConfig.IsEnabled = enable;
+            this.getWiFiInfo.IsEnabled = enable;
+            this.takeMrcPhoto.IsEnabled = enable;
+            this.photoHolograms.IsEnabled = enable;
+            this.photoColor.IsEnabled = enable;
+            this.startMrcRecording.IsEnabled = enable;
+            this.videoHolograms.IsEnabled = enable;
+            this.videoColor.IsEnabled = enable;
+            this.videoMicrophone.IsEnabled = enable;
+            this.videoAudio.IsEnabled = enable;
+            this.stopMrcRecording.IsEnabled = enable;
+            this.listMrcFiles.IsEnabled = enable;
+            //this.installApplication.IsEnabled = enable;
+            //this.appNameValue.IsEnabled = enable;
+            //this.uninstallPreviousVersion.IsEnabled = enable;
+            //this.packageNameValue.IsEnabled = enable;
+            //this.browsePackages.IsEnabled = enable;
+            //this.dependencyFolderValue.IsEnabled = enable;
         }
 
         private void DevicePortal_AppInstallStatus(
@@ -104,19 +132,65 @@ namespace TestAppHL.UniversalWindows
 
         private void connectToDevice_Click(object sender, RoutedEventArgs e)
         {
-            this.getName.IsEnabled = false;
-            this.getBatteryLevel.IsEnabled = false;
-            this.getPowerState.IsEnabled = false;
-            this.getIpd.IsEnabled = false;
-            this.setIpd.IsEnabled = false;
-            this.ipdValue.IsEnabled = false;
+            this.EnableTestControls(false);
+            this.getWiFiInfo.IsEnabled = false;
 
             this.connectToDevice.IsEnabled = false;
 
             this.ConnectToDevice();
         }
 
-        private async void getDeviceName_Click(object sender, RoutedEventArgs e)
+        private async void RebootDevice_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            { 
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                sb.AppendLine("Rebooting the device");
+                await portal.Reboot();
+            }
+            catch(Exception ex)
+            {
+                sb.AppendLine("Failed to reboot the device.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void ShutdownDevice_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            { 
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                sb.AppendLine("Shutting down the device");
+                await portal.Shutdown();
+            }
+            catch(Exception ex)
+            {
+                sb.AppendLine("Failed to shutdown the device.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void GetDeviceName_Click(object sender, RoutedEventArgs e)
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
@@ -135,14 +209,45 @@ namespace TestAppHL.UniversalWindows
             }
             catch(Exception ex)
             {
-                sb.AppendLine("Failed to get IPD.");
+                sb.AppendLine("Failed to get device name.");
                 sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
             }
 
             this.testOutput.Text = sb.ToString();
         }
 
-        private async void getBatteryLevel_Click(object sender, RoutedEventArgs e)
+        private async void SetDeviceName_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            { 
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(nameValue.Text))
+                {
+                    throw new InvalidOperationException("The device name must be a valid, non-whitespace string.");
+                }
+
+                sb.AppendLine("Setting device name to : " + nameValue.Text);
+                sb.AppendLine(" The name change will be reflected after a reboot.");
+                await portal.SetDeviceName(nameValue.Text, false);
+            }
+            catch(Exception ex)
+            {
+                sb.AppendLine("Failed to set device name.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void GetBatteryLevel_Click(object sender, RoutedEventArgs e)
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
@@ -161,14 +266,14 @@ namespace TestAppHL.UniversalWindows
             }
             catch(Exception ex)
             {
-                sb.AppendLine("Failed to get IPD.");
+                sb.AppendLine("Failed to get battery level.");
                 sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
             }
 
             this.testOutput.Text = sb.ToString();
         }
 
-        private async void getPowerState_Click(object sender, RoutedEventArgs e)
+        private async void GetPowerState_Click(object sender, RoutedEventArgs e)
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
@@ -187,14 +292,14 @@ namespace TestAppHL.UniversalWindows
             }
             catch(Exception ex)
             {
-                sb.AppendLine("Failed to get IPD.");
+                sb.AppendLine("Failed to get power state.");
                 sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
             }
 
             this.testOutput.Text = sb.ToString();
         }
 
-        private async void getIpd_Click(object sender, RoutedEventArgs e)
+        private async void GetIpd_Click(object sender, RoutedEventArgs e)
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
@@ -220,7 +325,7 @@ namespace TestAppHL.UniversalWindows
             this.testOutput.Text = sb.ToString();
         }
 
-        private async void setIpd_Click(object sender, RoutedEventArgs e)
+        private async void SetIpd_Click(object sender, RoutedEventArgs e)
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
@@ -244,6 +349,265 @@ namespace TestAppHL.UniversalWindows
             }
 
             this.testOutput.Text = sb.ToString();
+        }
+
+        private async void GetThermalStage_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            { 
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                ThermalStages thermalStage = await portal.GetThermalStage();
+                sb.Append("Thermal stage: ");
+                sb.AppendLine(thermalStage.ToString());
+            }
+            catch(Exception ex)
+            {
+                sb.AppendLine("Failed to get thermal stage.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void GetIPConfig_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            { 
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                IpConfiguration ipconfig = await portal.GetIpConfig();
+                sb.AppendLine("IP Configuration:");
+                foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
+                {
+                    sb.Append(" ");
+                    sb.AppendLine(adapterInfo.Description);
+                    sb.Append("  MAC address :");
+                    sb.AppendLine(adapterInfo.MacAddress);
+                    foreach (IpAddressInfo address in adapterInfo.IpAddresses)
+                    {
+                        sb.Append ("  IP address :");
+                        sb.AppendLine(address.Address);
+                    }
+                    sb.Append("  DHCP address :");
+                    sb.AppendLine(adapterInfo.Dhcp.Address.Address);
+                }
+            }
+            catch(Exception ex)
+            {
+                sb.AppendLine("Failed to get IP config info.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void GetWifiInfo_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            {
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                WifiInterfaces wifiInterfaces = await portal.GetWifiInterfaces();
+                sb.AppendLine("WiFi Interfaces:");
+                foreach (WifiInterface wifiInterface in wifiInterfaces.Interfaces)
+                {
+                    sb.Append(" ");
+                    sb.AppendLine(wifiInterface.Description);
+                    sb.Append("  GUID: ");
+                    sb.AppendLine(wifiInterface.Guid.ToString());
+
+                    WifiNetworks wifiNetworks = await portal.GetWifiNetworks(wifiInterface.Guid);
+                    sb.AppendLine("  Networks:");
+                    foreach (WifiNetworkInfo network in wifiNetworks.AvailableNetworks)
+                    {
+                        sb.Append("   SSID: ");
+                        sb.AppendLine(network.Ssid);
+                        sb.Append("   Profile name: ");
+                        sb.AppendLine(network.ProfileName);
+                        sb.Append("   is connected: ");
+                        sb.AppendLine(network.IsConnected.ToString());
+                        sb.Append("   Channel: ");
+                        sb.AppendLine(network.Channel.ToString());
+                        sb.Append("   Authentication algorithm: ");
+                        sb.AppendLine(network.AuthenticationAlgorithm);
+                        sb.Append("   Signal quality: ");
+                        sb.AppendLine(network.SignalQuality.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to get WiFi info.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void TakeMrcPhoto_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            {
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                bool holograms = photoHolograms.IsChecked.Value;
+                bool color = photoColor.IsChecked.Value;
+
+                sb.AppendLine("Taking MRC photo");
+                sb.AppendLine("Holograms: " + (holograms ? "On" : "Off"));
+                sb.AppendLine("Color    : " + (color ? "On" : "Off"));
+                await portal.TakeMrcPhoto(
+                    holograms, 
+                    color);
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to take MRC photo.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void ListMrcFiles_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            {
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                MrcFileList fileList = await portal.GetMrcFileList();
+                sb.AppendLine("MRC Files: " + fileList.Files.Count.ToString());
+                foreach (MrcFileInformation fileInfo in fileList.Files)
+                {
+                    sb.Append(" Name: ");
+                    sb.AppendLine(fileInfo.FileName);
+                    sb.Append(" Date: ");
+                    sb.AppendLine(fileInfo.Created.ToString());
+                    sb.Append(" Size: ");
+                    sb.AppendLine(fileInfo.FileSize.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to MRC file list.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void StartMrcRecording_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            {
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                bool holograms = videoHolograms.IsChecked.Value;
+                bool color = videoColor.IsChecked.Value;
+                bool microphone = videoMicrophone.IsChecked.Value;
+                bool audio = videoAudio.IsChecked.Value;
+
+                sb.AppendLine("Starting MRC recording");
+                sb.AppendLine("Holograms : " + (holograms ? "On" : "Off"));
+                sb.AppendLine("Color     : " + (color ? "On" : "Off"));
+                sb.AppendLine("Microphone: " + (microphone ? "On" : "Off"));
+                sb.AppendLine("App audio : " + (audio ? "On" : "Off"));
+                await portal.StartMrcRecording(
+                    holograms,
+                    color,
+                    microphone,
+                    audio);
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to start MRC recording.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void StopMrcRecording_Click(object sender, RoutedEventArgs e)
+        {
+            bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
+            if (clearOutput)
+            {
+                this.testOutput.Text = string.Empty;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.testOutput.Text);
+
+            try
+            {
+                sb.AppendLine("Stopping MRC recording");
+                await portal.StopMrcRecording();
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to stop MRC recording.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
+
+            this.testOutput.Text = sb.ToString();
+        }
+
+        private async void InstallApplication_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BrowsePackages_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BrowseDependencies_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
