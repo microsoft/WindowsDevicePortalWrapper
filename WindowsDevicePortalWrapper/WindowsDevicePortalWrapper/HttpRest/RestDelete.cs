@@ -32,7 +32,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyHttpHeaders(client, "DELETE");
+                this.ApplyHttpHeaders(client, HttpMethods.Delete);
 
                 Task<HttpResponseMessage> deleteTask = client.DeleteAsync(uri);
                 await deleteTask.ConfigureAwait(false);

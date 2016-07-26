@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
-                this.ApplyHttpHeaders(client, "GET");
+                this.ApplyHttpHeaders(client, HttpMethods.Get);
 
                 Task<HttpResponseMessage> getTask = client.GetAsync(uri);
                 await getTask.ConfigureAwait(false);

@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyHttpHeaders(client, "POST");
+                this.ApplyHttpHeaders(client, HttpMethods.Post);
 
                 Task<HttpResponseMessage> postTask = client.PostAsync(uri, requestContent);
                 await postTask.ConfigureAwait(false);

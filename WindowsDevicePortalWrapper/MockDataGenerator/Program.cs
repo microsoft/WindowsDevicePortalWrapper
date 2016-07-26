@@ -113,16 +113,16 @@ namespace MockDataGenerator
 
             if (parameters.HasParameter("endpoint"))
             {
-                HttpOperations httpOperation = HttpOperations.Get;
+                HttpMethods httpMethod = HttpMethods.Get;
                 string endpoint = parameters.GetParameterValue("endpoint");
 
                 if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
                 {
-                    httpOperation = HttpOperations.WebSocket;
+                    httpMethod = HttpMethods.WebSocket;
                     endpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
                 }
 
-                Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpOperation);
+                Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod);
                 saveResponseTask.Wait();
             }
             else
@@ -130,17 +130,17 @@ namespace MockDataGenerator
                 foreach (string endpoint in Endpoints)
                 {
                     string finalEndpoint = endpoint;
-                    HttpOperations httpOperation = HttpOperations.Get;
+                    HttpMethods httpMethod = HttpMethods.Get;
 
                     if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
                     {
-                        httpOperation = HttpOperations.WebSocket;
+                        httpMethod = HttpMethods.WebSocket;
                         finalEndpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
                     }
 
                     try
                     {
-                        Task saveResponseTask = portal.SaveEndpointResponseToFile(finalEndpoint, directory, httpOperation);
+                        Task saveResponseTask = portal.SaveEndpointResponseToFile(finalEndpoint, directory, httpMethod);
                         saveResponseTask.Wait();
                     }
                     catch (Exception e)

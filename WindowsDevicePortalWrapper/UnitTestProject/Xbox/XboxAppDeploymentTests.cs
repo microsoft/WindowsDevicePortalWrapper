@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void XboxAppDeploymentTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpOperations.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
 
             Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
             registerTask.Wait();

@@ -47,32 +47,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// HTTP Operations
+        /// HTTP Methods
         /// </summary>
-        public enum HttpOperations
+        public enum HttpMethods
         {
             /// <summary>
-            /// The HTTP Get operation.
+            /// The HTTP Get method.
             /// </summary>
             Get,
 
             /// <summary>
-            /// The HTTP Put operation.
+            /// The HTTP Put method.
             /// </summary>
             Put,
 
             /// <summary>
-            /// The HTTP Post operation.
+            /// The HTTP Post method.
             /// </summary>
             Post,
 
             /// <summary>
-            /// The HTTP Delete operation.
+            /// The HTTP Delete method.
             /// </summary>
             Delete,
 
             /// <summary>
-            /// The HTTP WebSocket operation.
+            /// The HTTP WebSocket method.
             /// </summary>
             WebSocket
         }
@@ -278,9 +278,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">API endpoint we are calling.</param>
         /// <param name="directory">Directory to store our file.</param>
-        /// <param name="httpOperation">The http operation to be performed.</param>
+        /// <param name="httpMethod">The http method to be performed.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpOperations httpOperation)
+        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpMethods httpMethod)
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
@@ -288,9 +288,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             // we can create a class with the same name as this Device/OS pair for tests.
             string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
 
-            if (httpOperation != HttpOperations.Get)
+            if (httpMethod != HttpMethods.Get)
             {
-                filename = httpOperation.ToString() + "_" + filename;
+                filename = httpMethod.ToString() + "_" + filename;
             }
 
             Utilities.ModifyEndpointForFilename(ref filename);
@@ -298,7 +298,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             filename += ".dat";
             string filepath = Path.Combine(directory, filename);
 
-            if (HttpOperations.WebSocket == httpOperation)
+            if (HttpMethods.WebSocket == httpMethod)
             {
 #if WINDOWS_UWP
                 WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, true);

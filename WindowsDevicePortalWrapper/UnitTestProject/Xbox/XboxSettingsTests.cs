@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetXboxSettingsTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, HttpOperations.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, HttpMethods.Get);
 
             Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
             getSettingsTask.Wait();
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetSingleXboxSettingTest()
         {
             string settingName = "TVResolution";
-            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName), HttpOperations.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName), HttpMethods.Get);
 
             Task<XboxSetting> getSettingTask = TestHelpers.Portal.GetXboxSetting(settingName);
             getSettingTask.Wait();
@@ -92,7 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             setting.Value = "1080p";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name), HttpOperations.Put);
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name), HttpMethods.Put);
 
             Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
             updateSettingsTask.Wait();

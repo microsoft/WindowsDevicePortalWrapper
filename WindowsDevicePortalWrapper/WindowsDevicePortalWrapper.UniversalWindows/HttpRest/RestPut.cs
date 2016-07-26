@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.ApplyHttpHeaders(client, "PUT");
+                this.ApplyHttpHeaders(client, HttpMethods.Put);
 
                 // Send the request
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PutAsync(uri, null);
