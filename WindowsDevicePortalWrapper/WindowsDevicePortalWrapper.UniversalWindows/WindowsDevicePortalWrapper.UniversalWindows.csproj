@@ -7,7 +7,7 @@
     <ProjectGuid>{F2D8B145-A737-494E-AEF4-508F9D02E0D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsDevicePortalWrapper.UniversalWindows</RootNamespace>
+    <RootNamespace>Microsoft.Tools.WindowsDevicePortal</RootNamespace>
     <AssemblyName>WindowsDevicePortalWrapper.UniversalWindows</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>

@@ -16,11 +16,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting a list of HoloLens specific ETW providers that are not registered with the system.
-        /// </summary>
-        private static readonly string HolographicEtwCustomProvidersApi = "api/holographic/os/etw/customproviders";
-
-        /// <summary>
         /// API for getting or setting Interpupilary distance
         /// </summary>
         private static readonly string HolographicIpdApi = "api/holographic/os/settings/ipd";

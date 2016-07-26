@@ -192,7 +192,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string payload = string.Format(
                 "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeHolograms,
                 includeColorCamera,
+                includeMicrophone,
                 includeAudio).ToLower();
 
             await this.Post(

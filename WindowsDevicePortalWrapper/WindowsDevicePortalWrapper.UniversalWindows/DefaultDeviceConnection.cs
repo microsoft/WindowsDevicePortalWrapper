@@ -1,10 +1,4 @@
-﻿//----------------------------------------------------------------------------------------------
-// <copyright file="DevicePortalConnection.cs" company="Microsoft Corporation">
-//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
-// </copyright>
-//----------------------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using Windows.Foundation;
@@ -15,28 +9,20 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
-    public class DevicePortalConnection : IDevicePortalConnection
+    public class DefaultDevicePortalConnection : IDevicePortalConnection
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DevicePortalConnection" /> class.
+        /// Initializes a new instance of the <see cref="DefaultDevicePortalConnection" /> class.
         /// </summary>
         /// <param name="address">The address of the device.</param>
         /// <param name="userName">The user name used in the connection credentials.</param>
         /// <param name="password">The password used in the connection credentials.</param>
-        public DevicePortalConnection(
+        public DefaultDevicePortalConnection(
             string address,
             string userName,
             string password)
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                address = "localhost:10080";
-            }
-
-            this.Connection = new Uri(
-                string.Format("{0}://{1}", 
-                this.GetUriScheme(address), 
-                address));
+            this.Connection = new Uri(address);
             this.Credentials = new NetworkCredential(
                 userName, 
                 password);
@@ -147,15 +133,16 @@ namespace TestApp
         /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
         public void UpdateConnection(bool requiresHttps)
         {
-            string uriScheme = this.GetUriScheme(
-                this.Connection.Authority,
-                requiresHttps);
+            // BUGBUG - DK
+            //string uriScheme = this.GetUriScheme(
+            //    this.Connection.Authority,
+            //    requiresHttps);
 
-            this.Connection = new Uri(
-                string.Format(
-                    "{0}://{1}",
-                    uriScheme,
-                    this.Connection.Authority));
+            //this.Connection = new Uri(
+            //    string.Format(
+            //        "{0}://{1}",
+            //        uriScheme,
+            //        this.Connection.Authority));
         }
 
         /// <summary>
@@ -167,41 +154,27 @@ namespace TestApp
             IpConfiguration ipConfig,
             bool requiresHttps = false)
         {
-            Uri newConnection = null;
+            // BUGBUG - DK
+            //Uri newConnection = null;
 
-            foreach (NetworkAdapterInfo adapter in ipConfig.Adapters)
-            {
-                foreach (IpAddressInfo addressInfo in adapter.IpAddresses)
-                {
-                    // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
-                    if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
-                    {
-                        newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
-                        break;
-                    }
-                }
+            //foreach (NetworkAdapterInfo adapter in ipConfig.Adapters)
+            //{
+            //    foreach (IpAddressInfo addressInfo in adapter.IpAddresses)
+            //    {
+            //        // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
+            //        if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
+            //        {
+            //            newConnection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+            //            break;
+            //        }
+            //    }
 
-                if (newConnection != null)
-                {
-                    this.Connection = newConnection;
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the URI scheme based on the specified address.
-        /// </summary>
-        /// <param name="address">The address of the device.</param>
-        /// <param name="requiresHttps">True if a secure connection should always be required.</param>
-        /// <returns>A string containing the URI scheme.</returns>
-        private string GetUriScheme(
-            string address,
-            bool requiresHttps = true)
-        {
-            return (address.Contains("127.0.0.1") ||
-                    address.Contains("localhost") ||
-                    !requiresHttps) ? "http" : "https";
+            //    if (newConnection != null)
+            //    {
+            //        this.Connection = newConnection;
+            //        break;
+            //    }
+            //}
         }
     }
 }
