@@ -28,8 +28,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Initializes a new instance of the <see cref="WebSocket{T}" /> class.
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
-        public WebSocket(IDevicePortalConnection connection)
+        /// <param name="sendStreams">specifies whether the web socket should send streams (useful for creating mock data).</param>
+        public WebSocket(IDevicePortalConnection connection, bool sendStreams = false)
         {
+            this.sendStreams = sendStreams;
             this.deviceConnection = connection;
             this.IsListeningForMessages = false;
         }

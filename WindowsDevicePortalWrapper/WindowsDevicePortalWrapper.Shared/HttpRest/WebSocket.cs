@@ -23,6 +23,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private IDevicePortalConnection deviceConnection;
 
         /// <summary>
+        /// Indicates whether the web socket should send streams instead of parsed <see cref="T" /> objects
+        /// </summary>
+        private bool sendStreams = false;
+
+        /// <summary>
         /// Gets a value indicating whether the web socket is listening for messages.
         /// </summary>
         public bool IsListeningForMessages
@@ -35,6 +40,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets or sets the message received handler.
         /// </summary>
         public WebSocketMessageReceivedEventHandler<T> WebSocketMessageReceived
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the stream received handler.
+        /// </summary>
+        public WebSocketMessageReceivedEventHandler<Stream> WebSocketStreamReceived
         {
             get;
             set;
@@ -74,21 +88,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Converts received stream to a parsed message and passes it to the WebSocketMessageReceived handler.
+        /// Converts received stream to a parsed <see cref="T" /> object and passes it to
+        /// the WebSocketMessageReceived handler. The sendstreams property can be used to
+        /// override this and send the <see cref="Stream" /> instead via the WebSocketStreamReceived handler.
         /// </summary>
         /// <param name="stream">The received stream.</param>
         private void ConvertStreamToMessage(Stream stream)
         {
             if (stream != null && stream.Length != 0)
             {
-                using (stream)
+                if (this.sendStreams)
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                    T message = (T)serializer.ReadObject(stream);
+                    this.WebSocketStreamReceived?.Invoke(
+                            this,
+                            new WebSocketMessageReceivedEventArgs<Stream>(stream));
+                }
+                else
+                {
+                    using (stream)
+                    {
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                        T message = (T)serializer.ReadObject(stream);
 
-                    this.WebSocketMessageReceived?.Invoke(
-                        this,
-                        new WebSocketMessageReceivedEventArgs<T>(message));
+                        this.WebSocketMessageReceived?.Invoke(
+                            this,
+                            new WebSocketMessageReceivedEventArgs<T>(message));
+                    }
                 }
             }
         }

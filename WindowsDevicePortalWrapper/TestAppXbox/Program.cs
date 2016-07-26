@@ -10,6 +10,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace TestApp
 {
@@ -35,26 +36,6 @@ namespace TestApp
         /// Usage string
         /// </summary>
         private static readonly string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
-
-        /// <summary>
-        /// Event used to indicate that the running processes on the device have been received.
-        /// </summary>
-        private ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
-
-        /// <summary>
-        /// The running processes on the device.
-        /// </summary>
-        private DevicePortal.RunningProcesses runningProcesses = null;
-
-        /// <summary>
-        /// Event used to indicate that the system perf on the device have been received.
-        /// </summary>
-        private ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
-
-        /// <summary>
-        /// The system perf of the device.
-        /// </summary>
-        private DevicePortal.SystemPerformanceInformation systemPerf = null;
 
         /// <summary>
         /// Operation types
@@ -183,28 +164,40 @@ namespace TestApp
                 }
                 else if (operation == OperationType.ListProcessesOperation)
                 {
-                    DevicePortal.RunningProcesses deviceProcesses = null;
+                    RunningProcesses runningProcesses = null;
                     if (listen)
                     {
-                        portal.RunningProcessesMessageReceived += app.ProcessesReceivedHandler;
+                        ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
+
+                        WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler =
+                            delegate(object sender, WebSocketMessageReceivedEventArgs<RunningProcesses> runningProccesesArgs)
+                        {
+                            if (runningProccesesArgs.Message != null)
+                            {
+                                runningProcesses = runningProccesesArgs.Message;
+                                runningProcessesReceived.Set();
+                            }
+                        };
+
+                        portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
 
                         Task startListeningForProcessesTask = portal.StartListeningForRunningProcesses();
                         startListeningForProcessesTask.Wait();
 
-                        app.runningProcessesReceived.WaitOne();
+                        runningProcessesReceived.WaitOne();
 
                         Task stopListeningForProcessesTask = portal.StopListeningForRunningProcesses();
                         stopListeningForProcessesTask.Wait();
 
-                        deviceProcesses = app.runningProcesses;
+                        portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
                     }
                     else
                     {
                         Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcesses();
-                        deviceProcesses = getRunningProcessesTask.Result;
+                        runningProcesses = getRunningProcessesTask.Result;
                     }
 
-                    foreach (DevicePortal.DeviceProcessInfo process in deviceProcesses.Processes)
+                    foreach (DeviceProcessInfo process in runningProcesses.Processes)
                     {
                         if (!string.IsNullOrEmpty(process.Name))
                         {
@@ -214,24 +207,36 @@ namespace TestApp
                 }
                 else if (operation == OperationType.GetSystemPerfOperation)
                 {
-                    DevicePortal.SystemPerformanceInformation systemPerformanceInformation = null;
+                    SystemPerformanceInformation systemPerformanceInformation = null;
                     if (listen)
                     {
-                        portal.SystemPerfMessageReceived += app.SystemPerfReceivedHandler;
+                        ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
+
+                        WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
+                            delegate(object sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
+                        {
+                            if (sysPerfInfoArgs.Message != null)
+                            {
+                                systemPerformanceInformation = sysPerfInfoArgs.Message;
+                                systemPerfReceived.Set();
+                            }
+                        };
+
+                        portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
 
                         Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerf();
                         startListeningForSystemPerfTask.Wait();
 
-                        app.systemPerfReceived.WaitOne();
+                        systemPerfReceived.WaitOne();
 
                         Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcesses();
                         stopListeningForSystemPerfTask.Wait();
 
-                        systemPerformanceInformation = app.systemPerf;
+                        portal.SystemPerfMessageReceived -= systemPerfReceivedHandler;
                     }
                     else
                     {
-                        Task<DevicePortal.SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
+                        Task<SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
                         systemPerformanceInformation = getRunningProcessesTask.Result;
                     }
 
@@ -320,38 +325,6 @@ namespace TestApp
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
-        }
-
-        /// <summary>
-        /// Handler for the ProcessesMessageReceived event.
-        /// </summary>
-        /// <param name="sender">The object sending the event.</param>
-        /// <param name="args">The event data.</param>
-        private void ProcessesReceivedHandler(
-            object sender,
-            WebSocketMessageReceivedEventArgs<DevicePortal.RunningProcesses> args)
-        {
-            if (args.Message != null)
-            {
-                this.runningProcesses = args.Message;
-                this.runningProcessesReceived.Set();
-            }
-        }
-
-        /// <summary>
-        /// Handler for the SystemPerfMessageReceived event.
-        /// </summary>
-        /// <param name="sender">The object sending the event.</param>
-        /// <param name="args">The event data.</param>
-        private void SystemPerfReceivedHandler(
-            object sender,
-            WebSocketMessageReceivedEventArgs<DevicePortal.SystemPerformanceInformation> args)
-        {
-            if (args.Message != null)
-            {
-                this.systemPerf = args.Message;
-                this.systemPerfReceived.Set();
-            }
         }
     }
 }

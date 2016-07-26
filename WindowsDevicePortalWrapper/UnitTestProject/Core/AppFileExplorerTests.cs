@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             response.Content = content;
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, response, HttpOperations.Get);
 
             Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFolders();
             getKnownFoldersTask.Wait();
@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             response.Content = content;
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, response, HttpOperations.Get);
 
             Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContents("KnownFolderOne");
             getFolderContentsTask.Wait();
@@ -117,7 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpContent content = new StreamContent(stream);
             response.Content = content;
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpOperations.Get);
 
             Task<Stream> getFileTask = TestHelpers.Portal.GetFile("knownfolder", "FileToDownload.txt", "SubFolder\\SubFolder2");
             getFileTask.Wait();
@@ -135,7 +135,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpOperations.Post);
 
             Task uploadFileTask = TestHelpers.Portal.UploadFile("knownfolder", "MockData\\Defaults\\api_os_devicefamily_Default.dat", "SubFolder\\SubFolder2");
             uploadFileTask.Wait();
@@ -152,7 +152,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpOperations.Post);
 
             try
             {
@@ -175,7 +175,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpOperations.Delete);
 
             Task deleteFileTask = TestHelpers.Portal.DeleteFile("knownfolder", "FileToDelete.txt", "SubFolder\\SubFolder2");
             deleteFileTask.Wait();
@@ -191,7 +191,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RenameFileApi, response);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RenameFileApi, response, HttpOperations.Post);
 
             Task renameFileTask = TestHelpers.Portal.RenameFile("knownfolder", "FileToRename.txt", "NewFileName.txt", "SubFolder\\SubFolder2");
             renameFileTask.Wait();

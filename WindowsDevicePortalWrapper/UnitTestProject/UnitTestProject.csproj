@@ -52,13 +52,16 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
+    <Compile Include="Core\PerformanceDataTests.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.cs" />
     <Compile Include="MockHttpResponder.cs" />
@@ -90,6 +93,12 @@
     <None Include="MockData\Defaults\api_os_machinename_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\Defaults\api_resourcemanager_processes_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_resourcemanager_systemperf_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\Defaults\ext_settings_TVResolution_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -97,6 +106,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\ext_settings_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\Put_ext_settings_TVResolution_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\WebSocket_api_resourcemanager_processes_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\WebSocket_api_resourcemanager_systemperf_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_filesystem_apps_files_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
@@ -114,10 +132,22 @@
     <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_os_machinename_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_resourcemanager_processes_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_resourcemanager_systemperf_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\ext_settings_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\ext_user_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\WebSocket_api_resourcemanager_processes_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\WebSocket_api_resourcemanager_systemperf_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

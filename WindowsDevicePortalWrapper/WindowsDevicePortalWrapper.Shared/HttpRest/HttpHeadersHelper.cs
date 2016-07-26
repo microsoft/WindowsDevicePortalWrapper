@@ -100,13 +100,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
 #if WINDOWS_UWP
             Assembly asm = this.GetType().GetTypeInfo().Assembly;
-            userAgentValue += "/v" + asm.GetName().Version.ToString();
-            userAgentValue += "/UWP";
+            userAgentValue += "-v" + asm.GetName().Version.ToString();
+            userAgentValue += "-UWP";
             HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
 #else
             Assembly asm = Assembly.GetExecutingAssembly();
-            userAgentValue += "/v" + asm.GetName().Version.ToString();
-            userAgentValue += "/dotnet";
+            userAgentValue += "-v" + asm.GetName().Version.ToString();
+            userAgentValue += "-dotnet";
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
 #endif // WINDOWS_UWP
 

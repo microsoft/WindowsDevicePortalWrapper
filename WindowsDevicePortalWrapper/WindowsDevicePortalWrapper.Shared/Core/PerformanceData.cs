@@ -19,12 +19,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting all running processes
         /// </summary>
-        private static readonly string RunningProcessApi = "api/resourcemanager/processes";
+        public static readonly string RunningProcessApi = "api/resourcemanager/processes";
 
         /// <summary>
         /// API for getting system performance
         /// </summary>
-        private static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
+        public static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
 
         /// <summary>
         /// Web socket to get running processes.
@@ -337,7 +337,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// GPU Adaptors
         /// </summary>
         [DataContract]
-        public class GpuAdapters
+        public class GpuAdapter
         {
             /// <summary>
             /// Gets or sets total Dedicated memory
@@ -386,7 +386,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets list of available adapters
             /// </summary>
             [DataMember(Name = "AvailableAdapters")]
-            public List<GpuAdapters> Adapters { get; set; }
+            public List<GpuAdapter> Adapters { get; set; }
         }
 
         /// <summary>
