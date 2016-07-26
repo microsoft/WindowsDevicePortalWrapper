@@ -19,8 +19,13 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WindowsDevicePortalWrapper.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppHL.UniversalWindows", "TestAppHL.UniversalWindows\TestAppHL.UniversalWindows.csproj", "{D49B6A91-7FFF-49AE-982D-108770BC7E5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockDataGenerator", "MockDataGenerator\MockDataGenerator.csproj", "{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{4fc7c762-adbe-4a0a-882d-10771cd8bd55}*SharedItemsImports = 4
 		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{6a9e862e-5cda-4a8a-bbc0-56e9ea921e39}*SharedItemsImports = 4
 		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{af72a46d-5d30-4fb4-8d3e-b516ed19f9a4}*SharedItemsImports = 13
 		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{f2d8b145-a737-494e-aef4-508f9d02e0d7}*SharedItemsImports = 4
@@ -156,6 +161,38 @@ Global
 		{D49B6A91-7FFF-49AE-982D-108770BC7E5B}.Release|x86.ActiveCfg = Release|x86
 		{D49B6A91-7FFF-49AE-982D-108770BC7E5B}.Release|x86.Build.0 = Release|x86
 		{D49B6A91-7FFF-49AE-982D-108770BC7E5B}.Release|x86.Deploy.0 = Release|x86
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|ARM.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x64.Build.0 = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Release|x86.Build.0 = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|ARM.Build.0 = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|ARM.ActiveCfg = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|ARM.Build.0 = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x64.Build.0 = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
