@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Helper for Xbox Live User related operations
     /// </summary>
-    internal class UserOperation
+    public class UserOperation
     {
         /// <summary>
         /// Usage message for this operation
@@ -38,7 +38,7 @@ namespace TestApp
         /// </summary>
         /// <param name="portal">DevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        internal static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {

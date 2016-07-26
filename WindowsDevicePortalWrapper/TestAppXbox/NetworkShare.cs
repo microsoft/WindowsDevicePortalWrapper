@@ -7,7 +7,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Helper class for connecting to Network Shares
