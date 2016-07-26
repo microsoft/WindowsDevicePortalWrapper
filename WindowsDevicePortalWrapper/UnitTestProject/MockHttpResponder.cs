@@ -38,12 +38,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         /// <param name="endpoint">The endpoint to be mocked.</param>
         /// <param name="response">The response to return.</param>
-        /// <param name="httpOperation">HTTP operation we are mocking.</param>
-        public void AddMockResponse(string endpoint, HttpResponseMessage response, HttpOperations httpOperation)
+        /// <param name="httpMethod">HTTP method we are mocking.</param>
+        public void AddMockResponse(string endpoint, HttpResponseMessage response, HttpMethods httpMethod)
         {
-            if (httpOperation != HttpOperations.Get)
+            if (httpMethod != HttpMethods.Get)
             {
-                endpoint = httpOperation.ToString() + "_" + endpoint;
+                endpoint = httpMethod.ToString() + "_" + endpoint;
             }
 
             Utilities.ModifyEndpointForFilename(ref endpoint);
@@ -57,19 +57,19 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="endpoint">Endpoint we are mocking.</param>
         /// <param name="platform">Device platform we are testing.</param>
         /// <param name="operatingSystemVersion">The OS Version we are testing.</param>
-        /// <param name="httpOperation">HTTP operation we are mocking.</param>
-        public void AddMockResponse(string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion, HttpOperations httpOperation)
+        /// <param name="httpMethod">HTTP method we are mocking.</param>
+        public void AddMockResponse(string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion, HttpMethods httpMethod)
         {
             // If no OS is provided, use the default.
             if (operatingSystemVersion == null)
             {
-                this.AddMockResponse(endpoint, httpOperation);
+                this.AddMockResponse(endpoint, httpMethod);
                 return;
             }
 
-            if (httpOperation != HttpOperations.Get)
+            if (httpMethod != HttpMethods.Get)
             {
-                endpoint = httpOperation.ToString() + "_" + endpoint;
+                endpoint = httpMethod.ToString() + "_" + endpoint;
             }
 
             Utilities.ModifyEndpointForFilename(ref endpoint);
@@ -85,14 +85,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Adds a default response for this endpoint, device agnostic.
         /// </summary>
         /// <param name="endpoint">Endpoint we are mocking.</param>
-        /// <param name="httpOperation">HTTP operation we are mocking.</param>
-        public void AddMockResponse(string endpoint, HttpOperations httpOperation)
+        /// <param name="httpMethod">HTTP method we are mocking.</param>
+        public void AddMockResponse(string endpoint, HttpMethods httpMethod)
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-            if (httpOperation != HttpOperations.Get)
+            if (httpMethod != HttpMethods.Get)
             {
-                endpoint = httpOperation.ToString() + "_" + endpoint;
+                endpoint = httpMethod.ToString() + "_" + endpoint;
             }
 
             Utilities.ModifyEndpointForFilename(ref endpoint);
@@ -112,7 +112,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public async Task<HttpResponseMessage> GetAsync(Uri uri)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpOperations.Get));
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.Get));
             task.Start();
 
             return await task;
@@ -126,7 +126,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public async Task<HttpResponseMessage> PostAsync(Uri uri, HttpContent content)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpOperations.Post));
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.Post));
             task.Start();
 
             return await task;
@@ -140,7 +140,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public async Task<HttpResponseMessage> PutAsync(Uri uri, HttpContent content)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpOperations.Put));
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.Put));
             task.Start();
 
             return await task;
@@ -154,7 +154,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public async Task<HttpResponseMessage> DeleteAsync(Uri uri)
         {
             // Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(this.HttpStoredResponse, uri);
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpOperations.Delete));
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.Delete));
             task.Start();
 
             return await task;
@@ -167,7 +167,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public async Task<HttpResponseMessage> WebSocketAsync(Uri uri)
         {
-            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpOperations.WebSocket));
+            Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.WebSocket));
             task.Start();
 
             return await task;
@@ -179,7 +179,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="uri">The URI we are looking for a canned response for.</param>
         /// <param name="httpOperation">The httpOperation we are looking for a canned response for.</param>
         /// <returns>An HttpResponseMessage previously stored for this URI.</returns>
-        private HttpResponseMessage HttpStoredResponse(Uri uri, HttpOperations httpOperation)
+        private HttpResponseMessage HttpStoredResponse(Uri uri, HttpMethods httpOperation)
         {
             Assert.IsNotNull(uri);
 
@@ -190,7 +190,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 targetEndpoint = targetEndpoint.Remove(0, 1);
             }
 
-            if (httpOperation != HttpOperations.Get)
+            if (httpOperation != HttpMethods.Get)
             {
                 targetEndpoint = httpOperation.ToString() + "_" + targetEndpoint;
             }

@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="operatingSystemVersion">The version of the OS we are targeting.</param>
         public static void VerifyOsInformation(string operatingSystemVersion)
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, DevicePortalPlatforms.XboxOne, operatingSystemVersion, HttpOperations.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, DevicePortalPlatforms.XboxOne, operatingSystemVersion, HttpMethods.Get);
 
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();

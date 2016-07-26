@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.ApplyHttpHeaders(client, "POST");
+                this.ApplyHttpHeaders(client, HttpMethods.Post);
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, requestContent);
                 TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();

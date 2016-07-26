@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         [TestMethod]
         public void GetRunningProcessesTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, HttpOperations.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, HttpMethods.Get);
 
             Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcesses();
             getRunningProcessesTask.Wait();
@@ -40,7 +40,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         [TestMethod]
         public void GetRunningProcessesWebSocketTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, HttpOperations.WebSocket);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, HttpMethods.WebSocket);
 
             ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
             RunningProcesses runningProcesses = null;
@@ -78,7 +78,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         [TestMethod]
         public void GetSystemPerfTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, HttpOperations.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, HttpMethods.Get);
 
             Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
             getSystemPerfTask.Wait();
@@ -94,7 +94,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         [TestMethod]
         public void GetSystemPerfWebSocketTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, HttpOperations.WebSocket);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, HttpMethods.WebSocket);
 
             ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
             SystemPerformanceInformation systemPerfInfo = null;

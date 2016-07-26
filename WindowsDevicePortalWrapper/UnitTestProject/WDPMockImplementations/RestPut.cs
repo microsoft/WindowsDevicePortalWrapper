@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
-                this.ApplyHttpHeaders(client, "PUT");
+                this.ApplyHttpHeaders(client, HttpMethods.Put);
 
                 // Send the request
                 Task<HttpResponseMessage> putTask = TestHelpers.MockHttpResponder.PutAsync(uri, body);
