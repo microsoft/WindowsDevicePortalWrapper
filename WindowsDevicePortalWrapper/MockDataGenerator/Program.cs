@@ -119,6 +119,9 @@ namespace MockDataGenerator
 
                 if (parameters.HasParameter("method"))
                 {
+                    // This is case sensitive. Since it's only used while generating mocks which is a development time action,
+                    // that seems okay. If we want to revisit I'd prefer keeping the casing of the enum and using a switch or
+                    // if/else block to manually convert.
                     httpMethod = (HttpMethods)Enum.Parse(typeof(HttpMethods), parameters.GetParameterValue("method"));
                 }
 

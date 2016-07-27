@@ -114,6 +114,8 @@ namespace XboxWdpDriver
             ParameterHelper parameters = new ParameterHelper();
             Program app = new Program();
 
+            string targetConsole = string.Empty;
+
             try
             {
                 parameters.ParseCommandLine(args);
@@ -125,9 +127,18 @@ namespace XboxWdpDriver
                     operation = OperationStringToEnum(parameters.GetParameterValue("op"));
                 }
 
-                if (!parameters.HasParameter(ParameterHelper.IpOrHostname))
+                // Allow /ip: to still function, even though we've moved to /x: in the documentation.
+                if (parameters.HasParameter(ParameterHelper.IpOrHostnameOld) && !parameters.HasParameter(ParameterHelper.IpOrHostname))
                 {
-                    string defaultConsole = string.Empty;
+                    targetConsole = parameters.GetParameterValue(ParameterHelper.IpOrHostnameOld);
+                }
+                else if (parameters.HasParameter(ParameterHelper.IpOrHostname))
+                {
+                    targetConsole = parameters.GetParameterValue(ParameterHelper.IpOrHostname);
+                }
+
+                if (string.IsNullOrEmpty(targetConsole))
+                {
                     object regValue;
                     regValue = Microsoft.Win32.Registry.GetValue(DefaultConsoleRegkey, null, null);
 
@@ -138,28 +149,11 @@ namespace XboxWdpDriver
 
                     if (regValue is string)
                     {
-                        defaultConsole = regValue as string;
-                        parameters.AddParameter(ParameterHelper.IpOrHostname, defaultConsole);
+                        targetConsole = regValue as string;
                     }
                     else
                     {
                         throw new Exception("No default console is currently set. Must provide an ip address or hostname to connect to: /x:<ip or hostname>.");
-                    }
-
-                    // If we do a connect operation with no IP specified, that means we want to know
-                    // what the default is. Print this and return.
-                    if (operation == OperationType.ConnectOperation)
-                    {
-                        if (!string.IsNullOrEmpty(defaultConsole))
-                        {
-                            Console.WriteLine(defaultConsole);
-                        }
-                        else
-                        {
-                            Console.WriteLine("No default console is currently set.");
-                        }
-
-                        return;
                     }
                 }
 
@@ -169,11 +163,11 @@ namespace XboxWdpDriver
                 {
                     if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
                     {
-                        connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                        connection = new DevicePortalConnection(targetConsole);
                     }
                     else
                     {
-                        connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                        connection = new DevicePortalConnection(targetConsole, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
                     }
                 }
                 catch (TypeLoadException)
@@ -185,7 +179,7 @@ namespace XboxWdpDriver
                     }
                     else
                     {
-                        string connectionUri = string.Format("https://{0}:11443", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                        string connectionUri = string.Format("https://{0}:11443", targetConsole);
                         connection = new DefaultDevicePortalConnection(connectionUri, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
                     }
                 }
@@ -224,7 +218,7 @@ namespace XboxWdpDriver
                     }
                     else
                     {
-                        Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                        Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", targetConsole);
                     }
                 }
                 else if (operation == OperationType.InfoOperation)
@@ -351,8 +345,16 @@ namespace XboxWdpDriver
                 }
                 else if (operation == OperationType.ConnectOperation)
                 {
-                    Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, parameters.GetParameterValue(ParameterHelper.IpOrHostname));
-                    Console.WriteLine("Default console set to {0}", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                    // User provided a new ip or hostname to set as the default.
+                    if (parameters.HasParameter(ParameterHelper.IpOrHostname) || parameters.HasParameter(ParameterHelper.IpOrHostnameOld))
+                    {
+                        Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, targetConsole);
+                        Console.WriteLine("Default console set to {0}", targetConsole);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Connected to Default console: {0}", targetConsole);
+                    }
                 }
                 else
                 {

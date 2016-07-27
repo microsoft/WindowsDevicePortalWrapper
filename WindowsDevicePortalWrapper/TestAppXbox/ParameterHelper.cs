@@ -35,6 +35,11 @@ namespace XboxWdpDriver
         public static readonly string IpOrHostname = "x";
 
         /// <summary>
+        /// Old Device Identifier identifier string. This allows us to accept both ip or x.
+        /// </summary>
+        public static readonly string IpOrHostnameOld = "ip";
+
+        /// <summary>
         /// WDP Username identifier string
         /// </summary>
         public static readonly string WdpUser = "user";
