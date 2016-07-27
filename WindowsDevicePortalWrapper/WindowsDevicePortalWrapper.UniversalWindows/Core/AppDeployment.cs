@@ -37,9 +37,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
-            httpFilter.ServerCredential = new PasswordCredential();
-            httpFilter.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
-            httpFilter.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+
+            if (this.deviceConnection.Credentials != null)
+            {
+                httpFilter.ServerCredential = new PasswordCredential();
+                httpFilter.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
+                httpFilter.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+            }
 
             using (HttpClient client = new HttpClient(httpFilter))
             {

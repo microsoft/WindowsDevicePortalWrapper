@@ -330,7 +330,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Stream stream = null;
 
                 WindowsDevicePortal.WebSocketMessageReceivedEventHandler<Stream> streamReceivedHandler =
-                    delegate(object sender, WebSocketMessageReceivedEventArgs<Stream> args)
+                    delegate (object sender, WebSocketMessageReceivedEventArgs<Stream> args)
                 {
                     if (args.Message != null)
                     {
@@ -360,7 +360,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                 }
             }
-            else
+            else if (HttpMethods.Put == httpMethod)
+            {
+                using (Stream dataStream = await this.Put(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Post == httpMethod)
+            {
+                using (Stream dataStream = await this.Post(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Delete == httpMethod)
+            {
+                using (Stream dataStream = await this.Delete(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Get == httpMethod)
             {
                 using (Stream dataStream = await this.Get(uri))
                 {
@@ -370,6 +403,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         dataStream.CopyTo(fileStream);
                     }
                 }
+            }
+            else
+            {
+                throw new NotImplementedException(string.Format("Unsupported HttpMethod {0}", httpMethod.ToString()));
             }
         }
 

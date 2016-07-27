@@ -26,22 +26,23 @@ namespace MockDataGenerator
         /// <summary>
         /// Usage string
         /// </summary>
-        private const string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/endpoint:<api to call>] [/directory:<directory to save mock data file(s)>";
+        private const string GeneralUsageMessage = "Usage: /address:<URL for device (eg. https://10.0.0.1:11443)> /user:<WDP username> /pwd:<WDP password> [/endpoint:<api to call>] [/directory:<directory to save mock data file(s)>";
 
         /// <summary>
-        /// Endpoints for REST calls to populate
+        /// Endpoints for REST calls to populate. Feel free to override this list (especially locally) to
+        /// facilitate generating a large number of mock files all simultaneously.
         /// </summary>
-        private static readonly string[] Endpoints = 
+        private static readonly Endpoint[] Endpoints = 
         {
-            DevicePortal.DeviceFamilyApi,
-            DevicePortal.MachineNameApi,
-            DevicePortal.OsInfoApi,
-            DevicePortal.XboxLiveUserApi,
-            DevicePortal.XboxSettingsApi,
-            DevicePortal.SystemPerfApi,
-            DevicePortal.RunningProcessApi,
-            WebSocketOpertionPrefix + DevicePortal.SystemPerfApi,
-            WebSocketOpertionPrefix + DevicePortal.RunningProcessApi
+            new Endpoint(HttpMethods.Get, DevicePortal.DeviceFamilyApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.MachineNameApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.OsInfoApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveUserApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.SystemPerfApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
+            new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
+            new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
         };
 
         /// <summary>
@@ -71,15 +72,15 @@ namespace MockDataGenerator
                 return;
             }
 
-            if (!parameters.HasParameter(ParameterHelper.IpOrHostname) || !parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+            if (!parameters.HasParameter(ParameterHelper.FullAddress) || !parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
             {
-                Console.WriteLine("Missing one or more required parameter(s). Must provide ip, user, and pwd");
+                Console.WriteLine("Missing one or more required parameter(s). Must provide address, user, and pwd");
                 Console.WriteLine();
                 Console.WriteLine(GeneralUsageMessage);
                 return;
             }
 
-            DevicePortalConnection connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+            IDevicePortalConnection connection = new DefaultDevicePortalConnection(parameters.GetParameterValue(ParameterHelper.FullAddress), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
             DevicePortal portal = new DevicePortal(connection);
 
             Task connectTask = portal.Connect(updateConnection: false);
@@ -111,32 +112,30 @@ namespace MockDataGenerator
                 Directory.CreateDirectory(directory);
             }
 
+
             if (parameters.HasParameter("endpoint"))
             {
                 HttpMethods httpMethod = HttpMethods.Get;
-                string endpoint = parameters.GetParameterValue("endpoint");
 
-                if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
+                if (parameters.HasParameter("method"))
                 {
-                    httpMethod = HttpMethods.WebSocket;
-                    endpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
+                    // This is case sensitive. Since it's only used while generating mocks which is a development time action,
+                    // that seems okay. If we want to revisit I'd prefer keeping the casing of the enum and using a switch or
+                    // if/else block to manually convert.
+                    httpMethod = (HttpMethods)Enum.Parse(typeof(HttpMethods), parameters.GetParameterValue("method"));
                 }
+
+                string endpoint = parameters.GetParameterValue("endpoint");
 
                 Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod);
                 saveResponseTask.Wait();
             }
             else
             {
-                foreach (string endpoint in Endpoints)
+                foreach (Endpoint endpoint in Endpoints)
                 {
-                    string finalEndpoint = endpoint;
-                    HttpMethods httpMethod = HttpMethods.Get;
-
-                    if (endpoint.StartsWith(WebSocketOpertionPrefix, StringComparison.OrdinalIgnoreCase))
-                    {
-                        httpMethod = HttpMethods.WebSocket;
-                        finalEndpoint = endpoint.Substring(WebSocketOpertionPrefix.Length);
-                    }
+                    HttpMethods httpMethod = endpoint.Method;
+                    string finalEndpoint = endpoint.Value;
 
                     try
                     {
@@ -158,6 +157,42 @@ namespace MockDataGenerator
             }
 
             Console.WriteLine("Data generated in directory {0}. Please make sure to remove any personally identifiable information from the response(s) before adding them as mock responses.", directory);
+        }
+
+        /// <summary>
+        /// Encapsulation of an endpoint and its HTTP method.
+        /// </summary>
+        private class Endpoint
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Endpoint"/> class.
+            /// </summary>
+            /// <param name="method">The HTTP method this endpoint should use.</param>
+            /// <param name="endpoint">The actual endpoint.</param>
+            public Endpoint(HttpMethods method, string endpoint)
+            {
+                this.Method = method;
+                this.Value = endpoint;
+            }
+
+            /// <summary>
+            /// Gets or sets the HTTP Method.
+            /// </summary>
+            public HttpMethods Method { get; set; }
+
+            /// <summary>
+            /// Gets or sets the endpoint value.
+            /// </summary>
+            public string Value { get; set; }
+
+            /// <summary>
+            /// Overridden ToString method.
+            /// </summary>
+            /// <returns>Human readable representation of an Endpoint.</returns>
+            public override string ToString()
+            {
+                return this.Method.ToString() + " : " + this.Value;
+            }
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 string userString = string.Empty;
                 foreach (UserInfo user in this.Users)
                 {
-                    userString += "User: " + user + "\n";
+                    userString += "User:\n" + user + "\n";
                 }
 
                 return userString;
@@ -152,7 +152,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <returns>String representation of a user</returns>
             public override string ToString()
             {
-                return "Id: " + this.UserId + "\n" +
+                return "    Id: " + this.UserId + "\n" +
                         (this.SponsoredUser != true ? "    Email: " + this.EmailAddress + "\n" : "    Sponsored User\n") +
                         "    Gamertag: " + this.Gamertag + "\n" +
                         "    XboxUserId: " + this.XboxUserId + "\n" +
