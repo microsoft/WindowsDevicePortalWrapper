@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Helper for file related operations
     /// </summary>
-    internal class FileOperation
+    public class FileOperation
     {
         /// <summary>
         /// Usage message for this operation

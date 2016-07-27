@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-    /// <summary>
+    /// <content>
     /// Wrappers for OS Information.
-    /// </summary>
+    /// </content>
     public partial class DevicePortal
     {
         /// <summary>

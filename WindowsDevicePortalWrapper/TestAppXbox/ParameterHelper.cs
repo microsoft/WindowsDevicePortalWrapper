@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Class for parsing command line parameters

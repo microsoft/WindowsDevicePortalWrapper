@@ -18,7 +18,9 @@ using Windows.Web.Http;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// DevicePortal object.
+    /// This is the main DevicePortal object. It contains methods for making HTTP REST calls against
+    /// all of the WDP endpoints covered by the wrapper project. Different endpoints have their
+    /// implementation separated out into individual files.
     /// </summary>
     public partial class DevicePortal
     {

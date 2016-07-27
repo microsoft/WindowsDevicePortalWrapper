@@ -11,7 +11,7 @@ using Windows.Security.Cryptography.Certificates;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace TestAppHL.UniversalWindows
 {
     public class DevicePortalConnection : IDevicePortalConnection
     {
