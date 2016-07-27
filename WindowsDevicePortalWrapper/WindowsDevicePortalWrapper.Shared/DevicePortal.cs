@@ -9,6 +9,7 @@ using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
@@ -31,6 +32,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Endpoint used to access the certificate.
         /// </summary>
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+
+        /// <summary>
+        /// Text to identify a FRE build.
+        /// </summary>
+        private static readonly string FreText = "fre.";
+
+        /// <summary>
+        /// Text to identify an xbox rel build.
+        /// </summary>
+        private static readonly string XboxRelText = "xbox_rel_";
 
         /// <summary>
         /// Device connection object.
@@ -284,9 +295,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
+            // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_1608
+            string friendlyOSVersion = this.OperatingSystemVersion;
+
+            int index = friendlyOSVersion.IndexOf(FreText, StringComparison.OrdinalIgnoreCase);
+
+            if (index != -1)
+            {
+                // Remove everything before and including the FRE
+                friendlyOSVersion = friendlyOSVersion.Substring(index + FreText.Length, friendlyOSVersion.Length - index - FreText.Length);
+
+                // Remove Xbox Rel if it is present
+                friendlyOSVersion = Regex.Replace(friendlyOSVersion, XboxRelText, string.Empty, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+                // Remove the rest of the numeric only version information.
+                friendlyOSVersion = friendlyOSVersion.Split('.')[0];
+            }
+
             // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
             // we can create a class with the same name as this Device/OS pair for tests.
-            string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
+            string filename = endpoint + "_" + this.Platform.ToString() + "_" + friendlyOSVersion;
 
             if (httpMethod != HttpMethods.Get)
             {
