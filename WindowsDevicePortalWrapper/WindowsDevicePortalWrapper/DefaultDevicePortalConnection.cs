@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private X509Certificate2 deviceCertificate = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DevicePortalConnection" /> class.
+        /// Initializes a new instance of the <see cref="DefaultDevicePortalConnection" /> class.
         /// </summary>
         /// <param name="address">The fully qualified (ex: "https:/1.2.3.4:4321") address of the device.</param>
         /// <param name="userName">The user name used in the connection credentials.</param>
@@ -35,7 +35,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string password)
         {
             this.Connection = new Uri(address);
-            this.Credentials = new NetworkCredential(userName, password);
+
+            if (!string.IsNullOrEmpty(userName) &&
+                !string.IsNullOrEmpty(password))
+            {
+                this.Credentials = new NetworkCredential(userName, password);
+            }
         }
 
         /// <summary>

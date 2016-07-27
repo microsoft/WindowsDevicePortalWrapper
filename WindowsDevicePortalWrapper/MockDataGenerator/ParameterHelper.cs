@@ -22,7 +22,7 @@ namespace MockDataGenerator
         /// <summary>
         /// Device Identifier identifier string
         /// </summary>
-        public static readonly string IpOrHostname = "ip";
+        public static readonly string FullAddress = "address";
 
         /// <summary>
         /// WDP Username identifier string

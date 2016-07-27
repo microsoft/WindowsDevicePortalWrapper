@@ -32,7 +32,7 @@ namespace XboxWdpDriver
         /// <summary>
         /// Device Identifier identifier string
         /// </summary>
-        public static readonly string IpOrHostname = "ip";
+        public static readonly string IpOrHostname = "x";
 
         /// <summary>
         /// WDP Username identifier string
@@ -58,6 +58,16 @@ namespace XboxWdpDriver
         /// List for storing parsed command line flags.
         /// </summary>
         private List<string> flags = new List<string>();
+
+        /// <summary>
+        /// Adds a new parameter.
+        /// </summary>
+        /// <param name="name">The name of the parameter we are adding.</param>
+        /// <param name="value">The value of that parameter.</param>
+        public void AddParameter(string name, string value)
+        {
+            this.parameters.Add(name, value);
+        }
 
         /// <summary>
         /// Helper for getting a parameter value for a key

@@ -30,12 +30,23 @@ namespace XboxWdpDriver
                 "processes\n" +
                 "systemPerf\n" +
                 "config\n" +
-                "file";
+                "file\n" +
+                "connect";
 
         /// <summary>
         /// Usage string
         /// </summary>
-        private static readonly string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
+        private static readonly string GeneralUsageMessage = "Usage: /x:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
+
+        /// <summary>
+        /// The registry key that Xbox uses for storing default console information.
+        /// </summary>
+        private static readonly string DefaultConsoleRegkey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Durango\\WDP\\Consoles";
+
+        /// <summary>
+        /// The XTF registry key that Xbox uses for storing default console information.
+        /// </summary>
+        private static readonly string DefaultXtfConsoleRegkey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Durango\\Xtf\\Consoles";
 
         /// <summary>
         /// Operation types
@@ -86,6 +97,12 @@ namespace XboxWdpDriver
             /// Does remote file operations.
             /// </summary>
             FileOperation,
+
+            /// <summary>
+            /// Sets the default xbox console to be this one.
+            /// Uses the same registry setting as XbConnect tool.
+            /// </summary>
+            ConnectOperation,
         }
 
         /// <summary>
@@ -108,9 +125,69 @@ namespace XboxWdpDriver
                     operation = OperationStringToEnum(parameters.GetParameterValue("op"));
                 }
 
-                if (!parameters.HasParameter(ParameterHelper.IpOrHostname) || !parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                if (!parameters.HasParameter(ParameterHelper.IpOrHostname))
                 {
-                    throw new Exception("Missing one or more required parameter(s). Must provide ip, user, and pwd");
+                    string defaultConsole = string.Empty;
+                    object regValue;
+                    regValue = Microsoft.Win32.Registry.GetValue(DefaultConsoleRegkey, null, null);
+
+                    if (regValue == null)
+                    {
+                        regValue = Microsoft.Win32.Registry.GetValue(DefaultXtfConsoleRegkey, null, null);
+                    }
+
+                    if (regValue is string)
+                    {
+                        defaultConsole = regValue as string;
+                        parameters.AddParameter(ParameterHelper.IpOrHostname, defaultConsole);
+                    }
+                    else
+                    {
+                        throw new Exception("No default console is currently set. Must provide an ip address or hostname to connect to: /x:<ip or hostname>.");
+                    }
+
+                    // If we do a connect operation with no IP specified, that means we want to know
+                    // what the default is. Print this and return.
+                    if (operation == OperationType.ConnectOperation)
+                    {
+                        if (!string.IsNullOrEmpty(defaultConsole))
+                        {
+                            Console.WriteLine(defaultConsole);
+                        }
+                        else
+                        {
+                            Console.WriteLine("No default console is currently set.");
+                        }
+
+                        return;
+                    }
+                }
+
+                IDevicePortalConnection connection = null;
+
+                try
+                {
+                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                    {
+                        connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                    }
+                    else
+                    {
+                        connection = new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                    }
+                }
+                catch (TypeLoadException)
+                {
+                    // Windows 7 doesn't support credential storage so we'll get a TypeLoadException
+                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                    {
+                        throw new Exception("Credential storage is not supported on your PC. It requires Windows 8+ to run. Please provide the user and password parameters.");
+                    }
+                    else
+                    {
+                        string connectionUri = string.Format("https://{0}:11443", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                        connection = new DefaultDevicePortalConnection(connectionUri, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                    }
                 }
 
                 bool listen = false;
@@ -123,20 +200,31 @@ namespace XboxWdpDriver
                     }
                 }
 
-                DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
+                DevicePortal portal = new DevicePortal(connection);
 
                 Task connectTask = portal.Connect(updateConnection: false);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
                 {
-                    if (portal.ConnectionHttpStatusCode != 0)
+                    if (portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (connection.Credentials == null)
+                        {
+                            Console.WriteLine("The WDP connection was rejected due to missing credentials.\n\nPlease provide the /user:<username> and /pwd:<pwd> parameters on your first call to WDP.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The WDP connection was rejected due to bad credentials.\n\nPlease check the /user:<username> and /pwd:<pwd> parameters.");
+                        }
+                    }
+                    else if (portal.ConnectionHttpStatusCode != 0)
                     {
                         Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
                     }
                     else
                     {
-                        Console.WriteLine("Failed to connect to WDP for unknown reason.");
+                        Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
                     }
                 }
                 else if (operation == OperationType.InfoOperation)
@@ -261,6 +349,11 @@ namespace XboxWdpDriver
                 {
                     FileOperation.HandleOperation(portal, parameters);
                 }
+                else if (operation == OperationType.ConnectOperation)
+                {
+                    Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                    Console.WriteLine("Default console set to {0}", parameters.GetParameterValue(ParameterHelper.IpOrHostname));
+                }
                 else
                 {
                     Console.WriteLine("Successfully connected to console but no operation was specified. \n" +
@@ -322,6 +415,10 @@ namespace XboxWdpDriver
             else if (operation.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.FileOperation;
+            }
+            else if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ConnectOperation;
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);

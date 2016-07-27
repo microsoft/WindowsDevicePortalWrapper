@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -38,10 +39,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="endpoint">The endpoint that is being modified.</param>
         public static void ModifyEndpointForFilename(ref string endpoint)
         {
-            endpoint = endpoint.Replace('\\', '_');
-            endpoint = endpoint.Replace('/', '_');
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+
+            foreach (char character in invalidChars)
+            {
+                endpoint = endpoint.Replace(character, '_');
+            }
+
             endpoint = endpoint.Replace('-', '_');
             endpoint = endpoint.Replace('.', '_');
+            endpoint = endpoint.Replace('=', '_');
+            endpoint = endpoint.Replace('&', '_');
         }
 
         /// <summary>
