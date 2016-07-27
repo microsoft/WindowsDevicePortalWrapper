@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.cs" company="Microsoft Corporation">
+// <copyright file="XboxOne_rs1_xbox_rel_1608.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -13,10 +13,10 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
     /// <summary>
-    /// Test class for XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700 version
+    /// Test class for XboxOne_rs1_xbox_rel_1608 version
     /// </summary>
     [TestClass]
-    public class XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700 : BaseTests
+    public class XboxOne_rs1_xbox_rel_1608 : BaseTests
     {
         /// <summary>
         /// Gets the Platform type these tests are targeting.
@@ -26,6 +26,17 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             get
             {
                 return DevicePortalPlatforms.XboxOne;
+            }
+        }
+
+        /// <summary>
+        /// Gets the friendly OS Version these tests are targeting.
+        /// </summary>
+        protected override string FriendlyOperatingSystemVersion
+        {
+            get
+            {
+                return "rs1_xbox_rel_1608";
             }
         }
 
@@ -48,7 +59,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetXboxLiveUserListTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsers();
             getUserTask.Wait();
@@ -74,7 +85,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetOsInfo_XboxOne_1608()
         {
-            XboxHelpers.VerifyOsInformation(this.OperatingSystemVersion);
+            XboxHelpers.VerifyOsInformation(this.FriendlyOperatingSystemVersion, this.OperatingSystemVersion);
         }
 
         /// <summary>
@@ -85,7 +96,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetXboxSettingsTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
             getSettingsTask.Wait();
@@ -120,7 +131,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void AppFileExplorerGetKnownFolderTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFolders();
             getKnownFoldersTask.Wait();
@@ -142,7 +153,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void AppFileExplorerGetFolderContentsTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContents("DevelopmentFiles");
             getFolderContentsTask.Wait();
@@ -245,7 +256,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetRunningProcessesTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcesses();
             getRunningProcessesTask.Wait();
@@ -262,7 +273,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetRunningProcessesWebSocketTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.WebSocket);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.WebSocket);
 
             ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
             RunningProcesses runningProcesses = null;
@@ -302,7 +313,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetSystemPerfTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
             getSystemPerfTask.Wait();
@@ -319,7 +330,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetSystemPerfWebSocketTest_XboxOne_1608()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, this.PlatformType, this.OperatingSystemVersion, HttpMethods.WebSocket);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.WebSocket);
 
             ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
             SystemPerformanceInformation systemPerfInfo = null;

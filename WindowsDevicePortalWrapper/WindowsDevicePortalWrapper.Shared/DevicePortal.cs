@@ -9,6 +9,7 @@ using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
@@ -33,6 +34,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Endpoint used to access the certificate.
         /// </summary>
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+
+        /// <summary>
+        /// Expected number of OS version sections once the OS version is split by period characters
+        /// </summary>
+        private static readonly uint ExpectedOSVersionSections = 5;
+
+        /// <summary>
+        /// The target OS version section index once the OS version is split by periods 
+        /// </summary>
+        private static readonly uint TargetOSVersionSection = 3;
 
         /// <summary>
         /// Device connection object.
@@ -285,9 +296,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
+            // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_xbox_rel_1608
+            string friendlyOSVersion = this.OperatingSystemVersion;
+            string[] versionParts = friendlyOSVersion.Split('.');
+            if (versionParts.Length == ExpectedOSVersionSections)
+            {
+                friendlyOSVersion = versionParts[TargetOSVersionSection];
+            }
+
             // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
             // we can create a class with the same name as this Device/OS pair for tests.
-            string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
+            string filename = endpoint + "_" + this.Platform.ToString() + "_" + friendlyOSVersion;
 
             if (httpMethod != HttpMethods.Get)
             {

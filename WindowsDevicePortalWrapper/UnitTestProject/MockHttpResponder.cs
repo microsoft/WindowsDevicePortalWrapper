@@ -56,12 +56,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         /// <param name="endpoint">Endpoint we are mocking.</param>
         /// <param name="platform">Device platform we are testing.</param>
-        /// <param name="operatingSystemVersion">The OS Version we are testing.</param>
+        /// <param name="friendlyOperatingSystemVersion">The friendly name of the OS Version we are testing, used to find the mock file.</param>
         /// <param name="httpMethod">HTTP method we are mocking.</param>
-        public void AddMockResponse(string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion, HttpMethods httpMethod)
+        public void AddMockResponse(string endpoint, DevicePortalPlatforms platform, string friendlyOperatingSystemVersion, HttpMethods httpMethod)
         {
             // If no OS is provided, use the default.
-            if (operatingSystemVersion == null)
+            if (friendlyOperatingSystemVersion == null)
             {
                 this.AddMockResponse(endpoint, httpMethod);
                 return;
@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Utilities.ModifyEndpointForFilename(ref endpoint);
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            string filepath = Path.Combine("MockData", platform.ToString(), operatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + operatingSystemVersion + ".dat");
+            string filepath = Path.Combine("MockData", platform.ToString(), friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
             response.Content = this.LoadContentFromFile(filepath);
 
             this.mockResponses.Add(endpoint.ToLowerInvariant(), response);

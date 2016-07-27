@@ -23,7 +23,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         public BaseTests()
         {
-            TestHelpers.EstablishMockConnection(this.PlatformType, this.OperatingSystemVersion);
+            TestHelpers.EstablishMockConnection(this.PlatformType, this.FriendlyOperatingSystemVersion);
         }
 
         /// <summary>
@@ -41,6 +41,17 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Gets the overridable OS Version.
         /// </summary>
         protected virtual string OperatingSystemVersion
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the overridable friendly OS Version used to find the file names of mock data.
+        /// </summary>
+        protected virtual string FriendlyOperatingSystemVersion
         {
             get
             {
