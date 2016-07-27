@@ -5,7 +5,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
@@ -46,11 +45,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }
 
+#if !WINDOWS_UWP
         /// <summary>
         /// Get the raw data of the device's root certificate.
         /// </summary>
         /// <returns>Byte array containing the certificate data.</returns>
         byte[] GetDeviceCertificateData();
+#endif
 
         /// <summary>
         /// Validates and sets the device certificate.

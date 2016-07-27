@@ -168,7 +168,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
             string connectionPhaseDescription = string.Empty;
 
-            // TODO - add status event. this can take a LONG time
             try 
             {
                 // Get the device certificate

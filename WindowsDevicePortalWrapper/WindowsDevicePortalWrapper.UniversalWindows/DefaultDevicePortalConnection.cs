@@ -1,45 +1,37 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="DevicePortalConnection.cs" company="Microsoft Corporation">
+// <copyright file="DefaultDevicePortalConnection.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
 using System;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
-using Microsoft.Tools.WindowsDevicePortal;
+using Windows.Foundation;
+using Windows.Security.Cryptography.Certificates;
+using Windows.Storage.Streams;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// IDevicePortalConnection implementation for the core test project
+    /// Default implementation of the IDevicePortalConnection interface.
+    /// This implementation is designed to be compatibile with all device families.
     /// </summary>
-    public class DevicePortalConnection : IDevicePortalConnection
+    public class DefaultDevicePortalConnection : IDevicePortalConnection
     {
-        /// <summary>
-        /// The device's root certificate.
-        /// </summary>
-        private X509Certificate2 deviceCertificate = null;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalConnection" /> class.
         /// </summary>
-        /// <param name="address">The address of the device.</param>
+        /// <param name="address">The fully qualified (ex: "https:/1.2.3.4:4321") address of the device.</param>
         /// <param name="userName">The user name used in the connection credentials.</param>
         /// <param name="password">The password used in the connection credentials.</param>
-        public DevicePortalConnection(
+        public DefaultDevicePortalConnection(
             string address,
             string userName,
             string password)
         {
-            if (string.IsNullOrWhiteSpace(address))
-            {
-                address = "localhost:50443";
-            }
-
-            this.Connection = new Uri(string.Format("{0}://{1}", this.GetUriScheme(address), address));
+            this.Connection = new Uri(address);
             this.Credentials = new NetworkCredential(userName, password);
         }
 
@@ -114,30 +106,25 @@ namespace TestApp
         }
 
         /// <summary>
-        /// Gets the raw device certificate.
-        /// </summary>
-        /// <returns>Byte array containing the raw certificate data.</returns>
-        public byte[] GetDeviceCertificateData()
-        {
-            return this.deviceCertificate.GetRawCertData();
-        }
-
-        /// <summary>
         /// Validates and sets the device certificate.
         /// </summary>
         /// <param name="certificate">The device's root certificate.</param>
-        public void SetDeviceCertificate(X509Certificate2 certificate)
+        /// <summary>
+        /// Sets the device's root certificate in the certificate store. 
+        /// </summary>
+        /// <param name="certificate">The device's root certificate.</param>
+        public void SetDeviceCertificate(Certificate certificate)
         {
-            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
+            // Verify that the certificate is one we recognize.
+            if (!certificate.Issuer.Contains(DevicePortalCertificateIssuer))
             {
+                certificate = null;
                 throw new DevicePortalException(
-                    (HttpStatusCode)0,
+                    (Windows.Web.Http.HttpStatusCode)0,
                     "Invalid certificate issuer",
                     null,
-                    "Failed to download device certificate");
+                    "Failed to set the device certificate");
             }
-
-            this.deviceCertificate = certificate;
         }
 
         /// <summary>
@@ -146,14 +133,10 @@ namespace TestApp
         /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
         public void UpdateConnection(bool requiresHttps)
         {
-            string uriScheme = this.GetUriScheme(
-                this.Connection.Authority, 
-                requiresHttps);
-
             this.Connection = new Uri(
                 string.Format(
-                    "{0}://{1}:50443", 
-                    uriScheme, 
+                    "{0}://{1}",
+                    requiresHttps ? "https" : "http",
                     this.Connection.Authority));
         }
         
@@ -175,7 +158,11 @@ namespace TestApp
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        newConnection = new Uri(string.Format("{0}://{1}:50443", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
+                        newConnection = new Uri(
+                            string.Format(
+                                "{0}://{1}", 
+                                requiresHttps ? "https" : "http",
+                                this.Connection.Authority));
                         break;
                     }
                 }
@@ -186,20 +173,6 @@ namespace TestApp
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the URI scheme based on the specified address.
-        /// </summary>
-        /// <param name="address">The address of the device.</param>
-        /// <param name="requiresHttps">True if a secure connection should always be required.</param>
-        /// <returns>A string containing the URI scheme.</returns>
-        private string GetUriScheme(
-            string address,
-            bool requiresHttps = true)
-        {
-            return "https"; // Desktop always uses https. 
-                            //TODO: Replace with DNS-SD call. 
         }
     }
 }
