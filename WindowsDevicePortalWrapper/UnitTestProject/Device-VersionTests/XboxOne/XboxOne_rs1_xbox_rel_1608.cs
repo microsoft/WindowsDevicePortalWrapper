@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="XboxOne_rs1_1608.cs" company="Microsoft Corporation">
+// <copyright file="XboxOne_rs1_xbox_rel_1608.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -13,10 +13,10 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
     /// <summary>
-    /// Test class for XboxOne_rs1_1608 version
+    /// Test class for XboxOne_rs1_xbox_rel_1608 version
     /// </summary>
     [TestClass]
-    public class XboxOne_rs1_1608 : BaseTests
+    public class XboxOne_rs1_xbox_rel_1608 : BaseTests
     {
         /// <summary>
         /// Gets the Platform type these tests are targeting.
@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             get
             {
-                return "rs1_1608";
+                return "rs1_xbox_rel_1608";
             }
         }
 

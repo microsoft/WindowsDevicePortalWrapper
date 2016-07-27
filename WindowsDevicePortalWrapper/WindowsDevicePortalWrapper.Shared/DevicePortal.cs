@@ -34,14 +34,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
-        /// Text to identify a FRE build.
+        /// Expected number of OS version sections once the OS version is split by period characters
         /// </summary>
-        private static readonly string FreText = "fre.";
+        private static readonly uint ExpectedOSVersionSections = 5;
 
         /// <summary>
-        /// Text to identify an xbox rel build.
+        /// The target OS version section index once the OS version is split by periods 
         /// </summary>
-        private static readonly string XboxRelText = "xbox_rel_";
+        private static readonly uint TargetOSVersionSection = 3;
 
         /// <summary>
         /// Device connection object.
@@ -295,21 +295,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
-            // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_1608
+            // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_xbox_rel_1608
             string friendlyOSVersion = this.OperatingSystemVersion;
-
-            int index = friendlyOSVersion.IndexOf(FreText, StringComparison.OrdinalIgnoreCase);
-
-            if (index != -1)
+            string[] versionParts = friendlyOSVersion.Split('.');
+            if (versionParts.Length == ExpectedOSVersionSections)
             {
-                // Remove everything before and including the FRE
-                friendlyOSVersion = friendlyOSVersion.Substring(index + FreText.Length, friendlyOSVersion.Length - index - FreText.Length);
-
-                // Remove Xbox Rel if it is present
-                friendlyOSVersion = Regex.Replace(friendlyOSVersion, XboxRelText, string.Empty, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-
-                // Remove the rest of the numeric only version information.
-                friendlyOSVersion = friendlyOSVersion.Split('.')[0];
+                friendlyOSVersion = versionParts[TargetOSVersionSection];
             }
 
             // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
