@@ -235,7 +235,7 @@ namespace TestAppHL.UniversalWindows
 
                 sb.AppendLine("Setting device name to : " + nameValue.Text);
                 sb.AppendLine(" The name change will be reflected after a reboot.");
-                await portal.SetDeviceName(nameValue.Text, false);
+                await portal.SetDeviceName(nameValue.Text);
             }
             catch(Exception ex)
             {
@@ -592,21 +592,6 @@ namespace TestAppHL.UniversalWindows
             }
 
             this.testOutput.Text = sb.ToString();
-        }
-
-        private async void InstallApplication_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void BrowsePackages_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void BrowseDependencies_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

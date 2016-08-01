@@ -242,10 +242,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
                     await this.ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
-
-                    // TODO - note that in some instances, the hololens was receiving a KeepAlive exception, yet the network connection succeeded. 
-                    // this COULD have been an RTM bug that is now fixed, or it could have been the fault of the access point
-                    // some investigation and defensive measures should be implemented here to avoid excessive noise / false failures
                 }
 
                 // Get the device's IP configuration and update the connection as appropriate.

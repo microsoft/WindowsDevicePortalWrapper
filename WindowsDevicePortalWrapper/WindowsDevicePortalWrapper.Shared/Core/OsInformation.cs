@@ -115,24 +115,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Sets the device's name
         /// </summary>
         /// <param name="name">The name to assign to the device.</param>
-        /// <param name="reboot">True to reboot the device after setting the name, false otherwise.</param>
         /// <remarks>The new name does not take effect until the device has been restarted.</remarks>
         /// <returns>Task tracking setting the device name completion.</returns>
-        public async Task SetDeviceName(
-            string name,
-            bool reboot = true)
+        public async Task SetDeviceName(string name)
         {
             await this.Post(
                 MachineNameApi,
                 string.Format("name={0}", Utilities.Hex64Encode(name)));
-
-            // Names do not take effect until after a reboot.
-            if (reboot)
-            {
-                await this.Reboot();
-            }
-
-            // TODO - wait until device has rebooted then reconnect
         }
 
         #region Data contract
