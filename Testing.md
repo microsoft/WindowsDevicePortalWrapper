@@ -58,7 +58,7 @@ protected override string OperatingSystemVersion
   }
   ```
 
-4. Each test should start with a call to TestHelpers.MockHttpResponder.AddMockResponse to prepare a mock response for a specified enpoint in one of three ways:
+4. Each test should start with a call to TestHelpers.MockHttpResponder.AddMockResponse to prepare a mock response for a specified endpoint in one of three ways:
 
   a. Default mock
   
@@ -91,3 +91,68 @@ protected override string OperatingSystemVersion
   ![debugselectedtests](https://cloud.githubusercontent.com/assets/1520739/17310093/27a33636-57f7-11e6-8cab-45620c167dcf.png)
 
 # Collecting Data for Tests
+
+## Using MockDataGenerator.exe to Generate Mock Data
+
+MockDataGenerator.exe, from the MockDataGenerator project, is used to target a WDP instance to create mock data.
+
+### MockDataGenerator Parameters
+
+| Paramater               | Purpose                                        |
+|-------------------------|------------------------------------------------|
+| /Address                | URL for device (eg. https://10.0.0.1:11443)    |
+| /User                   | WDP username                                   |
+| /Pwd                    | WDP password                                   |
+| /Endpoint               | API to call (default is all endoints in program.cs)   |
+| /Method                 | HTTP method to use (default is GET)            |
+| /Directory              | Directory to save mock data file(s) (default is .\MockData) |
+
+### MockDataGenerator File Name Format
+
+All mock data is saved as files in the \<endpoint\>\_\<platform\>\_\<friendly OS version\>.dat format, such as api_os_devicefamily_XboxOne_rs1_xbox_rel_1608.dat. 
+
+All file names are pre-pended with the HTTP method except for GET (as it is the default). Hence the file name for calling the System Performance API with GET is api_resourcemanager_systemperf_XboxOne_rs1_xbox_rel_1608.dat but calling the WebSocket is WebSocket_api_resourcemanager_systemperf_XboxOne_rs1_xbox_rel_1608.dat.
+
+### MockDataGenerator Examples
+
+All examples connect to 10.0.0.1:11443 with username TestUser and password SuperSecret.
+* Generate all mocks specified in the Program.cs Endpoints array and store them in .\MockData
+
+  ```shell
+  MockDataGenerator.exe  /ip: 10.0.0.1:11443 /user:TestUser /pwd:SuperSecret
+  ```
+
+* Generate mock for the device family API and store it in .\MockData
+  
+  ```shell
+  MockDataGenerator.exe  /ip: 10.0.0.1:11443 /user:TestUser /pwd:SuperSecret /endpoint:api/os/devicefamily
+  ```
+  or
+  ```shell
+  MockDataGenerator.exe  /ip: 10.0.0.1:11443 /user:TestUser /pwd:SuperSecret /endpoint:api/os/devicefamily /method:Get
+  ```
+  
+* Generate mock for the System Performance API web socket connection and store it in .\MockData
+
+  ```shell
+  MockDataGenerator.exe  /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/resourcemanager/systemperf /method:WebSocket
+  ```
+  
+  ## Adding Mock Data to the Solution
+  
+  1. Mock data should be added to the UnitTestProject in the MockData directory. 
+  
+    * Default mock data should be added to the MockData\Defaults directory.
+    
+      ![defaultmocks](https://cloud.githubusercontent.com/assets/1520739/17312218/ff62b160-5805-11e6-92f9-0934fc50b961.png)
+
+  
+    * Device-version mock data should be added to the MockData<Device\>\ \<Friendly OS Version\> directory with the Friendly OS Version parsed from the mock data’s file name.
+    
+      ![platformspecificmocks](https://cloud.githubusercontent.com/assets/1520739/17312269/5248edf4-5806-11e6-833e-cb2445ffc0f1.png)
+
+  
+  2. In the properties view the mock data files should have their “Copy to Output Directory” property marked as “Copy if newer.” If this is not done then the tests will be unable to find the files.
+  
+    ![copytooutputdirectory](https://cloud.githubusercontent.com/assets/1520739/17312271/55911450-5806-11e6-9616-eaf7de842121.png)
+
