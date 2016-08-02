@@ -111,7 +111,7 @@ MockDataGenerator.exe, from the MockDataGenerator project, is used to target a W
 
 ### MockDataGenerator Parameters
 
-| Paramater               | Purpose                                        |
+| Parameter               | Purpose                                        |
 |-------------------------|------------------------------------------------|
 | /Address                | URL for device (eg. https://10.0.0.1:11443)    |
 | /User                   | WDP username                                   |
