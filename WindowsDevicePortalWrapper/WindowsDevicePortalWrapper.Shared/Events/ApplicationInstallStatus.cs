@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </summary>
     /// <param name="sender">sender object</param>
     /// <param name="args">install args</param>
-    public delegate void ApplicationInstallStatusEventHandler(object sender, ApplicationInstallStatusEventArgs args);
+    public delegate void ApplicationInstallStatusEventHandler(DevicePortal sender, ApplicationInstallStatusEventArgs args);
 
     /// <summary>
     /// Application install status
