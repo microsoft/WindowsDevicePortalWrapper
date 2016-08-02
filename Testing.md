@@ -1,14 +1,4 @@
 # Running Tests
-
-There are two types of tests for excercising the wrapper library. 
-
-First, unit tests built against mock responses should be run before every Pull Request. Use Run All via the Test Explorer in Visual Studio prior to submitting any Pull Requests. You can also configure Visual Studio to automatically run the tests after each build of the solution via Test Settings in the Test menu.
-  ![runalltests](https://cloud.githubusercontent.com/assets/19478513/17338380/16900018-589c-11e6-87a6-8091d62ce399.png)
-
-Second, manual or semi-automated tests can also be run on a per-device basis via the device specific test apps. See the following for information on running these test apps:
-
-For Xbox One: [Using the Xbox Test App.](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/XboxWDPDriver.md)
-
 # Writing Tests
 
 Windows Device Portal Wrapper (WDPW) tests are run against mock data so that a windows device is not required to run the tests.
@@ -28,7 +18,7 @@ Windows Device Portal Wrapper (WDPW) tests are run against mock data so that a w
   }
   ```
   
-  a. If you are writing a device specific version test then override the PlatformType, the FriendlyOperatingSystemVersion used to specify where mock files are stored/named, and the OperatingSystemVersion to be used when validating the OSâ€™s actual version number.
+  a. If you are writing a device specific version test then override the PlatformType, the FriendlyOperatingSystemVersion used to specify where mock files are stored/named, and the OperatingSystemVersion to be used when validating the OS’s actual version number.
   
   ```c#
  /// <summary>
@@ -56,7 +46,7 @@ protected override string OperatingSystemVersion
 }
   ```
 
-3.	Define void methods with no parameters tagged with â€œtestMethodâ€ for each test case you want to run
+3.	Define void methods with no parameters tagged with “testMethod” for each test case you want to run
 
   ```c#
   [TestMethod]
@@ -72,7 +62,6 @@ protected override string OperatingSystemVersion
 
   a. Default mock
   
-<<<<<<< Updated upstream
   Use mock data from the MockData\Defaults\ \<endpoint\>\_Default.dat file.
   ```c#
   TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, HttpMethods.Get);
@@ -80,21 +69,12 @@ protected override string OperatingSystemVersion
   b. Version specific mock
   
   Use mock data from the MockData\ \<platform>\ \<friendly OS version\>\ \<endpoint\>\_\<platform\>\_\<friendly OS version\>.dat file
-=======
-  Use mock data from the MockData\\Defaults\\\<endpoint\>_Default.dat file.
-  ```c#
-  TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, HttpMethods.Get);
-  ```
-  b. Version specific mock
-  
-  Use mock data from the MockData\\\<platform\>\\\<friendly OS version\>\\\<endpoint\>_\<platform\>_\<friendly OS version\>.dat file
->>>>>>> Stashed changes
   ```c#
   TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
   ```
   c. Provided response
   
-  Use a custom built response object as a mock. This could set the response content to be a JSON string, return a failure response, load a response object from a custom file, etc.
+  Use a response object as a mock.
   ```c#
   TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, response, HttpMethods.Get);
   ```
@@ -106,7 +86,7 @@ protected override string OperatingSystemVersion
   Assert.IsNotNull(TestHelpers.Portal.OperatingSystemVersion);
   ```
   
-6. After building the test right click on it in the test explorer and select â€œDebug Selected Testsâ€ to be able to hit selected break points as it runs.
+6. After building the test right click on it in the test explorer and select “Debug Selected Tests” to be able to hit selected break points as it runs.
 
   ![debugselectedtests](https://cloud.githubusercontent.com/assets/1520739/17310093/27a33636-57f7-11e6-8cab-45620c167dcf.png)
 
@@ -118,7 +98,7 @@ MockDataGenerator.exe, from the MockDataGenerator project, is used to target a W
 
 ### MockDataGenerator Parameters
 
-| Parameter               | Purpose                                        |
+| Paramater               | Purpose                                        |
 |-------------------------|------------------------------------------------|
 | /Address                | URL for device (eg. https://10.0.0.1:11443)    |
 | /User                   | WDP username                                   |
@@ -162,17 +142,17 @@ All examples connect to 10.0.0.1:11443 with username TestUser and password Super
   
   1. Mock data should be added to the UnitTestProject in the MockData directory. 
   
-    * Default mock data should be added to the MockData\\Defaults directory.
+    * Default mock data should be added to the MockData\Defaults directory.
     
       ![defaultmocks](https://cloud.githubusercontent.com/assets/1520739/17312218/ff62b160-5805-11e6-92f9-0934fc50b961.png)
 
   
-    * Device-version mock data should be added to the MockData\<Device\>\\\<Friendly OS Version\> directory with the Friendly OS Version parsed from the mock data's file name.
+    * Device-version mock data should be added to the MockData<Device\>\ \<Friendly OS Version\> directory with the Friendly OS Version parsed from the mock data’s file name.
     
       ![platformspecificmocks](https://cloud.githubusercontent.com/assets/1520739/17312269/5248edf4-5806-11e6-833e-cb2445ffc0f1.png)
 
   
-  2. In the properties view the mock data files should have their "Copy to Output Directory" property marked as "Copy if newer." If this is not done then the tests will be unable to find the files.
+  2. In the properties view the mock data files should have their “Copy to Output Directory” property marked as “Copy if newer.” If this is not done then the tests will be unable to find the files.
   
     ![copytooutputdirectory](https://cloud.githubusercontent.com/assets/1520739/17312271/55911450-5806-11e6-9616-eaf7de842121.png)
 
