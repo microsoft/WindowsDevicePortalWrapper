@@ -4,21 +4,23 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.IO;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
     /// Web socket message received event handler
     /// </summary>
-    /// <param name="sender">sender object</param>
+    /// <param name="sender">Sender <see cref="DevicePortal"/> object</param>
     /// <param name="args">Web socket message received args</param>
     /// <typeparam name="T">Return type for the websocket messages.</typeparam>
-    public delegate void WebSocketMessageReceivedEventHandler<T>(object sender, WebSocketMessageReceivedEventArgs<T> args);
+    public delegate void WebSocketMessageReceivedEventHandler<T>(DevicePortal sender, WebSocketMessageReceivedEventArgs<T> args);
 
     /// <summary>
     /// Web socket message received event args
     /// </summary>
     /// <typeparam name="T">Return type for the websocket messages.</typeparam>
-    public class WebSocketMessageReceivedEventArgs<T>
+    public class WebSocketMessageReceivedEventArgs<T> : System.EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSocketMessageReceivedEventArgs{T}"/> class.
