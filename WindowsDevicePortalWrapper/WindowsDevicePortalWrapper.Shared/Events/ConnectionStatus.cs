@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Contains the details about the connection status
     /// </summary>
-    public class DeviceConnectionStatusEventArgs
+    public class DeviceConnectionStatusEventArgs : System.EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceConnectionStatusEventArgs"/> class.

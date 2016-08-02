@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Application install status event args
     /// </summary>
-    public class ApplicationInstallStatusEventArgs
+    public class ApplicationInstallStatusEventArgs : System.EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationInstallStatusEventArgs"/> class.
