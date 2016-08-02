@@ -1,4 +1,17 @@
 # Running Tests
+
+
+There are two types of tests for excercising the wrapper library. 
+
+First, unit tests built against mock responses should be run before every Pull Request. Use Run All via the Test Explorer in Visual Studio prior to submitting any Pull Requests. You can also configure Visual Studio to automatically run the tests after each build of the solution via Test Settings in the Test menu.
+<br>
+
+  ![runalltests](https://cloud.githubusercontent.com/assets/19478513/17338380/16900018-589c-11e6-87a6-8091d62ce399.png)
+
+Second, manual or semi-automated tests can also be run on a per-device basis via the device specific test apps. See the following for information on running these test apps:
+
+For Xbox One: [Using the Xbox Test App.](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/XboxWDPDriver.md)
+
 # Writing Tests
 
 Windows Device Portal Wrapper (WDPW) tests are run against mock data so that a windows device is not required to run the tests.
