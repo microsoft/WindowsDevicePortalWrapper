@@ -2,7 +2,7 @@
 
 XboxWDPDriver.exe, from the TestAppXbox project, is used to target WDP on Xbox One to assist in automated testing as well as being useful for production development scenarios.
 
-The app has built in help for most of its operations which can be accessed with with the /? flag.
+The app has built in help for most of its operations which can be accessed with the /? flag.
 
 Scripts or other executables could be written to interface with XboxWDPDriver.exe to make simpler command line calls, and can mimic things like the Xb*.exe command line tools that may be familiar to some Xbox developers. An example of such a script is provided in the Tools directory when building the TestAppXbox project (XbUser.cmd).
 
@@ -17,31 +17,34 @@ Scripts or other executables could be written to interface with XboxWDPDriver.ex
 
 Supported operations are the following:
 
-connect
-info
-xbluser
-install
-reboot
-processes
-systemPerf
-config
-file
+  * connect
+  * info
+  * xbluser
+  * install
+  * reboot
+  * processes
+  * systemPerf
+  * config
+  * file
 
 ### The connect operation
 
 The ip parameter is required if no default console is configured. You can set a default console or list the current default console by using the 'connect' operation.
 
+Examples:
 ```shell
 XboxWDPDriver.exe /ip:10.0.0.1 /op:connect
 ```
 or
 ```shell
 XboxWDPDriver.exe /op:connect
+```
 
 ### The info operation
 
 Lists some basic information about the operating system and device name of this Xbox One console.
 
+Example:
 ```shell
 XboxWDPDriver.exe /op:info
 ```
@@ -51,19 +54,21 @@ XboxWDPDriver.exe /op:info
 Controls listing and managing users on the console.
 
 Usage:
+```shell
   /subop:list
         Lists all Xbox Live Users on the console
-  /subop:signin \<user identifier (/msa:\<msa\> or /id:\<id\>)> [/msapwd:\<password\>]
+  /subop:signin <user identifier (/msa:<msa> or /id:<id>)> [/msapwd:<password>]
         Signs in the given user, adding them to the console if necessary
-  /subop:signout \<user identifier (/msa:\<msa\> or /id:\<id\>)>
+  /subop:signout <user identifier (/msa:<msa> or /id:<id>)>
         Signs the given user out of the console
   /subop:addsponsored
         Adds a sponsored user to the console
-  /subop:autosignin \<user identifier (/msa:\<msa\> or /id:\<id\>)\> \<state (/on or /off)\>
+  /subop:autosignin <user identifier (/msa:<msa> or /id:<id>)> <state (/on or /off)>
         Turns autosignin on or off for a given user
-  /subop:delete \<user identifier (/msa:\<msa\> or /id:\<id\>)\>
+  /subop:delete <user identifier (/msa:<msa> or /id:<id>)>
         Deletes the given user from the console
-
+```
+Examples:
 ```shell
 XboxWDPDriver.exe /op:xbluser /subop:list
 ```
@@ -93,11 +98,14 @@ XboxWDPDriver.exe /op:xbluser /subop:delete /id:16
 Installs a UWP application from an appx or loose folder.
 
 Usage:
-  /appx:\<path to Appx\> [/depend:\<path to dependency1\>;\<path to dependency2\> /cer:\<path to certificate\>]
+```shell
+  /appx:<path to Appx> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]
         Installs the given AppX package, along with any given dependencies.
-  /folder:\<path to loose folder\> [/depend:\<path to dependency1\>;\<path to dependency2\> /cer:\<path to certificate\>]
+  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]
         Installs the appx from a loose folder, along with any given dependencies.
+```
 
+Examples:
 ```shell
 XboxWDPDriver.exe /op:install /appx:myappx.appx
 ```
@@ -110,6 +118,7 @@ XboxWDPDriver.exe /op:install /folder:myapploosefolder
 
 Reboots the target Xbox One console.
 
+Example:
 ```shell
 XboxWDPDriver.exe /op:reboot
 ```
@@ -118,6 +127,7 @@ XboxWDPDriver.exe /op:reboot
 
 Lists all processes on the target Xbox One console.
 
+Example:
 ```shell
 XboxWDPDriver.exe /op:processes
 ```
@@ -126,6 +136,7 @@ XboxWDPDriver.exe /op:processes
 
 Gives a summary of current system performance on the target Xbox One console (memory usage, etc).
 
+Example:
 ```shell
 XboxWDPDriver.exe /op:systemPerf
 ```
@@ -135,13 +146,16 @@ XboxWDPDriver.exe /op:systemPerf
 Allows retrieving and setting some common system settings.
 
 Usage:
-  [/setting:\<setting name\> [/value:\<setting value\>]]
+```shell
+  [/setting:<setting name> [/value:<setting value>]]
         Gets current settings and their values. If
         /setting is specified, only returns that value.
         If /value is also specified, sets the settting to
         that value instead of returning the current
         value.
+```
 
+Examples:
 ```shell
 XboxWDPDriver.exe /op:config
 ```
@@ -161,19 +175,22 @@ Allows file operations on some known folders on the console (application specifi
 LocalAppData operations require the package full name be provided.
 
 Usage:
+```shell
   /subop:knownfolders
         Lists all available known folder ids on the console
-  /subop:dir /knownfolderid:\<knownfolderid\> [/subpath:\<subpath\>] [/packagefullname:\<packageFullName\>]
+  /subop:dir /knownfolderid:<knownfolderid> [/subpath:<subpath>] [/packagefullname:<packageFullName>]
         Lists the directory contents at the given knownfoldid and optionally subpath.
-  /subop:download /knownfolderid:\<knownfolderid\> /filename:\<name of the file to download\> /destination:\<filepath for storing the file\> [/subpath:\<subpath\>] [/packagefullname:\<packageFullName\>]
+  /subop:download /knownfolderid:<knownfolderid> /filename:<name of the file to download> /destination:<filepath for storing the file> [/subpath:<subpath>] [/packagefullname:<packageFullName>]
         Downloads the requested file to the desired destination.
-  /subop:upload /knownfolderid:\<knownfolderid\> /filepath:\<filepath of the file to upload\> [/subpath:\<subpath\>] [/packagefullname:\<packageFullName\>]
+  /subop:upload /knownfolderid:<knownfolderid> /filepath:<filepath of the file to upload> [/subpath:<subpath>] [/packagefullname:<packageFullName>]
         Uploads a file to the requested folder.
-  /subop:rename /knownfolderid:\<knownfolderid\> /filename:\<name of the file to rename\> /newfilename:\<new filename\> [/subpath:\<subpath\>] [/packagefullname:\<packageFullName\>]
+  /subop:rename /knownfolderid:<knownfolderid> /filename:<name of the file to rename> /newfilename:<new filename> [/subpath:<subpath>] [/packagefullname:<packageFullName>]
         Renames a given file.
-  /subop:delete /knownfolderid:\<knownfolderid\> /filename:\<name of the file to delete\> [/subpath:\<subpath\>] [/packagefullname:\<packageFullName\>]
+  /subop:delete /knownfolderid:<knownfolderid> /filename:<name of the file to delete> [/subpath:<subpath>] [/packagefullname:<packageFullName>]
         Deletes the given file.
+```
 
+Examples:
 ```shell
 XboxWDPDriver.exe /op:file /supop:knownfolders
 ```
