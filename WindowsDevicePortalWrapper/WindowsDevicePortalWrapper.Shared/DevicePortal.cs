@@ -101,11 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets or sets handler for reporting connection status.
         /// </summary>
-        public DeviceConnectionStatusEventHandler ConnectionStatus
-        {
-            get;
-            set;
-        }
+        public event DeviceConnectionStatusEventHandler ConnectionStatus;
 
         /// <summary>
         /// Gets the status code for establishing our connection.
