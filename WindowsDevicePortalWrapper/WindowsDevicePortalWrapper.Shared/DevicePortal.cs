@@ -330,7 +330,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Stream stream = null;
 
                 WindowsDevicePortal.WebSocketMessageReceivedEventHandler<Stream> streamReceivedHandler =
-                    delegate (object sender, WebSocketMessageReceivedEventArgs<Stream> args)
+                    delegate(object sender, WebSocketMessageReceivedEventArgs<Stream> args)
                 {
                     if (args.Message != null)
                     {
