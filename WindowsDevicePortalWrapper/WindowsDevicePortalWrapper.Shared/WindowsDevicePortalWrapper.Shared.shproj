@@ -12,5 +12,5 @@
   <PropertyGroup />
   <Import Project="WindowsDevicePortalWrapper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
-  <Import Project="$(StyleCopTargetsDir)StyleCop.targets " Condition="'$(StyleCopTargetsDir)' != ''"/>
+  <Import Project="$(StyleCopTargetsDir)StyleCop.targets" Condition="'$(StyleCopTargetsDir)' != ''"/>
 </Project>
