@@ -23,6 +23,7 @@ namespace XboxWdpDriver
         /// String listing the available operations.
         /// </summary>
         private static readonly string AvailableOperationsText = "Supported operations are the following:\n" +
+                "connect\n" +
                 "info\n" +
                 "xbluser\n" +
                 "install\n" +
@@ -30,8 +31,7 @@ namespace XboxWdpDriver
                 "processes\n" +
                 "systemPerf\n" +
                 "config\n" +
-                "file\n" +
-                "connect";
+                "file";
 
         /// <summary>
         /// Usage string
@@ -386,7 +386,11 @@ namespace XboxWdpDriver
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
+            if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ConnectOperation;
+            }
+            else if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.InfoOperation;
             }
@@ -417,10 +421,6 @@ namespace XboxWdpDriver
             else if (operation.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.FileOperation;
-            }
-            else if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.ConnectOperation;
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
