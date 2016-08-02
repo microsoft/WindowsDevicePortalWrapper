@@ -62,13 +62,13 @@ protected override string OperatingSystemVersion
 
   a. Default mock
   
-  Use mock data from the MockData\Defaults\<endpoint>_Default.dat file.
+  Use mock data from the MockData\Defaults\ \<endpoint\>\_Default.dat file.
   ```c#
-  TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, response, HttpMethods.Get);
+  TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, HttpMethods.Get);
   ```
   b. Version specific mock
   
-  Use mock data from the MockData\<platform>\<friendly OS version>\<endpoint>_<platform>_<friendly OS version>.dat file
+  Use mock data from the MockData\ \<platform>\ \<friendly OS version\>\ \<endpoint\>\_\<platform\>\_\<friendly OS version\>.dat file
   ```c#
   TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
   ```
