@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public class DefaultDevicePortalConnection : IDevicePortalConnection
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DevicePortalConnection" /> class.
+        /// Initializes a new instance of the <see cref="DefaultDevicePortalConnection" /> class.
         /// </summary>
         /// <param name="address">The fully qualified (ex: "https:/1.2.3.4:4321") address of the device.</param>
         /// <param name="userName">The user name used in the connection credentials.</param>
@@ -105,10 +105,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             set;
         }
 
-        /// <summary>
-        /// Validates and sets the device certificate.
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
         /// <summary>
         /// Sets the device's root certificate in the certificate store. 
         /// </summary>

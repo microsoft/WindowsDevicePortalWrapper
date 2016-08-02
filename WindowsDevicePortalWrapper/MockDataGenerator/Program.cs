@@ -112,7 +112,6 @@ namespace MockDataGenerator
                 Directory.CreateDirectory(directory);
             }
 
-
             if (parameters.HasParameter("endpoint"))
             {
                 HttpMethods httpMethod = HttpMethods.Get;
