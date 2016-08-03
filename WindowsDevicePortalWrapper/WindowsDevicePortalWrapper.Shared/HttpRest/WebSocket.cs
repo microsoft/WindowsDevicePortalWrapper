@@ -12,6 +12,22 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
+    /// Internal Web socket message received event handler
+    /// </summary>
+    /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
+    /// <param name="args">Web socket message received args</param>
+    /// <typeparam name="T">Return type for the websocket messages.</typeparam>
+    internal delegate void WebSocketMessageReceivedEventInternalHandler<T>(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<T> args);
+
+    /// <summary>
+    /// Internal Web socket stream received event handler
+    /// </summary>
+    /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
+    /// <param name="args">Web socket message received args</param>
+    /// <typeparam name="T">Return type for the websocket.</typeparam>
+    internal delegate void WebSocketStreamReceivedEventInternalHandler<T>(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<Stream> args);
+
+    /// <summary>
     /// HTTP Websocket Wrapper
     /// </summary>
     /// <typeparam name="T">Return type for the websocket messages.</typeparam>
@@ -28,30 +44,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private bool sendStreams = false;
 
         /// <summary>
+        /// Gets or sets the message received handler.
+        /// </summary>
+        public event WebSocketMessageReceivedEventInternalHandler<T> WebSocketMessageReceived;
+
+        /// <summary>
+        /// Gets or sets the stream received handler.
+        /// </summary>
+        public event WebSocketStreamReceivedEventInternalHandler<T> WebSocketStreamReceived;
+
+        /// <summary>
         /// Gets a value indicating whether the web socket is listening for messages.
         /// </summary>
         public bool IsListeningForMessages
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Gets or sets the message received handler.
-        /// </summary>
-        public WebSocketMessageReceivedEventHandler<T> WebSocketMessageReceived
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the stream received handler.
-        /// </summary>
-        public WebSocketMessageReceivedEventHandler<Stream> WebSocketStreamReceived
-        {
-            get;
-            set;
         }
 
         /// <summary>

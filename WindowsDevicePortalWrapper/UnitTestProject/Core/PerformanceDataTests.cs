@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
             RunningProcesses runningProcesses = null;
 
-            WindowsDevicePortal.WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler = delegate(object sender,
+            WindowsDevicePortal.WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler = delegate(DevicePortal sender,
             WebSocketMessageReceivedEventArgs<RunningProcesses> args)
             {
                 if (args.Message != null)
@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
             SystemPerformanceInformation systemPerfInfo = null;
 
-            WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler = delegate(object sender,
+            WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler = delegate(DevicePortal sender,
             WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> args)
             {
                 if (args.Message != null)
