@@ -90,6 +90,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                         this.HResult = errorResponse.ErrorCode;
                         this.Reason = errorResponse.ErrorMessage;
+
+                        if (string.IsNullOrEmpty(this.Reason))
+                        {
+                            this.Reason = errorResponse.Reason;
+                        }
                     }
                 }
             }
@@ -169,6 +174,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "ErrorMessage")]
             public string ErrorMessage { get; set; }
+
+            /// <summary>
+            /// Gets or sets the Reason
+            /// </summary>
+            [DataMember(Name = "Reason")]
+            public string Reason { get; set; }
         }
 
         #endregion

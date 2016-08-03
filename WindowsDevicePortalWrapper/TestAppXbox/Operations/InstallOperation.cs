@@ -30,8 +30,10 @@ namespace XboxWdpDriver
         private const string XblInstallUsageMessage = "Usage:\n" +
             "  /appx:<path to Appx> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]\n" +
             "        Installs the given AppX package, along with any given dependencies.\n" +
-            "  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]\n" +
-            "        Installs the appx from a loose folder, along with any given dependencies.\n";
+            "  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate> /transfer:<SMB or HTTP, SMB is the default> /destfoldername:<folder name, defaults to the same as the loose folder>]\n" +
+            "        Installs the appx from a loose folder, along with any given dependencies.\n" +
+            "  /register:<subpath on DevelopmentFiles\\LooseFolder to app to register>\n" +
+            "        Registers a loose folder that is already present on the device.\n";
 
         /// <summary>
         /// Event used to indicate that the application install process is complete.
@@ -49,6 +51,20 @@ namespace XboxWdpDriver
         private bool verbose;
 
         /// <summary>
+        /// Reference to our portal object.
+        /// </summary>
+        private DevicePortal portal;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstallOperation"/> class. 
+        /// </summary>
+        /// <param name="portal">Reference to the device portal object.</param>
+        public InstallOperation(DevicePortal portal)
+        {
+            this.portal = portal;
+        }
+
+        /// <summary>
         /// Main entry point for handling an install operation
         /// </summary>
         /// <param name="portal">DevicePortal reference for communicating with the device.</param>
@@ -61,7 +77,7 @@ namespace XboxWdpDriver
                 return;
             }
 
-            InstallOperation operation = new InstallOperation();
+            InstallOperation operation = new InstallOperation(portal);
             portal.AppInstallStatus += operation.AppInstallStatusHandler;
 
             if (parameters.HasFlag(ParameterHelper.VerboseFlag))
@@ -81,25 +97,26 @@ namespace XboxWdpDriver
 
             string appxFile = parameters.GetParameterValue("appx");
             string folderPath = parameters.GetParameterValue("folder");
+            string registerPath = parameters.GetParameterValue("register");
 
-            if (!string.IsNullOrEmpty(appxFile))
+            try
             {
-                operation.mreAppInstall.Reset();
-                Task installTask = portal.InstallApplication(null, appxFile, dependencies, certificate);
-                operation.mreAppInstall.WaitOne();
+                if (!string.IsNullOrEmpty(appxFile))
+                {
+                    operation.mreAppInstall.Reset();
+                    Task installTask = portal.InstallApplication(null, appxFile, dependencies, certificate);
+                    operation.mreAppInstall.WaitOne();
 
-                if (operation.installResults.Status == ApplicationInstallStatus.Completed)
-                {
-                    Console.WriteLine("Install complete.");
+                    if (operation.installResults.Status == ApplicationInstallStatus.Completed)
+                    {
+                        Console.WriteLine("Install complete.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Install failed in phase {0}. {1}", operation.installResults.Phase, operation.installResults.Message);
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("Install failed in phase {0}. {1}", operation.installResults.Phase, operation.installResults.Message);
-                }
-            }
-            else if (!string.IsNullOrEmpty(folderPath))
-            {
-                try
+                else if (!string.IsNullOrEmpty(folderPath))
                 {
                     // Install all dependencies one at a time (loose folder doesn't handle dependencies well).
                     foreach (string dependency in dependencies)
@@ -123,72 +140,102 @@ namespace XboxWdpDriver
                         folderPath = folderPath.Remove(folderPath.Length - 1);
                     }
 
-                    // Get just the folder name
-                    string folderName = folderPath.Substring(folderPath.LastIndexOf('\\') + 1);
-                    string shareName = Path.Combine("\\\\", parameters.GetParameterValue(ParameterHelper.IpOrHostname), "DevelopmentFiles");
+                    string destinationFolderName = parameters.GetParameterValue("destfoldername");
 
-                    try
+                    if (string.IsNullOrEmpty(destinationFolderName))
                     {
-                        operation.CopyDirectory(folderPath, Path.Combine(shareName, "LooseApps", folderName));
+                        // Get just the folder name
+                        string folderName = folderPath.Substring(folderPath.LastIndexOf('\\') + 1);
+
+                        destinationFolderName = folderName;
                     }
-                    catch (IOException e)
+
+                    string transferType = parameters.GetParameterValue("transfer");
+
+                    if (string.IsNullOrEmpty(transferType) || string.Equals(transferType, "smb", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (e.HResult == ErrorLogonFailureHresult)
+                        string shareName = Path.Combine("\\\\", parameters.GetParameterValue(ParameterHelper.IpOrHostname), "DevelopmentFiles");
+                        string destinationFolder = Path.Combine(shareName, "LooseApps", destinationFolderName);
+
+                        try
                         {
-                            Task<SmbInfo> smbTask = portal.GetSmbShareInfo();
-                            smbTask.Wait();
-
-                            // Set the username/password for accessing the share.
-                            NetworkShare.DisconnectFromShare(shareName, true);
-                            int connected = NetworkShare.ConnectToShare(shareName, smbTask.Result.Username, smbTask.Result.Password);
-
-                            if (connected != 0)
+                            operation.CopyDirectory(folderPath, destinationFolder);
+                        }
+                        catch (IOException e)
+                        {
+                            if (e.HResult == ErrorLogonFailureHresult)
                             {
-                                Console.WriteLine(string.Format("Failed to connect to the network share: {0}", connected));
+                                Task<SmbInfo> smbTask = portal.GetSmbShareInfo();
+                                smbTask.Wait();
+
+                                // Set the username/password for accessing the share.
+                                NetworkShare.DisconnectFromShare(shareName, true);
+                                int connected = NetworkShare.ConnectToShare(shareName, smbTask.Result.Username, smbTask.Result.Password);
+
+                                if (connected != 0)
+                                {
+                                    Console.WriteLine(string.Format("Failed to connect to the network share: {0}", connected));
+                                    return;
+                                }
+
+                                operation.CopyDirectory(folderPath, destinationFolder);
+
+                                NetworkShare.DisconnectFromShare(shareName, false);
+                            }
+                            else
+                            {
+                                Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
                                 return;
                             }
-
-                            operation.CopyDirectory(folderPath, Path.Combine(shareName, "LooseApps", folderName));
-
-                            NetworkShare.DisconnectFromShare(shareName, false);
-                        }
-                        else
-                        {
-                            Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
-                            return;
                         }
                     }
+                    else if (string.Equals(transferType, "http", StringComparison.OrdinalIgnoreCase))
+                    {
+                        operation.UploadDirectoryOverHttp(folderPath, destinationFolderName);
+                    }
+                    else
+                    {
+                        Console.WriteLine(string.Format("Unexpected transfer type received: {0}. Expecting one of SMB or HTTP.", transferType));
+                        return;
+                    }
 
-                    Task registerTask = portal.RegisterApplication(folderName);
+                    Task registerTask = portal.RegisterApplication(destinationFolderName);
                     registerTask.Wait();
 
                     Console.WriteLine("Install complete.");
                 }
-                catch (AggregateException e)
+                else if (!string.IsNullOrEmpty(registerPath))
                 {
-                    if (e.InnerException is DevicePortalException)
-                    {
-                        DevicePortalException innerException = e.InnerException as DevicePortalException;
+                    Task registerTask = portal.RegisterApplication(registerPath);
+                    registerTask.Wait();
 
-                        Console.WriteLine(string.Format("Exception encountered: 0x{0:X} : {1}", innerException.HResult, innerException.Reason));
-                    }
-                    else if (e.InnerException is OperationCanceledException)
-                    {
-                        Console.WriteLine("The operation was cancelled.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
-                    }
-
+                    Console.WriteLine("Registration complete.");
+                }
+                else
+                {
+                    Console.WriteLine("Must provide an appx package, loose folder, or path to register.");
+                    Console.WriteLine();
+                    Console.WriteLine(XblInstallUsageMessage);
                     return;
                 }
             }
-            else
+            catch (AggregateException e)
             {
-                Console.WriteLine("Must provide an appx package or a loose folder.");
-                Console.WriteLine();
-                Console.WriteLine(XblInstallUsageMessage);
+                if (e.InnerException is DevicePortalException)
+                {
+                    DevicePortalException innerException = e.InnerException as DevicePortalException;
+
+                    Console.WriteLine(string.Format("Exception encountered: {0}, hr = 0x{1:X} : {2}", innerException.StatusCode, innerException.HResult, innerException.Reason));
+                }
+                else if (e.InnerException is OperationCanceledException)
+                {
+                    Console.WriteLine("The operation was cancelled.");
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
+                }
+
                 return;
             }
         }
@@ -212,6 +259,26 @@ namespace XboxWdpDriver
             {
                 this.mreAppInstall?.Dispose();
                 this.mreAppInstall = null;
+            }
+        }
+
+        /// <summary>
+        /// Recursively uploads a source directory to the console.
+        /// </summary>
+        /// <param name="folderPath">The source directory.</param>
+        /// <param name="relativeDestination">The relative destination directory.</param>
+        private void UploadDirectoryOverHttp(string folderPath, string relativeDestination)
+        {
+            Task uploadTask = this.portal.UploadPackageFolder(folderPath, relativeDestination);
+            uploadTask.Wait();
+
+            foreach (string subDir in Directory.GetDirectories(folderPath))
+            {
+                // Get just the folder name
+                string subDirName = subDir.Substring(subDir.LastIndexOf('\\') + 1);
+                string destSubDir = Path.Combine(relativeDestination, subDirName);
+                
+                this.UploadDirectoryOverHttp(subDir, destSubDir);
             }
         }
 

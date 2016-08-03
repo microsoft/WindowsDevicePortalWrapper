@@ -236,6 +236,9 @@ namespace XboxWdpDriver
                 }
                 else if (operation == OperationType.InstallOperation)
                 {
+                    // Ensure we have an IP since SMB might need it for path generation.
+                    parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+
                     InstallOperation.HandleOperation(portal, parameters);
                 }
                 else if (operation == OperationType.RebootOperation)
