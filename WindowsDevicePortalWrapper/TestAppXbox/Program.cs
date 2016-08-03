@@ -32,7 +32,7 @@ namespace XboxWdpDriver
                 "systemPerf\n" +
                 "config\n" +
                 "file\n" +
-                "screenshot\n";
+                "screenshot";
 
         /// <summary>
         /// Usage string

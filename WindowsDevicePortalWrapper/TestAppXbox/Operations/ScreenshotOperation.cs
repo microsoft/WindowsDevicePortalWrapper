@@ -5,10 +5,9 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.IO;
 
 namespace XboxWdpDriver
 {
@@ -54,7 +53,6 @@ namespace XboxWdpDriver
             }
             else
             {
-
                 Task<Stream> screenshotTask = portal.TakeXboxScreenshot();
                 screenshotTask.Wait();
 
@@ -62,6 +60,7 @@ namespace XboxWdpDriver
                 {
                     screenshotTask.Result.CopyTo(fileStream);
                 }
+
                 Console.WriteLine("Screenshot saved as {0}.", filepath);
             }
         }

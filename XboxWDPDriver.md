@@ -213,6 +213,7 @@ XboxWDPDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subp
 ### The Screenshot operation
 
 Allows taking of screenshots of the remote console.
+
 Usage:
 ```shell
   [/filepath:<filepath> [/override]]

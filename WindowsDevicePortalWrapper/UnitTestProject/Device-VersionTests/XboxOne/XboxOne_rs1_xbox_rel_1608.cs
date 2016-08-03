@@ -583,6 +583,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("No", recievedSetting.RequiresReboot);
         }
 
+        /// <summary>
+        /// Simple test of Xbox Screenshot API.
+        /// </summary>
         public void XboxScreenshotTest()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, HttpMethods.Get);
