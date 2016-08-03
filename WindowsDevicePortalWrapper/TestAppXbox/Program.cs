@@ -252,7 +252,7 @@ namespace XboxWdpDriver
                         ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
 
                         WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler =
-                            delegate(object sender, WebSocketMessageReceivedEventArgs<RunningProcesses> runningProccesesArgs)
+                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<RunningProcesses> runningProccesesArgs)
                         {
                             if (runningProccesesArgs.Message != null)
                             {
@@ -295,7 +295,7 @@ namespace XboxWdpDriver
                         ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
 
                         WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
-                            delegate(object sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
+                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
                         {
                             if (sysPerfInfoArgs.Message != null)
                             {
