@@ -4,7 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -449,6 +453,223 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             NetworkPerformanceData networkPerformanceData = systemPerfInfo.NetworkData;
             Assert.AreEqual(networkPerformanceData.BytesIn, 15000);
             Assert.AreEqual(networkPerformanceData.BytesOut, 0);
+        }
+
+        /// <summary>
+        /// Basic test of the register API.
+        /// </summary>
+        [TestMethod]
+        public void XboxAppRegisterTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
+
+            Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
+            registerTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, registerTask.Status);
+        }
+
+        /// <summary>
+        /// Basic test of the folder upload API.
+        /// </summary>
+        [TestMethod]
+        public void XboxAppUploadFolderTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.UploadPackageFolderApi, HttpMethods.Post);
+
+            Task uploadTask = TestHelpers.Portal.UploadPackageFolder("MockData\\XboxOne", "DestinationLooseFolder");
+            uploadTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, uploadTask.Status);
+        }
+
+        /// <summary>
+        /// Basic test of the GET method. Gets a mock list of users
+        /// and verifies it comes back as expected from the raw response
+        /// content.
+        /// </summary>
+        [TestMethod]
+        public void GetXboxLiveUserListTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, HttpMethods.Get);
+
+            Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsers();
+            getUserTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getUserTask.Status);
+
+            List<UserInfo> users = getUserTask.Result.Users;
+
+            // Check some known things about this response.
+            Assert.AreEqual(2, users.Count);
+
+            Assert.AreEqual("fakeMsa@fakedomain.com", users[0].EmailAddress);
+            Assert.AreEqual("fakeGamertag", users[0].Gamertag);
+            Assert.AreEqual(16u, users[0].UserId);
+            Assert.AreEqual("12345667890123456", users[0].XboxUserId);
+            Assert.AreEqual(true, users[0].SignedIn);
+            Assert.AreEqual(false, users[0].AutoSignIn);
+
+            Assert.IsNull(users[1].EmailAddress);
+            Assert.AreEqual("fakeGamertag(1)", users[1].Gamertag);
+            Assert.AreEqual(1u, users[1].UserId);
+            Assert.AreEqual("7036874539097560", users[1].XboxUserId);
+            Assert.AreEqual(true, users[1].SponsoredUser);
+            Assert.AreEqual(true, users[1].SignedIn);
+        }
+
+        /// <summary>
+        /// Basic test of the PUT method. Creates a UserList
+        /// object and passes that to the server.
+        /// </summary>
+        [TestMethod]
+        public void UpdateXboxLiveUsersTest()
+        {
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, response, HttpMethods.Put);
+
+            UserList users = new UserList();
+            UserInfo user = new UserInfo();
+            user.EmailAddress = "fakeMsa@fakeDomain.com";
+            user.Password = "someFakePassword!";
+            user.SignedIn = true;
+            users.Add(user);
+
+            Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsers(users);
+            updateUsersTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, updateUsersTask.Status);
+        }
+
+        /// <summary>
+        /// Tests the failure case of trying to add a sponsored user
+        /// when the maximum number is already on the console.
+        /// </summary>
+        [TestMethod]
+        public void AddSponsoredUserTest_Failure()
+        {
+            HttpResponseMessage response = new HttpResponseMessage((HttpStatusCode)422);
+            HttpContent content = new StringContent(
+                "{\"ErrorCode\":-2136866553,\"ErrorMessage\":\"The maximum number of sponsored users is already signed in.\"}",
+                System.Text.Encoding.UTF8,
+                "application/json");
+
+            response.Content = content;
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, response, HttpMethods.Put);
+
+            UserList users = new UserList();
+            UserInfo user = new UserInfo();
+            user.SponsoredUser = true;
+            users.Add(user);
+
+            try
+            {
+                Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsers(users);
+                updateUsersTask.Wait();
+
+                Assert.Fail("Expected an exception due to mock responder returning failure HRESULT.");
+            }
+            catch (Exception e)
+            {
+                Assert.IsTrue(e is AggregateException);
+                Assert.IsNotNull(e.InnerException);
+                Assert.IsTrue(e.InnerException is DevicePortalException);
+
+                DevicePortalException exception = e.InnerException as DevicePortalException;
+
+                Assert.AreEqual(-2136866553, exception.HResult);
+                Assert.AreEqual("The maximum number of sponsored users is already signed in.", exception.Reason);
+            }
+        }
+
+        /// <summary>
+        /// Basic test of the GET method. Gets a mock list of settings
+        /// and verifies it comes back as expected from the raw response
+        /// content.
+        /// </summary>
+        [TestMethod]
+        public void GetXboxSettingsTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, HttpMethods.Get);
+
+            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
+            getSettingsTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getSettingsTask.Status);
+
+            List<XboxSetting> settings = getSettingsTask.Result.Settings;
+
+            // Check some known things about this response.
+            Assert.AreEqual(8, settings.Count);
+
+            Assert.AreEqual("AudioBitstreamFormat", settings[0].Name);
+            Assert.AreEqual("DTS", settings[0].Value);
+            Assert.AreEqual("Audio", settings[0].Category);
+            Assert.AreEqual("No", settings[0].RequiresReboot);
+
+            Assert.AreEqual("ColorDepth", settings[1].Name);
+            Assert.AreEqual("24 bit", settings[1].Value);
+            Assert.AreEqual("Video", settings[1].Category);
+            Assert.AreEqual("Yes", settings[1].RequiresReboot);
+
+            Assert.AreEqual("TVResolution", settings[7].Name);
+            Assert.AreEqual("720p", settings[7].Value);
+            Assert.AreEqual("Video", settings[7].Category);
+            Assert.AreEqual("No", settings[7].RequiresReboot);
+        }
+
+        /// <summary>
+        /// Basic test of the GET method when called for a
+        /// single setting.
+        /// </summary>
+        [TestMethod]
+        public void GetSingleXboxSettingTest()
+        {
+            string settingName = "TVResolution";
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName), HttpMethods.Get);
+
+            Task<XboxSetting> getSettingTask = TestHelpers.Portal.GetXboxSetting(settingName);
+            getSettingTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getSettingTask.Status);
+
+            XboxSetting setting = getSettingTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(settingName, setting.Name);
+            Assert.AreEqual("720p", setting.Value);
+            Assert.AreEqual("Video", setting.Category);
+            Assert.AreEqual("No", setting.RequiresReboot);
+        }
+
+        /// <summary>
+        /// Basic test of the PUT method. Creates a XboxSettingList
+        /// object and passes that to the server.
+        /// </summary>
+        [TestMethod]
+        public void UpdateXboxSettingsTest()
+        {
+            XboxSetting setting = new XboxSetting();
+            setting.Name = "TVResolution";
+            setting.Value = "1080p";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name), HttpMethods.Put);
+
+            Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
+            updateSettingsTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, updateSettingsTask.Status);
+
+            XboxSetting recievedSetting = updateSettingsTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(setting.Name, recievedSetting.Name);
+
+            Assert.AreEqual("1080p", recievedSetting.Value);
+            Assert.AreEqual("Video", recievedSetting.Category);
+            Assert.AreEqual("No", recievedSetting.RequiresReboot);
         }
     }
 }
