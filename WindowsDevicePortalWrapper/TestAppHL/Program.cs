@@ -202,7 +202,7 @@ namespace TestAppHL
             for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i].ToLower();
-                if (!arg.StartsWith("/'") && !arg.StartsWith("-"))
+                if (!arg.StartsWith("/") && !arg.StartsWith("-"))
                 {
                     throw new Exception(string.Format("Unrecognized argument: {0}", args[i]));
                 }
