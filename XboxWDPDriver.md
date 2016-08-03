@@ -10,7 +10,7 @@ Scripts or other executables could be written to interface with XboxWDPDriver.ex
 
 | Parameter               | Purpose                                        |
 |-------------------------|------------------------------------------------|
-| /ip                     | The system IP address for the Xbox One console (required if no default console is set).          |
+| /Ip                     | The system IP address for the Xbox One console (required if no default console is set).          |
 | /User                   | WDP username (if required, will be stored after the first connection starting with Windows 8).   |
 | /Pwd                    | WDP password (if required, will be stored after the first connection starting with Windows 8).   |
 | /Op                     | The operation to run. Run XboxWDPDriver without this parameter to get a list of all available operations.    |
@@ -101,8 +101,10 @@ Usage:
 ```shell
   /appx:<path to Appx> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]
         Installs the given AppX package, along with any given dependencies.
-  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate>]
+  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate> /transfer:<SMB or HTTP, SMB is the default> /destfoldername:<folder name, defaults to the same as the loose folder>]
         Installs the appx from a loose folder, along with any given dependencies.
+  /register:<subpath on DevelopmentFiles\LooseFolder to app to register>
+        Registers a loose folder that is already present on the device.
 ```
 
 Examples:
@@ -112,6 +114,10 @@ XboxWDPDriver.exe /op:install /appx:myappx.appx
 
 ```shell
 XboxWDPDriver.exe /op:install /folder:myapploosefolder
+```
+
+```shell
+XboxWDPDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
 ```
 
 ### The reboot operation

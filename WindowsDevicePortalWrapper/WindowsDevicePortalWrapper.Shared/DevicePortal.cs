@@ -60,6 +60,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Gets or sets handler for reporting connection status.
+        /// </summary>
+        public event DeviceConnectionStatusEventHandler ConnectionStatus;
+
+        /// <summary>
         /// HTTP Methods
         /// </summary>
         public enum HttpMethods
@@ -97,11 +102,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             get { return this.deviceConnection.Connection.Authority; }
         }
-        
-        /// <summary>
-        /// Gets or sets handler for reporting connection status.
-        /// </summary>
-        public event DeviceConnectionStatusEventHandler ConnectionStatus;
 
         /// <summary>
         /// Gets the status code for establishing our connection.

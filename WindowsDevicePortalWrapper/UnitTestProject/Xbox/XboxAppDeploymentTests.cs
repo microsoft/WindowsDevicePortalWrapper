@@ -17,10 +17,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     public class XboxAppDeploymentTests : BaseTests
     {
         /// <summary>
-        /// First basic test.
+        /// Basic test of the register API.
         /// </summary>
         [TestMethod]
-        public void XboxAppDeploymentTest()
+        public void XboxAppRegisterTest()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
 
@@ -28,6 +28,20 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             registerTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, registerTask.Status);
+        }
+
+        /// <summary>
+        /// Basic test of the folder upload API.
+        /// </summary>
+        [TestMethod]
+        public void XboxAppUploadFolderTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.UploadPackageFolderApi, HttpMethods.Post);
+
+            Task uploadTask = TestHelpers.Portal.UploadPackageFolder("MockData\\XboxOne", "DestinationLooseFolder");
+            uploadTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, uploadTask.Status);
         }
     }
 }

@@ -4,6 +4,8 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -19,6 +21,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string RegisterPackageApi = "api/app/packagemanager/register";
 
         /// <summary>
+        /// REST endpoint for uploading a folder to the DevelopmentFiles loose folder.
+        /// </summary>
+        public static readonly string UploadPackageFolderApi = "api/app/packagemanager/upload";
+
+        /// <summary>
         /// Registers a loose app on the console
         /// </summary>
         /// <param name="folderName">Relative folder path where the app can be found.</param>
@@ -28,6 +35,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
             await this.Post(
                 RegisterPackageApi,
                 string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
+        }
+
+        /// <summary>
+        /// Uploads a folder to the DevelopmentFiles loose folder.
+        /// </summary>
+        /// <param name="sourceFolder">The source folder to upload.</param>
+        /// <param name="destinationFolder">The destination path to upload it to.</param>
+        /// <returns>Task for tracking async completion.</returns>
+        public async Task UploadPackageFolder(string sourceFolder, string destinationFolder)
+        {
+            List<string> files = new List<string>();
+            files.AddRange(Directory.GetFiles(sourceFolder));
+
+            await this.Post(
+                UploadPackageFolderApi,
+                files,
+                string.Format("destinationFolder={0}", Utilities.Hex64Encode(destinationFolder)));
         }
     }
 }
