@@ -17,18 +17,19 @@ Scripts or other executables could be written to interface with XboxWDPDriver.ex
 
 Supported operations are the following:
 
-  * connect
-  * info
-  * xbluser
-  * install
-  * reboot
-  * processes
-  * systemPerf
-  * config
-  * file
-  * screenshot
+  * [connect](#connect)
+  * [info](#info)
+  * [xbluser](#xbluser)
+  * [[install](#install)
+  * [reboot](#reboot)
+  * [processes](#processes)
+  * [systemPerf](#systemperf)
+  * [config](#config)
+  * [file](#file)
+  * [screenshot](#screenshot)
 
 ### The connect operation
+<a name="connect"/>
 
 The ip parameter is required if no default console is configured. You can set a default console or list the current default console by using the 'connect' operation.
 
@@ -42,6 +43,7 @@ XboxWDPDriver.exe /op:connect
 ```
 
 ### The info operation
+<a name="info"/>
 
 Lists some basic information about the operating system and device name of this Xbox One console.
 
@@ -51,6 +53,7 @@ XboxWDPDriver.exe /op:info
 ```
 
 ### The xbluser operation
+<a name="xbluser"/>
 
 Controls listing and managing users on the console.
 
@@ -95,6 +98,7 @@ XboxWDPDriver.exe /op:xbluser /subop:delete /id:16
 ```
 
 ### The install operation
+<a name="install"/>
 
 Installs a UWP application from an appx or loose folder.
 
@@ -122,6 +126,7 @@ XboxWDPDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
 ```
 
 ### The reboot operation
+<a name="reboot"/>
 
 Reboots the target Xbox One console.
 
@@ -131,6 +136,7 @@ XboxWDPDriver.exe /op:reboot
 ```
 
 ### The processes operation
+<a name="processes"/>
 
 Lists all processes on the target Xbox One console.
 
@@ -140,6 +146,7 @@ XboxWDPDriver.exe /op:processes
 ```
 
 ### The systemPerf operation
+<a name="systemperf"/>
 
 Gives a summary of current system performance on the target Xbox One console (memory usage, etc).
 
@@ -149,6 +156,7 @@ XboxWDPDriver.exe /op:systemPerf
 ```
 
 ### The config operation
+<a name="config"/>
 
 Allows retrieving and setting some common system settings.
 
@@ -176,6 +184,7 @@ XboxWDPDriver.exe /op:config /setting:TVResolution /value:1080p
 ```
 
 ### The file operation
+<a name="file"/>
 
 Allows file operations on some known folders on the console (application specific storage via LocalAppData and development files via DevelopmentFiles).
 
@@ -211,6 +220,7 @@ XboxWDPDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subp
 ```
 
 ### The Screenshot operation
+<a name="screenshot"/>
 
 Allows taking of screenshots of the remote console.
 
