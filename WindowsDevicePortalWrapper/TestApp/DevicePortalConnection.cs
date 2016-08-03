@@ -176,7 +176,6 @@ namespace TestApp
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
                         newConnection = new Uri(string.Format("{0}://{1}:50443", this.GetUriScheme(addressInfo.Address, requiresHttps), addressInfo.Address));
-                        //// TODO qualified name
                         break;
                     }
                 }

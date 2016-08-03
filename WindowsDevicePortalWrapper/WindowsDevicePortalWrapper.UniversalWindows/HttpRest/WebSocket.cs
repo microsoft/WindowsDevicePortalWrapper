@@ -28,8 +28,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Initializes a new instance of the <see cref="WebSocket{T}" /> class.
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
-        public WebSocket(IDevicePortalConnection connection)
+        /// <param name="sendStreams">specifies whether the web socket should send streams (useful for creating mock data).</param>
+        public WebSocket(IDevicePortalConnection connection, bool sendStreams = false)
         {
+            this.sendStreams = sendStreams;
             this.deviceConnection = connection;
             this.IsListeningForMessages = false;
         }
@@ -58,11 +60,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             };
 
-            PasswordCredential cred = new PasswordCredential();
-            cred.UserName = this.deviceConnection.Credentials.UserName;
-            cred.Password = this.deviceConnection.Credentials.Password;
+            if (this.deviceConnection.Credentials != null)
+            {
+                PasswordCredential cred = new PasswordCredential();
+                cred.UserName = this.deviceConnection.Credentials.UserName;
+                cred.Password = this.deviceConnection.Credentials.Password;
 
-            this.websocket.Control.ServerCredential = cred;
+                this.websocket.Control.ServerCredential = cred;
+            }
+
             this.websocket.SetRequestHeader("Origin", this.deviceConnection.Connection.AbsoluteUri);
 
             // Do not wait on receiving messages.

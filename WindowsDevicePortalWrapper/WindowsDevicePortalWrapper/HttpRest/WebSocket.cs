@@ -52,8 +52,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
         /// <param name="serverCertificateValidationHandler">Server certificate handler.</param>
-        public WebSocket(IDevicePortalConnection connection, Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler)
+        /// <param name="sendStreams">specifies whether the web socket should send streams (useful for creating mock data).</param>
+        public WebSocket(IDevicePortalConnection connection, Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler, bool sendStreams = false)
         {
+            this.sendStreams = sendStreams;
             this.deviceConnection = connection;
             this.IsListeningForMessages = false;
             this.serverCertificateValidationHandler = serverCertificateValidationHandler;

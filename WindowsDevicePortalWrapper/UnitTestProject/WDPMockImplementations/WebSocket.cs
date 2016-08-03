@@ -5,9 +5,13 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
+using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Tools.WindowsDevicePortal.Tests;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -18,13 +22,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
     internal partial class WebSocket<T>
     {
         /// <summary>
+        /// Indicates whether the websocket should continue listening for messages.
+        /// </summary>
+        private bool keepListeningForMessages = false;
+
+        /// <summary>
+        /// <see cref="ManualResetEvent" /> used to indicate that the <see cref="WebSocket{T}" /> has stopped receiving messages.
+        /// </summary>
+        private ManualResetEvent stoppedReceivingMessages = new ManualResetEvent(false);
+
+        /// <summary>
+        /// The handler used to validate server certificates.
+        /// </summary>
+        private Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WebSocket{T}" /> class.
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
         /// <param name="serverCertificateValidationHandler">Server certificate handler.</param>
-        public WebSocket(IDevicePortalConnection connection, Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler)
+        /// <param name="sendStreams">specifies whether the web socket should send streams (useful for creating mock data).</param>
+        public WebSocket(IDevicePortalConnection connection, Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler, bool sendStreams = false)
         {
-            throw new NotImplementedException();
+            this.sendStreams = sendStreams;
+            this.deviceConnection = connection;
+            this.IsListeningForMessages = false;
+            this.serverCertificateValidationHandler = serverCertificateValidationHandler;
         }
 
         /// <summary>
@@ -33,7 +56,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The task of closing the websocket connection.</returns>
         private async Task StopListeningForMessagesInternal()
         {
-            throw new NotImplementedException();
+            if (this.IsListeningForMessages)
+            {
+                this.keepListeningForMessages = false;
+
+                // Wait for web socket to no longer be receiving messages.
+                if (this.IsListeningForMessages)
+                {
+                    this.stoppedReceivingMessages.WaitOne();
+                    this.stoppedReceivingMessages.Reset();
+                }
+            }
         }
 
         /// <summary>
@@ -44,7 +77,47 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The task of listening for messages from the websocket.</returns>
         private async Task StartListeningForMessagesInternal(Uri endpoint)
         {
-            throw new NotImplementedException();
+            this.keepListeningForMessages = true;
+
+            try
+            {
+                while (this.keepListeningForMessages)
+                {
+                    Task<HttpResponseMessage> webSocketTask = TestHelpers.MockHttpResponder.WebSocketAsync(endpoint);
+                    await webSocketTask.ConfigureAwait(false);
+                    webSocketTask.Wait();
+
+                    using (HttpResponseMessage response = webSocketTask.Result)
+                    {
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            throw new DevicePortalException(response);
+                        }
+
+                        using (HttpContent content = response.Content)
+                        {
+                            MemoryStream dataStream = new MemoryStream();
+
+                            Task copyTask = content.CopyToAsync(dataStream);
+                            await copyTask.ConfigureAwait(false);
+                            copyTask.Wait();
+
+                            // Ensure we return with the stream pointed at the origin.
+                            dataStream.Position = 0;
+
+                            this.ConvertStreamToMessage(dataStream);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                this.stoppedReceivingMessages.Set();
+                this.IsListeningForMessages = false;
+            }
         }
     }
 }

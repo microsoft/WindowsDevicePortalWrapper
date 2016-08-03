@@ -10,8 +10,9 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// Main entry point for the test command line class.
@@ -22,6 +23,7 @@ namespace TestApp
         /// String listing the available operations.
         /// </summary>
         private static readonly string AvailableOperationsText = "Supported operations are the following:\n" +
+                "connect\n" +
                 "info\n" +
                 "xbluser\n" +
                 "install\n" +
@@ -34,27 +36,17 @@ namespace TestApp
         /// <summary>
         /// Usage string
         /// </summary>
-        private static readonly string GeneralUsageMessage = "Usage: /ip:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
+        private static readonly string GeneralUsageMessage = "Usage: /x:<system-ip or hostname> /user:<WDP username> /pwd:<WDP password> [/op:<operation type> [operation parameters]]";
 
         /// <summary>
-        /// Event used to indicate that the running processes on the device have been received.
+        /// The registry key that Xbox uses for storing default console information.
         /// </summary>
-        private ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
+        private static readonly string DefaultConsoleRegkey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Durango\\WDP\\Consoles";
 
         /// <summary>
-        /// The running processes on the device.
+        /// The XTF registry key that Xbox uses for storing default console information.
         /// </summary>
-        private DevicePortal.RunningProcesses runningProcesses = null;
-
-        /// <summary>
-        /// Event used to indicate that the system perf on the device have been received.
-        /// </summary>
-        private ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
-
-        /// <summary>
-        /// The system perf of the device.
-        /// </summary>
-        private DevicePortal.SystemPerformanceInformation systemPerf = null;
+        private static readonly string DefaultXtfConsoleRegkey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Durango\\Xtf\\Consoles";
 
         /// <summary>
         /// Operation types
@@ -105,6 +97,12 @@ namespace TestApp
             /// Does remote file operations.
             /// </summary>
             FileOperation,
+
+            /// <summary>
+            /// Sets the default xbox console to be this one.
+            /// Uses the same registry setting as XbConnect tool.
+            /// </summary>
+            ConnectOperation,
         }
 
         /// <summary>
@@ -115,6 +113,8 @@ namespace TestApp
         {
             ParameterHelper parameters = new ParameterHelper();
             Program app = new Program();
+
+            string targetConsole = string.Empty;
 
             try
             {
@@ -127,9 +127,61 @@ namespace TestApp
                     operation = OperationStringToEnum(parameters.GetParameterValue("op"));
                 }
 
-                if (!parameters.HasParameter(ParameterHelper.IpOrHostname) || !parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                // Allow /ip: to still function, even though we've moved to /x: in the documentation.
+                if (parameters.HasParameter(ParameterHelper.IpOrHostnameOld) && !parameters.HasParameter(ParameterHelper.IpOrHostname))
                 {
-                    throw new Exception("Missing one or more required parameter(s). Must provide ip, user, and pwd");
+                    targetConsole = parameters.GetParameterValue(ParameterHelper.IpOrHostnameOld);
+                }
+                else if (parameters.HasParameter(ParameterHelper.IpOrHostname))
+                {
+                    targetConsole = parameters.GetParameterValue(ParameterHelper.IpOrHostname);
+                }
+
+                if (string.IsNullOrEmpty(targetConsole))
+                {
+                    object regValue;
+                    regValue = Microsoft.Win32.Registry.GetValue(DefaultConsoleRegkey, null, null);
+
+                    if (regValue == null)
+                    {
+                        regValue = Microsoft.Win32.Registry.GetValue(DefaultXtfConsoleRegkey, null, null);
+                    }
+
+                    if (regValue is string)
+                    {
+                        targetConsole = regValue as string;
+                    }
+                    else
+                    {
+                        throw new Exception("No default console is currently set. Must provide an ip address or hostname to connect to: /x:<ip or hostname>.");
+                    }
+                }
+
+                IDevicePortalConnection connection = null;
+
+                try
+                {
+                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                    {
+                        connection = new DevicePortalConnection(targetConsole);
+                    }
+                    else
+                    {
+                        connection = new DevicePortalConnection(targetConsole, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                    }
+                }
+                catch (TypeLoadException)
+                {
+                    // Windows 7 doesn't support credential storage so we'll get a TypeLoadException
+                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                    {
+                        throw new Exception("Credential storage is not supported on your PC. It requires Windows 8+ to run. Please provide the user and password parameters.");
+                    }
+                    else
+                    {
+                        string connectionUri = string.Format("https://{0}:11443", targetConsole);
+                        connection = new DefaultDevicePortalConnection(connectionUri, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                    }
                 }
 
                 bool listen = false;
@@ -142,20 +194,31 @@ namespace TestApp
                     }
                 }
 
-                DevicePortal portal = new DevicePortal(new DevicePortalConnection(parameters.GetParameterValue(ParameterHelper.IpOrHostname), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword)));
+                DevicePortal portal = new DevicePortal(connection);
 
                 Task connectTask = portal.Connect(updateConnection: false);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
                 {
-                    if (portal.ConnectionHttpStatusCode != 0)
+                    if (portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        if (connection.Credentials == null)
+                        {
+                            Console.WriteLine("The WDP connection was rejected due to missing credentials.\n\nPlease provide the /user:<username> and /pwd:<pwd> parameters on your first call to WDP.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The WDP connection was rejected due to bad credentials.\n\nPlease check the /user:<username> and /pwd:<pwd> parameters.");
+                        }
+                    }
+                    else if (portal.ConnectionHttpStatusCode != 0)
                     {
                         Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
                     }
                     else
                     {
-                        Console.WriteLine("Failed to connect to WDP for unknown reason.");
+                        Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", targetConsole);
                     }
                 }
                 else if (operation == OperationType.InfoOperation)
@@ -183,28 +246,40 @@ namespace TestApp
                 }
                 else if (operation == OperationType.ListProcessesOperation)
                 {
-                    DevicePortal.RunningProcesses deviceProcesses = null;
+                    RunningProcesses runningProcesses = null;
                     if (listen)
                     {
-                        portal.RunningProcessesMessageReceived += app.ProcessesReceivedHandler;
+                        ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
+
+                        WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler =
+                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<RunningProcesses> runningProccesesArgs)
+                        {
+                            if (runningProccesesArgs.Message != null)
+                            {
+                                runningProcesses = runningProccesesArgs.Message;
+                                runningProcessesReceived.Set();
+                            }
+                        };
+
+                        portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
 
                         Task startListeningForProcessesTask = portal.StartListeningForRunningProcesses();
                         startListeningForProcessesTask.Wait();
 
-                        app.runningProcessesReceived.WaitOne();
+                        runningProcessesReceived.WaitOne();
 
                         Task stopListeningForProcessesTask = portal.StopListeningForRunningProcesses();
                         stopListeningForProcessesTask.Wait();
 
-                        deviceProcesses = app.runningProcesses;
+                        portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
                     }
                     else
                     {
                         Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcesses();
-                        deviceProcesses = getRunningProcessesTask.Result;
+                        runningProcesses = getRunningProcessesTask.Result;
                     }
 
-                    foreach (DevicePortal.DeviceProcessInfo process in deviceProcesses.Processes)
+                    foreach (DeviceProcessInfo process in runningProcesses.Processes)
                     {
                         if (!string.IsNullOrEmpty(process.Name))
                         {
@@ -214,24 +289,36 @@ namespace TestApp
                 }
                 else if (operation == OperationType.GetSystemPerfOperation)
                 {
-                    DevicePortal.SystemPerformanceInformation systemPerformanceInformation = null;
+                    SystemPerformanceInformation systemPerformanceInformation = null;
                     if (listen)
                     {
-                        portal.SystemPerfMessageReceived += app.SystemPerfReceivedHandler;
+                        ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
+
+                        WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
+                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
+                        {
+                            if (sysPerfInfoArgs.Message != null)
+                            {
+                                systemPerformanceInformation = sysPerfInfoArgs.Message;
+                                systemPerfReceived.Set();
+                            }
+                        };
+
+                        portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
 
                         Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerf();
                         startListeningForSystemPerfTask.Wait();
 
-                        app.systemPerfReceived.WaitOne();
+                        systemPerfReceived.WaitOne();
 
                         Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcesses();
                         stopListeningForSystemPerfTask.Wait();
 
-                        systemPerformanceInformation = app.systemPerf;
+                        portal.SystemPerfMessageReceived -= systemPerfReceivedHandler;
                     }
                     else
                     {
-                        Task<DevicePortal.SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
+                        Task<SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
                         systemPerformanceInformation = getRunningProcessesTask.Result;
                     }
 
@@ -255,6 +342,19 @@ namespace TestApp
                 else if (operation == OperationType.FileOperation)
                 {
                     FileOperation.HandleOperation(portal, parameters);
+                }
+                else if (operation == OperationType.ConnectOperation)
+                {
+                    // User provided a new ip or hostname to set as the default.
+                    if (parameters.HasParameter(ParameterHelper.IpOrHostname) || parameters.HasParameter(ParameterHelper.IpOrHostnameOld))
+                    {
+                        Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, targetConsole);
+                        Console.WriteLine("Default console set to {0}", targetConsole);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Connected to Default console: {0}", targetConsole);
+                    }
                 }
                 else
                 {
@@ -286,7 +386,11 @@ namespace TestApp
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
+            if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ConnectOperation;
+            }
+            else if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.InfoOperation;
             }
@@ -320,38 +424,6 @@ namespace TestApp
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
-        }
-
-        /// <summary>
-        /// Handler for the ProcessesMessageReceived event.
-        /// </summary>
-        /// <param name="sender">The object sending the event.</param>
-        /// <param name="args">The event data.</param>
-        private void ProcessesReceivedHandler(
-            object sender,
-            WebSocketMessageReceivedEventArgs<DevicePortal.RunningProcesses> args)
-        {
-            if (args.Message != null)
-            {
-                this.runningProcesses = args.Message;
-                this.runningProcessesReceived.Set();
-            }
-        }
-
-        /// <summary>
-        /// Handler for the SystemPerfMessageReceived event.
-        /// </summary>
-        /// <param name="sender">The object sending the event.</param>
-        /// <param name="args">The event data.</param>
-        private void SystemPerfReceivedHandler(
-            object sender,
-            WebSocketMessageReceivedEventArgs<DevicePortal.SystemPerformanceInformation> args)
-        {
-            if (args.Message != null)
-            {
-                this.systemPerf = args.Message;
-                this.systemPerfReceived.Set();
-            }
         }
     }
 }

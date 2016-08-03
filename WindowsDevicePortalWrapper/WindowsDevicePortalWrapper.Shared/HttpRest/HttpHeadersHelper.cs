@@ -56,12 +56,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
         public void ApplyCSRFHeader(
             HttpClient client, 
-            string method)
+            HttpMethods method)
         {
             string headerName = "X-" + CsrfTokenName;
             string headerValue = this.csrfToken;
 
-            if (string.Compare(method, "get", true) == 0)
+            if (string.Compare(method.ToString(), "get", true) == 0)
             {
                 headerName = CsrfTokenName;
                 headerValue = string.IsNullOrEmpty(this.csrfToken) ? "Fetch" : headerValue;
@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
         public void ApplyHttpHeaders(
             HttpClient client,
-            string method)
+            HttpMethods method)
         {
             this.ApplyCSRFHeader(client, method);
             this.ApplyUserAgentHeader(client);
@@ -100,13 +100,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
 #if WINDOWS_UWP
             Assembly asm = this.GetType().GetTypeInfo().Assembly;
-            userAgentValue += "/v" + asm.GetName().Version.ToString();
-            userAgentValue += "/UWP";
+            userAgentValue += "-v" + asm.GetName().Version.ToString();
+            userAgentValue += "-UWP";
             HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
 #else
             Assembly asm = Assembly.GetExecutingAssembly();
-            userAgentValue += "/v" + asm.GetName().Version.ToString();
-            userAgentValue += "/dotnet";
+            userAgentValue += "-v" + asm.GetName().Version.ToString();
+            userAgentValue += "-dotnet";
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
 #endif // WINDOWS_UWP
 

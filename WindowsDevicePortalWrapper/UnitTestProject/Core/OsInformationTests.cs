@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -22,7 +23,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void OsInformationTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, HttpMethods.Get);
 
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();

@@ -34,8 +34,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public static void EstablishMockConnection(DevicePortalPlatforms platform, string operatingSystemVersion)
         {
             TestHelpers.MockHttpResponder = new MockHttpResponder();
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi, platform, operatingSystemVersion);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi, platform, operatingSystemVersion);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi, platform, operatingSystemVersion, HttpMethods.Get);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi, platform, operatingSystemVersion, HttpMethods.Get);
 
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 

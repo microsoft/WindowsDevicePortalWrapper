@@ -7,13 +7,11 @@
 using System;
 using System.Net;
 using System.Text.RegularExpressions;
-using Windows.Foundation;
 using Windows.Security.Cryptography.Certificates;
-using Windows.Storage.Streams;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace TestAppHL.UniversalWindows
 {
     public class DevicePortalConnection : IDevicePortalConnection
     {
@@ -104,15 +102,6 @@ namespace TestApp
                     return new Uri(Regex.Replace(absoluteUri, "http", "ws", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns certificate data
-        /// </summary>
-        /// <returns>certificate data</returns>
-        public byte[] GetDeviceCertificateData()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

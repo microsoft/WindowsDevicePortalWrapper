@@ -4,6 +4,7 @@
     <ProjectGuid>af72a46d-5d30-4fb4-8d3e-b516ed19f9a4</ProjectGuid>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+    <StyleCopTargetsDir>$(registry:HKEY_LOCAL_MACHINE\Software\CodePlex\StyleCop@TargetsDir)</StyleCopTargetsDir>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.Default.props" />
@@ -11,5 +12,5 @@
   <PropertyGroup />
   <Import Project="WindowsDevicePortalWrapper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
-  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" />
+  <Import Project="$(StyleCopTargetsDir)StyleCop.targets" Condition="'$(StyleCopTargetsDir)' != ''"/>
 </Project>

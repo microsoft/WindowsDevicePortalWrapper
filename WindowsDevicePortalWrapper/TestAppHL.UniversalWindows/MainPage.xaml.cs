@@ -4,7 +4,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using TestApp;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -236,7 +235,7 @@ namespace TestAppHL.UniversalWindows
 
                 sb.AppendLine("Setting device name to : " + nameValue.Text);
                 sb.AppendLine(" The name change will be reflected after a reboot.");
-                await portal.SetDeviceName(nameValue.Text, false);
+                await portal.SetDeviceName(nameValue.Text);
             }
             catch(Exception ex)
             {
@@ -593,21 +592,6 @@ namespace TestAppHL.UniversalWindows
             }
 
             this.testOutput.Text = sb.ToString();
-        }
-
-        private async void InstallApplication_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void BrowsePackages_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void BrowseDependencies_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -21,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void XboxAppDeploymentTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
 
             Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
             registerTask.Wait();

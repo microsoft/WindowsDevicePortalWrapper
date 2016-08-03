@@ -18,10 +18,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Helper method for verifying OS info based on a given version.
         /// </summary>
+        /// <param name="friendlyOperatingSystemVersion">The friendly version of the OS we are targeting.</param>
         /// <param name="operatingSystemVersion">The version of the OS we are targeting.</param>
-        public static void VerifyOsInformation(string operatingSystemVersion)
+        public static void VerifyOsInformation(string friendlyOperatingSystemVersion, string operatingSystemVersion)
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, DevicePortalPlatforms.XboxOne, operatingSystemVersion);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, DevicePortalPlatforms.XboxOne, friendlyOperatingSystemVersion, HttpMethods.Get);
 
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();

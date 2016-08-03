@@ -12,6 +12,22 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
+    /// Internal Web socket message received event handler
+    /// </summary>
+    /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
+    /// <param name="args">Web socket message received args</param>
+    /// <typeparam name="T">Return type for the websocket messages.</typeparam>
+    internal delegate void WebSocketMessageReceivedEventInternalHandler<T>(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<T> args);
+
+    /// <summary>
+    /// Internal Web socket stream received event handler
+    /// </summary>
+    /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
+    /// <param name="args">Web socket message received args</param>
+    /// <typeparam name="T">Return type for the websocket.</typeparam>
+    internal delegate void WebSocketStreamReceivedEventInternalHandler<T>(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<Stream> args);
+
+    /// <summary>
     /// HTTP Websocket Wrapper
     /// </summary>
     /// <typeparam name="T">Return type for the websocket messages.</typeparam>
@@ -23,21 +39,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private IDevicePortalConnection deviceConnection;
 
         /// <summary>
+        /// Indicates whether the web socket should send streams instead of parsed <see cref="T" /> objects
+        /// </summary>
+        private bool sendStreams = false;
+
+        /// <summary>
+        /// Gets or sets the message received handler.
+        /// </summary>
+        public event WebSocketMessageReceivedEventInternalHandler<T> WebSocketMessageReceived;
+
+        /// <summary>
+        /// Gets or sets the stream received handler.
+        /// </summary>
+        public event WebSocketStreamReceivedEventInternalHandler<T> WebSocketStreamReceived;
+
+        /// <summary>
         /// Gets a value indicating whether the web socket is listening for messages.
         /// </summary>
         public bool IsListeningForMessages
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Gets or sets the message received handler.
-        /// </summary>
-        public WebSocketMessageReceivedEventHandler<T> WebSocketMessageReceived
-        {
-            get;
-            set;
         }
 
         /// <summary>
@@ -74,21 +96,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Converts received stream to a parsed message and passes it to the WebSocketMessageReceived handler.
+        /// Converts received stream to a parsed <see cref="T" /> object and passes it to
+        /// the WebSocketMessageReceived handler. The sendstreams property can be used to
+        /// override this and send the <see cref="Stream" /> instead via the WebSocketStreamReceived handler.
         /// </summary>
         /// <param name="stream">The received stream.</param>
         private void ConvertStreamToMessage(Stream stream)
         {
             if (stream != null && stream.Length != 0)
             {
-                using (stream)
+                if (this.sendStreams)
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                    T message = (T)serializer.ReadObject(stream);
+                    this.WebSocketStreamReceived?.Invoke(
+                            this,
+                            new WebSocketMessageReceivedEventArgs<Stream>(stream));
+                }
+                else
+                {
+                    using (stream)
+                    {
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                        T message = (T)serializer.ReadObject(stream);
 
-                    this.WebSocketMessageReceived?.Invoke(
-                        this,
-                        new WebSocketMessageReceivedEventArgs<T>(message));
+                        this.WebSocketMessageReceived?.Invoke(
+                            this,
+                            new WebSocketMessageReceivedEventArgs<T>(message));
+                    }
                 }
             }
         }

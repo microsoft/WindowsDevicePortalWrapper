@@ -58,17 +58,10 @@
         <CheckBox x:Name="photoColor" Content="Color" HorizontalAlignment="Left" Margin="289,343,0,0" VerticalAlignment="Top" Width="64" IsEnabled="False" IsChecked="True"/>
         <Button x:Name="startMrcRecording" Content="Start Recording" HorizontalAlignment="Left" Margin="15,379,0,0" VerticalAlignment="Top" Width="144" Click="StartMrcRecording_Click" IsEnabled="False" Height="32"/>
         <CheckBox x:Name="videoHolograms" Content="Holograms" HorizontalAlignment="Left" Margin="164,379,0,0" VerticalAlignment="Top" IsEnabled="False" IsChecked="True"/>
-        <Button x:Name="stopMrcRecording" Content="Stop Recording" HorizontalAlignment="Left" Margin="15,443,0,0" VerticalAlignment="Top" Width="144" Click="StopMrcRecording_Click" IsEnabled="False" Height="32"/>
-        <Button x:Name="listMrcFiles" Content="List MRC Files" HorizontalAlignment="Left" Margin="164,443,0,0" VerticalAlignment="Top" Width="144" Click="ListMrcFiles_Click" IsEnabled="False" RenderTransformOrigin="-0.403,2.156"/>
-        <Button x:Name="installApplication" Content="Install Application" HorizontalAlignment="Left" Margin="15,481,0,0" VerticalAlignment="Top" Width="144" Click="InstallApplication_Click" IsEnabled="False"/>
-        <CheckBox x:Name="uninstallPreviousVersion" Content="Uninstall previous" HorizontalAlignment="Left" Margin="385,481,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-        <TextBox x:Name="appNameValue" HorizontalAlignment="Left" Height="32" Margin="164,481,0,0" TextWrapping="Wrap" Text="ApplictionName" VerticalAlignment="Top" Width="216" IsEnabled="False"/>
-        <TextBox x:Name="packageNameValue" HorizontalAlignment="Left" Height="20" Margin="15,518,0,0" TextWrapping="Wrap" Text="Package" VerticalAlignment="Top" Width="496" IsEnabled="False"/>
-        <Button x:Name="browsePackages" Content="..." HorizontalAlignment="Left" Margin="516,518,0,0" VerticalAlignment="Top" Width="54" Click="BrowsePackages_Click" IsEnabled="False"/>
-        <TextBox x:Name="dependencyFolderValue" HorizontalAlignment="Left" Height="20" Margin="15,555,0,0" TextWrapping="Wrap" Text="DependencyFolder" VerticalAlignment="Top" Width="496" IsEnabled="False"/>
-        <Button x:Name="browseDependencies" Content="..." HorizontalAlignment="Left" Margin="516,555,0,0" VerticalAlignment="Top" Width="54" Click="BrowseDependencies_Click" IsEnabled="False"/>
         <CheckBox x:Name="videoColor" Content="Color" HorizontalAlignment="Left" Margin="289,374,0,0" VerticalAlignment="Top" IsEnabled="False" IsChecked="True"/>
         <CheckBox x:Name="videoMicrophone" Content="Microphone" HorizontalAlignment="Left" Margin="164,411,0,0" VerticalAlignment="Top" IsEnabled="False" IsChecked="True"/>
         <CheckBox x:Name="videoAudio" Content="App Audio" HorizontalAlignment="Left" Margin="289,411,0,0" VerticalAlignment="Top" IsEnabled="False" IsChecked="True"/>
+        <Button x:Name="stopMrcRecording" Content="Stop Recording" HorizontalAlignment="Left" Margin="15,443,0,0" VerticalAlignment="Top" Width="144" Click="StopMrcRecording_Click" IsEnabled="False" Height="32"/>
+        <Button x:Name="listMrcFiles" Content="List MRC Files" HorizontalAlignment="Left" Margin="164,443,0,0" VerticalAlignment="Top" Width="144" Click="ListMrcFiles_Click" IsEnabled="False" RenderTransformOrigin="-0.403,2.156"/>
     </Grid>
 </Page>

@@ -47,13 +47,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
-            httpFilter.ServerCredential = new PasswordCredential();
-            httpFilter.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
-            httpFilter.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+
+            if (this.deviceConnection.Credentials != null)
+            {
+                httpFilter.ServerCredential = new PasswordCredential();
+                httpFilter.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
+                httpFilter.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+            }
 
             using (HttpClient client = new HttpClient(httpFilter))
             {
-                this.ApplyHttpHeaders(client, "POST");
+                this.ApplyHttpHeaders(client, HttpMethods.Post);
 
                 IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, requestContent);
                 TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();

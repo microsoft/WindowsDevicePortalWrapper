@@ -47,11 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets or sets install status handler.
         /// </summary>
-        public ApplicationInstallStatusEventHandler AppInstallStatus
-        {
-            get;
-            set;
-        }
+        public event ApplicationInstallStatusEventHandler AppInstallStatus;
 
         /// <summary>
         /// Gets the collection of applications installed on the device.

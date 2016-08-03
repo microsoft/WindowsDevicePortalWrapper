@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </summary>
     /// <param name="sender">sender object</param>
     /// <param name="args">connection status details</param>
-    public delegate void DeviceConnectionStatusEventHandler(object sender, DeviceConnectionStatusEventArgs args);
+    public delegate void DeviceConnectionStatusEventHandler(DevicePortal sender, DeviceConnectionStatusEventArgs args);
 
     /// <summary>
     /// Connection status enumeration
@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Contains the details about the connection status
     /// </summary>
-    public class DeviceConnectionStatusEventArgs
+    public class DeviceConnectionStatusEventArgs : System.EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceConnectionStatusEventArgs"/> class.

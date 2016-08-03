@@ -19,12 +19,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting all running processes
         /// </summary>
-        private static readonly string RunningProcessApi = "api/resourcemanager/processes";
+        public static readonly string RunningProcessApi = "api/resourcemanager/processes";
 
         /// <summary>
         /// API for getting system performance
         /// </summary>
-        private static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
+        public static readonly string SystemPerfApi = "api/resourcemanager/systemperf";
 
         /// <summary>
         /// Web socket to get running processes.
@@ -39,20 +39,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets or sets the running processes message received handler.
         /// </summary>
-        public WebSocketMessageReceivedEventHandler<RunningProcesses> RunningProcessesMessageReceived
-        {
-            get;
-            set;
-        }
+        public event WebSocketMessageReceivedEventHandler<RunningProcesses> RunningProcessesMessageReceived;
 
         /// <summary>
         /// Gets or sets the system perf message received handler.
         /// </summary>
-        public WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> SystemPerfMessageReceived
-        {
-            get;
-            set;
-        }
+        public event WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> SystemPerfMessageReceived;
 
         /// <summary>
         /// Gets the collection of processes running on the device.
@@ -127,7 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection, this.ServerCertificateValidation);
 #endif
 
-                this.systemPerfWebSocket.WebSocketMessageReceived += this.SystemPerfMessageReceived;
+                this.systemPerfWebSocket.WebSocketMessageReceived += this.SystemPerfReceivedHandler;
             }
             else
             {
@@ -157,10 +149,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Handler for the processes received event that passes the event to the RunningProcessesMessageReceived handler.
         /// </summary>
-        /// <param name="sender">The object sending the event.</param>
+        /// <param name="sender">The <see cref="WebSocket{RunningProcesses}"/> object sending the event.</param>
         /// <param name="args">The event data.</param>
         private void RunningProcessesReceivedHandler(
-            object sender,
+            WebSocket<RunningProcesses> sender,
             WebSocketMessageReceivedEventArgs<RunningProcesses> args)
         {
             if (args.Message != null)
@@ -174,10 +166,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Handler for the system performance information received event that passes the event to the SystemPerfMessageReceived handler.
         /// </summary>
-        /// <param name="sender">The object sending the event.</param>
+        /// <param name="sender">The <see cref="WebSocket{SystemPerformanceInformation}"/> object sending the event.</param>
         /// <param name="args">The event data.</param>
         private void SystemPerfReceivedHandler(
-            object sender,
+            WebSocket<SystemPerformanceInformation> sender,
             WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> args)
         {
             if (args.Message != null)
@@ -337,7 +329,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// GPU Adaptors
         /// </summary>
         [DataContract]
-        public class GpuAdapters
+        public class GpuAdapter
         {
             /// <summary>
             /// Gets or sets total Dedicated memory
@@ -386,7 +378,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets list of available adapters
             /// </summary>
             [DataMember(Name = "AvailableAdapters")]
-            public List<GpuAdapters> Adapters { get; set; }
+            public List<GpuAdapter> Adapters { get; set; }
         }
 
         /// <summary>

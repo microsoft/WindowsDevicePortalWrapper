@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace TestAppHL
 {
     /// <summary>
     /// Application class.

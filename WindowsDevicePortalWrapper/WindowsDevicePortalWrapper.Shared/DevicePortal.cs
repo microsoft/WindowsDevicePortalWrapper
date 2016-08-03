@@ -5,11 +5,12 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
 using Windows.Web.Http;
@@ -18,7 +19,9 @@ using Windows.Web.Http;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// DevicePortal object.
+    /// This is the main DevicePortal object. It contains methods for making HTTP REST calls against
+    /// all of the WDP endpoints covered by the wrapper project. Different endpoints have their
+    /// implementation separated out into individual files.
     /// </summary>
     public partial class DevicePortal
     {
@@ -31,6 +34,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Endpoint used to access the certificate.
         /// </summary>
         private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+
+        /// <summary>
+        /// Expected number of OS version sections once the OS version is split by period characters
+        /// </summary>
+        private static readonly uint ExpectedOSVersionSections = 5;
+
+        /// <summary>
+        /// The target OS version section index once the OS version is split by periods 
+        /// </summary>
+        private static readonly uint TargetOSVersionSection = 3;
 
         /// <summary>
         /// Device connection object.
@@ -47,6 +60,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// HTTP Methods
+        /// </summary>
+        public enum HttpMethods
+        {
+            /// <summary>
+            /// The HTTP Get method.
+            /// </summary>
+            Get,
+
+            /// <summary>
+            /// The HTTP Put method.
+            /// </summary>
+            Put,
+
+            /// <summary>
+            /// The HTTP Post method.
+            /// </summary>
+            Post,
+
+            /// <summary>
+            /// The HTTP Delete method.
+            /// </summary>
+            Delete,
+
+            /// <summary>
+            /// The HTTP WebSocket method.
+            /// </summary>
+            WebSocket
+        }
+
+        /// <summary>
         /// Gets the device address.
         /// </summary>
         public string Address 
@@ -57,11 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets or sets handler for reporting connection status.
         /// </summary>
-        public DeviceConnectionStatusEventHandler ConnectionStatus
-        {
-            get;
-            set;
-        }
+        public event DeviceConnectionStatusEventHandler ConnectionStatus;
 
         /// <summary>
         /// Gets the status code for establishing our connection.
@@ -137,7 +177,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
             string connectionPhaseDescription = string.Empty;
 
-            // TODO - add status event. this can take a LONG time
             try 
             {
                 // Get the device certificate
@@ -199,10 +238,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
                     await this.ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
-
-                    // TODO - note that in some instances, the hololens was receiving a KeepAlive exception, yet the network connection succeeded. 
-                    // this COULD have been an RTM bug that is now fixed, or it could have been the fault of the access point
-                    // some investigation and defensive measures should be implemented here to avoid excessive noise / false failures
                 }
 
                 // Get the device's IP configuration and update the connection as appropriate.
@@ -247,27 +282,123 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">API endpoint we are calling.</param>
         /// <param name="directory">Directory to store our file.</param>
+        /// <param name="httpMethod">The http method to be performed.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(string endpoint, string directory)
+        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpMethods httpMethod)
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
-            using (Stream dataStream = await this.Get(uri))
+            // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_xbox_rel_1608
+            string friendlyOSVersion = this.OperatingSystemVersion;
+            string[] versionParts = friendlyOSVersion.Split('.');
+            if (versionParts.Length == ExpectedOSVersionSections)
             {
-                // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
-                // we can create a class with the same name as this Device/OS pair for tests.
-                string filename = endpoint + "_" + this.Platform.ToString() + "_" + this.OperatingSystemVersion;
+                friendlyOSVersion = versionParts[TargetOSVersionSection];
+            }
 
-                Utilities.ModifyEndpointForFilename(ref filename);
+            // Create the filename as DeviceFamily_OSVersion.dat, replacing '/', '.', and '-' with '_' so
+            // we can create a class with the same name as this Device/OS pair for tests.
+            string filename = endpoint + "_" + this.Platform.ToString() + "_" + friendlyOSVersion;
 
-                filename += ".dat";
-                string filepath = Path.Combine(directory, filename);
+            if (httpMethod != HttpMethods.Get)
+            {
+                filename = httpMethod.ToString() + "_" + filename;
+            }
 
-                using (var fileStream = File.Create(filepath))
+            Utilities.ModifyEndpointForFilename(ref filename);
+
+            filename += ".dat";
+            string filepath = Path.Combine(directory, filename);
+
+            if (HttpMethods.WebSocket == httpMethod)
+            {
+#if WINDOWS_UWP
+                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, true);
+#else
+                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, this.ServerCertificateValidation, true);
+#endif // WINDOWS_UWP
+
+                ManualResetEvent streamReceived = new ManualResetEvent(false);
+                Stream stream = null;
+
+                WindowsDevicePortal.WebSocketStreamReceivedEventInternalHandler<object> streamReceivedHandler =
+                    delegate(WebSocket<object> sender, WebSocketMessageReceivedEventArgs<Stream> args)
                 {
-                    dataStream.Seek(0, SeekOrigin.Begin);
-                    dataStream.CopyTo(fileStream);
+                    if (args.Message != null)
+                    {
+                        stream = args.Message;
+                        streamReceived.Set();
+                    }
+                };
+
+                websocket.WebSocketStreamReceived += streamReceivedHandler;
+
+                Task startListeningForStreamTask = websocket.StartListeningForMessages(endpoint);
+                startListeningForStreamTask.Wait();
+
+                streamReceived.WaitOne();
+
+                Task stopListeningForStreamTask = websocket.StopListeningForMessages();
+                stopListeningForStreamTask.Wait();
+
+                websocket.WebSocketStreamReceived -= streamReceivedHandler;
+
+                using (stream)
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        stream.CopyTo(fileStream);
+                    }
                 }
+            }
+            else if (HttpMethods.Put == httpMethod)
+            {
+                using (Stream dataStream = await this.Put(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Post == httpMethod)
+            {
+                using (Stream dataStream = await this.Post(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Delete == httpMethod)
+            {
+                using (Stream dataStream = await this.Delete(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else if (HttpMethods.Get == httpMethod)
+            {
+                using (Stream dataStream = await this.Get(uri))
+                {
+                    using (var fileStream = File.Create(filepath))
+                    {
+                        dataStream.Seek(0, SeekOrigin.Begin);
+                        dataStream.CopyTo(fileStream);
+                    }
+                }
+            }
+            else
+            {
+                throw new NotImplementedException(string.Format("Unsupported HttpMethod {0}", httpMethod.ToString()));
             }
         }
 

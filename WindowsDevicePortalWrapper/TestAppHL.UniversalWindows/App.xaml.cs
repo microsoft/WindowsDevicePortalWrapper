@@ -58,7 +58,7 @@ namespace TestAppHL.UniversalWindows
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // This application intentionally does not restore state.
                 }
 
                 // Place the frame in the current Window
@@ -99,7 +99,7 @@ namespace TestAppHL.UniversalWindows
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            // This application intentionally does not save state.
             deferral.Complete();
         }
     }

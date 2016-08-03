@@ -5,13 +5,15 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
+using Windows.Security.Credentials;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
-namespace TestApp
+namespace XboxWdpDriver
 {
     /// <summary>
     /// IDevicePortalConnection implementation for Xbox test project
@@ -26,9 +28,9 @@ namespace TestApp
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalConnection"/> class.
         /// </summary>
-        /// <param name="address">device identifier</param>
-        /// <param name="userName">WDP username</param>
-        /// <param name="password">WDP password</param>
+        /// <param name="address">The ip address or hostname of the device we are connecting to.</param>
+        /// <param name="userName">The WDP username.</param>
+        /// <param name="password">The WDP password.</param>
         public DevicePortalConnection(
             string address,
             string userName,
@@ -36,6 +38,51 @@ namespace TestApp
         {
             this.Connection = new Uri(string.Format("https://{0}:11443", address));
             this.Credentials = new NetworkCredential(userName, password);
+
+            PasswordVault vault = new PasswordVault();
+
+            try
+            {
+                // Remove any existing stored creds for this address and add these ones.
+                foreach (var cred in vault.FindAllByResource(address))
+                {
+                    vault.Remove(cred);
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing. This is expected if no credentials have been previously stored
+            }
+
+            vault.Add(new PasswordCredential(address, userName, password));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortalConnection"/> class.
+        /// This version of the contructor can be used if WDP credentials are not provided,
+        /// and should be used if they were previously persisted or are not needed.
+        /// </summary>
+        /// <param name="address">The ip address or hostname of the device we are connecting to.</param>
+        public DevicePortalConnection(
+            string address)
+        {
+            this.Connection = new Uri(string.Format("https://{0}:11443", address));
+
+            try
+            {
+                PasswordVault vault = new PasswordVault();
+                // Set the first stored cred as our network creds.
+                IReadOnlyList<PasswordCredential> creds = vault.FindAllByResource(address);
+                if (creds != null && creds.Count > 0)
+                {
+                    creds[0].RetrievePassword();
+                    this.Credentials = new NetworkCredential(creds[0].UserName, creds[0].Password);
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing. No credentials were stored. If they are needed, REST calls will fail with Unauthorized.
+            }
         }
 
         /// <summary>

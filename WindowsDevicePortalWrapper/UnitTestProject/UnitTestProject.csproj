@@ -17,6 +17,7 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+    <StyleCopTargetsDir>$(registry:HKEY_LOCAL_MACHINE\Software\CodePlex\StyleCop@TargetsDir)</StyleCopTargetsDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,15 +53,18 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
+    <Compile Include="Core\PerformanceDataTests.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
-    <Compile Include="Device-VersionTests\XboxOne\XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.cs" />
+    <Compile Include="Device-VersionTests\XboxOne\XboxOne_rs1_xbox_rel_1608.cs" />
     <Compile Include="MockHttpResponder.cs" />
     <Compile Include="WDPMockImplementations\AppDeployment.cs" />
     <Compile Include="WDPMockImplementations\CertificateHandling.cs" />
@@ -90,6 +94,12 @@
     <None Include="MockData\Defaults\api_os_machinename_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\Defaults\api_resourcemanager_processes_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_resourcemanager_systemperf_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\Defaults\ext_settings_TVResolution_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -99,25 +109,46 @@
     <None Include="MockData\Defaults\ext_settings_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_filesystem_apps_files_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\Defaults\Put_ext_settings_TVResolution_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_filesystem_apps_knownfolders_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\Defaults\WebSocket_api_resourcemanager_processes_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_os_devicefamily_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\Defaults\WebSocket_api_resourcemanager_systemperf_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_os_info_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_files_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\api_os_machinename_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_knownfolders_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\ext_settings_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_os_devicefamily_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\XboxOne\14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700\ext_user_XboxOne_14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700.dat">
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_os_info_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_os_machinename_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_resourcemanager_processes_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_resourcemanager_systemperf_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\ext_settings_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\ext_user_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\WebSocket_api_resourcemanager_processes_XboxOne_rs1_xbox_rel_1608.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\XboxOne\rs1_xbox_rel_1608\WebSocket_api_resourcemanager_systemperf_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -146,7 +177,7 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="..\WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" />
+  <Import Project="$(StyleCopTargetsDir)StyleCop.targets" Condition="'$(StyleCopTargetsDir)' != ''"/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

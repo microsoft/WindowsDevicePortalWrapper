@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         [TestMethod]
         public void GetXboxSettingsTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, HttpMethods.Get);
 
             Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
             getSettingsTask.Wait();
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetSingleXboxSettingTest()
         {
             string settingName = "TVResolution";
-            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName));
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName), HttpMethods.Get);
 
             Task<XboxSetting> getSettingTask = TestHelpers.Portal.GetXboxSetting(settingName);
             getSettingTask.Wait();
@@ -92,7 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             setting.Value = "1080p";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name));
+            TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name), HttpMethods.Put);
 
             Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
             updateSettingsTask.Wait();
@@ -104,8 +104,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             Assert.AreEqual(setting.Name, recievedSetting.Name);
             
-            // Note this is still 720p because that's what our default mock returns.
-            Assert.AreEqual("720p", recievedSetting.Value);
+            Assert.AreEqual("1080p", recievedSetting.Value);
             Assert.AreEqual("Video", recievedSetting.Category);
             Assert.AreEqual("No", recievedSetting.RequiresReboot);
         }
