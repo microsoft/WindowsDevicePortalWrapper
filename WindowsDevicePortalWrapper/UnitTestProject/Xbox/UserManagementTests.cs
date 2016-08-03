@@ -21,6 +21,28 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     public class UserManagementTests : BaseTests
     {
         /// <summary>
+        /// Gets the Platform type these tests are targeting.
+        /// </summary>
+        protected override DevicePortalPlatforms PlatformType
+        {
+            get
+            {
+                return DevicePortalPlatforms.XboxOne;
+            }
+        }
+
+        /// <summary>
+        /// Gets the friendly OS Version these tests are targeting.
+        /// </summary>
+        protected override string FriendlyOperatingSystemVersion
+        {
+            get
+            {
+                return "rs1_xbox_rel_1608";
+            }
+        }
+
+        /// <summary>
         /// Basic test of the GET method. Gets a mock list of users
         /// and verifies it comes back as expected from the raw response
         /// content.

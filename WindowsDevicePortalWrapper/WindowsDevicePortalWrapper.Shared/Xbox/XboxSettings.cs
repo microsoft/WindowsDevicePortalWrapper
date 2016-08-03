@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -27,6 +28,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>XboxSettingList object containing a List of XboxSetting objects representing the settings on the device.</returns>
         public async Task<XboxSettingList> GetXboxSettings()
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             return await this.Get<XboxSettingList>(XboxSettingsApi);
         }
 
@@ -37,6 +43,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>XboxSetting object containing a information about the settings on the device.</returns>
         public async Task<XboxSetting> GetXboxSetting(string settingName)
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             return await this.Get<XboxSetting>(Path.Combine(XboxSettingsApi, settingName));
         }
 
@@ -47,6 +58,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task<XboxSetting> UpdateXboxSetting(XboxSetting setting)
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             return await this.Put<XboxSetting, XboxSetting>(Path.Combine(XboxSettingsApi, setting.Name), setting);
         }
 

@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>UserList object containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task<UserList> GetXboxLiveUsers()
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             return await this.Get<UserList>(XboxLiveUserApi);
         }
 
@@ -36,6 +42,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task UpdateXboxLiveUsers(UserList users)
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             await this.Put(XboxLiveUserApi, users);
         }
 

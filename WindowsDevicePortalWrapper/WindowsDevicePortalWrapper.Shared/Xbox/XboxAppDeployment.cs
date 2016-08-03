@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -32,6 +33,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task RegisterApplication(string folderName)
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             await this.Post(
                 RegisterPackageApi,
                 string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
@@ -45,6 +51,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task UploadPackageFolder(string sourceFolder, string destinationFolder)
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             List<string> files = new List<string>();
             files.AddRange(Directory.GetFiles(sourceFolder));
 
