@@ -26,6 +26,7 @@ Supported operations are the following:
   * systemPerf
   * config
   * file
+  * screenshot
 
 ### The connect operation
 
@@ -207,4 +208,30 @@ XboxWDPDriver.exe /op:file /supop:dir /knownfolderid:DevelopmentFiles /subpath:V
 
 ```shell
 XboxWDPDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools/x64 /filename:dbgshim.dll /destination:c:\temp
+```
+
+### The Screenshot operation
+
+Allows taking of screenshots of the remote console.
+Usage:
+```shell
+  [/filepath:<filepath> [/override]]
+        Saves a screenshot from the console to the destination file specified
+        by /filepath. This filename should end in .png so the file can be
+        correctly read. If this parameter is not provided the screenshot is
+        saved in the current directory as xbox_screenshot.png. This operation
+        will fail if the file already exists unless the /override flag is specified.
+```
+
+Examples:
+```shell
+XboxWDPDriver.exe /op:screenshot
+```
+
+```shell
+XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png
+```
+
+```shell
+XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png /override
 ```

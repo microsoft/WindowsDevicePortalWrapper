@@ -583,6 +583,16 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("No", recievedSetting.RequiresReboot);
         }
 
+        public void XboxScreenshotTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, HttpMethods.Get);
+
+            Task<Stream> screenshotTask = TestHelpers.Portal.TakeXboxScreenshot();
+            screenshotTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, screenshotTask.Status);
+        }
+
         /// <summary>
         /// Validate the <see cref="RunningProcesses" /> returned from the tests.
         /// </summary>

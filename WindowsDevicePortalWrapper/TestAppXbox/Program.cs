@@ -31,7 +31,8 @@ namespace XboxWdpDriver
                 "processes\n" +
                 "systemPerf\n" +
                 "config\n" +
-                "file";
+                "file\n" +
+                "screenshot\n";
 
         /// <summary>
         /// Usage string
@@ -103,6 +104,11 @@ namespace XboxWdpDriver
             /// Uses the same registry setting as XbConnect tool.
             /// </summary>
             ConnectOperation,
+
+            /// <summary>
+            /// Takes a screenshot from the current Xbox One console.
+            /// </summary>
+            ScreenshotOperation,
         }
 
         /// <summary>
@@ -359,6 +365,10 @@ namespace XboxWdpDriver
                         Console.WriteLine("Connected to Default console: {0}", targetConsole);
                     }
                 }
+                else if (operation == OperationType.ScreenshotOperation)
+                {
+                    ScreenshotOperation.HandleOperation(portal, parameters);
+                }
                 else
                 {
                     Console.WriteLine("Successfully connected to console but no operation was specified. \n" +
@@ -424,6 +434,10 @@ namespace XboxWdpDriver
             else if (operation.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.FileOperation;
+            }
+            else if (operation.Equals("screenshot", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ScreenshotOperation;
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
