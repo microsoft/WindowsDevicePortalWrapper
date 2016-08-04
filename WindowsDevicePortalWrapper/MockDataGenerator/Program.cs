@@ -34,12 +34,23 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.DeviceFamilyApi),
             new Endpoint(HttpMethods.Get, DevicePortal.MachineNameApi),
             new Endpoint(HttpMethods.Get, DevicePortal.OsInfoApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveUserApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.BatteryStateApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.PowerStateApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.IpConfigApi),
             new Endpoint(HttpMethods.Get, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
+            // HoloLens specific endpoints
+            new Endpoint(HttpMethods.Get, DevicePortal.HolographicIpdApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.HolographicServicesApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.HolographicWebManagementHttpSettingsApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.MrcFileListApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.MrcStatusApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.ThermalStageApi),
+            // Xbox One specific endpoints
+            new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveUserApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
         };
 
