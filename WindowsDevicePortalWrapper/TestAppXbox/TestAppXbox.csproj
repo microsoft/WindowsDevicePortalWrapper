@@ -52,6 +52,7 @@
     <Compile Include="DevicePortalConnection.cs" />
     <Compile Include="NetworkShare.cs" />
     <Compile Include="Operations\FileOperation.cs" />
+    <Compile Include="Operations\FiddlerOperation.cs" />
     <Compile Include="Operations\ScreenshotOperation.cs" />
     <Compile Include="Operations\SettingOperation.cs" />
     <Compile Include="Operations\InstallOperation.cs" />

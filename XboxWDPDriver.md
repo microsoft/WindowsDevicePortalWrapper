@@ -20,16 +20,17 @@ Supported operations are the following:
   * [connect](#connect)
   * [info](#info)
   * [xbluser](#xbluser)
-  * [[install](#install)
+  * [install](#install)
   * [reboot](#reboot)
   * [processes](#processes)
   * [systemPerf](#systemperf)
   * [config](#config)
   * [file](#file)
   * [screenshot](#screenshot)
+  * [fiddler](#fiddler)
 
-### The connect operation
 <a name="connect"/>
+### The connect operation
 
 The ip parameter is required if no default console is configured. You can set a default console or list the current default console by using the 'connect' operation.
 
@@ -42,8 +43,8 @@ or
 XboxWDPDriver.exe /op:connect
 ```
 
-### The info operation
 <a name="info"/>
+### The info operation
 
 Lists some basic information about the operating system and device name of this Xbox One console.
 
@@ -52,8 +53,8 @@ Example:
 XboxWDPDriver.exe /op:info
 ```
 
-### The xbluser operation
 <a name="xbluser"/>
+### The xbluser operation
 
 Controls listing and managing users on the console.
 
@@ -97,8 +98,8 @@ XboxWDPDriver.exe /op:xbluser /subop:autosigin /id:16 /state:on
 XboxWDPDriver.exe /op:xbluser /subop:delete /id:16
 ```
 
-### The install operation
 <a name="install"/>
+### The install operation
 
 Installs a UWP application from an appx or loose folder.
 
@@ -125,8 +126,8 @@ XboxWDPDriver.exe /op:install /folder:myapploosefolder
 XboxWDPDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
 ```
 
-### The reboot operation
 <a name="reboot"/>
+### The reboot operation
 
 Reboots the target Xbox One console.
 
@@ -135,8 +136,8 @@ Example:
 XboxWDPDriver.exe /op:reboot
 ```
 
-### The processes operation
 <a name="processes"/>
+### The processes operation
 
 Lists all processes on the target Xbox One console.
 
@@ -145,8 +146,8 @@ Example:
 XboxWDPDriver.exe /op:processes
 ```
 
-### The systemPerf operation
 <a name="systemperf"/>
+### The systemPerf operation
 
 Gives a summary of current system performance on the target Xbox One console (memory usage, etc).
 
@@ -155,8 +156,8 @@ Example:
 XboxWDPDriver.exe /op:systemPerf
 ```
 
-### The config operation
 <a name="config"/>
+### The config operation
 
 Allows retrieving and setting some common system settings.
 
@@ -183,8 +184,8 @@ XboxWDPDriver.exe /op:config /setting:TVResolution
 XboxWDPDriver.exe /op:config /setting:TVResolution /value:1080p
 ```
 
-### The file operation
 <a name="file"/>
+### The file operation
 
 Allows file operations on some known folders on the console (application specific storage via LocalAppData and development files via DevelopmentFiles).
 
@@ -219,8 +220,8 @@ XboxWDPDriver.exe /op:file /supop:dir /knownfolderid:DevelopmentFiles /subpath:V
 XboxWDPDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools/x64 /filename:dbgshim.dll /destination:c:\temp
 ```
 
-### The Screenshot operation
 <a name="screenshot"/>
+### The Screenshot operation
 
 Allows taking of screenshots of the remote console.
 
@@ -245,4 +246,32 @@ XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png
 
 ```shell
 XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png /override
+```
+
+<a name="fiddler"/>
+### The Fiddler operation
+
+Allows enabling and disabling of a Fiddler proxy for monitoring HTTP traffic on the console.
+
+Usage:
+```shell
+  /state:<on or off> [/reboot] [/proxyaddress:<proxy address> /proxyport:<proxy port> /certpath:<path to cert file>]
+        Whether to enable or disable Fiddler. Enabling and disabling Fiddler
+        requires a reboot. You can specify the /reboot flag to do the reboot
+        automatically. If Fiddler is being enabled, proxyaddress and proxyport
+        are both required. If Fiddler has not been configured on this console
+        previously, then the cert file is also required.
+```
+
+Examples:
+```shell
+XboxWDPDriver.exe /op:fiddler
+```
+
+```shell
+XboxWDPDriver.exe /op:fiddler /state:on /proxyaddress:10.0.0.1 /proxyport:8888 /certpath:FiddlerRoot.cer
+```
+
+```shell
+XboxWDPDriver.exe /op:fiddler /state:off /reboot
 ```
