@@ -51,10 +51,13 @@
   <ItemGroup>
     <Compile Include="DevicePortalConnection.cs" />
     <Compile Include="NetworkShare.cs" />
+    <Compile Include="Operations\SystemPerfOperation.cs" />
+    <Compile Include="Operations\ListProcessesOperation.cs" />
     <Compile Include="Operations\FileOperation.cs" />
     <Compile Include="Operations\FiddlerOperation.cs" />
+    <Compile Include="Operations\SandboxOperation.cs" />
     <Compile Include="Operations\ScreenshotOperation.cs" />
-    <Compile Include="Operations\SettingOperation.cs" />
+    <Compile Include="Operations\ConfigOperation.cs" />
     <Compile Include="Operations\InstallOperation.cs" />
     <Compile Include="ParameterHelper.cs" />
     <Compile Include="Program.cs" />

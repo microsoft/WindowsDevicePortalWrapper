@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint for enabling and disabling a Fiddler proxy.
         /// </summary>
-        public static readonly string FiddlerSetupApi = "/ext/fiddler";
+        public static readonly string FiddlerSetupApi = "ext/fiddler";
 
         /// <summary>
         /// Enables Fiddler on the console with the specified proxy.

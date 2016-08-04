@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint for SMB share info
         /// </summary>
-        private static readonly string GetSmbShareInfoApi = "/ext/smb/developerfolder";
+        private static readonly string GetSmbShareInfoApi = "ext/smb/developerfolder";
 
         /// <summary>
         /// Gets the SMB Share info for the device
