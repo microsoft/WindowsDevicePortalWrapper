@@ -5,8 +5,10 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
@@ -18,11 +20,6 @@ namespace MockDataGenerator
     /// </summary>
     public class Program
     {
-        /// <summary>
-        /// WebSocket operation prefix
-        /// </summary>
-        private const string WebSocketOpertionPrefix = "WebSocket/";
-
         /// <summary>
         /// Usage string
         /// </summary>
@@ -167,7 +164,22 @@ namespace MockDataGenerator
                 }
             }
 
-            Console.WriteLine("Data generated in directory {0}. Please make sure to remove any personally identifiable information from the response(s) before adding them as mock responses.", directory);
+            Console.WriteLine("Data generated in directory {0}.", directory);
+            Console.WriteLine();
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("Please make sure to remove any personally identifiable information from the\n" +
+                              "response(s) (such as alias/emails, ip addresses, and machine names) before\n" +
+                              "adding them as mock responses!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            // If a debugger is attached, don't close but instead loop here until
+            // closed.
+            while (Debugger.IsAttached)
+            {
+                Thread.Sleep(0);
+            }
         }
 
         /// <summary>
