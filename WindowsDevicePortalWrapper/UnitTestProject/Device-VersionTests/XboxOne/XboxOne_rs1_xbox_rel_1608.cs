@@ -584,6 +584,19 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Simple test of Xbox Screenshot API.
+        /// </summary>
+        public void XboxScreenshotTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, HttpMethods.Get);
+
+            Task<Stream> screenshotTask = TestHelpers.Portal.TakeXboxScreenshot();
+            screenshotTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, screenshotTask.Status);
+        }
+
+        /// <summary>
         /// Validate the <see cref="RunningProcesses" /> returned from the tests.
         /// </summary>
         /// <param name="runningProcesses">The <see cref="RunningProcesses" /> to validate.</param>
