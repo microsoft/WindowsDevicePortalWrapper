@@ -586,9 +586,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Simple test of Xbox Screenshot API.
         /// </summary>
+        [TestMethod]
         public void XboxScreenshotTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, HttpMethods.Get);
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(new FileStream(Path.Combine("MockData", this.PlatformType.ToString(), this.FriendlyOperatingSystemVersion, "xbox_screenshot.png"), FileMode.Open));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, response, HttpMethods.Get);
 
             Task<Stream> screenshotTask = TestHelpers.Portal.TakeXboxScreenshot();
             screenshotTask.Wait();
@@ -599,19 +603,63 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         /// Simple test of Xbox Fiddler API.
         /// </summary>
+        [TestMethod]
         public void EnableFiddlerTest()
         {
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, HttpMethods.Post);
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, response, HttpMethods.Post);
 
             Task fiddlerEnableTask = TestHelpers.Portal.EnableFiddlerTracing("localhost", "8888");
             fiddlerEnableTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerEnableTask.Status);
 
+            response = new HttpResponseMessage(HttpStatusCode.OK);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, response, HttpMethods.Delete);
+
             Task fiddlerDisableTask = TestHelpers.Portal.DisableFiddlerTracing();
             fiddlerDisableTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerDisableTask.Status);
+        }
+
+        /// <summary>
+        /// Simple test of Xbox Live Sandbox Get API
+        /// </summary>
+        [TestMethod]
+        public void GetXboxLiveSandboxTest()
+        {
+            string expectedSandboxValue = "XDKS.1";
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveSandboxApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
+
+            Task<Sandbox> getSandboxTask = TestHelpers.Portal.GetXboxLiveSandbox();
+            getSandboxTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getSandboxTask.Status);
+
+            Assert.AreEqual(expectedSandboxValue, getSandboxTask.Result.Value);
+        }
+
+        /// <summary>
+        /// Simple test of Xbox Live Sandbox Set API
+        /// </summary>
+        [TestMethod]
+        public void SetXboxLiveSandboxTest()
+        {
+            string sandboxValue = "NewSandboxId";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"Sandbox\" : \"{0}\"}}", sandboxValue));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveSandboxApi, response, HttpMethods.Put);
+
+            Task<Sandbox> setSandboxTask = TestHelpers.Portal.SetXboxLiveSandbox(sandboxValue);
+            setSandboxTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setSandboxTask.Status);
+
+            Assert.AreEqual(sandboxValue, setSandboxTask.Result.Value);
         }
 
         /// <summary>

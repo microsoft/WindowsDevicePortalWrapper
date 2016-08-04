@@ -50,7 +50,7 @@ namespace XboxWdpDriver
         public static readonly string WdpPassword = "pwd";
 
         /// <summary>
-        /// Listen (use web socket) identifier string
+        /// Listen (use web socket) Flag identifier string.
         /// </summary>
         public static readonly string Listen = "listen";
 

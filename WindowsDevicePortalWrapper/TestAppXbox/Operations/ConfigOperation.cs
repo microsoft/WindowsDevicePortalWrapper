@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="SettingOperation.cs" company="Microsoft Corporation">
+// <copyright file="ConfigOperation.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -12,14 +12,14 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 namespace XboxWdpDriver
 {
     /// <summary>
-    /// Helper for Setting related operations
+    /// Helper for Config related operations
     /// </summary>
-    public class SettingOperation
+    public class ConfigOperation
     {
         /// <summary>
         /// Usage message for this operation
         /// </summary>
-        private const string XblSettingUsageMessage = "Usage:\n" +
+        private const string ConfigUsageMessage = "Usage:\n" +
             "  [/setting:<setting name> [/value:<setting value>]]\n" +
             "        Gets current settings and their values. If\n" +
             "        /setting is specified, only returns that value.\n" +
@@ -28,7 +28,7 @@ namespace XboxWdpDriver
             "        value.\n";
 
         /// <summary>
-        /// Main entry point for handling a Setting operation
+        /// Main entry point for handling a Config operation
         /// </summary>
         /// <param name="portal">DevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
@@ -36,7 +36,7 @@ namespace XboxWdpDriver
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {
-                Console.WriteLine(XblSettingUsageMessage);
+                Console.WriteLine(ConfigUsageMessage);
                 return;
             }
 

@@ -44,7 +44,7 @@ namespace XboxWdpDriver
 
             if (string.IsNullOrEmpty(filepath))
             {
-                filepath = "screenshot.png";
+                filepath = "xbox_screenshot.png";
             }
 
             if (File.Exists(filepath) && !parameters.HasFlag("override"))

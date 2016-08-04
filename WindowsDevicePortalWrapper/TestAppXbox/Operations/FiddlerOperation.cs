@@ -50,8 +50,6 @@ namespace XboxWdpDriver
                 return;
             }
 
-            bool shouldReboot = parameters.HasFlag("reboot");
-
             try
             {
                 if (string.Equals(state, "on", StringComparison.OrdinalIgnoreCase))
@@ -69,13 +67,13 @@ namespace XboxWdpDriver
 
                     Task fiddlerEnableTask = portal.EnableFiddlerTracing(proxyAddress, proxyPort, parameters.GetParameterValue("certpath"));
                     fiddlerEnableTask.Wait();
-                    Console.WriteLine("Fiddler enabled. This will take effect on the next reboot.");
+                    Console.WriteLine("Fiddler enabled.");
                 }
                 else if (string.Equals(state, "off", StringComparison.OrdinalIgnoreCase))
                 {
                     Task fiddlerDisableTask = portal.DisableFiddlerTracing();
                     fiddlerDisableTask.Wait();
-                    Console.WriteLine("Fiddler disabled. This will take effect on the next reboot.");
+                    Console.WriteLine("Fiddler disabled.");
                 }
                 else
                 {
@@ -85,11 +83,15 @@ namespace XboxWdpDriver
                     return;
                 }
 
-                if (shouldReboot)
+                if (parameters.HasFlag("reboot"))
                 {
                     Task rebootTask = portal.Reboot();
                     rebootTask.Wait();
                     Console.WriteLine("Console rebooting...");
+                }
+                else
+                {
+                    Console.WriteLine("A reboot is required before this takes effect.");
                 }
             }
             catch (AggregateException e)
