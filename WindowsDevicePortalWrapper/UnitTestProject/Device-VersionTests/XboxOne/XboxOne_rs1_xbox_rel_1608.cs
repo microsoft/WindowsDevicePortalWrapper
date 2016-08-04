@@ -51,7 +51,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             get
             {
-                return "14385_1002_amd64fre_rs1_xbox_rel_1608_160709_1700";
+                return "14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700";
             }
         }
 
