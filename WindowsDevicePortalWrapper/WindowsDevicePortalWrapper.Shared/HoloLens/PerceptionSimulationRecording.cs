@@ -16,16 +16,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting a Holographic Perception Simulation recording status.
         /// </summary>
-        private static readonly string HolographicSimulationRecordingStatusApi = "api/holographic/simulation/recording/status";
+        public static readonly string HolographicSimulationRecordingStatusApi = "api/holographic/simulation/recording/status";
 
         /// <summary>
         /// API for starting a Holographic Perception Simulation recording.
         /// </summary>
-        private static readonly string StartHolographicSimulationRecordingApi = "api/holographic/simulation/recording/start";
+        public static readonly string StartHolographicSimulationRecordingApi = "api/holographic/simulation/recording/start";
 
         /// <summary>
         /// API for stopping a Holographic Perception Simulation recording.
         /// </summary>
-        private static readonly string StopHolographicSimulationRecordingApi = "api/holographic/simulation/recording/stop";
+        public static readonly string StopHolographicSimulationRecordingApi = "api/holographic/simulation/recording/stop";
     }
 }

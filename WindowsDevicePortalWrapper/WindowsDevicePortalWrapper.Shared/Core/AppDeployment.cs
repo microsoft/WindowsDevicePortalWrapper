@@ -32,17 +32,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API to retrieve list of installed packages.
         /// </summary>
-        private static readonly string InstalledPackagesApi = "api/app/packagemanager/packages";
+        public static readonly string InstalledPackagesApi = "api/app/packagemanager/packages";
 
         /// <summary>
         /// Install state API.
         /// </summary>
-        private static readonly string InstallStateApi = "api/app/packagemanager/state";
+        public static readonly string InstallStateApi = "api/app/packagemanager/state";
 
         /// <summary>
         /// API for package management.
         /// </summary>
-        private static readonly string PackageManagerApi = "api/app/packagemanager/package";
+        public static readonly string PackageManagerApi = "api/app/packagemanager/package";
 
         /// <summary>
         /// Gets or sets install status handler.

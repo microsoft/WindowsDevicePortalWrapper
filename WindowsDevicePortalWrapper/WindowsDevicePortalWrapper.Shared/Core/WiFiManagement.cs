@@ -19,17 +19,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting the WiFi interfaces.
         /// </summary>
-        private static readonly string WifiInterfacesApi = "api/wifi/interfaces";
+        public static readonly string WifiInterfacesApi = "api/wifi/interfaces";
 
         /// <summary>
         /// API for the controlling the WiFi network.
         /// </summary>
-        private static readonly string WifiNetworkApi = "api/wifi/network";
+        public static readonly string WifiNetworkApi = "api/wifi/network";
 
         /// <summary>
         /// API for getting available WiFi networks.
         /// </summary>
-        private static readonly string WifiNetworksApi = "api/wifi/networks";
+        public static readonly string WifiNetworksApi = "api/wifi/networks";
 
         /// <summary>
         /// Connect to a WiFi network.

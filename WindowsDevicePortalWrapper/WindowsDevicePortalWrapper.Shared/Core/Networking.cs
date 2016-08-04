@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting IP config data.
         /// </summary>
-        private static readonly string IpConfigApi = "api/networking/ipconfig";
+        public static readonly string IpConfigApi = "api/networking/ipconfig";
 
         /// <summary>
         /// Gets the IP configuration data of the device.

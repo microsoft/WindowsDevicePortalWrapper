@@ -14,16 +14,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for downloading a Windows error reporting file.
         /// </summary>
-        private static readonly string WindowsErrorReportingFileApi = "api/wer/report/file";
+        public static readonly string WindowsErrorReportingFileApi = "api/wer/report/file";
 
         /// <summary>
         /// API for getting the list of files in a Windows error report.
         /// </summary>
-        private static readonly string WindowsErrorReportingFilesApi = "api/wer/report/files";
+        public static readonly string WindowsErrorReportingFilesApi = "api/wer/report/files";
 
         /// <summary>
         /// API for getting the list of Windows error reports.
         /// </summary>
-        private static readonly string WindowsErrorReportsApi = "api/wer/reports";
+        public static readonly string WindowsErrorReportsApi = "api/wer/reports";
     }
 }

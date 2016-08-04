@@ -16,12 +16,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for rebooting the device.
         /// </summary>
-        private static readonly string RebootApi = "api/control/restart";
+        public static readonly string RebootApi = "api/control/restart";
 
         /// <summary>
         /// API for shutting down the device.
         /// </summary>
-        private static readonly string ShutdownApi = "api/control/shutdown";
+        public static readonly string ShutdownApi = "api/control/shutdown";
 
         /// <summary>
         /// Reboots the device.

@@ -14,16 +14,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API to create a realtime ETW session.
         /// </summary>
-        private static readonly string CreateRealtimeEtwSessionApi = "api/etw/session/realtime";
+        public static readonly string CreateRealtimeEtwSessionApi = "api/etw/session/realtime";
 
         /// <summary>
         /// API to getthe list of registered custom ETW providers.
         /// </summary>
-        private static readonly string GetCustomEtwProvidersApi = "api/etw/customproviders";
+        public static readonly string GetCustomEtwProvidersApi = "api/etw/customproviders";
 
         /// <summary>
         /// API to getthe list of registered ETW providers.
         /// </summary>
-        private static readonly string GetEtwProvidersApi = "api/etw/providers";
+        public static readonly string GetEtwProvidersApi = "api/etw/providers";
     }
 }
