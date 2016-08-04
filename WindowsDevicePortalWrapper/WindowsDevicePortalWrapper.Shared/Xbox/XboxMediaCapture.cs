@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint for getting a screenshot.
         /// </summary>
-        public static readonly string GetXboxScreenshotApi = "/ext/screenshot";
+        public static readonly string GetXboxScreenshotApi = "ext/screenshot";
 
         /// <summary>
         /// Takes a current screenshot of the device.

@@ -43,6 +43,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
         };
 
         /// <summary>

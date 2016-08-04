@@ -32,7 +32,8 @@ namespace XboxWdpDriver
                 "systemPerf\n" +
                 "config\n" +
                 "file\n" +
-                "screenshot";
+                "screenshot\n" +
+                "fiddler";
 
         /// <summary>
         /// Usage string
@@ -50,7 +51,8 @@ namespace XboxWdpDriver
         private static readonly string DefaultXtfConsoleRegkey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Durango\\Xtf\\Consoles";
 
         /// <summary>
-        /// Operation types
+        /// Operation types. These should be arranged alphabetically (other than None)
+        /// for ease of use.
         /// </summary>
         private enum OperationType
         {
@@ -60,44 +62,9 @@ namespace XboxWdpDriver
             None,
 
             /// <summary>
-            /// Info operation.
-            /// </summary>
-            InfoOperation,
-
-            /// <summary>
-            /// User operation.
-            /// </summary>
-            UserOperation,
-
-            /// <summary>
-            /// Install Appx Package or loose folder operation.
-            /// </summary>
-            InstallOperation,
-
-            /// <summary>
-            /// Reboot console operation.
-            /// </summary>
-            RebootOperation,
-
-            /// <summary>
-            /// List processes operation.
-            /// </summary>
-            ListProcessesOperation,
-
-            /// <summary>
-            /// Get the system performance operation.
-            /// </summary>
-            GetSystemPerfOperation,
-
-            /// <summary>
             /// Get or set Xbox Settings.
             /// </summary>
-            XboxSettings,
-
-            /// <summary>
-            /// Does remote file operations.
-            /// </summary>
-            FileOperation,
+            ConfigOperation,
 
             /// <summary>
             /// Sets the default xbox console to be this one.
@@ -106,9 +73,54 @@ namespace XboxWdpDriver
             ConnectOperation,
 
             /// <summary>
+            /// Manages enabling and disabling a Fiddler proxy for the console.
+            /// </summary>
+            FiddlerOperation,
+
+            /// <summary>
+            /// Does remote file operations.
+            /// </summary>
+            FileOperation,
+
+            /// <summary>
+            /// Info operation.
+            /// </summary>
+            InfoOperation,
+
+            /// <summary>
+            /// Install Appx Package or loose folder operation.
+            /// </summary>
+            InstallOperation,
+
+            /// <summary>
+            /// List processes operation.
+            /// </summary>
+            ListProcessesOperation,
+
+            /// <summary>
+            /// Reboot console operation.
+            /// </summary>
+            RebootOperation,
+
+            /// <summary>
+            /// Gets or sets the Xbox Live sandbox for the console.
+            /// </summary>
+            SandboxOperation,
+
+            /// <summary>
             /// Takes a screenshot from the current Xbox One console.
             /// </summary>
             ScreenshotOperation,
+
+            /// <summary>
+            /// Get the system performance operation.
+            /// </summary>
+            SystemPerfOperation,
+
+            /// <summary>
+            /// User operation.
+            /// </summary>
+            XblUserOperation,
         }
 
         /// <summary>
@@ -190,16 +202,6 @@ namespace XboxWdpDriver
                     }
                 }
 
-                bool listen = false;
-                if (parameters.HasParameter(ParameterHelper.Listen))
-                {
-                    bool parsedValue = false;
-                    if (bool.TryParse(parameters.GetParameterValue(ParameterHelper.Listen), out parsedValue))
-                    {
-                        listen = parsedValue;
-                    }
-                }
-
                 DevicePortal portal = new DevicePortal(connection);
 
                 Task connectTask = portal.Connect(updateConnection: false);
@@ -227,154 +229,87 @@ namespace XboxWdpDriver
                         Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", targetConsole);
                     }
                 }
-                else if (operation == OperationType.InfoOperation)
-                {
-                    Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
-                    Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
-
-                    Task<string> getNameTask = portal.GetDeviceName();
-                    getNameTask.Wait();
-                    Console.WriteLine("Device name: " + getNameTask.Result);
-                }
-                else if (operation == OperationType.UserOperation)
-                {
-                    UserOperation.HandleOperation(portal, parameters);
-                }
-                else if (operation == OperationType.InstallOperation)
-                {
-                    // Ensure we have an IP since SMB might need it for path generation.
-                    parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
-
-                    InstallOperation.HandleOperation(portal, parameters);
-                }
-                else if (operation == OperationType.RebootOperation)
-                {
-                    Task rebootTask = portal.Reboot();
-                    rebootTask.Wait();
-                    Console.WriteLine("Rebooting device.");
-                }
-                else if (operation == OperationType.ListProcessesOperation)
-                {
-                    RunningProcesses runningProcesses = null;
-                    if (listen)
-                    {
-                        ManualResetEvent runningProcessesReceived = new ManualResetEvent(false);
-
-                        WebSocketMessageReceivedEventHandler<RunningProcesses> runningProcessesReceivedHandler =
-                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<RunningProcesses> runningProccesesArgs)
-                        {
-                            if (runningProccesesArgs.Message != null)
-                            {
-                                runningProcesses = runningProccesesArgs.Message;
-                                runningProcessesReceived.Set();
-                            }
-                        };
-
-                        portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
-
-                        Task startListeningForProcessesTask = portal.StartListeningForRunningProcesses();
-                        startListeningForProcessesTask.Wait();
-
-                        runningProcessesReceived.WaitOne();
-
-                        Task stopListeningForProcessesTask = portal.StopListeningForRunningProcesses();
-                        stopListeningForProcessesTask.Wait();
-
-                        portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
-                    }
-                    else
-                    {
-                        Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcesses();
-                        runningProcesses = getRunningProcessesTask.Result;
-                    }
-
-                    foreach (DeviceProcessInfo process in runningProcesses.Processes)
-                    {
-                        if (!string.IsNullOrEmpty(process.Name))
-                        {
-                            Console.WriteLine(process.Name);
-                        }
-                    }
-                }
-                else if (operation == OperationType.GetSystemPerfOperation)
-                {
-                    SystemPerformanceInformation systemPerformanceInformation = null;
-                    if (listen)
-                    {
-                        ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
-
-                        WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
-                            delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
-                        {
-                            if (sysPerfInfoArgs.Message != null)
-                            {
-                                systemPerformanceInformation = sysPerfInfoArgs.Message;
-                                systemPerfReceived.Set();
-                            }
-                        };
-
-                        portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
-
-                        Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerf();
-                        startListeningForSystemPerfTask.Wait();
-
-                        systemPerfReceived.WaitOne();
-
-                        Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcesses();
-                        stopListeningForSystemPerfTask.Wait();
-
-                        portal.SystemPerfMessageReceived -= systemPerfReceivedHandler;
-                    }
-                    else
-                    {
-                        Task<SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
-                        systemPerformanceInformation = getRunningProcessesTask.Result;
-                    }
-
-                    Console.WriteLine("Available Pages: " + systemPerformanceInformation.AvailablePages);
-                    Console.WriteLine("Commit Limit: " + systemPerformanceInformation.CommitLimit);
-                    Console.WriteLine("Commited Pages: " + systemPerformanceInformation.CommittedPages);
-                    Console.WriteLine("CPU Load: " + systemPerformanceInformation.CpuLoad);
-                    Console.WriteLine("IoOther Speed: " + systemPerformanceInformation.IoOtherSpeed);
-                    Console.WriteLine("IoRead Speed: " + systemPerformanceInformation.IoReadSpeed);
-                    Console.WriteLine("IoWrite Speed: " + systemPerformanceInformation.IoWriteSpeed);
-                    Console.WriteLine("Non-paged Pool Pages: " + systemPerformanceInformation.NonPagedPoolPages);
-                    Console.WriteLine("Paged Pool Pages: " + systemPerformanceInformation.PagedPoolPages);
-                    Console.WriteLine("Page Size: " + systemPerformanceInformation.PageSize);
-                    Console.WriteLine("Total Installed Kb: " + systemPerformanceInformation.TotalInstalledKb);
-                    Console.WriteLine("Total Pages: " + systemPerformanceInformation.TotalPages);
-                }
-                else if (operation == OperationType.XboxSettings)
-                {
-                    SettingOperation.HandleOperation(portal, parameters);
-                }
-                else if (operation == OperationType.FileOperation)
-                {
-                    FileOperation.HandleOperation(portal, parameters);
-                }
-                else if (operation == OperationType.ConnectOperation)
-                {
-                    // User provided a new ip or hostname to set as the default.
-                    if (parameters.HasParameter(ParameterHelper.IpOrHostname) || parameters.HasParameter(ParameterHelper.IpOrHostnameOld))
-                    {
-                        Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, targetConsole);
-                        Console.WriteLine("Default console set to {0}", targetConsole);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Connected to Default console: {0}", targetConsole);
-                    }
-                }
-                else if (operation == OperationType.ScreenshotOperation)
-                {
-                    ScreenshotOperation.HandleOperation(portal, parameters);
-                }
                 else
                 {
-                    Console.WriteLine("Successfully connected to console but no operation was specified. \n" +
-                        "Use the '/op:<operation type>' parameter to run a specified operation.");
-                    Console.WriteLine();
-                    Console.WriteLine(AvailableOperationsText);
+                    // If the operation is more than a couple lines, it should
+                    // live in its own file. These are arranged alphabetically
+                    // for ease of use.
+                    switch(operation)
+                    {
+                        case OperationType.ConfigOperation:
+                            ConfigOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.ConnectOperation:
+                            // User provided a new ip or hostname to set as the default.
+                            if (parameters.HasParameter(ParameterHelper.IpOrHostname) || parameters.HasParameter(ParameterHelper.IpOrHostnameOld))
+                            {
+                                Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, null, targetConsole);
+                                Console.WriteLine("Default console set to {0}", targetConsole);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Connected to Default console: {0}", targetConsole);
+                            }
+                            break;
+
+                        case OperationType.FiddlerOperation:
+                            FiddlerOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.FileOperation:
+                            FileOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.InfoOperation:
+                            Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
+                            Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
+
+                            Task<string> getNameTask = portal.GetDeviceName();
+                            getNameTask.Wait();
+                            Console.WriteLine("Device name: " + getNameTask.Result);
+                            break;
+
+                        case OperationType.InstallOperation:
+                            // Ensure we have an IP since SMB might need it for path generation.
+                            parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+
+                            InstallOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.ListProcessesOperation:
+                            ListProcessesOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.RebootOperation:
+                            Task rebootTask = portal.Reboot();
+                            rebootTask.Wait();
+                            Console.WriteLine("Rebooting device.");
+                            break;
+
+                        case OperationType.SandboxOperation:
+                            SandboxOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.ScreenshotOperation:
+                            ScreenshotOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.SystemPerfOperation:
+                            SystemPerfOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        case OperationType.XblUserOperation:
+                            UserOperation.HandleOperation(portal, parameters);
+                            break;
+
+                        default:
+                            Console.WriteLine("Successfully connected to console but no operation was specified. \n" +
+                                "Use the '/op:<operation type>' parameter to run a specified operation.");
+                            Console.WriteLine();
+                            Console.WriteLine(AvailableOperationsText);
+                            break;
+                    }
                 }
             }
             catch (Exception e)
@@ -399,45 +334,53 @@ namespace XboxWdpDriver
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
+            if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ConfigOperation;
+            }
+            else if (operation.Equals("connect", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ConnectOperation;
             }
-            else if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
+            else if (operation.Equals("fiddler", StringComparison.OrdinalIgnoreCase))
             {
-                return OperationType.InfoOperation;
-            }
-            else if (operation.Equals("xbluser", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.UserOperation;
-            }
-            else if (operation.Equals("install", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.InstallOperation;
-            }
-            else if (operation.Equals("reboot", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.RebootOperation;
-            }
-            else if (operation.Equals("processes", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.ListProcessesOperation;
-            }
-            else if (operation.Equals("systemPerf", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.GetSystemPerfOperation;
-            }
-            else if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
-            {
-                return OperationType.XboxSettings;
+                return OperationType.FiddlerOperation;
             }
             else if (operation.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.FileOperation;
             }
+            else if (operation.Equals("info", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.InfoOperation;
+            }
+            else if (operation.Equals("install", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.InstallOperation;
+            }
+            else if (operation.Equals("processes", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.ListProcessesOperation;
+            }
+            else if (operation.Equals("reboot", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.RebootOperation;
+            }
+            else if (operation.Equals("sandbox", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.SandboxOperation;
+            }
             else if (operation.Equals("screenshot", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ScreenshotOperation;
+            }
+            else if (operation.Equals("systemPerf", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.SystemPerfOperation;
+            }
+            else if (operation.Equals("xbluser", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.XblUserOperation;
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
