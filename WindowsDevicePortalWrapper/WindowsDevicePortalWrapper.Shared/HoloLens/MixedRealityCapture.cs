@@ -20,57 +20,57 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         ///  API for getting or deleting a Mixed Reality Capture file
         /// </summary>
-        private static readonly string MrcFileApi = "api/holographic/mrc/file";
+        public static readonly string MrcFileApi = "api/holographic/mrc/file";
 
         /// <summary>
         /// API for getting the list of Holographic Mixed Reality Capture files
         /// </summary>
-        private static readonly string MrcFileListApi = "api/holographic/mrc/files";
+        public static readonly string MrcFileListApi = "api/holographic/mrc/files";
 
         /// <summary>
         /// API for taking a Mixed Reality Capture photo 
         /// </summary>
-        private static readonly string MrcPhotoApi = "api/holographic/mrc/photo";
+        public static readonly string MrcPhotoApi = "api/holographic/mrc/photo";
 
         /// <summary>
         /// API for starting a Holographic Mixed Reality Capture recording.
         /// </summary>
-        private static readonly string MrcStartRecordingApi = "api/holographic/mrc/video/control/start";
+        public static readonly string MrcStartRecordingApi = "api/holographic/mrc/video/control/start";
 
         /// <summary>
         /// API for getting the Holographic Mixed Reality Capture status.
         /// </summary>
-        private static readonly string MrcStatusApi = "api/holographic/mrc/status";
+        public static readonly string MrcStatusApi = "api/holographic/mrc/status";
 
         /// <summary>
         /// API for stopping a Holographic Mixed Reality Capture recording.
         /// </summary>
-        private static readonly string MrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
+        public static readonly string MrcStopRecordingApi = "api/holographic/mrc/video/control/stop";
 
         /// <summary>
         /// API for getting a live Holographic Mixed Reality Capture stream.
         /// </summary>
-        private static readonly string MrcLiveStreamApi = "api/holographic/stream/live.mp4";
+        public static readonly string MrcLiveStreamApi = "api/holographic/stream/live.mp4";
 
         /// <summary>
         /// API for getting a high resolution live Holographic Mixed Reality Capture stream.
         /// </summary>
-        private static readonly string MrcLiveStreamHighwResApi = "api/holographic/stream/live_high.mp4";
+        public static readonly string MrcLiveStreamHighwResApi = "api/holographic/stream/live_high.mp4";
 
         /// <summary>
         /// API for getting a low resolution live Holographic Mixed Reality Capture stream.
         /// </summary>
-        private static readonly string MrcLiveStreamLowResApi = "api/holographic/stream/live_low.mp4";
+        public static readonly string MrcLiveStreamLowResApi = "api/holographic/stream/live_low.mp4";
 
         /// <summary>
         /// API for getting a medium resolution live Holographic Mixed Reality Capture stream.
         /// </summary>
-        private static readonly string MrcLiveStreamMediumResApi = "api/holographic/stream/live_med.mp4";
+        public static readonly string MrcLiveStreamMediumResApi = "api/holographic/stream/live_med.mp4";
 
         /// <summary>
         /// API for getting a mixed reality capture thumbnail
         /// </summary>
-        private static readonly string MrcThumbnailApi = "api/holographic/mrc/thumbnail";
+        public static readonly string MrcThumbnailApi = "api/holographic/mrc/thumbnail";
 
         /// <summary>
         /// Removes a Mixed Reality Capture file from the device's local storage.

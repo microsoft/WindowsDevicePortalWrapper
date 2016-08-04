@@ -19,12 +19,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API to add or delete a tag to the DNS-SD advertisement.
         /// </summary>
-        private static readonly string TagApi = "api/dns-sd/tag";
+        public static readonly string TagApi = "api/dns-sd/tag";
 
         /// <summary>
         /// API to retrieve or delete the currently applied tags for the device.
         /// </summary>
-        private static readonly string TagsApi = "api/dns-sd/tags";
+        public static readonly string TagsApi = "api/dns-sd/tags";
 
         /// <summary>
         /// Gets the name of the device.

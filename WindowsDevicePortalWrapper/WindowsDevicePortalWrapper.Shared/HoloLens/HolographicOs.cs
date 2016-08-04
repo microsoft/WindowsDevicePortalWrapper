@@ -18,17 +18,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting or setting Interpupilary distance
         /// </summary>
-        private static readonly string HolographicIpdApi = "api/holographic/os/settings/ipd";
+        public static readonly string HolographicIpdApi = "api/holographic/os/settings/ipd";
 
         /// <summary>
         /// API for getting a list of running HoloLens specific services.
         /// </summary>
-        private static readonly string HolographicServicesApi = "api/holographic/os/services";
+        public static readonly string HolographicServicesApi = "api/holographic/os/services";
 
         /// <summary>
         /// API for getting or setting HTTPS setting
         /// </summary>
-        private static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
+        public static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
 
         /// <summary>
         /// Gets the interpupilary distance registered on the device.
