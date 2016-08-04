@@ -156,9 +156,11 @@ namespace MockDataGenerator
             Console.WriteLine("Data generated in directory {0}.", directory);
             Console.WriteLine();
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             Console.WriteLine("Please make sure to remove any personally identifiable information from the\n" +
                               "response(s) (such as alias/emails, ip addresses, and machine names) before\n" +
                               "adding them as mock responses!");
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             // If a debugger is attached, don't close but instead loop here until
