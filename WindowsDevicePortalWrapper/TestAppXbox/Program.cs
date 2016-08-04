@@ -32,7 +32,8 @@ namespace XboxWdpDriver
                 "systemPerf\n" +
                 "config\n" +
                 "file\n" +
-                "screenshot";
+                "screenshot\n" +
+                "fiddler";
 
         /// <summary>
         /// Usage string
@@ -109,6 +110,11 @@ namespace XboxWdpDriver
             /// Takes a screenshot from the current Xbox One console.
             /// </summary>
             ScreenshotOperation,
+
+            /// <summary>
+            /// Manages enabling and disabling a Fiddler proxy for the console.
+            /// </summary>
+            FiddlerOperation,
         }
 
         /// <summary>
@@ -369,6 +375,10 @@ namespace XboxWdpDriver
                 {
                     ScreenshotOperation.HandleOperation(portal, parameters);
                 }
+                else if (operation == OperationType.FiddlerOperation)
+                {
+                    FiddlerOperation.HandleOperation(portal, parameters);
+                }
                 else
                 {
                     Console.WriteLine("Successfully connected to console but no operation was specified. \n" +
@@ -438,6 +448,10 @@ namespace XboxWdpDriver
             else if (operation.Equals("screenshot", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ScreenshotOperation;
+            }
+            else if (operation.Equals("fiddler", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.FiddlerOperation;
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);

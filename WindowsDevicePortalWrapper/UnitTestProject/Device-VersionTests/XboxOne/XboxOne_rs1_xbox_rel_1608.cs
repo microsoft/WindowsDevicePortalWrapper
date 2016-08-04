@@ -597,6 +597,24 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Simple test of Xbox Fiddler API.
+        /// </summary>
+        public void EnableFiddlerTest()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, HttpMethods.Post);
+
+            Task fiddlerEnableTask = TestHelpers.Portal.EnableFiddlerTracing("localhost", "8888");
+            fiddlerEnableTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerEnableTask.Status);
+
+            Task fiddlerDisableTask = TestHelpers.Portal.DisableFiddlerTracing();
+            fiddlerDisableTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerDisableTask.Status);
+        }
+
+        /// <summary>
         /// Validate the <see cref="RunningProcesses" /> returned from the tests.
         /// </summary>
         /// <param name="runningProcesses">The <see cref="RunningProcesses" /> to validate.</param>
