@@ -115,6 +115,33 @@
     <None Include="MockData\Defaults\WebSocket_api_resourcemanager_systemperf_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\Desktop\rs1_release\api_networking_ipconfig_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_os_devicefamily_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_os_info_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_os_machinename_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_power_battery_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_power_state_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_resourcemanager_processes_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\api_resourcemanager_systemperf_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\ext_xboxlive_sandbox_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\WebSocket_api_resourcemanager_processes_Desktop_rs1_release.dat" />
+    <None Include="MockData\Desktop\rs1_release\WebSocket_api_resourcemanager_systemperf_Desktop_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_mrc_files_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_mrc_status_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_services_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_settings_ipd_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_webmanagement_settings_https_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_thermal_stage_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_networking_ipconfig_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_os_devicefamily_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_os_info_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_os_machinename_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_power_battery_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_power_state_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_resourcemanager_processes_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\api_resourcemanager_systemperf_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_processes_HoloLens_rs1_release.dat" />
+    <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat" />
     <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_files_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
