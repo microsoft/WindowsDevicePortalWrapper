@@ -91,7 +91,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        private async Task<bool> GetIsHttpsRequired()
+        public async Task<bool> GetIsHttpsRequired()
         {
             if (this.Platform != DevicePortalPlatforms.HoloLens)
             {
