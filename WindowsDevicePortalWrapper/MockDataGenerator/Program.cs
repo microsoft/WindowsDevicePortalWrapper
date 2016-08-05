@@ -41,6 +41,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
+
             // HoloLens specific endpoints
             new Endpoint(HttpMethods.Get, DevicePortal.HolographicIpdApi),
             new Endpoint(HttpMethods.Get, DevicePortal.HolographicServicesApi),
@@ -48,6 +49,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.MrcFileListApi),
             new Endpoint(HttpMethods.Get, DevicePortal.MrcStatusApi),
             new Endpoint(HttpMethods.Get, DevicePortal.ThermalStageApi),
+
             // Xbox One specific endpoints
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveUserApi),
             new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),

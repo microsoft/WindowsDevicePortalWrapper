@@ -63,6 +63,8 @@
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
     <Compile Include="Core\PerformanceDataTests.cs" />
+    <Compile Include="Device-VersionTests\HoloLens\HoloLensHelpers.cs" />
+    <Compile Include="Device-VersionTests\HoloLens\HoloLens_rs1_release.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxOne_rs1_xbox_rel_1608.cs" />
     <Compile Include="MockHttpResponder.cs" />
@@ -113,6 +115,54 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\WebSocket_api_resourcemanager_systemperf_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_mrc_files_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_mrc_status_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_services_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_settings_ipd_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_os_webmanagement_settings_https_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_holographic_thermal_stage_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_networking_ipconfig_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_os_devicefamily_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_os_info_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_os_machinename_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_power_battery_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_power_state_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_resourcemanager_processes_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_processes_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_files_XboxOne_rs1_xbox_rel_1608.dat">
