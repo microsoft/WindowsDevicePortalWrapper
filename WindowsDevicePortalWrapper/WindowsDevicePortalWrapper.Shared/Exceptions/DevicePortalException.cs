@@ -34,9 +34,44 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
-        /// <param name="responseMessage">Http response message</param>
-        /// <param name="message">Optional exception message</param>
-        /// <param name="innerException">Optional inner exception</param>
+        /// <param name="statusCode">The Http status code.</param>
+        /// <param name="errorResponse">Http parsed error response message.</param>
+        /// <param name="requestUri">Request URI which threw the exception.</param>
+        /// <param name="message">Optional exception message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
+        public DevicePortalException(
+            HttpStatusCode statusCode,
+            HttpErrorResponse errorResponse,
+            Uri requestUri = null,
+            string message = "",
+            Exception innerException = null) : this(
+                                                    statusCode,
+                                                    errorResponse.Reason,
+                                                    requestUri,
+                                                    message,
+                                                    innerException)
+        {
+            this.HResult = errorResponse.ErrorCode;
+            this.Reason = errorResponse.ErrorMessage;
+
+            // If we didn't get the Hresult and reason from these properties, try the other ones.
+            if (this.HResult == 0)
+            {
+                this.HResult = errorResponse.Code;
+            }
+
+            if (string.IsNullOrEmpty(this.Reason))
+            {
+                this.Reason = errorResponse.Reason;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
+        /// </summary>
+        /// <param name="responseMessage">Http response message.</param>
+        /// <param name="message">Optional exception message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
         public DevicePortalException(
             HttpResponseMessage responseMessage,
             string message = "",
@@ -113,11 +148,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
-        /// <param name="statusCode">Http status code</param>
-        /// <param name="reason">Reason for exception</param>
-        /// <param name="requestUri">Request URI which threw the exception</param>
-        /// <param name="message">Optional message</param>
-        /// <param name="innerException">Optional inner exception</param>
+        /// <param name="statusCode">Http status code.</param>
+        /// <param name="reason">Reason for exception.</param>
+        /// <param name="requestUri">Request URI which threw the exception.</param>
+        /// <param name="message">Optional message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
         public DevicePortalException(
             HttpStatusCode statusCode,
             string reason,
@@ -133,17 +168,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets the HTTP Status code
+        /// Gets the HTTP Status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
         
         /// <summary>
-        /// Gets a reason for the exception
+        /// Gets a reason for the exception.
         /// </summary>
         public string Reason { get; private set; }
 
         /// <summary>
-        /// Gets the request URI that threw the exception
+        /// Gets the request URI that threw the exception.
         /// </summary>
         public Uri RequestUri { get; private set; }
 
@@ -167,7 +202,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// an HTTP response.
         /// </summary>
         [DataContract]
-        private class HttpErrorResponse
+        public class HttpErrorResponse
         {
             /// <summary>
             /// Gets or sets the ErrorCode
@@ -192,6 +227,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "Reason")]
             public string Reason { get; set; }
+
+            /// <summary>
+            /// Gets or sets the Success. For an error this should generally be false if present.
+            /// </summary>
+            [DataMember(Name = "Success")]
+            public bool Success { get; set; }
         }
 
         #endregion

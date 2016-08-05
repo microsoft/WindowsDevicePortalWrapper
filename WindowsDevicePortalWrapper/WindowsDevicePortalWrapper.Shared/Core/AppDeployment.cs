@@ -199,18 +199,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 DevicePortalException dpe = e as DevicePortalException;
 
-                HttpStatusCode status = (HttpStatusCode)0;
-                Uri request = null;
                 if (dpe != null)
                 {
-                    status = dpe.StatusCode;
-                    request = dpe.RequestUri;
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, dpe.Reason));
                 }
-
-                this.SendAppInstallStatus(
-                    ApplicationInstallStatus.Failed,
-                    ApplicationInstallPhase.Idle,
-                    string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
+                else
+                {
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
+                }
             }
         }
 

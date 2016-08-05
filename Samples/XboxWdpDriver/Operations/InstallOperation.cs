@@ -32,7 +32,7 @@ namespace XboxWdpDriver
             "        Installs the given AppX package, along with any given dependencies.\n" +
             "  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate> /transfer:<SMB or HTTP, SMB is the default> /destfoldername:<folder name, defaults to the same as the loose folder>]\n" +
             "        Installs the appx from a loose folder, along with any given dependencies.\n" +
-            "  /register:<subpath on DevelopmentFiles\\LooseFolder to app to register>\n" +
+            "  /register:<subpath on DevelopmentFiles\\LooseApps to app to register>\n" +
             "        Registers a loose folder that is already present on the device.\n";
 
         /// <summary>
@@ -124,6 +124,12 @@ namespace XboxWdpDriver
                         operation.mreAppInstall.Reset();
                         Task installTask = portal.InstallApplication(null, dependency, new List<string>());
                         operation.mreAppInstall.WaitOne();
+
+                        if (operation.installResults.Status != ApplicationInstallStatus.Completed)
+                        {
+                            Console.WriteLine("Deploy failed during dependency installation. {0}", operation.installResults.Message);
+                            return;
+                        }
                     }
 
                     if (!Directory.Exists(folderPath))

@@ -41,6 +41,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             await this.Post(
                 RegisterPackageApi,
                 string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
+
+            // Poll the status until complete.
+            ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
+            do
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+
+                status = await this.GetInstallStatus();
+            }
+            while (status == ApplicationInstallStatus.InProgress);
         }
 
         /// <summary>
