@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API to retrieve list of installed devices.
         /// </summary>
-        private static readonly string InstalledDevicesApi = "api/devicemanager/devices";
+        public static readonly string InstalledDevicesApi = "api/devicemanager/devices";
 
         /// <summary>
         /// Get a listing of installed devices

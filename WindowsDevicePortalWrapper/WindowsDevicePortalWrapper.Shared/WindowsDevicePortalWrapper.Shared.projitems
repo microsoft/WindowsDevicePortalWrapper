@@ -45,9 +45,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\WebSocket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxLiveSandbox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\SmbShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\UserManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxAppDeployment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xbox\FiddlerSetup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxMediaCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxSettings.cs" />
   </ItemGroup>
 </Project>

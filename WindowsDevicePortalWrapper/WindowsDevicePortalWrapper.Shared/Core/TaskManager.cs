@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for starting or stopping a modern application.
         /// </summary>
-        private static readonly string TaskManagerApi = "api/taskmanager/app";
+        public static readonly string TaskManagerApi = "api/taskmanager/app";
 
         /// <summary>
         /// Starts running the specified application.

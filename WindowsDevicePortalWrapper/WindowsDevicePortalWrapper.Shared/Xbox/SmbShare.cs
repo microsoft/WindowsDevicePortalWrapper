@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint for SMB share info
         /// </summary>
-        private static readonly string GetSmbShareInfoApi = "/ext/smb/developerfolder";
+        private static readonly string GetSmbShareInfoApi = "ext/smb/developerfolder";
 
         /// <summary>
         /// Gets the SMB Share info for the device
@@ -25,6 +26,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The SMB path, username, and password.</returns>
         public async Task<SmbInfo> GetSmbShareInfo()
         {
+            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            {
+                throw new NotSupportedException("This method is only supported on Xbox One.");
+            }
+
             return await this.Get<SmbInfo>(GetSmbShareInfoApi);
         }
 

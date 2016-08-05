@@ -44,7 +44,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting the thermal stage
         /// </summary>
-        private static readonly string ThermalStageApi = "api/holographic/thermal/stage";
+        public static readonly string ThermalStageApi = "api/holographic/thermal/stage";
 
         /// <summary>
         /// Gets the current thermal stage reading from the device.
