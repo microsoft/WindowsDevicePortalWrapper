@@ -139,7 +139,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets maximum capacity.
             /// </summary>
             [DataMember(Name = "MaximumCapacity")]
-            public uint MaximumCapacity { get; set; }
+            public int MaximumCapacity { get; set; }
 
             /// <summary>
             /// Gets or sets remaining capacity.

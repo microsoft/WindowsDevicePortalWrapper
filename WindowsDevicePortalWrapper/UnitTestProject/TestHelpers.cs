@@ -36,6 +36,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             TestHelpers.MockHttpResponder = new MockHttpResponder();
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceFamilyApi, platform, operatingSystemVersion, HttpMethods.Get);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.OsInfoApi, platform, operatingSystemVersion, HttpMethods.Get);
+            if (platform == DevicePortalPlatforms.HoloLens)
+            {
+                TestHelpers.MockHttpResponder.AddMockResponse(
+                    DevicePortal.HolographicWebManagementHttpSettingsApi, 
+                    platform, 
+                    operatingSystemVersion, 
+                    HttpMethods.Get);
+            }
 
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 
