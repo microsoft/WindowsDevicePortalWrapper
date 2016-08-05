@@ -4,15 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using System;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -100,6 +96,38 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             // Check some known things about this response.
             Assert.AreEqual("MyHoloLens", getTask.Result);
+        }
+
+        /// <summary>
+        /// Gets the IP configuration using a mock generated on a HoloLens.
+        /// </summary>
+        [TestMethod]
+        public void GetIpConfig_HoloLens_1607()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.IpConfigApi, 
+                this.PlatformType, 
+                this.FriendlyOperatingSystemVersion, 
+                HttpMethods.Get);
+
+            Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfig();
+            getTask.Wait();;
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+
+            IpConfiguration ipconfig = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(2, ipconfig.Adapters.Count);
+            NetworkAdapterInfo adapter = ipconfig.Adapters[0];
+            Assert.AreEqual("Bluetooth Device (Personal Area Network)", adapter.Description);
+            Assert.AreEqual("4c-0b-be-ff-bd-64", adapter.MacAddress);
+            Assert.AreEqual(7, adapter.Index);
+            Assert.AreEqual(Guid.Parse("{765C05C8-7B46-4CE6-BEC9-33C6112234B4}"), adapter.Id);
+            Assert.AreEqual("Ethernet", adapter.AdapterType);
+            IpAddressInfo ipAddress = adapter.IpAddresses[0];
+            Assert.AreEqual("0.0.0.0", ipAddress.Address);
+            Assert.AreEqual("0.0.0.0", ipAddress.SubnetMask);
         }
 
         /// <summary>
@@ -194,24 +222,23 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Gets the thermal stage using a mock generated on a HoloLens.
+        /// Gets the system performance using a mock generated on a HoloLens.
         /// </summary>
         [TestMethod]
-        public void GetThermalStage_HoloLens_1607()
+        public void GetSystemPerf_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.ThermalStageApi, 
+                DevicePortal.SystemPerfApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<ThermalStages> getTask  = TestHelpers.Portal.GetThermalStage();
-            getTask.Wait();
+            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
+            getSystemPerfTask.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, getSystemPerfTask.Status);
 
-            // Check some known things about this response.
-            Assert.AreEqual(ThermalStages.Normal, getTask.Result);
+            HoloLensHelpers.ValidateSystemPerf(getSystemPerfTask.Result);
         }
 
         /// <summary>
