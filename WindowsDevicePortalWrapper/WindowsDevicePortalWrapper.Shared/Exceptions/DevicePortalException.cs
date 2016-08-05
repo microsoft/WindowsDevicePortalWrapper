@@ -91,6 +91,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         this.HResult = errorResponse.ErrorCode;
                         this.Reason = errorResponse.ErrorMessage;
 
+                        // If we didn't get the Hresult and reason from these properties, try the other ones.
+                        if (this.HResult == 0)
+                        {
+                            this.HResult = errorResponse.Code;
+                        }
+
                         if (string.IsNullOrEmpty(this.Reason))
                         {
                             this.Reason = errorResponse.Reason;
@@ -170,13 +176,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public int ErrorCode { get; set; }
 
             /// <summary>
+            /// Gets or sets the Code (used by some endpoints instead of ErrorCode).
+            /// </summary>
+            [DataMember(Name = "Code")]
+            public int Code { get; set; }
+
+            /// <summary>
             /// Gets or sets the ErrorMessage
             /// </summary>
             [DataMember(Name = "ErrorMessage")]
             public string ErrorMessage { get; set; }
 
             /// <summary>
-            /// Gets or sets the Reason
+            /// Gets or sets the Reason (used by some endpoints instead of ErrorMessage).
             /// </summary>
             [DataMember(Name = "Reason")]
             public string Reason { get; set; }
