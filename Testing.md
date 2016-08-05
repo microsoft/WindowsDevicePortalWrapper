@@ -8,9 +8,9 @@ First, unit tests built against mock responses should be run before every Pull R
 
   ![runalltests](https://cloud.githubusercontent.com/assets/19478513/17338380/16900018-589c-11e6-87a6-8091d62ce399.png)
 
-Second, manual or semi-automated tests can also be run on a per-device basis via the device specific test apps. See the following for information on running these test apps:
+Second, manual or semi-automated tests can also be run on a per-device basis via the device specific apps. See the following for information on running these apps:
 
-For Xbox One: [Using the Xbox Test App.](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/XboxWDPDriver.md)
+For Xbox One: [Using the XboxWdpDriver to test wrappers against a real Xbox One](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/XboxWDPDriver.md)
 
 # Writing Tests
 

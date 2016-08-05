@@ -1,19 +1,19 @@
-# Using XboxWDPDriver.exe for testing or production management
+# Using XboxWdpDriver.exe for testing or production management of consoles
 
-XboxWDPDriver.exe, from the TestAppXbox project, is used to target WDP on Xbox One to assist in automated testing as well as being useful for production development scenarios.
+XboxWdpDriver.exe, built from the Samples/XboxWdpDriver project, is used to target WDP on Xbox One to assist in automated testing as well as being useful for production development scenarios.
 
 The app has built in help for most of its operations which can be accessed with the /? flag.
 
-Scripts or other executables could be written to interface with XboxWDPDriver.exe to make simpler command line calls, and can mimic things like the Xb*.exe command line tools that may be familiar to some Xbox developers. An example of such a script is provided in the Tools directory when building the TestAppXbox project (XbUser.cmd).
+Scripts or other executables could be written to interface with XboxWdpDriver.exe to make simpler command line calls, and can mimic things like the Xb*.exe command line tools that may be familiar to some Xbox developers. An example of such a script is provided in the Tools directory when building the TestAppXbox project (XbUser.cmd).
 
-### XboxWDPDriver Parameters
+### XboxWdpDriver Parameters
 
 | Parameter               | Purpose                                        |
 |-------------------------|------------------------------------------------|
 | /Ip                     | The system IP address for the Xbox One console (required if no default console is set).          |
 | /User                   | WDP username (if required, will be stored after the first connection starting with Windows 8).   |
 | /Pwd                    | WDP password (if required, will be stored after the first connection starting with Windows 8).   |
-| /Op                     | The operation to run. Run XboxWDPDriver without this parameter to get a list of all available operations.    |
+| /Op                     | The operation to run. Run XboxWdpDriver without this parameter to get a list of all available operations.    |
 
 Supported operations (in alphabetical order) are the following:
 
@@ -48,15 +48,15 @@ Usage:
 
 Examples:
 ```shell
-XboxWDPDriver.exe /op:config
+XboxWdpDriver.exe /op:config
 ```
 
 ```shell
-XboxWDPDriver.exe /op:config /setting:TVResolution
+XboxWdpDriver.exe /op:config /setting:TVResolution
 ```
 
 ```shell
-XboxWDPDriver.exe /op:config /setting:TVResolution /value:1080p
+XboxWdpDriver.exe /op:config /setting:TVResolution /value:1080p
 ```
 
 <a name="connect"/>
@@ -66,11 +66,11 @@ The ip parameter is required if no default console is configured. You can set a 
 
 Examples:
 ```shell
-XboxWDPDriver.exe /ip:10.0.0.1 /op:connect
+XboxWdpDriver.exe /ip:10.0.0.1 /op:connect
 ```
 or
 ```shell
-XboxWDPDriver.exe /op:connect
+XboxWdpDriver.exe /op:connect
 ```
 
 <a name="fiddler"/>
@@ -90,15 +90,15 @@ Usage:
 
 Examples:
 ```shell
-XboxWDPDriver.exe /op:fiddler
+XboxWdpDriver.exe /op:fiddler
 ```
 
 ```shell
-XboxWDPDriver.exe /op:fiddler /state:on /proxyaddress:10.0.0.1 /proxyport:8888 /certpath:FiddlerRoot.cer
+XboxWdpDriver.exe /op:fiddler /state:on /proxyaddress:10.0.0.1 /proxyport:8888 /certpath:FiddlerRoot.cer
 ```
 
 ```shell
-XboxWDPDriver.exe /op:fiddler /state:off /reboot
+XboxWdpDriver.exe /op:fiddler /state:off /reboot
 ```
 
 <a name="file"/>
@@ -126,15 +126,15 @@ Usage:
 
 Examples:
 ```shell
-XboxWDPDriver.exe /op:file /supop:knownfolders
+XboxWdpDriver.exe /op:file /supop:knownfolders
 ```
 
 ```shell
-XboxWDPDriver.exe /op:file /supop:dir /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools
+XboxWdpDriver.exe /op:file /supop:dir /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools
 ```
 
 ```shell
-XboxWDPDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools/x64 /filename:dbgshim.dll /destination:c:\temp
+XboxWdpDriver.exe /op:file /supop:download /knownfolderid:DevelopmentFiles /subpath:VSRemoteTools/x64 /filename:dbgshim.dll /destination:c:\temp
 ```
 
 <a name="info"/>
@@ -144,7 +144,7 @@ Lists some basic information about the operating system and device name of this 
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:info
+XboxWdpDriver.exe /op:info
 ```
 
 <a name="install"/>
@@ -164,15 +164,15 @@ Usage:
 
 Examples:
 ```shell
-XboxWDPDriver.exe /op:install /appx:myappx.appx
+XboxWdpDriver.exe /op:install /appx:myappx.appx
 ```
 
 ```shell
-XboxWDPDriver.exe /op:install /folder:myapploosefolder
+XboxWdpDriver.exe /op:install /folder:myapploosefolder
 ```
 
 ```shell
-XboxWDPDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
+XboxWdpDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
 ```
 
 <a name="processes"/>
@@ -182,7 +182,7 @@ Lists all processes on the target Xbox One console.
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:processes
+XboxWdpDriver.exe /op:processes
 ```
 
 <a name="reboot"/>
@@ -192,7 +192,7 @@ Reboots the target Xbox One console.
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:reboot
+XboxWdpDriver.exe /op:reboot
 ```
 
 <a name="sandbox"/>
@@ -210,12 +210,12 @@ Usage:
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:sandbox
+XboxWdpDriver.exe /op:sandbox
 ```
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:sandbox /value:MySandboxId /reboot
+XboxWdpDriver.exe /op:sandbox /value:MySandboxId /reboot
 ```
 
 <a name="screenshot"/>
@@ -235,15 +235,15 @@ Usage:
 
 Examples:
 ```shell
-XboxWDPDriver.exe /op:screenshot
+XboxWdpDriver.exe /op:screenshot
 ```
 
 ```shell
-XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png
+XboxWdpDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png
 ```
 
 ```shell
-XboxWDPDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png /override
+XboxWdpDriver.exe /op:screenshot /filepath:c:\temp\screenshot.png /override
 ```
 
 <a name="systemperf"/>
@@ -253,7 +253,7 @@ Gives a summary of current system performance on the target Xbox One console (me
 
 Example:
 ```shell
-XboxWDPDriver.exe /op:systemPerf
+XboxWdpDriver.exe /op:systemPerf
 ```
 
 <a name="xbluser"/>
@@ -278,26 +278,26 @@ Usage:
 ```
 Examples:
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:list
+XboxWdpDriver.exe /op:xbluser /subop:list
 ```
 
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:signin /msa:testaccount@testdomain.com /msapwd:SuperSecret
+XboxWdpDriver.exe /op:xbluser /subop:signin /msa:testaccount@testdomain.com /msapwd:SuperSecret
 ```
 
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:signout /id:16
+XboxWdpDriver.exe /op:xbluser /subop:signout /id:16
 ```
 
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:addsponsored
+XboxWdpDriver.exe /op:xbluser /subop:addsponsored
 ```
 
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:autosigin /id:16 /state:on
+XboxWdpDriver.exe /op:xbluser /subop:autosigin /id:16 /state:on
 ```
 
 ```shell
-XboxWDPDriver.exe /op:xbluser /subop:delete /id:16
+XboxWdpDriver.exe /op:xbluser /subop:delete /id:16
 ```
 
