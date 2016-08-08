@@ -176,7 +176,7 @@ namespace XboxWdpDriver
                 {
                     DevicePortalException exception = e.InnerException as DevicePortalException;
 
-                    Console.WriteLine(string.Format("HTTP Status: {0}, Hresult: 0x{1:X8}. {2}", exception.StatusCode, exception.HResult, exception.Message));
+                    Console.WriteLine(string.Format("HTTP Status: {0}, Hresult: 0x{1:X8}. {2}", exception.StatusCode, exception.HResult, exception.Reason));
                 }
             }
         }

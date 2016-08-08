@@ -158,7 +158,7 @@ Usage:
         Installs the given AppX package, along with any given dependencies.
   /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate> /transfer:<SMB or HTTP, SMB is the default> /destfoldername:<folder name, defaults to the same as the loose folder>]
         Installs the appx from a loose folder, along with any given dependencies.
-  /register:<subpath on DevelopmentFiles\LooseFolder to app to register>
+  /register:<subpath on DevelopmentFiles\LooseApps to app to register>
         Registers a loose folder that is already present on the device.
 ```
 
@@ -173,6 +173,10 @@ XboxWdpDriver.exe /op:install /folder:myapploosefolder
 
 ```shell
 XboxWdpDriver.exe /op:install /folder:myapploosefolder /transfer:HTTP
+```
+
+```shell
+XboxWdpDriver.exe /op:install /register:myapploosefolder
 ```
 
 <a name="processes"/>
