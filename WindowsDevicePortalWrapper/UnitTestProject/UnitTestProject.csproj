@@ -198,6 +198,36 @@
     <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_files_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
