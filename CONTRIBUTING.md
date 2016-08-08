@@ -84,4 +84,10 @@ The Windows Device Portal Wrapper uses [Doxygen](http://www.stack.nl/~dimitri/do
 4. Run '\<Doxygen Install Location\>\\doxygen.exe DocConfig.txt'. This will update the files under the html folder relative to the root directory.
 5. Delete everything but the html folder, then bring the contents of html/ to root.
 6. Commit, and PR to the gh-pages branch. 
-7. Ponder a better way to do this.  
+7. Ponder a better way to do this.
+
+Alternate:
+
+1. First time, do steps 1-3 above, only make the gh-pages branch a second clone of the repository to keep things cleaner and easier for the helper script and for the future.
+2. Run the helper script from a command prompt starting at the root of this second clone: 'updateDocs.cmd \<path to your master repository\>'
+3. Verify the docs look right on the [main site](https://microsoft.github.io/WindowsDevicePortalWrapper/)
