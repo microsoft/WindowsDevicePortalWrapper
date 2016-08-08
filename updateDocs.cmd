@@ -14,7 +14,7 @@ rmdir /S /Q search
 pushd %1
 doxygen docconfig.txt
 popd
-move %1\html .
+move %1\html\* .
 git add *
 git commit -m "Update code documentation via UpdateDocs.cmd script"
 git push
