@@ -27,11 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
             getNameTask.Wait();
 
-            string formattedOsVersion = TestHelpers.Portal.OperatingSystemVersion;
-            formattedOsVersion = formattedOsVersion.Replace('.', '_');
-            formattedOsVersion = formattedOsVersion.Replace('-', '_');
-
-            Assert.AreEqual(operatingSystemVersion, formattedOsVersion);
+            Assert.AreEqual(operatingSystemVersion, TestHelpers.Portal.OperatingSystemVersion);
             Assert.AreEqual(DevicePortalPlatforms.XboxOne, TestHelpers.Portal.Platform);
             Assert.AreEqual("XboxOneName", getNameTask.Result);
         }

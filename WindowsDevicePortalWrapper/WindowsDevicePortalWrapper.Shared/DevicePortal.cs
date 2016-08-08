@@ -266,7 +266,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
                 else
                 {
-                    this.ConnectionHttpStatusCode = (HttpStatusCode)0;
+                    this.ConnectionHttpStatusCode = HttpStatusCode.Conflict;
                 }
 
                 this.SendConnectionStatus(

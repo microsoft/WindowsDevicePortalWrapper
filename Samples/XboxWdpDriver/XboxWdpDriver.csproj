@@ -71,7 +71,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj">
+    <ProjectReference Include="..\..\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj">
       <Project>{6a9e862e-5cda-4a8a-bbc0-56e9ea921e39}</Project>
       <Name>WindowsDevicePortalWrapper</Name>
     </ProjectReference>

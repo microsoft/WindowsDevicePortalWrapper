@@ -23,17 +23,18 @@ namespace XboxWdpDriver
         /// String listing the available operations.
         /// </summary>
         private static readonly string AvailableOperationsText = "Supported operations are the following:\n" +
-                "connect\n" +
-                "info\n" +
-                "xbluser\n" +
-                "install\n" +
-                "reboot\n" +
-                "processes\n" +
-                "systemPerf\n" +
-                "config\n" +
-                "file\n" +
-                "screenshot\n" +
-                "fiddler";
+                                "   config\n" +
+                                "   connect\n" +
+                                "   fiddler\n" +
+                                "   file\n" +
+                                "   info\n" +
+                                "   install\n" +
+                                "   processes\n" +
+                                "   reboot\n" +
+                                "   sandbox\n" +
+                                "   screenshot\n" +
+                                "   systemPerf\n" +
+                                "   xbluser";
 
         /// <summary>
         /// Usage string
