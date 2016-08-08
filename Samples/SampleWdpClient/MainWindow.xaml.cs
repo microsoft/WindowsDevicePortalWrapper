@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Runtime.CompilerServices;
-using Windows.UI.Core;
 
-namespace SampleWdpClient.UniversalWindows
+namespace SampleWdpClient
 {
     /// <summary>
     /// The main page of the application.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public partial class MainWindow : Window
     {
         /// <summary>
         /// The device portal to which we are connecting.
@@ -32,10 +31,9 @@ namespace SampleWdpClient.UniversalWindows
         /// <summary>
         /// The main page constructor.
         /// </summary>
-        public MainPage()
+        public MainWindow()
         {
-            this.InitializeComponent();
-            this.EnableDeviceControls(false);
+            InitializeComponent();
         }
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="e">The arguments associated with this event.</param>
         private void Address_TextChanged(object sender, TextChangedEventArgs e)
         {
-            EnableConnectButton();
+            this.EnableConnectButton();
         }
 
         /// <summary>
@@ -119,8 +117,7 @@ namespace SampleWdpClient.UniversalWindows
                     this.MarshalEnableConnectionControls(true);
                 });
 
-            connectTask.Start();
-        }
+            connectTask.Start();        }
 
         /// <summary>
         /// Enables or disables the Connect button based on the current state of the
@@ -204,12 +201,13 @@ namespace SampleWdpClient.UniversalWindows
                         sb.AppendLine("Failed to get IP config info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                     }
+
+                    this.MarshalUpdateCommandOutput(sb.ToString());
                 });
 
             Task continuationTask = getTask.ContinueWith(
                 (t) =>
                 {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
                     this.MarshalEnableDeviceControls(true);
                     this.MarshalEnableConnectionControls(true);
                 });
@@ -271,12 +269,13 @@ namespace SampleWdpClient.UniversalWindows
                         sb.AppendLine("Failed to get WiFi info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                     }
+
+                    this.MarshalUpdateCommandOutput(sb.ToString());
                 });
 
             Task continuationTask = getTask.ContinueWith(
                 (t) =>
                 {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
                     this.MarshalEnableDeviceControls(true);
                     this.MarshalEnableConnectionControls(true);
                 });
@@ -290,13 +289,12 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="enable">True to enable the controls, false to disable them.</param>
         private void  MarshalEnableConnectionControls(bool enable)
         {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
+            this.Dispatcher.Invoke(
                 () =>
                 {
                     this.EnableConnectionControls(enable);
-                }).AsTask();
-            t.Wait();
+                },
+                DispatcherPriority.Normal);
         }
 
         /// <summary>
@@ -305,13 +303,12 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="enable">True to enable the controls, false to disable them.</param>
         private void  MarshalEnableDeviceControls(bool enable)
         {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
+            this.Dispatcher.Invoke(
                 () =>
                 {
                     this.EnableDeviceControls(enable);
-                }).AsTask();
-            t.Wait();
+                },
+                DispatcherPriority.Normal);
         }
 
         /// <summary>
@@ -322,13 +319,12 @@ namespace SampleWdpClient.UniversalWindows
         {
             string output = string.Empty;
 
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
+            this.Dispatcher.Invoke(
                 () =>
                 {
                     output = this.commandOutput.Text;
-                }).AsTask();
-            t.Wait();
+                },
+                DispatcherPriority.Normal);
 
             return output;
         }
@@ -339,13 +335,12 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="output">The text to display in the command output UI element.</param>
         private void MarshalUpdateCommandOutput(string output)
         {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
+            this.Dispatcher.Invoke(
                 () =>
                 {
                     this.commandOutput.Text = output;
-                }).AsTask();
-            t.Wait();
+                },
+                DispatcherPriority.Normal);
         }
 
         /// <summary>
@@ -355,7 +350,7 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="e">The arguments associated with this event.</param>
         private void Password_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            EnableConnectButton();
+            this.EnableConnectButton();
         }
 
         /// <summary>
@@ -389,12 +384,13 @@ namespace SampleWdpClient.UniversalWindows
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                         reenableDeviceControls = true;
                     }
+
+                    this.MarshalUpdateCommandOutput(sb.ToString());
                 });
 
             Task continuationTask = rebootTask.ContinueWith(
                 (t) =>
                 {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
                     this.MarshalEnableDeviceControls(reenableDeviceControls);
                     this.MarshalEnableConnectionControls(true);
                 });
@@ -433,12 +429,13 @@ namespace SampleWdpClient.UniversalWindows
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                         reenableDeviceControls = true;
                     }
+
+                    this.MarshalUpdateCommandOutput(sb.ToString());
                 });
 
             Task continuationTask = shutdownTask.ContinueWith(
                 (t) =>
                 {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
                     this.MarshalEnableDeviceControls(reenableDeviceControls);
                     this.MarshalEnableConnectionControls(true);
                 });
@@ -453,7 +450,7 @@ namespace SampleWdpClient.UniversalWindows
         /// <param name="e">The arguments associated with this event.</param>
         private void Username_TextChanged(object sender, TextChangedEventArgs e)
         {
-            EnableConnectButton();
+            this.EnableConnectButton();
         }
     }
 }
