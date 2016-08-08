@@ -79,33 +79,36 @@ namespace SampleWdpClient.UniversalWindows
                     this.password.Password));
 
             StringBuilder sb = new StringBuilder();
-            Task connectTask = new Task( 
-                async () => 
+            Task connectTask = new Task(
+                async () =>
                 {
                     sb.Append(this.MarshalGetCommandOutput());
                     sb.AppendLine("Connecting...");
                     this.MarshalUpdateCommandOutput(sb.ToString());
-
-                    try
+                    portal.ConnectionStatus += (portal, connectArgs) =>
                     {
+                        if (connectArgs.Status == DeviceConnectionStatus.Connected) { 
+                            sb.Append("Connected to: ");
+                            sb.AppendLine(portal.Address);
+                            sb.Append("OS version: ");
+                            sb.AppendLine(portal.OperatingSystemVersion);
+                            sb.Append("Device family: ");
+                            sb.AppendLine(portal.DeviceFamily);
+                            sb.Append("Platform: ");
+                            sb.AppendLine(String.Format("{0} ({1})",
+                                portal.PlatformName,
+                                portal.Platform.ToString()));
+                        }
+                        else if (connectArgs.Status == DeviceConnectionStatus.Failed)
+                        { 
+                        sb.AppendLine("Failed to connect to the device.");
+                        sb.AppendLine(connectArgs.Message);
+                        }
+                    };
+                    
                         await portal.Connect();
 
-                        sb.Append("Connected to: ");
-                        sb.AppendLine(portal.Address);
-                        sb.Append("OS version: ");
-                        sb.AppendLine(portal.OperatingSystemVersion);
-                        sb.Append("Device family: ");
-                        sb.AppendLine(portal.DeviceFamily);
-                        sb.Append("Platform: ");
-                        sb.AppendLine(String.Format("{0} ({1})",
-                            portal.PlatformName,
-                            portal.Platform.ToString()));
-                    }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to connect to the device.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                    }
+                      
                 });
 
             Task continuationTask = connectTask.ContinueWith(
