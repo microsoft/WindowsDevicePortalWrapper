@@ -5,13 +5,12 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortalException;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -52,7 +51,48 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
                             // Status code: 200
-                            status = ApplicationInstallStatus.Completed;
+                            if (response.Content == null)
+                            {
+                                status = ApplicationInstallStatus.Completed;
+                            }
+                            else
+                            {
+                                // If we have a response body, it's possible this was an error
+                                // (even though we got an HTTP 200).
+                                Stream dataStream = null;
+                                using (HttpContent content = response.Content)
+                                {
+                                    dataStream = new MemoryStream();
+
+                                    Task copyTask = content.CopyToAsync(dataStream);
+                                    await copyTask.ConfigureAwait(false);
+                                    copyTask.Wait();
+
+                                    // Ensure we point the stream at the origin.
+                                    dataStream.Position = 0;
+                                }
+
+                                if (dataStream != null)
+                                {
+                                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
+
+                                    HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
+
+                                    if (errorResponse.Success)
+                                    {
+                                        status = ApplicationInstallStatus.Completed;
+                                    }
+                                    else
+                                    {
+                                        
+                                        throw new DevicePortalException(response.StatusCode, errorResponse, uri);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new DevicePortalException(response.StatusCode, "Failed to deserialize GetInstallStatus response.");
+                                }
+                            }
                         }
                         else if (response.StatusCode == HttpStatusCode.NoContent)
                         {
@@ -62,7 +102,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     else
                     {
-                        status = ApplicationInstallStatus.Failed; 
+                        throw new DevicePortalException(response);
                     }
                 }
             }
