@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['iporhostname',['IpOrHostname',['../class_mock_data_generator_1_1_parameter_helper.html#a6258a253b06b4aef1a678372f6c035fa',1,'MockDataGenerator.ParameterHelper.IpOrHostname()'],['../class_xbox_wdp_driver_1_1_parameter_helper.html#af8fdfdb69d5e68410893d36d51d4cb98',1,'XboxWdpDriver.ParameterHelper.IpOrHostname()']]]
+  ['devicefamilyapi',['DeviceFamilyApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#aaf5a2a13e142ef456e4e803cdd18bcdb',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['deviceportalcertificateissuer',['DevicePortalCertificateIssuer',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a58775dec23c77183f38d90b2e784a1e9',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];

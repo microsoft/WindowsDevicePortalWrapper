@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['helpflag',['HelpFlag',['../class_mock_data_generator_1_1_parameter_helper.html#abf714b4e3c94b56cbd994db316c92d23',1,'MockDataGenerator.ParameterHelper.HelpFlag()'],['../class_xbox_wdp_driver_1_1_parameter_helper.html#adc40a7e5980dfe95e09ebf4cb4f20e51',1,'XboxWdpDriver.ParameterHelper.HelpFlag()']]]
+  ['crashdumpfileapi',['CrashDumpFileApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a93308df06c3924fc771a3671e8fd5fdd',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['crashdumpsettingsapi',['CrashDumpSettingsApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a7254e5ec366b751b0daf3bce7e36b8c7',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['createrealtimeetwsessionapi',['CreateRealtimeEtwSessionApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#af8088d58cacebd91a2fca56e584415dd',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];

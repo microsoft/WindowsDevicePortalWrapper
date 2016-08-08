@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['onlaunched',['OnLaunched',['../class_test_app_h_l_1_1_universal_windows_1_1_app.html#ad30e2d1ef44952b446aa49708bddf8ca',1,'TestAppHL::UniversalWindows::App']]],
-  ['osinformationtest',['OsInformationTest',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_os_information_tests.html#a373fcd62b8b0cb85996cb7ec2adc91a4',1,'Microsoft::Tools::WindowsDevicePortal::Tests::OsInformationTests']]]
+  ['main',['Main',['../class_xbox_wdp_driver_1_1_program.html#a93870816a0d59bfb28b2737e637d67d7',1,'XboxWdpDriver.Program.Main()'],['../class_mock_data_generator_1_1_program.html#a6cb66c2ee779de007148e97512c6b69d',1,'MockDataGenerator.Program.Main()']]],
+  ['mainpage',['MainPage',['../class_sample_wdp_client_1_1_universal_windows_1_1_main_page.html#a12e6d507555072daecc9e6562a85d300',1,'SampleWdpClient::UniversalWindows::MainPage']]],
+  ['mockdeviceportalconnection',['MockDevicePortalConnection',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html#ae213a0e4a9b39c70c3d07f59a0aa7f8d',1,'Microsoft::Tools::WindowsDevicePortal::Tests::MockDevicePortalConnection']]]
 ];

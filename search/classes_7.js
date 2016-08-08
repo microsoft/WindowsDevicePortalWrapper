@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['mainpage',['MainPage',['../class_test_app_h_l_1_1_universal_windows_1_1_main_page.html',1,'TestAppHL::UniversalWindows']]],
-  ['mockdeviceportalconnection',['MockDevicePortalConnection',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
-  ['mockhttpresponder',['MockHttpResponder',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
-  ['mrcfileinformation',['MrcFileInformation',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_file_information.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['mrcfilelist',['MrcFileList',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_file_list.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['mrcstatus',['MrcStatus',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_status.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['ideviceportalconnection',['IDevicePortalConnection',['../interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html',1,'Microsoft::Tools::WindowsDevicePortal']]],
+  ['installoperation',['InstallOperation',['../class_xbox_wdp_driver_1_1_install_operation.html',1,'XboxWdpDriver']]],
+  ['installstate',['InstallState',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_install_state.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['interpupilarydistance',['InterPupilaryDistance',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_inter_pupilary_distance.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['ipaddressinfo',['IpAddressInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_ip_address_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['ipconfiguration',['IpConfiguration',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_ip_configuration.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];

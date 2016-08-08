@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['getfileapi',['GetFileApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a8d486bbeae299edc6aa7def85d81a07f',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['getfilesapi',['GetFilesApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ac3cea434721424b2a8191a5cf60f7569',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['batterystateapi',['BatteryStateApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a99123459d1716dbdd6aae356473a85ec',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['bugcheckfileapi',['BugcheckFileApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ae5a1998b44bab97e47e516f264452890',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['bugchecksettingsapi',['BugcheckSettingsApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a4f044aef9ee55b414115bd802da34db1',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];

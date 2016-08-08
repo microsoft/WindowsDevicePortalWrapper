@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['xboxappdeploymenttest',['XboxAppDeploymentTest',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_xbox_app_deployment_tests.html#a15fd1e0cdd996d00d196a7db2073674a',1,'Microsoft::Tools::WindowsDevicePortal::Tests::XboxAppDeploymentTests']]],
-  ['xboxsettinglist',['XboxSettingList',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_xbox_setting_list.html#aa58f636d4bb0e99feb081c51790e8c4e',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::XboxSettingList']]]
+  ['websocketasync',['WebSocketAsync',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#afabc4a33cd37a539d51426ce53f0667d',1,'Microsoft::Tools::WindowsDevicePortal::Tests::MockHttpResponder']]],
+  ['websocketmessagereceivedeventhandler_3c_20t_20_3e',['WebSocketMessageReceivedEventHandler&lt; T &gt;',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a865501b050b53bdba53acc198c066607',1,'Microsoft::Tools::WindowsDevicePortal']]]
 ];

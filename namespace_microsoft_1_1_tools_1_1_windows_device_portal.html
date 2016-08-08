@@ -103,6 +103,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_application_install_status_event_args.html">ApplicationInstallStatusEventArgs</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application install status event args  <a href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_application_install_status_event_args.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html">DefaultDevicePortalConnection</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default implementation of the <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html" title="Interface for creating a connection with the device portal. ">IDevicePortalConnection</a> interface. This implementation is designed to be compatibile with all device families.  <a href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_connection_status_event_args.html">DeviceConnectionStatusEventArgs</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the details about the connection status  <a href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_connection_status_event_args.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,15 +173,15 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a090bafbb778fef68cd8b97d373800c99"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a090bafbb778fef68cd8b97d373800c99">ApplicationInstallStatusEventHandler</a> (object sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_application_install_status_event_args.html">ApplicationInstallStatusEventArgs</a> args)</td></tr>
-<tr class="memdesc:a090bafbb778fef68cd8b97d373800c99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application install status event handler  <a href="#a090bafbb778fef68cd8b97d373800c99">More...</a><br /></td></tr>
-<tr class="separator:a090bafbb778fef68cd8b97d373800c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cf019b0c750e52495263f4fb0df9ead"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a7cf019b0c750e52495263f4fb0df9ead">DeviceConnectionStatusEventHandler</a> (object sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_connection_status_event_args.html">DeviceConnectionStatusEventArgs</a> args)</td></tr>
-<tr class="memdesc:a7cf019b0c750e52495263f4fb0df9ead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler for reporting on device connection status  <a href="#a7cf019b0c750e52495263f4fb0df9ead">More...</a><br /></td></tr>
-<tr class="separator:a7cf019b0c750e52495263f4fb0df9ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabd55565b1172f54b61bc5bcb4537a90"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#aabd55565b1172f54b61bc5bcb4537a90">WebSocketMessageReceivedEventHandler&lt; T &gt;</a> (object sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_web_socket_message_received_event_args.html">WebSocketMessageReceivedEventArgs</a>&lt; T &gt; args)</td></tr>
-<tr class="memdesc:aabd55565b1172f54b61bc5bcb4537a90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Web socket message received event handler  <a href="#aabd55565b1172f54b61bc5bcb4537a90">More...</a><br /></td></tr>
-<tr class="separator:aabd55565b1172f54b61bc5bcb4537a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf35e29112489102fd9522f1f986c256"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#adf35e29112489102fd9522f1f986c256">ApplicationInstallStatusEventHandler</a> (<a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a> sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_application_install_status_event_args.html">ApplicationInstallStatusEventArgs</a> args)</td></tr>
+<tr class="memdesc:adf35e29112489102fd9522f1f986c256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application install status event handler  <a href="#adf35e29112489102fd9522f1f986c256">More...</a><br /></td></tr>
+<tr class="separator:adf35e29112489102fd9522f1f986c256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47004ac87cae2edd37908d5e71acb579"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a47004ac87cae2edd37908d5e71acb579">DeviceConnectionStatusEventHandler</a> (<a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a> sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_connection_status_event_args.html">DeviceConnectionStatusEventArgs</a> args)</td></tr>
+<tr class="memdesc:a47004ac87cae2edd37908d5e71acb579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler for reporting on device connection status  <a href="#a47004ac87cae2edd37908d5e71acb579">More...</a><br /></td></tr>
+<tr class="separator:a47004ac87cae2edd37908d5e71acb579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a865501b050b53bdba53acc198c066607"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a865501b050b53bdba53acc198c066607">WebSocketMessageReceivedEventHandler&lt; T &gt;</a> (<a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a> sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_web_socket_message_received_event_args.html">WebSocketMessageReceivedEventArgs</a>&lt; T &gt; args)</td></tr>
+<tr class="memdesc:a865501b050b53bdba53acc198c066607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Web socket message received event handler  <a href="#a865501b050b53bdba53acc198c066607">More...</a><br /></td></tr>
+<tr class="separator:a865501b050b53bdba53acc198c066607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="ae5c648e462b3bc9051abfc39ceeb4b69"></a>
@@ -368,14 +371,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a090bafbb778fef68cd8b97d373800c99"></a>
+<a class="anchor" id="adf35e29112489102fd9522f1f986c256"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">delegate void Microsoft.Tools.WindowsDevicePortal.ApplicationInstallStatusEventHandler </td>
           <td>(</td>
-          <td class="paramtype">object&#160;</td>
+          <td class="paramtype"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a>&#160;</td>
           <td class="paramname"><em>sender</em>, </td>
         </tr>
         <tr>
@@ -403,14 +406,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a7cf019b0c750e52495263f4fb0df9ead"></a>
+<a class="anchor" id="a47004ac87cae2edd37908d5e71acb579"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">delegate void Microsoft.Tools.WindowsDevicePortal.DeviceConnectionStatusEventHandler </td>
           <td>(</td>
-          <td class="paramtype">object&#160;</td>
+          <td class="paramtype"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a>&#160;</td>
           <td class="paramname"><em>sender</em>, </td>
         </tr>
         <tr>
@@ -438,14 +441,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aabd55565b1172f54b61bc5bcb4537a90"></a>
+<a class="anchor" id="a865501b050b53bdba53acc198c066607"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">delegate void Microsoft.Tools.WindowsDevicePortal.WebSocketMessageReceivedEventHandler&lt; T &gt; </td>
           <td>(</td>
-          <td class="paramtype">object&#160;</td>
+          <td class="paramtype"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a>&#160;</td>
           <td class="paramname"><em>sender</em>, </td>
         </tr>
         <tr>
@@ -465,7 +468,7 @@ Functions</h2></td></tr>
 <p>Web socket message received event handler </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sender</td><td>sender object</td></tr>
+    <tr><td class="paramname">sender</td><td>Sender <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html" title="This is the main DevicePortal object. It contains methods for making HTTP REST calls against all of t...">DevicePortal</a> object</td></tr>
     <tr><td class="paramname">args</td><td>Web socket message received args</td></tr>
   </table>
   </dd>

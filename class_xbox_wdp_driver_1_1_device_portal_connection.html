@@ -114,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5feebdb5e8109ac6402482d09594d7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html#aa5feebdb5e8109ac6402482d09594d7b">DevicePortalConnection</a> (string address, string userName, string password)</td></tr>
 <tr class="memdesc:aa5feebdb5e8109ac6402482d09594d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html" title="IDevicePortalConnection implementation for Xbox test project ">DevicePortalConnection</a> class.  <a href="#aa5feebdb5e8109ac6402482d09594d7b">More...</a><br /></td></tr>
 <tr class="separator:aa5feebdb5e8109ac6402482d09594d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70dbd9bcd9c996200d071d298852d696"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html#a70dbd9bcd9c996200d071d298852d696">DevicePortalConnection</a> (string address)</td></tr>
+<tr class="memdesc:a70dbd9bcd9c996200d071d298852d696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html" title="IDevicePortalConnection implementation for Xbox test project ">DevicePortalConnection</a> class. This version of the contructor can be used if WDP credentials are not provided, and should be used if they were previously persisted or are not needed.  <a href="#a70dbd9bcd9c996200d071d298852d696">More...</a><br /></td></tr>
+<tr class="separator:a70dbd9bcd9c996200d071d298852d696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5b498e62e5a0b2c701c039e66764f3c"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html#ae5b498e62e5a0b2c701c039e66764f3c">GetDeviceCertificateData</a> ()</td></tr>
 <tr class="memdesc:ae5b498e62e5a0b2c701c039e66764f3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns certificate data  <a href="#ae5b498e62e5a0b2c701c039e66764f3c">More...</a><br /></td></tr>
 <tr class="separator:ae5b498e62e5a0b2c701c039e66764f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,9 +218,41 @@ Properties</h2></td></tr>
 <p>Initializes a new instance of the <a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html" title="IDevicePortalConnection implementation for Xbox test project ">DevicePortalConnection</a> class. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">address</td><td>device identifier</td></tr>
-    <tr><td class="paramname">userName</td><td>WDP username</td></tr>
-    <tr><td class="paramname">password</td><td>WDP password</td></tr>
+    <tr><td class="paramname">address</td><td>The ip address or hostname of the device we are connecting to.</td></tr>
+    <tr><td class="paramname">userName</td><td>The WDP username.</td></tr>
+    <tr><td class="paramname">password</td><td>The WDP password.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a70dbd9bcd9c996200d071d298852d696"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">XboxWdpDriver.DevicePortalConnection.DevicePortalConnection </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes a new instance of the <a class="el" href="class_xbox_wdp_driver_1_1_device_portal_connection.html" title="IDevicePortalConnection implementation for Xbox test project ">DevicePortalConnection</a> class. This version of the contructor can be used if WDP credentials are not provided, and should be used if they were previously persisted or are not needed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">address</td><td>The ip address or hostname of the device we are connecting to.</td></tr>
   </table>
   </dd>
 </dl>
@@ -498,7 +533,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>WindowsDevicePortalWrapper/TestAppXbox/DevicePortalConnection.cs</li>
+<li>Samples/XboxWdpDriver/DevicePortalConnection.cs</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

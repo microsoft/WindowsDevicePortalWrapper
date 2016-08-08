@@ -107,9 +107,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a71e8c0cb9ebdd89b8d84175829303f0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#a71e8c0cb9ebdd89b8d84175829303f0d">AddMockResponse</a> (string endpoint, HttpResponseMessage response, HttpMethods httpMethod)</td></tr>
 <tr class="memdesc:a71e8c0cb9ebdd89b8d84175829303f0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a given response as a mock for the endpoint.  <a href="#a71e8c0cb9ebdd89b8d84175829303f0d">More...</a><br /></td></tr>
 <tr class="separator:a71e8c0cb9ebdd89b8d84175829303f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab44cb18771e48ebab84e97de0bb946ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#ab44cb18771e48ebab84e97de0bb946ca">AddMockResponse</a> (string endpoint, DevicePortalPlatforms platform, string operatingSystemVersion, HttpMethods httpMethod)</td></tr>
-<tr class="memdesc:ab44cb18771e48ebab84e97de0bb946ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a response for this endpoint, loading from the file matching the deviceType and OsVersion  <a href="#ab44cb18771e48ebab84e97de0bb946ca">More...</a><br /></td></tr>
-<tr class="separator:ab44cb18771e48ebab84e97de0bb946ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97324397ce2f4c41d86807166398c643"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#a97324397ce2f4c41d86807166398c643">AddMockResponse</a> (string endpoint, DevicePortalPlatforms platform, string friendlyOperatingSystemVersion, HttpMethods httpMethod)</td></tr>
+<tr class="memdesc:a97324397ce2f4c41d86807166398c643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a response for this endpoint, loading from the file matching the deviceType and OsVersion  <a href="#a97324397ce2f4c41d86807166398c643">More...</a><br /></td></tr>
+<tr class="separator:a97324397ce2f4c41d86807166398c643"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3a8c3e12380e27062759ff3d4402a0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#ab3a8c3e12380e27062759ff3d4402a0e">AddMockResponse</a> (string endpoint, HttpMethods httpMethod)</td></tr>
 <tr class="memdesc:ab3a8c3e12380e27062759ff3d4402a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a default response for this endpoint, device agnostic.  <a href="#ab3a8c3e12380e27062759ff3d4402a0e">More...</a><br /></td></tr>
 <tr class="separator:ab3a8c3e12380e27062759ff3d4402a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,7 +182,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab44cb18771e48ebab84e97de0bb946ca"></a>
+<a class="anchor" id="a97324397ce2f4c41d86807166398c643"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -205,7 +205,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>operatingSystemVersion</em>, </td>
+          <td class="paramname"><em>friendlyOperatingSystemVersion</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -231,7 +231,7 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">endpoint</td><td>Endpoint we are mocking.</td></tr>
     <tr><td class="paramname">platform</td><td>Device platform we are testing.</td></tr>
-    <tr><td class="paramname">operatingSystemVersion</td><td>The OS Version we are testing.</td></tr>
+    <tr><td class="paramname">friendlyOperatingSystemVersion</td><td>The friendly name of the OS Version we are testing, used to find the mock file.</td></tr>
     <tr><td class="paramname">httpMethod</td><td>HTTP method we are mocking.</td></tr>
   </table>
   </dd>

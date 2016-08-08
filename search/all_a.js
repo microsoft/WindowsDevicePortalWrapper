@@ -7,5 +7,8 @@ var searchData=
   ['leaseobtained',['LeaseObtained',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_dhcp.html#ad8e0c9e2915d9a544fb3916bffc26dae',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::Dhcp']]],
   ['leaseobtainedraw',['LeaseObtainedRaw',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_dhcp.html#ab3fec7067df816e3d7fc7d2a2023e0d9',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::Dhcp']]],
   ['level',['Level',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_battery_state.html#a8f5b46ac830b139f0549cc144f9ba499',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::BatteryState']]],
-  ['listen',['Listen',['../class_xbox_wdp_driver_1_1_parameter_helper.html#a831c1ff817ac381e9dbd2802ea96ad81',1,'XboxWdpDriver::ParameterHelper']]]
+  ['listen',['Listen',['../class_xbox_wdp_driver_1_1_parameter_helper.html#a831c1ff817ac381e9dbd2802ea96ad81',1,'XboxWdpDriver::ParameterHelper']]],
+  ['listprocessesoperation',['ListProcessesOperation',['../class_xbox_wdp_driver_1_1_list_processes_operation.html',1,'XboxWdpDriver']]],
+  ['livekerneldumpapi',['LiveKernelDumpApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a321c5f6683ef1beee5dc3b178c2eab98',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['liveprocessdumpapi',['LiveProcessDumpApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a55b91239d4fe55775920a92256176475',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];

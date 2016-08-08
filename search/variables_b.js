@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['wdppassword',['WdpPassword',['../class_mock_data_generator_1_1_parameter_helper.html#ac751eeb8296390769e03caa6c44e3dba',1,'MockDataGenerator.ParameterHelper.WdpPassword()'],['../class_xbox_wdp_driver_1_1_parameter_helper.html#acea1cb42361f521ed5d644db783ef2c6',1,'XboxWdpDriver.ParameterHelper.WdpPassword()']]],
-  ['wdpuser',['WdpUser',['../class_mock_data_generator_1_1_parameter_helper.html#ad1fd80b7aebc61379fdec5cfa1164621',1,'MockDataGenerator.ParameterHelper.WdpUser()'],['../class_xbox_wdp_driver_1_1_parameter_helper.html#ad561cf66a2e9f5179a3343f76df3010e',1,'XboxWdpDriver.ParameterHelper.WdpUser()']]]
+  ['operation',['Operation',['../class_xbox_wdp_driver_1_1_parameter_helper.html#a3f7664000cb974494e187ee1a571e624',1,'XboxWdpDriver::ParameterHelper']]],
+  ['osinfoapi',['OsInfoApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a332f2b67f2e05b5e822124893424b6a4',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];
