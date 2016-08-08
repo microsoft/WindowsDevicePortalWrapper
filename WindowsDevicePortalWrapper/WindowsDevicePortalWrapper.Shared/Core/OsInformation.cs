@@ -205,18 +205,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     try
                     {
+                        // MinnowBoard Max model no. can change based on firmware
+                        if (this.PlatformName.Contains("Minnowboard Max"))
+                        {
+                            return DevicePortalPlatforms.IoTMinnowboardMax;
+                        }
+
                         switch (this.PlatformName)
                         {
                             case "Xbox One":
                                 platform = DevicePortalPlatforms.XboxOne;
                                 break;
 
-                            case "Dragonboard 401c":
+                            case "SBC":
                                 platform = DevicePortalPlatforms.IoTDragonboard410c;
-                                break;
-
-                            case "Minnowboard Max":
-                                platform = DevicePortalPlatforms.IoTMinnowboardMax;
                                 break;
 
                             case "Raspberry Pi 2":
