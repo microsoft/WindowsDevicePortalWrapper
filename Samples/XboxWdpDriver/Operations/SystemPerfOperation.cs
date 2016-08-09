@@ -5,10 +5,10 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Threading;
 
 namespace XboxWdpDriver
 {
@@ -30,7 +30,7 @@ namespace XboxWdpDriver
                 ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
 
                 WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
-                    delegate (DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
+                    delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
                     {
                         if (sysPerfInfoArgs.Message != null)
                         {

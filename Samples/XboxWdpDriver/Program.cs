@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -205,7 +206,24 @@ namespace XboxWdpDriver
 
                 DevicePortal portal = new DevicePortal(connection);
 
-                Task connectTask = portal.Connect(updateConnection: false);
+                byte[] rawCert = null;
+
+                if (parameters.HasParameter(ParameterHelper.Cert))
+                {
+                    string certFile = parameters.GetParameterValue(ParameterHelper.Cert);
+
+                    try
+                    {
+                        rawCert = File.ReadAllBytes(certFile);
+                        connection.AllowCertOverride = true;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(string.Format("Failed to read manual cert file {0}, {1}", certFile, e.Message), e);
+                    }
+                }
+
+                Task connectTask = portal.Connect(updateConnection: false, rawManualCertificate: rawCert);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
@@ -235,7 +253,7 @@ namespace XboxWdpDriver
                     // If the operation is more than a couple lines, it should
                     // live in its own file. These are arranged alphabetically
                     // for ease of use.
-                    switch(operation)
+                    switch (operation)
                     {
                         case OperationType.ConfigOperation:
                             ConfigOperation.HandleOperation(portal, parameters);
@@ -252,6 +270,7 @@ namespace XboxWdpDriver
                             {
                                 Console.WriteLine("Connected to Default console: {0}", targetConsole);
                             }
+
                             break;
 
                         case OperationType.FiddlerOperation:

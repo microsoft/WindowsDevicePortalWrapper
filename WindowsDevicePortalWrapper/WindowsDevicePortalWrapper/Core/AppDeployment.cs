@@ -84,7 +84,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                     }
                                     else
                                     {
-                                        
                                         throw new DevicePortalException(response.StatusCode, errorResponse, uri);
                                     }
                                 }

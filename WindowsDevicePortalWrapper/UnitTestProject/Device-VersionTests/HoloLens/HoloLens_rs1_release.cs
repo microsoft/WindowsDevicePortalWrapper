@@ -4,11 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -111,7 +110,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 HttpMethods.Get);
 
             Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfig();
-            getTask.Wait();;
+            getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
 

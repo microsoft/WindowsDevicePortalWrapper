@@ -9,10 +9,16 @@ using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
 #endif // !WINDOWS_UWP
-using System.Text.RegularExpressions;
+#if WINDOWS_UWP
+using System.Runtime.InteropServices.WindowsRuntime;
+#endif // WINDOWS_UWP
+#if !WINDOWS_UWP
+using System.Security.Cryptography.X509Certificates;
+#endif // !WINDOWS_UWP
 using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
+using Windows.Security.Cryptography.Certificates;
 using Windows.Web.Http;
 #endif // WINDOWS_UWP
 
@@ -162,13 +168,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ssid">Optional network SSID.</param>
         /// <param name="ssidKey">Optional network key.</param>
         /// <param name="updateConnection">Indicates whether we should update this connection's IP address after connecting.</param>
+        /// <param name="rawManualCertificate">Allows specifying the raw certificate manually. This allows loading it from a local file or loading an override for a web proxy.</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
         public async Task Connect(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true)
+            bool updateConnection = true,
+            byte[] rawManualCertificate = null)
         {
 #if WINDOWS_UWP
             this.ConnectionHttpStatusCode = HttpStatusCode.Ok;
@@ -181,25 +189,39 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 // Get the device certificate
                 bool certificateAcquired = false;
-                try
-                {
-                    connectionPhaseDescription = "Acquiring device certificate";
-                    this.SendConnectionStatus(
-                        DeviceConnectionStatus.Connecting,
-                        DeviceConnectionPhase.AcquiringCertificate,
-                        connectionPhaseDescription);                  
 
-                    this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+                if (rawManualCertificate == null)
+                {
+                    try
+                    {
+                        connectionPhaseDescription = "Acquiring device certificate";
+                        this.SendConnectionStatus(
+                            DeviceConnectionStatus.Connecting,
+                            DeviceConnectionPhase.AcquiringCertificate,
+                            connectionPhaseDescription);
+
+                        this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
+
+                        certificateAcquired = true;
+                    }
+                    catch
+                    {
+                        // This device does not support the root certificate endpoint.
+                        this.SendConnectionStatus(
+                            DeviceConnectionStatus.Connecting,
+                            DeviceConnectionPhase.AcquiringCertificate,
+                            "No device certificate available");
+                    }
+                }
+                else
+                {
+#if WINDOWS_UWP
+                    this.deviceConnection.SetDeviceCertificate(new Certificate(rawManualCertificate.AsBuffer()));
+#else
+                    this.deviceConnection.SetDeviceCertificate(new X509Certificate2(rawManualCertificate));
+#endif // WINDOWS_UWP
 
                     certificateAcquired = true;
-                }
-                catch
-                {
-                    // This device does not support the root certificate endpoint.
-                    this.SendConnectionStatus(
-                        DeviceConnectionStatus.Connecting,
-                        DeviceConnectionPhase.AcquiringCertificate,
-                        "No device certificate available");
                 }
 
                 // Get the device family and operating system information.

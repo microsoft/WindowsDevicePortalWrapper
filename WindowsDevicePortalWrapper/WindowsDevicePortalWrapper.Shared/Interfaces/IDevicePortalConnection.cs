@@ -45,6 +45,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
+        /// </summary>
+        bool AllowCertOverride { get; set; }
+
 #if !WINDOWS_UWP
         /// <summary>
         /// Get the raw data of the device's root certificate.

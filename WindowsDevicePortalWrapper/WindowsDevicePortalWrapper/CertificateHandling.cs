@@ -94,8 +94,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             X509Chain chain,
             SslPolicyErrors policyErrors)
         {
-            //// TODO - really need a GOOD (read: secure) way to do this for .net. uwp already handles nicely
-
             byte[] deviceCertData = this.deviceConnection.GetDeviceCertificateData();
 
             if (deviceCertData == null)
@@ -121,11 +119,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 return false;
             }
-
-            /*
-            // Would be nice to allow Fiddler via an override as well--Issuer will show up as something like the following:
-            // "cert.Issuer = "CN=DO_NOT_TRUST_FiddlerRoot, O=DO_NOT_TRUST, OU=Created by http://www.fiddler2.com"
-            */
 
             return true;
         }

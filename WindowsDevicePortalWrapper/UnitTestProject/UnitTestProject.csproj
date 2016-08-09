@@ -325,7 +325,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj">
+      <Project>{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}</Project>
+      <Name>WindowsDevicePortalWrapper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="MockData\ReadMe.txt" />
     <Content Include="MockData\XboxOne\rs1_xbox_rel_1608\xbox_screenshot.png">
