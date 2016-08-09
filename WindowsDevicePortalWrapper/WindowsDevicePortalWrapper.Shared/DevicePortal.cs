@@ -5,9 +5,12 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 #endif // !WINDOWS_UWP
 #if WINDOWS_UWP
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,6 +23,7 @@ using System.Threading.Tasks;
 #if WINDOWS_UWP
 using Windows.Security.Cryptography.Certificates;
 using Windows.Web.Http;
+using Windows.Web.Http.Headers;
 #endif // WINDOWS_UWP
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -305,8 +309,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="endpoint">API endpoint we are calling.</param>
         /// <param name="directory">Directory to store our file.</param>
         /// <param name="httpMethod">The http method to be performed.</param>
+        /// <param name="requestBody">An optional stream to use for the request body content.</param>
+        /// <param name="requestBodyContentType">The content type of the request stream.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpMethods httpMethod)
+        public async Task SaveEndpointResponseToFile(
+            string endpoint,
+            string directory,
+            HttpMethods httpMethod,
+            Stream requestBody = null,
+            string requestBodyContentType = null)
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
@@ -376,7 +387,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Put == httpMethod)
             {
-                using (Stream dataStream = await this.Put(uri))
+#if WINDOWS_UWP
+                HttpStreamContent streamContent = null;
+#else
+                StreamContent streamContent = null;
+#endif // WINDOWS_UWP
+
+                if (requestBody != null)
+                {
+#if WINDOWS_UWP
+                streamContent = new HttpStreamContent(requestBody.AsInputStream());
+                streamContent.Headers.ContentType = new HttpMediaTypeHeaderValue(requestBodyContentType);
+#else
+                    streamContent = new StreamContent(requestBody);
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue(requestBodyContentType);
+#endif // WINDOWS_UWP
+                }
+
+                using (Stream dataStream = await this.Put(uri, streamContent))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -387,7 +415,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Post == httpMethod)
             {
-                using (Stream dataStream = await this.Post(uri))
+                using (Stream dataStream = await this.Post(uri, requestBody, requestBodyContentType))
                 {
                     using (var fileStream = File.Create(filepath))
                     {

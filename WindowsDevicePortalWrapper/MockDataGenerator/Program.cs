@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
@@ -23,7 +24,7 @@ namespace MockDataGenerator
         /// <summary>
         /// Usage string
         /// </summary>
-        private const string GeneralUsageMessage = "Usage: /address:<URL for device (eg. https://10.0.0.1:11443)> /user:<WDP username> /pwd:<WDP password> [/endpoint:<api to call>] [/directory:<directory to save mock data file(s)>";
+        private const string GeneralUsageMessage = "Usage: /address:<URL for device (eg. https://10.0.0.1:11443)> /user:<WDP username> /pwd:<WDP password> [/endpoint:<api to call> [/method:<http method>] [/requestBody:<path to file for requestBody (PUT and POST only)>] [/requestBodyMultiPartFile (otherwise defaults to application/json] [/directory:<directory to save mock data file(s)>";
 
         /// <summary>
         /// Endpoints for REST calls to populate. Feel free to override this list (especially locally) to
@@ -137,8 +138,47 @@ namespace MockDataGenerator
 
                 string endpoint = parameters.GetParameterValue("endpoint");
 
-                Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod);
-                saveResponseTask.Wait();
+                string requestBodyFile = parameters.GetParameterValue("requestbody");
+
+                if (!string.IsNullOrEmpty(requestBodyFile))
+                {
+                    if (parameters.HasFlag("requestbodymultipartfile"))
+                    {
+                        string boundaryString = Guid.NewGuid().ToString();
+
+                        using (MemoryStream dataStream = new MemoryStream())
+                        {
+                            byte[] data;
+
+                            FileInfo fi = new FileInfo(requestBodyFile);
+                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                            dataStream.Write(data, 0, data.Length);
+                            CopyFileToRequestStream(fi, dataStream);
+
+                            // Close the multipart request data.
+                            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
+                            dataStream.Write(data, 0, data.Length);
+
+                            dataStream.Position = 0;
+                            string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
+
+                            Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod, dataStream, contentType);
+                            saveResponseTask.Wait();
+                        }
+                    }
+                    else
+                    {
+                        Stream fileStream = new FileStream(requestBodyFile, FileMode.Open);
+
+                        Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod, fileStream, "application/json");
+                        saveResponseTask.Wait();
+                    }
+                }
+                else
+                {
+                    Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod);
+                    saveResponseTask.Wait();
+                }
             }
             else
             {
@@ -181,6 +221,32 @@ namespace MockDataGenerator
             while (Debugger.IsAttached)
             {
                 Thread.Sleep(0);
+            }
+        }
+
+        /// <summary>
+        /// Copies a file to the specified stream and prepends the necessary content information
+        /// required to be part of a multipart form data request.
+        /// </summary>
+        /// <param name="file">The file to be copied.</param>
+        /// <param name="stream">The stream to which the file will be copied.</param>
+        private static void CopyFileToRequestStream(
+            FileInfo file,
+            Stream stream)
+        {
+            byte[] data;
+            string contentDisposition = string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n", file.Name, file.Name);
+            string contentType = "Content-Type: application/octet-stream\r\n\r\n";
+
+            data = Encoding.ASCII.GetBytes(contentDisposition);
+            stream.Write(data, 0, data.Length);
+
+            data = Encoding.ASCII.GetBytes(contentType);
+            stream.Write(data, 0, data.Length);
+
+            using (FileStream fs = File.OpenRead(file.FullName))
+            {
+                fs.CopyTo(stream);
             }
         }
 
