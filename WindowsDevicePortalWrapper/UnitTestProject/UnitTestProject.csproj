@@ -198,31 +198,91 @@
     <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTMinnowboardMax_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_os_info_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTMinnowboardMax_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_power_battery_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTMinnowboardMax_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_power_state_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTMinnowboardMax_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTMinnowboardMax_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
