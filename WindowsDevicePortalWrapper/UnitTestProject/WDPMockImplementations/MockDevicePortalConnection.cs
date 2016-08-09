@@ -98,6 +98,15 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
+        /// </summary>
+        public bool AllowCertOverride
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Returns certificate data
         /// </summary>
         /// <returns>certificate data</returns>

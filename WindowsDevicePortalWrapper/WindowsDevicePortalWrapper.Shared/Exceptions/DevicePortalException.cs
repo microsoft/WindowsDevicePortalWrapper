@@ -229,7 +229,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string Reason { get; set; }
 
             /// <summary>
-            /// Gets or sets the Success. For an error this should generally be false if present.
+            /// Gets or sets a value indicating whether the operation succeeded. For an error this should generally be false if present.
             /// </summary>
             [DataMember(Name = "Success")]
             public bool Success { get; set; }

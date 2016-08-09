@@ -325,7 +325,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="MockData\ReadMe.txt" />
     <Content Include="MockData\XboxOne\rs1_xbox_rel_1608\xbox_screenshot.png">

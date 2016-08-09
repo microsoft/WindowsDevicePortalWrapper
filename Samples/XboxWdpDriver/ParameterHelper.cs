@@ -55,6 +55,11 @@ namespace XboxWdpDriver
         public static readonly string Listen = "listen";
 
         /// <summary>
+        /// Optional manual Cert file identifier string.
+        /// </summary>
+        public static readonly string Cert = "certfile";
+
+        /// <summary>
         /// List for storing parsed command line parameters as key value pairs.
         /// </summary>
         private Dictionary<string, string> parameters = new Dictionary<string, string>();

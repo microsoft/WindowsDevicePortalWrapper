@@ -111,14 +111,16 @@ MockDataGenerator.exe, from the MockDataGenerator project, is used to target a W
 
 ### MockDataGenerator Parameters
 
-| Parameter               | Purpose                                        |
-|-------------------------|------------------------------------------------|
-| /Address                | URL for device (eg. https://10.0.0.1:11443)    |
-| /User                   | WDP username                                   |
-| /Pwd                    | WDP password                                   |
-| /Endpoint               | API to call (default is all endoints in program.cs)   |
-| /Method                 | HTTP method to use (default is GET)            |
-| /Directory              | Directory to save mock data file(s) (default is .\MockData) |
+| Parameter                  | Purpose                                        |
+|----------------------------|------------------------------------------------|
+| /Address                   | URL for device (eg. https://10.0.0.1:11443)    |
+| /User                      | WDP username                                   |
+| /Pwd                       | WDP password                                   |
+| /Endpoint                  | API to call (default is all endoints in program.cs)   |
+| /Method                    | HTTP method to use (default is GET)            |
+| /Directory                 | Directory to save mock data file(s) (default is .\MockData) |
+| /requestBody               | File to use for the request body. Only applicable when /Endpoint is present. |
+| /requestBodyMultiPartFile  | Normally the requestBody file is considered JSON and provided as is. Specify this parameter to include it as a multipart file instead. |
 
 ### MockDataGenerator File Name Format
 
@@ -149,6 +151,12 @@ All examples connect to 10.0.0.1:11443 with username TestUser and password Super
 
   ```shell
   MockDataGenerator.exe  /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/resourcemanager/systemperf /method:WebSocket
+  ```
+
+* Generate mock for a POST call to upload a file, specifying the file to use for the request body.
+
+    ```shell
+  MockDataGenerator.exe  /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/filesystem/apps/file?knownfolderid=LocalAppData&packagefullname=MyTestPackage_Fullname /method:Post /requestBody:myfile.txt /requestBodyMultiPartFile
   ```
   
   ## Adding Mock Data to the Solution
