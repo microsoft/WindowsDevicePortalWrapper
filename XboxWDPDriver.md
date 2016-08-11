@@ -13,7 +13,7 @@ Scripts or other executables could be written to interface with XboxWdpDriver.ex
 | /Ip                     | The system IP address for the Xbox One console (required if no default console is set).          |
 | /User                   | WDP username (if required, will be stored after the first connection starting with Windows 8).   |
 | /Pwd                    | WDP password (if required, will be stored after the first connection starting with Windows 8).   |
-| /CertFile               | Path to a certificate file. This allows extra security on an untrusted network or allows specifying a proxy cert for a web proxy such as Fiddler |
+| /CertFile               | (optional) Path to a certificate file. This allows extra security on an untrusted network or allows specifying a proxy cert for a web proxy such as Fiddler |
 | /Op                     | The operation to run. Run XboxWdpDriver without this parameter to get a list of all available operations.    |
 
 Supported operations (in alphabetical order) are the following:
