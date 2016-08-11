@@ -62,3 +62,5 @@ To connect using one of the sample apps, you can enter the full protocol, IP, an
 | HoloLens | https://ipAddress |
 
 Once connected to the target device, you can see basic device information, collect the IP Config for the device, and power cycle it. 
+
+There is also an [Xbox console application](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/XboxWDPDriver.md) which provides a helpful and extensible command line tool when working on Xbox.
