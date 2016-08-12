@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="DeviceLab.DevicePortalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeviceLab"
+             mc:Ignorable="d" 
+             Background="White"
+             d:DesignHeight="100" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="LightGreen">
+            <TextBlock Grid.Row="0" HorizontalAlignment="Left" Width="200" Text="{Binding DeviceName}" VerticalAlignment="Top"/>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Right" Width="100" Text="{Binding Address}" VerticalAlignment="Top"/>
+        </Grid>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Device Name">
+                <Grid >
+                    <TextBlock HorizontalAlignment="Left" Margin="57,25,0,0" TextWrapping="Wrap" Text="Device Name" VerticalAlignment="Top"/>
+                    <TextBox
+                        x:Name="textBoxDeviceName"
+                        HorizontalAlignment="Left" Height="23" Margin="138,24,0,0" VerticalAlignment="Top" Width="171"
+                        TextChanged="textBoxDeviceName_TextChanged"
+                        Text="{Binding DeviceNameEntry}"/>
+                    <Button
+                        HorizontalAlignment="Left" Margin="323,26,0,0" VerticalAlignment="Top" Width="89"
+                        Content="Change Name"
+                        Command="{Binding RenameCommand}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="CPU Performance">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="CPU Load: "/>
+                    <TextBlock Grid.Column="1" Text="{Binding CPULoad}" />
+                    <TextBlock Grid.Column="2" Text="TBD: " />
+                    <TextBlock Grid.Column="3" Text="Grab some other CPU data" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Device Info">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Address</TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding Address}"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Platform</TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding Platform}" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Platform Name</TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding PlatformName}" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Device Family</TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding DeviceFamily}" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Operating System Version</TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding OperatingSystemVersion}" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+</UserControl>
