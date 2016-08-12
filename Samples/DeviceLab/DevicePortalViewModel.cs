@@ -273,7 +273,7 @@ namespace DeviceLab
             }
             await ExecuteReestablishConnectionAsync();
         }
-        #endregion // Reboot Comment
+        #endregion // Reboot Command
 
         #region ReestablishConnectionCommand
         private DelegateCommand reestablishConnectionCommand;

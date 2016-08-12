@@ -6,6 +6,7 @@
 
 using System;
 using System.Net;
+using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
@@ -41,6 +42,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.Credentials = new NetworkCredential(userName, password);
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XboxDevicePortalConnection"/> class, using a SecureString to secure the password.
+        /// </summary>
+        /// <param name="address">device identifier</param>
+        /// <param name="userName">WDP username</param>
+        /// <param name="password">WDP password</param>
+        public DefaultDevicePortalConnection(
+            string address,
+            string userName,
+            SecureString password)
+        {
+            this.Connection = new Uri(string.Format("https://{0}:11443", address));
+            this.Credentials = new NetworkCredential(userName, password);
         }
 
         /// <summary>

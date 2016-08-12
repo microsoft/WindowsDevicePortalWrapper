@@ -123,6 +123,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             set;
         }
 
+        public bool AllowCertOverride
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Returns certificate data
         /// </summary>
