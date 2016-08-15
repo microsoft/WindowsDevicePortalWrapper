@@ -80,6 +80,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Windows IoT on Raspberry Pi 3
             /// </summary>
             IoTRaspberryPi3,
+
+            /// <summary>
+            /// A virtual machine. This may or may not be an emulator.
+            /// </summary>
+            VirtualMachine
         }
 
         /// <summary>
@@ -229,14 +234,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 platform = DevicePortalPlatforms.IoTRaspberryPi3;
                                 break;
 
+                            case "Virtual Machine":
+                                platform = DevicePortalPlatforms.VirtualMachine;
+                                break;
+
                             default:
                                 platform = (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);
                                 break;
                         }
                     }
                     catch
-                    {
-                    }
+                    { }
 
                     return platform;
                 }

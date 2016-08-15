@@ -55,5 +55,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for retrieving the types of data in a Holographic Perception Simulation recording.
         /// </summary>
         public static readonly string HolographicSimulationTypesApi = "api/holographic/simulation/playback/session/types";
+
+        #region Data contract
+
+        #endregion // Data contract
     }
 }

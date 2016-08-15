@@ -27,5 +27,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for stopping a Holographic Perception Simulation recording.
         /// </summary>
         public static readonly string StopHolographicSimulationRecordingApi = "api/holographic/simulation/recording/stop";
+
+        #region Data contract
+
+        #endregion // Data contract
     }
 }

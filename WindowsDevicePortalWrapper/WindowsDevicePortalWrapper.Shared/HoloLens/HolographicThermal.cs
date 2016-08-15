@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<ThermalStages> GetThermalStage()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }

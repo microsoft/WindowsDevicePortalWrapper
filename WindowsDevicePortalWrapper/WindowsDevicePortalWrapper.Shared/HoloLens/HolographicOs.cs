@@ -4,7 +4,6 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -37,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<float> GetInterPupilaryDistance()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -54,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task SetIsHttpsRequired(bool httpsRequired)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -74,7 +73,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task SetInterPupilaryDistance(float ipd)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -93,7 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<bool> GetIsHttpsRequired()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
