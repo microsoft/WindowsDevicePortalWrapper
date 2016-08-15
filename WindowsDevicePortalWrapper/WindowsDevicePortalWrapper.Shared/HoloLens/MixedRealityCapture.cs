@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task tracking the deletion request</returns>
         public async Task DeleteMrcFile(string fileName)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string fileName,
             bool isThumbnailRequest = false)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -125,7 +125,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>List of the capture files</returns>
         public async Task<MrcFileList> GetMrcFileList()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -152,7 +152,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Status of the capture</returns>
         public async Task<MrcStatus> GetMrcStatus()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             bool includeMicrophone = true,
             bool includeAudio = true)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -208,7 +208,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task tracking the stop request</returns>
         public async Task StopMrcRecording()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
@@ -226,7 +226,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             bool includeHolograms = true,
             bool includeColorCamera = true)
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
