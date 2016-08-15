@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            PerceptionSimulationControlMode controlMode = await Get<PerceptionSimulationControlMode>(HolographicSimulationModeApi);
+            PerceptionSimulationControlMode controlMode = await this.Get<PerceptionSimulationControlMode>(HolographicSimulationModeApi);
             return controlMode.Mode;
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = string.Format(
                 "mode={0}",
                 (int)mode);
-            await Post(HolographicSimulationModeApi, payload);
+            await this.Post(HolographicSimulationModeApi, payload);
         }
 
         #region Data contract
