@@ -376,18 +376,7 @@ namespace SampleWdpClient
 
                     try
                     {
-//                        await this.portal.StartHolographicSimulationRecording("portaltest");
-//                        System.Threading.Thread.Sleep(10000);
-                        bool isRecording = await this.portal.GetHolographicSimulationRecordingStatus();
-                        byte[] data = await this.portal.StopHolographicSimulationRecording();
-                        using (System.IO.FileStream fs = new System.IO.FileStream("portaltest.xef", System.IO.FileMode.Create, System.IO.FileAccess.Write))
-                        {
-                            using (System.IO.BinaryWriter writer = new System.IO.BinaryWriter(fs))
-                            {
-                                writer.Write(data);
-                            }
-                        }
-//                        await this.portal.Reboot();
+                        await this.portal.Reboot();
                     }
                     catch(Exception ex)
                     {
