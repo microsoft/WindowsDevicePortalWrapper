@@ -36,15 +36,15 @@ Supported operations (in alphabetical order) are the following:
 <a name="app"/>
 ### The app operation
 
-Allows gettings the list of applications on the console and performing some basic lifetime management (launch, terminate, etc). Suspend and resume aren't currently supported but will be in the future.
+Allows getting the list of applications on the console and performing some basic lifetime management (launch, terminate, etc). Suspend and resume aren't currently supported but will be in the future.
 
 Usage:
 ```shell
   /subop:list
         Lists all installed packages on the console.
-  /subop:launch/pfn:<packageFullName> /aumid:<appId>
+  /subop:launch /pfn:<packageFullName> /aumid:<appId>
         Starts the requested application.
-  /subop:terminate pfn:<packageFullName.
+  /subop:terminate /pfn:<packageFullName>
         Stops the requested application.
   /subop:uninstall /pfn:<packageFullName>
         Removes or unregisters the given application from the console.

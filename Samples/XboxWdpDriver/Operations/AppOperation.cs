@@ -22,13 +22,16 @@ namespace XboxWdpDriver
         private const string AppUsageMessage = "Usage:\n" +
             "  /subop:list\n" +
             "        Lists all installed packages on the console.\n" +
+    // Suspend and resume are currently not supported. The endpoints are not very
+    // reliable yet on Xbox One and are completely unavailable on other platforms.
+    // We'll revisit these two operations in the future.
             //"  /subop:suspend /pfn:<packageFullName>\n" +
             //"        Suspends the requested application.\n" +
             //"  /subop:resume /pfn:<packageFullName>\n" +
             //"        Resumes the requested application.\n" +
-            "  /subop:launch/pfn:<packageFullName> /aumid:<appId>\n" +
+            "  /subop:launch /pfn:<packageFullName> /aumid:<appId>\n" +
             "        Starts the requested application.\n" +
-            "  /subop:terminate pfn:<packageFullName.\n" +
+            "  /subop:terminate /pfn:<packageFullName>\n" +
             "        Stops the requested application.\n" +
             "  /subop:uninstall /pfn:<packageFullName>\n" +
             "        Removes or unregisters the given application from the console.\n";
