@@ -287,7 +287,7 @@ namespace SampleWdpClient
         /// Executes the EnabledConnectionControls method on the UI thread.
         /// </summary>
         /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableConnectionControls(bool enable)
+        private void MarshalEnableConnectionControls(bool enable)
         {
             this.Dispatcher.Invoke(
                 () =>
@@ -301,7 +301,7 @@ namespace SampleWdpClient
         /// Executes the EnabledDeviceControls method on the UI thread.
         /// </summary>
         /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableDeviceControls(bool enable)
+        private void MarshalEnableDeviceControls(bool enable)
         {
             this.Dispatcher.Invoke(
                 () =>
@@ -376,7 +376,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        await portal.Reboot();
+                        await this.portal.Reboot();
                     }
                     catch(Exception ex)
                     {
@@ -421,7 +421,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        await portal.Shutdown();
+                        await this.portal.Shutdown();
                     }
                     catch(Exception ex)
                     {
