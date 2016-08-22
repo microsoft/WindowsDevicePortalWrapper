@@ -16,19 +16,18 @@ using System.Windows.Shapes;
 namespace DeviceLab
 {
     /// <summary>
-    /// Interaction logic for DevicePortalView.xaml
+    /// Interaction logic for DeviceCollectionView.xaml
     /// </summary>
-    public partial class DevicePortalView : UserControl
+    public partial class DeviceCollectionView : UserControl
     {
-        public DevicePortalView()
+        public DeviceCollectionView()
         {
             InitializeComponent();
         }
 
-        private void textBoxDeviceName_TextChanged(object sender, TextChangedEventArgs e)
+        private void EatMouseClicks(object sender, MouseButtonEventArgs e)
         {
-            var binding = ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
-            binding.UpdateSource();
+            e.Handled = true;
         }
     }
 }

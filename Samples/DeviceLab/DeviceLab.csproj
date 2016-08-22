@@ -59,19 +59,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DevicePortalView.xaml.cs">
-      <DependentUpon>DevicePortalView.xaml</DependentUpon>
+    <Compile Include="DeviceCollectionView.xaml.cs">
+      <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DevicePortalViewModel.cs" />
+    <Compile Include="DeviceSignInView.xaml.cs">
+      <DependentUpon>DeviceSignInView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="SelectionListBox.cs" />
     <Compile Include="XboxDevicePortalConnection.cs" />
     <Page Include="BindablePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DevicePortalView.xaml">
+    <Page Include="DeviceCollectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeviceSignInView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -90,6 +98,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

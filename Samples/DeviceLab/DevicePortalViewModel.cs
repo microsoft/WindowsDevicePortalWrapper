@@ -38,8 +38,6 @@ namespace DeviceLab
             this.diagnostics = diags;
             this.portal = portal;
             this.Ready = true;
-            Task t = GetDeviceNameAsync();
-            HookupWebSocket();
         }
         #endregion // Cosntructors
 
@@ -153,7 +151,6 @@ namespace DeviceLab
         #endregion // Platform
 
         #region PlatformName
-        #endregion // PlatformName
         public string PlatformName
         {
             get
@@ -161,6 +158,7 @@ namespace DeviceLab
                 return this.portal == null ? "<unknown>" : this.portal.PlatformName;
             }
         }
+        #endregion // PlatformName
 
         #region // CPULoad
         private int cpuLoad;
@@ -217,13 +215,40 @@ namespace DeviceLab
                 ReportException("Rename", exn);
             }
             await ExecuteRebootAsync();
+                        
             if (this.Ready)
             {
-                await GetDeviceNameAsync();
+                await RefreshDeviceNameAsync();
+            }
+            else
+            {
+                // TODO: Need to decide what to do if this.Ready == false;
+                // ALTERNATIVLEY: Need to decide how to recover after an error
+            }
+        }
+        #endregion // RenameCommand
+
+        #region RefreshDeviceName
+        private DelegateCommand refreshDeviceNameCommand;
+        public ICommand RefreshDeviceNameCommand
+        {
+            get
+            {
+                if(this.refreshDeviceNameCommand == null)
+                {
+                    this.refreshDeviceNameCommand = DelegateCommand.FromAsyncHandler(RefreshDeviceNameAsync, CanExecuteRefreshDeviceName);
+                    this.refreshDeviceNameCommand.ObservesProperty(() => this.Ready);
+                }
+                return this.refreshDeviceNameCommand;
             }
         }
 
-        private async Task GetDeviceNameAsync()
+        private bool CanExecuteRefreshDeviceName()
+        {
+            return this.Ready;
+        }
+
+        private async Task RefreshDeviceNameAsync()
         {
             this.Ready = false;
             try
@@ -237,7 +262,7 @@ namespace DeviceLab
             this.diagnostics.OutputDiagnosticString("[{0}] Retrieved device name.\n", this.diagnosticMoniker);
             this.Ready = true;
         }
-        #endregion // RenameCommand
+        #endregion // RefreshDeviceName
 
         #region Reboot Command
         private DelegateCommand rebootCommand;
@@ -331,17 +356,66 @@ namespace DeviceLab
         }
         #endregion // ReestablishConnectionCommand
 
+        #region StartListeningForSystemPerfCommand
+        private DelegateCommand startListeningForSystemPerfCommand;
+        public ICommand StartListeningForSystemPerfCommand
+        {
+            get
+            {
+                if(this.startListeningForSystemPerfCommand == null)
+                {
+                    this.startListeningForSystemPerfCommand = DelegateCommand.FromAsyncHandler(ExecuteStartListeningForSystemPerfAsync, CanStartListeningForSystemPerf);
+                    this.startListeningForSystemPerfCommand.ObservesProperty(() => this.Ready);
+                }
+                return startListeningForSystemPerfCommand;
+            }
+        }
 
+        private bool CanStartListeningForSystemPerf()
+        {
+            return this.Ready;
+        }
 
-        #endregion // Commands
-
-        private async void HookupWebSocket()
+        private async Task ExecuteStartListeningForSystemPerfAsync()
         {
             this.Ready = false;
             this.portal.SystemPerfMessageReceived += OnSystemPerfReceived;
             await this.portal.StartListeningForSystemPerf();
             this.Ready = true;
         }
+        #endregion // StartListeningForSystemPerfCommand
+
+        #region StopListeningForSystemPerfCommand
+        private DelegateCommand stopListeningForSystemPerfCommand;
+        public ICommand StopListeningForSystemPerfCommand
+        {
+            get
+            {
+                if(this.stopListeningForSystemPerfCommand == null)
+                {
+                    this.stopListeningForSystemPerfCommand = DelegateCommand.FromAsyncHandler(ExecuteStopListeningForSystemPerfAsync, CanStopListeningForSystemPerf);
+                    this.stopListeningForSystemPerfCommand.ObservesProperty(() => this.Ready);
+                }
+                return stopListeningForSystemPerfCommand;
+            }
+        }
+
+        private bool CanStopListeningForSystemPerf()
+        {
+            return this.Ready;
+        }
+
+        private async Task ExecuteStopListeningForSystemPerfAsync()
+        {
+            this.Ready = false;
+            this.portal.SystemPerfMessageReceived -= OnSystemPerfReceived;
+            await this.portal.StopListeningForSystemPerf();
+            this.Ready = true;
+        }
+        #endregion // StopListeningForSystemPerfCommand
+        #endregion // Commands
+             
+
 
         private void OnSystemPerfReceived(DevicePortal sender, WebSocketMessageReceivedEventArgs<DevicePortal.SystemPerformanceInformation> args)
         {

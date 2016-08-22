@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeviceLab"
         mc:Ignorable="d"
-        Title="Device Lab" Height="600" Width="525">
+        Title="Device Lab" Height="600" Width="700">
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
@@ -15,52 +15,34 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" DataContext="{Binding SignIn}">
-            <TextBlock x:Name="labelAddress" Text="Address" HorizontalAlignment="Left" Margin="97,5,0,0" VerticalAlignment="Top"/>
-            <TextBox
-                x:Name="addressEntry"
-                HorizontalAlignment="Left" Height="23" Margin="155,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="285"
-                Text="{Binding DeviceIP}"
-                IsEnabled="{Binding Ready}"
-                TextChanged="addressEntry_TextChanged" />
-            <TextBlock x:Name="labelUserName" Text="UserName" HorizontalAlignment="Left" Margin="85,33,0,0" VerticalAlignment="Top"/>
-            <TextBox
-                x:Name="userNameEntry" HorizontalAlignment="Left" Height="23" Margin="155,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="285"
-                Text="{Binding UserName}"
-                IsEnabled="{Binding Ready}"
-                TextChanged="userNameEntry_TextChanged"/>
-            <TextBlock x:Name="labelPassword" Text="Password" HorizontalAlignment="Left" Margin="90,62,0,0" VerticalAlignment="Top"/>
-            <local:BindablePassword
-                x:Name="passwordBox" HorizontalAlignment="Left" Margin="155,64,0,0" VerticalAlignment="Top" Width="285" Height="21"
-                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsEnabled="{Binding Ready}" />
-            <TextBlock x:Name="lableConnectionType" Text="Connection Type" HorizontalAlignment="Left" Margin="51,86,0,0" VerticalAlignment="Top"/>
-            <ComboBox
-                x:Name="connectionTypeBox" HorizontalAlignment="Left" Margin="155,90,0,0" VerticalAlignment="Top" Width="204"
-                ItemsSource="{Binding ConnectionTypes}"
-                SelectedItem="{Binding ConnectionTypeSelection}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <Button
-                x:Name="buttonConnect" Content="Connect" HorizontalAlignment="Left" Margin="364,90,0,0" VerticalAlignment="Top" Width="76"
-                Command="{Binding ConnectCommand}"
-                IsEnabled="{Binding Ready}" />
+        
+        <!--<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">-->
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="20" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="10"/>
+            </Grid.ColumnDefinitions>
+        
+            
+            <local:DeviceSignInView Grid.Column="1"/>
+
+            <Rectangle Grid.Column="2" Fill="Gray" Width="2" Margin="0,2,0,2"/>
+
+            <StackPanel Grid.Column="3" VerticalAlignment="Center" >
+                <Button Margin="0,0,0,2">Select All</Button>
+                <Button Margin="0,0,0,2">Unselecte All</Button>
+                <Button Margin="0,0,0,2">Reboot Selected Devices</Button>
+            </StackPanel>
+
         </Grid>
+        <!--</StackPanel>-->
+        
         <Grid Grid.Row="1">
-            <ListBox x:Name="listBoxConnectedDevices" HorizontalAlignment="Left" VerticalAlignment="Top"
-                     Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"
-                     Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"
-                     ItemsSource="{Binding ConnectedDevices}" >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <local:DevicePortalView Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsPresenter}}}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <local:DeviceCollectionView />
         </Grid>
         <Grid Grid.Row="2" DataContext="{Binding Diagnostics}">
             <TextBox x:Name="Output"
@@ -69,6 +51,5 @@
                      HorizontalScrollBarVisibility="Auto"
                      IsReadOnly="True"/>
         </Grid>
-
     </Grid>
 </Window>
