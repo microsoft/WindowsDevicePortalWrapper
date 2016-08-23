@@ -65,6 +65,7 @@
     <Compile Include="Core\PerformanceDataTests.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLensHelpers.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLens_rs1_release.cs" />
+    <Compile Include="Device-VersionTests\IoT\IoT_rs1_release.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxOne_rs1_xbox_rel_1608.cs" />
     <Compile Include="MockHttpResponder.cs" />
@@ -196,6 +197,33 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_controllersdriver_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_datetime_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_displayorientation_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_displayresolution_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_information_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_timezones_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_remote_status_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_windowsupdate_installtime_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_windowsupdate_status_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTDragonboard410c_rs1_release.dat">
