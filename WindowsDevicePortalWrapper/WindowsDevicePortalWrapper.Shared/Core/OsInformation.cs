@@ -60,8 +60,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Xbox One platform
             /// </summary>
             XboxOne,
-
-            IoT,
+           
 
             /// <summary>
             /// Windows IoT on Dragonboard 410c

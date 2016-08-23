@@ -32,13 +32,13 @@ namespace MockDataGenerator
         /// </summary>
         private static readonly Endpoint[] Endpoints = 
         {
-            new Endpoint(HttpMethods.Get, DevicePortal.DeviceFamilyApi),
+          /*  new Endpoint(HttpMethods.Get, DevicePortal.DeviceFamilyApi),
             new Endpoint(HttpMethods.Get, DevicePortal.MachineNameApi),
             new Endpoint(HttpMethods.Get, DevicePortal.OsInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.BatteryStateApi),
             new Endpoint(HttpMethods.Get, DevicePortal.PowerStateApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.IpConfigApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.SystemPerfApi),
+           */ new Endpoint(HttpMethods.Get, DevicePortal.IpConfigApi),
+            /*new Endpoint(HttpMethods.Get, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
@@ -64,7 +64,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.DeviceNameApi),
             new Endpoint(HttpMethods.Get, DevicePortal.SetTimezoneInfoApi),
 
-
+            */
         };
 
         /// <summary>
