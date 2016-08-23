@@ -276,6 +276,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "InstalledPackages")]
             public List<PackageInfo> Packages { get; set; }
+
+            /// <summary>
+            /// Presents a user readable representation of a list of AppPackages
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                string output = "Packages:\n";
+                foreach (PackageInfo package in this.Packages)
+                {
+                    output += package;
+                }
+                return output;
+            }
         }
 
         /// <summary>
@@ -357,7 +371,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <returns>String representation</returns>
             public override string ToString()
             {
-                return string.Format("{0} ({1})", this.Name, this.Version);
+                return string.Format("\t{0}\n\t\t{1}\n", this.FullName, this.AppId);
             }
         }
 

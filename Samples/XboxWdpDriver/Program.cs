@@ -24,6 +24,7 @@ namespace XboxWdpDriver
         /// String listing the available operations.
         /// </summary>
         private static readonly string AvailableOperationsText = "Supported operations are the following:\n" +
+                                "   app\n" +
                                 "   config\n" +
                                 "   connect\n" +
                                 "   fiddler\n" +
@@ -62,6 +63,12 @@ namespace XboxWdpDriver
             /// No operation (just connects to the console).
             /// </summary>
             None,
+
+            /// <summary>
+            /// Perform an App operation (List, Suspend, Resume, Launch, Terminate,
+            /// Uninstall)
+            /// </summary>
+            AppOperation,
 
             /// <summary>
             /// Get or set Xbox Settings.
@@ -255,6 +262,10 @@ namespace XboxWdpDriver
                     // for ease of use.
                     switch (operation)
                     {
+                        case OperationType.AppOperation:
+                            AppOperation.HandleOperation(portal, parameters);
+                            break;
+
                         case OperationType.ConfigOperation:
                             ConfigOperation.HandleOperation(portal, parameters);
                             break;
@@ -354,7 +365,11 @@ namespace XboxWdpDriver
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
+            if (operation.Equals("app", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.AppOperation;
+            }
+            else if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ConfigOperation;
             }

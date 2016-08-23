@@ -18,6 +18,7 @@ Scripts or other executables could be written to interface with XboxWdpDriver.ex
 
 Supported operations (in alphabetical order) are the following:
 
+  * [app](#app)
   * [config](#config)
   * [connect](#connect)
   * [fiddler](#fiddler)
@@ -31,6 +32,40 @@ Supported operations (in alphabetical order) are the following:
   * [systemPerf](#systemperf)
   * [xbluser](#xbluser)
 
+
+<a name="app"/>
+### The app operation
+
+Allows getting the list of applications on the console and performing some basic lifetime management (launch, terminate, etc). Suspend and resume aren't currently supported but will be in the future.
+
+Usage:
+```shell
+  /subop:list
+        Lists all installed packages on the console.
+  /subop:launch /pfn:<packageFullName> /aumid:<appId>
+        Starts the requested application.
+  /subop:terminate /pfn:<packageFullName>
+        Stops the requested application.
+  /subop:uninstall /pfn:<packageFullName>
+        Removes or unregisters the given application from the console.
+```
+
+Examples:
+```shell
+XboxWdpDriver.exe /op:app /subop:list
+```
+
+```shell
+XboxWdpDriver.exe /op:app /subop:launch /pfn:Microsoft.Xbox.DevHome_100.1607.22000.0_x64__8wekyb3d8bbwe /aumid:Microsoft.Xbox.DevHome_8wekyb3d8bbwe!App
+```
+
+```shell
+XboxWdpDriver.exe /op:app /subop:terminate /pfn:Microsoft.Xbox.DevHome_100.1607.22000.0_x64__8wekyb3d8bbwe
+```
+
+```shell
+XboxWdpDriver.exe /op:app /subop:uninstall /pfn:d15692ce-8b27-4bd3-9ceb-81652e9fea54_1.0.0.0_x64__55mw97kmv3wha
+```
 
 <a name="config"/>
 ### The config operation

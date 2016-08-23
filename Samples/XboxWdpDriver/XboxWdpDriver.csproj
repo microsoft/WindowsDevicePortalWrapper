@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="DevicePortalConnection.cs" />
     <Compile Include="NetworkShare.cs" />
+    <Compile Include="Operations\AppOperation.cs" />
     <Compile Include="Operations\SystemPerfOperation.cs" />
     <Compile Include="Operations\ListProcessesOperation.cs" />
     <Compile Include="Operations\FileOperation.cs" />

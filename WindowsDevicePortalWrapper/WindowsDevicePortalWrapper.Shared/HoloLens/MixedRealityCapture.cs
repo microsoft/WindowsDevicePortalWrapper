@@ -18,19 +18,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        ///  API for getting or deleting a Mixed Reality Capture file
+        ///  API for getting or deleting a Mixed Reality Capture file.
         /// </summary>
         public static readonly string MrcFileApi = "api/holographic/mrc/file";
 
         /// <summary>
-        /// API for getting the list of Holographic Mixed Reality Capture files
+        /// API for getting the list of Holographic Mixed Reality Capture files.
         /// </summary>
         public static readonly string MrcFileListApi = "api/holographic/mrc/files";
 
         /// <summary>
-        /// API for taking a Mixed Reality Capture photo 
+        /// API for taking a Mixed Reality Capture photo.
         /// </summary>
         public static readonly string MrcPhotoApi = "api/holographic/mrc/photo";
+
+        /// <summary>
+        /// API for getting or setting the default Mixed Reality Capture settings.
+        /// </summary>
+        public static readonly string MrcSettingsApi = "api/holographic/mrc/settings";
 
         /// <summary>
         /// API for starting a Holographic Mixed Reality Capture recording.
@@ -76,7 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Removes a Mixed Reality Capture file from the device's local storage.
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
-        /// <returns>Task tracking the deletion request</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task DeleteMrcFile(string fileName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -94,7 +99,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="fileName">Name of the file to retrieve</param>
         /// <param name="isThumbnailRequest">Whether or not we just want a thumbnail</param>
-        /// <returns>The raw capture data</returns>
+        /// <returns>Byte array containing the file data.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<byte[]> GetMrcFileData(
             string fileName,
             bool isThumbnailRequest = false)
@@ -123,6 +129,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the list of capture files
         /// </summary>
         /// <returns>List of the capture files</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<MrcFileList> GetMrcFileList()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -150,6 +157,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the status of the reality capture
         /// </summary>
         /// <returns>Status of the capture</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<MrcStatus> GetMrcStatus()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -164,7 +172,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets thumbnail data for the capture
         /// </summary>
         /// <param name="fileName">Name of the capture file</param>
-        /// <returns>Thumbnail data</returns>
+        /// <returns>Byte array containing the thumbnail image data</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task<byte[]> GetMrcThumbnailData(string fileName)
         {
             // GetMrcFileData checks for the appropriate platform. We do not need to duplicate the check here.
@@ -172,13 +181,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Starts a reality capture recording
+        /// Starts a Mixed Reality Capture recording.
         /// </summary>
         /// <param name="includeHolograms">Whether to include holograms</param>
         /// <param name="includeColorCamera">Whether to include the color camera</param>
         /// <param name="includeMicrophone">Whether to include microphone data</param>
         /// <param name="includeAudio">Whether to include audio data</param>
-        /// <returns>Task tracking the start recording request</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task StartMrcRecording(
             bool includeHolograms = true,
             bool includeColorCamera = true,
@@ -203,9 +212,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
         
         /// <summary>
-        /// Stops the capture recording
+        /// Stops the Mixed Reality Capture recording
         /// </summary>
-        /// <returns>Task tracking the stop request</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task StopMrcRecording()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -217,11 +226,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Take a capture photo
+        /// Take a Mixed Reality Capture photo
         /// </summary>
         /// <param name="includeHolograms">Whether to include holograms</param>
         /// <param name="includeColorCamera">Whether to include the color camera</param>
-        /// <returns>Task tracking the photo request</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task TakeMrcPhoto(
             bool includeHolograms = true,
             bool includeColorCamera = true)
@@ -237,7 +246,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         #region Data contract
-
         /// <summary>
         /// Object representation of the capture file list
         /// </summary>
