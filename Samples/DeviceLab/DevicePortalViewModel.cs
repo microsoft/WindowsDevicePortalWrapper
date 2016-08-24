@@ -257,7 +257,7 @@ namespace DeviceLab
             }
             catch (Exception exn)
             {
-                ReportException("Rename", exn);
+                ReportException("RefreshDeviceName", exn);
             }
             this.diagnostics.OutputDiagnosticString("[{0}] Retrieved device name.\n", this.diagnosticMoniker);
             this.Ready = true;
@@ -291,10 +291,14 @@ namespace DeviceLab
             {
                 this.diagnostics.OutputDiagnosticString("[{0}] Attempting to reboot device.\n", this.diagnosticMoniker);
                 await this.Portal.Reboot();
+
+                // Sometimes able to reestablish the connection prematurely before the console has a chance to shut down
+                // So adding a delay here before trying to reestablish the connection.
+                await Task.Delay(1000 * 5);
             }
             catch (Exception exn)
             {
-                ReportException("Rename", exn);
+                ReportException("Reboot", exn);
             }
             await ExecuteReestablishConnectionAsync();
         }
@@ -350,7 +354,7 @@ namespace DeviceLab
             }
             catch (Exception exn)
             {
-                ReportException("Rename", exn);
+                ReportException("ReestablishConnection", exn);
             }
             this.portal.ConnectionStatus -= handler;
         }

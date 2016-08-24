@@ -13,11 +13,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <!--<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">-->
-
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="10" />
@@ -26,26 +24,24 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" MinWidth="10"/>
             </Grid.ColumnDefinitions>
-        
-            
-            <local:DeviceSignInView Grid.Column="1"/>
+
+            <local:DeviceSignInView Grid.Column="1" DataContext="{Binding SignIn}" />
 
             <Rectangle Grid.Column="2" Fill="Gray" Width="2" Margin="0,2,0,2"/>
 
             <StackPanel Grid.Column="3" VerticalAlignment="Center" >
-                <Button Margin="0,0,0,2">Select All</Button>
-                <Button Margin="0,0,0,2">Unselecte All</Button>
-                <Button Margin="0,0,0,2">Reboot Selected Devices</Button>
+                <Button Margin="0,0,0,2" Content="Select All" Command="{Binding SelectAllDevicesCommand}" />
+                <Button Margin="0,0,0,2" Content="Unselect All" Command="{Binding UnSelectAllDevicesCommand}"/>
+                <Button Margin="0,0,0,2" Content="Reboot Selected Devices" Command="{Binding RebootSelectedDevicesCommand}" />
             </StackPanel>
 
         </Grid>
-        <!--</StackPanel>-->
-        
         <Grid Grid.Row="1">
             <local:DeviceCollectionView />
         </Grid>
-        <Grid Grid.Row="2" DataContext="{Binding Diagnostics}">
-            <TextBox x:Name="Output"
+        <GridSplitter Grid.Row="2" Style="{StaticResource horzSplitterStyle}" />
+        <Grid Grid.Row="3" DataContext="{Binding Diagnostics}">
+            <local:AutoScrollTextBox x:Name="Output"
                      Text="{Binding OutputStream, Mode=OneWay}"
                      VerticalScrollBarVisibility="Visible"
                      HorizontalScrollBarVisibility="Auto"

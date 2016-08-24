@@ -36,6 +36,7 @@ namespace DeviceLab
         public static readonly DependencyProperty SelectionListProperty =
             DependencyProperty.Register("SelectionList", typeof(IList), typeof(SelectionListBox), new PropertyMetadata(null, null, CoerceSelectionList));
 
+ 
         /// <summary>
         /// Coerce the value of SelectionList so that it is identical to (i.e. the same object as) the
         /// value of SelectedItems
@@ -45,13 +46,14 @@ namespace DeviceLab
         /// <returns>The list of selected items of the list</returns>
         private static object CoerceSelectionList(DependencyObject d, object baseValue)
         {
-            SelectionListBox thisDCV = d as SelectionListBox;
-            IList selectedItems = thisDCV.SelectedItems;
+            SelectionListBox thisSLB = d as SelectionListBox;
+            IList selectedItems = thisSLB.SelectedItems;
             IList baseList = baseValue as IList;
             if (baseList == selectedItems)
             {
                 // Must have been called from OnSelectionChanged...
                 // ...implies nothing to do so early out
+                thisSLB.OnPropertyChanged(new DependencyPropertyChangedEventArgs(SelectionListProperty, null, selectedItems));
                 return selectedItems;
             }
 
@@ -60,12 +62,12 @@ namespace DeviceLab
             // Note: This will result in multiple calls to OnSelectionChanged which
             // will subsequently call this method but will early out according to
             // the condition described above.
-            thisDCV.SelectedItems.Clear();
+            thisSLB.SelectedItems.Clear();
             if (baseList != null)
             {
                 foreach (object itm in baseList)
                 {
-                    thisDCV.SelectedItems.Add(itm);
+                    thisSLB.SelectedItems.Add(itm);
                 }
             }
 

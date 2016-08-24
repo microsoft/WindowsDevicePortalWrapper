@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:DeviceLab"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Themes\CustomStyles.xaml" />
     </Application.Resources>
 </Application>

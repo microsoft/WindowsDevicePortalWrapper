@@ -172,9 +172,14 @@ namespace DeviceLab
 
             set
             {
-                SetProperty(ref selectedDevices, value);
-                OnPropertyChanged("SomeSelectedDevicesReady");
-                OnPropertyChanged("AllSelectedDevicesReady");
+                // This will be called when the contents of the list change without changing
+                // the actual list itself (i.e. same list, but different contents)
+                if(this.selectedDevices != value)
+                {
+                    this.selectedDevices = value;
+                }
+                // We always want to fire the event to handle the case when contents change
+                OnPropertyChanged("SelectedDevices");
             }
         }
         #endregion // SelectedDevices
@@ -212,41 +217,148 @@ namespace DeviceLab
             }
         }
         #endregion // AllDevicesReady
-
-        #region SomeSelectedDevicesReady
-        public bool SomeSelectedDevicesReady
-        {
-            get
-            {
-                foreach (DevicePortalViewModel dpvm in SelectedDevices)
-                {
-                    if (dpvm.Ready)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-        #endregion // SomeDevicesReady
-
-        #region AllSelectedDevicesReady
-        public bool AllSelectedDevicesReady
-        {
-            get
-            {
-                foreach (DevicePortalViewModel dpvm in ConnectedDevices)
-                {
-                    if (!dpvm.Ready)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        #endregion // AllDevicesReady
         #endregion // Properties
+
+        //-------------------------------------------------------------------
+        // Commands
+        //-------------------------------------------------------------------
+        #region Commands
+        #region SelectAllDevicesCommand
+        private DelegateCommand selectAllDevicesCommand;
+        public ICommand SelectAllDevicesCommand
+        {
+            get
+            {
+                if(this.selectAllDevicesCommand == null)
+                {
+                    this.selectAllDevicesCommand = new DelegateCommand(ExecuteSelectAllDevices, CanExecuteSelectAllDevices);
+                    this.selectAllDevicesCommand.ObservesProperty(() => SomeDevicesReady);
+                    this.selectAllDevicesCommand.ObservesProperty(() => SelectedDevices);
+                }
+                return this.selectAllDevicesCommand;
+            }
+        }
+
+        private bool CanExecuteSelectAllDevices()
+        {
+            return this.SomeDevicesReady && (this.SelectedDevices.Count < this.ConnectedDevices.Count);
+        }
+
+        private void ExecuteSelectAllDevices()
+        {
+            List<DevicePortalViewModel> newSelection = new List<DevicePortalViewModel>();
+            foreach(DevicePortalViewModel dpvm in this.ConnectedDevices)
+            {
+                if (dpvm.Ready)
+                {
+                    newSelection.Add(dpvm);
+                }
+            }
+            this.SelectedDevices = newSelection;
+        }
+        #endregion // SelectAllDevicesCommand
+
+        #region UnSelectAllDevicesCommand
+        private DelegateCommand unSelectAllDevicesCommand;
+        public ICommand UnSelectAllDevicesCommand
+        {
+            get
+            {
+                if(this.unSelectAllDevicesCommand == null)
+                {
+                    this.unSelectAllDevicesCommand = new DelegateCommand(ExecuteUnSelectAllDevices, CanExecuteUnSelectAllDevices);
+                    this.unSelectAllDevicesCommand.ObservesProperty(() => SelectedDevices);
+                }
+                return this.unSelectAllDevicesCommand;
+            }
+        }
+
+        private bool CanExecuteUnSelectAllDevices()
+        {
+            return this.SelectedDevices.Count > 0;
+        }
+
+        private void ExecuteUnSelectAllDevices()
+        {
+            this.SelectedDevices = new List<DevicePortalViewModel>();
+        }
+        #endregion // UnSelectAllDevicesCommand
+
+        #region RebootSelectedDevicesCommand
+        private DelegateCommand rebootSelectedDevicesCommand;
+        public ICommand RebootSelectedDevicesCommand
+        {
+            get
+            {
+                if(this.rebootSelectedDevicesCommand == null)
+                {
+                    this.rebootSelectedDevicesCommand = new DelegateCommand(ExecuteRebootSelectedDevices, CanExecuteRebootSelectedDevices);
+                    this.rebootSelectedDevicesCommand.ObservesProperty(() => this.SelectedDevices);
+                }
+                return rebootSelectedDevicesCommand;
+            }
+        }
+
+        private bool CanExecuteRebootSelectedDevices()
+        {
+            return this.SelectedDevices.Count > 0;
+        }
+
+        private void ExecuteRebootSelectedDevices()
+        {
+            // When devices become busy, they will be reomoved from the selected devices collection.
+            // So, make a local copy of the devices we want to reboot:
+            List<DevicePortalViewModel> rebootList = new List<DevicePortalViewModel>();
+            foreach(DevicePortalViewModel dpvm in this.SelectedDevices)
+            {
+                if(dpvm.RebootCommand.CanExecute(this))
+                {
+                    rebootList.Add(dpvm);
+                }
+            }
+
+            foreach(DevicePortalViewModel dpvm in rebootList)
+            {
+                dpvm.RebootCommand.Execute(this);
+            }
+        }
+        #endregion // RebootSelectedDevicesCommand
+
+        #region RemoveDeviceCommand
+        private DelegateCommand<DevicePortalViewModel> removeDeviceCommand;
+        public ICommand RemoveDeviceCommand
+        {
+            get
+            {
+                if(this.removeDeviceCommand == null)
+                {
+                    this.removeDeviceCommand = new DelegateCommand<DevicePortalViewModel>(ExecuteRemoveDeviceCommand, CanExecuteRemoveDeviceCommand);
+                    this.removeDeviceCommand.ObservesProperty(() => SomeDevicesReady);
+                }
+                return this.removeDeviceCommand;
+            }
+        }
+
+        private bool CanExecuteRemoveDeviceCommand(DevicePortalViewModel arg)
+        {
+            if (arg != null)
+            {
+                return arg.Ready;
+            }
+            return false;
+        }
+
+        private void ExecuteRemoveDeviceCommand(DevicePortalViewModel obj)
+        {
+            if (obj != null)
+            {
+                OnDeviceRemoved(obj);
+                this.ConnectedDevices.Remove(obj);
+            }
+        }
+        #endregion // RemoveDeviceCommand
+
+        #endregion // Commands
 
         private void OnConnectedDevicesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -266,7 +378,7 @@ namespace DeviceLab
                 {
                     foreach(DevicePortalViewModel dpvm in e.OldItems)
                     {
-                        OnDeviceRemoved(dpvm);
+                        //OnDeviceRemoved(dpvm);
                     }
                 }
             }
@@ -291,10 +403,23 @@ namespace DeviceLab
         {
             if(e.PropertyName == "Ready")
             {
+                DevicePortalViewModel dpvmSender = sender as DevicePortalViewModel;
+                if (dpvmSender != null && !dpvmSender.Ready)
+                { 
+                    // A device is no-longer ready, so remove it from the current selection
+                    List<DevicePortalViewModel> updatedSelection = new List<DevicePortalViewModel>();
+                    foreach(DevicePortalViewModel dpvm in this.SelectedDevices)
+                    {
+                        if(dpvm.Ready)
+                        {
+                            updatedSelection.Add(dpvm);
+                        }
+                    }
+                    this.SelectedDevices = updatedSelection;
+                }
+
                 OnPropertyChanged("SomeDevicesReady");
                 OnPropertyChanged("AllDevicesReady");
-                OnPropertyChanged("SomeSelectedDevicesReady");
-                OnPropertyChanged("AllSelectedDevicesReady");
             }
         }
     }
