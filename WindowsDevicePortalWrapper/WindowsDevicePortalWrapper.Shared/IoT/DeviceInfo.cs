@@ -16,16 +16,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
-        
-
         public static readonly string IoTOsInfoApi = "api/iot/device/information";
         public static readonly string TimezoneInfoApi = "api/iot/device/timezones";
-        public static readonly string SetTimezoneInfoApi = "api/iot/device/settimezone";
         public static readonly string DateTimeInfoApi = "api/iot/device/datetime";
         public static readonly string ControllerDriverApi = "api/iot/device/controllersdriver";
         public static readonly string DisplayResolutionApi = "api/iot/device/displayresolution";
         public static readonly string DisplayOrientationApi = "api/iot/device/displayorientation";
-        public static readonly string RemoteDebuggingPinApi = "api/iot/device/remotedebuggingpin";
         public static readonly string DeviceNameApi = "api/iot/device/name";
 
         /// <summary>
@@ -34,18 +30,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>String containing the OS information.</returns>
         public async Task<IoTOSInfo> GetIoTOSInfo()
         {
-            var info = await this.Get<IoTOSInfo>(IoTOsInfoApi);
-            return info;
+            return await this.Get<IoTOSInfo>(IoTOsInfoApi);
         }
+
         /// <summary>
         /// Gets the Timezone information.
         /// </summary>
         /// <returns>String containing the timezone information.</returns>
         public async Task<TimezoneInfo> GetTimezoneInfo()
         {
-            var info = await this.Get<TimezoneInfo>(TimezoneInfoApi);
-            return info;
+            return await this.Get<TimezoneInfo>(TimezoneInfoApi);
         }
+
         /// <summary>
         /// Gets the datetime information.
         /// </summary>
@@ -53,49 +49,45 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task<DateTimeInfo> GetDateTimeInfo()
         {
             return await this.Get<DateTimeInfo>(DateTimeInfoApi);
-            
         }
+
         /// <summary>
         /// Gets the controller driver information.
         /// </summary>
         /// <returns>String containing the controller driver information.</returns>
-        public async Task<controllerDriverInfo> GetControllerDriverInfo()
+        public async Task<ControllerDriverInfo> GetControllerDriverInfo()
         {
-            return await this.Get<controllerDriverInfo>(ControllerDriverApi);
-           
+            return await this.Get<ControllerDriverInfo>(ControllerDriverApi);
         }
 
         /// <summary>
         /// Gets the dispaly orientation information.
         /// </summary>
         /// <returns>String containing the dispaly orientation information.</returns>
-
         public async Task<DisplayOrientationInfo> GetDisplayOrientationInfo()
         {
-            return await this.Get<DisplayOrientationInfo>(DisplayOrientationApi);
-            
+            return await this.Get<DisplayOrientationInfo>(DisplayOrientationApi); 
         }
+
         /// <summary>
         /// Gets the dispaly resolution information.
         /// </summary>
         /// <returns>String containing the dispaly resolution information.</returns>
-
         public async Task<DisplayResolutionInfo> GetDisplayResolutionInfo()
         {
             return await this.Get<DisplayResolutionInfo>(DisplayResolutionApi);
-            
         }
+
         /// <summary>
         /// Sets the Device Name.
         /// </summary>
-
         public async Task SetIoTDeviceName(string name)
         {
-       
             await this.Post(DeviceNameApi, string.Format("newdevicename={0}", Utilities.Hex64Encode(name)));
         }
 
         #region Data contract
+
         /// <summary>
         /// Operating system information.
         /// </summary>
@@ -120,31 +112,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "OSVersion")]
             public string OSVersion { get; set; }
         }
+
         /// <summary>
-        ///Timezone information.
+        /// Timezone information.
         /// </summary>
         [DataContract]
-       
         public class TimezoneInfo
         {
             /// <summary>
             /// Gets the current timezone
             /// </summary>
             [DataMember(Name = "Current")]
-            public Timezones Current;
+            public Timezone CurrentTimeZone;
             /// <summary>
             /// Gets the list of all timezones
             /// </summary>
             [DataMember(Name = "Timezones")]
-            public Timezones[] Timezones;
-
+            public Timezone[] Timezones;
+            
         }
-        
+
         /// <summary>
-        ///Timezone information.
+        /// Timezone specifications.
         /// </summary>
         [DataContract]
-        public partial class Timezones
+        public partial class Timezone
         {
             /// <summary>
             /// Gets the timezone description
@@ -163,25 +155,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "Name")]
             public string name { get; set; }
-            
         }
+
         /// <summary>
-        ///DateTime information.
+        /// DateTime information.
         /// </summary>
         [DataContract]
         public class DateTimeInfo
         {
+            /// <summary>
+            /// Gets the current date time
+            /// </summary>
             [DataMember(Name = "Current")]
-            public Current Current;
+            public DateTimeDescription CurrentDateTime;
         }
+
         /// <summary>
-        ///Current Datetime information.
+        /// Current Datetime information.
         /// </summary>
         [DataContract]
-        public partial class Current
+        public partial class DateTimeDescription
         {
             /// <summary>
-            /// Gets the current day information
+            /// Gets the current day
             /// </summary>
             [DataMember(Name = "Day")]
             public int day { get; set; }
@@ -215,13 +211,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "Year")]
             public int year { get; set; }
-
         }
+
         /// <summary>
-        ///Controller Driver information.
+        /// Controller Driver information.
         /// </summary>
         [DataContract]
-        public class controllerDriverInfo
+        public class ControllerDriverInfo
         {
             /// <summary>
             /// Gets the current driver information
@@ -234,59 +230,58 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>         
             [DataMember(Name = "ControllersDrivers")]
             public string[] ControllersDrivers { get; set; }
-
-
         }
 
         /// <summary>
-        ///Dispaly orientation information.
+        /// Dispaly orientation information.
         /// </summary>
         [DataContract]
-        public class DisplayOrientationInfo {
+        public class DisplayOrientationInfo
+        {
             /// <summary>
             /// Gets the dispaly orientation information
             /// </summary>
-            [DataMember]
+            [DataMember(Name = "Orientation")]
             public int Orientation { get; set; }
-
         }
+
         /// <summary>
-        ///Dispaly resolution information.
+        /// Dispaly resolution information.
         /// </summary>
         [DataContract]
         public class DisplayResolutionInfo
         {
             /// <summary>
-            /// Gets the current resolution information
+            /// Gets the current display resolution
             /// </summary>
-            [DataMember]
-            public Resolutions Current;
+            [DataMember(Name = "Current")]
+            public Resolution CurrentResolution;
             
             /// <summary>
             /// Gets the list of resolution specifications
             /// </summary>
-            [DataMember]
-            public Resolutions[] Resolutions;
-
-
+            [DataMember(Name = "Resolutions")]
+            public Resolution[] Resolutions;
         }
-        
-        public partial class Resolutions
+
+        /// <summary>
+        /// Dispaly resolution specifications.
+        /// </summary>
+        [DataContract]
+        public partial class Resolution
         {
             /// <summary>
-            /// Gets the resolution information
+            /// Gets the list of supported display resolutions 
             /// </summary>
-            [DataMember]
-            public string Resolution { get; set; }
+            [DataMember(Name = "Resolution")]
+            public string ResolutionDetail { get; set; }
             
             /// <summary>
             /// Gets the index for the resolution information
             /// </summary>
-            [DataMember]
+            [DataMember(Name = "Index")]
             public int Index { get; set; }
-
         }
-       
         #endregion // Data contract
     }
 }

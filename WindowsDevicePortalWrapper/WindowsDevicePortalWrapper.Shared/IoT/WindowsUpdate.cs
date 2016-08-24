@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="OsInformation.cs" company="Microsoft Corporation">
+// <copyright file="WindowsUpdate.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -14,32 +14,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
     public partial class DevicePortal
     {
-
         public static readonly string InstallTimeApi = "api/iot/windowsupdate/installtime";
-        public static readonly string UpdateNowApi = "api/iot/windowsupdate/updatenow";
-        public static readonly string UpdateRestartApi = "api/iot/windowsupdate/updaterestart";
         public static readonly string StatusApi = "api/iot/windowsupdate/status";
 
         /// <summary>
         /// Gets Status information.
         /// </summary>
         /// <returns>String containing the status information.</returns>
-
         public async Task<StatusInfo> GetStatusInfo()
         {
             return await this.Get<StatusInfo>(StatusApi);
         }
+
         /// <summary>
         /// Gets the update install time information.
         /// </summary>
         /// <returns>String containing the update install timne information.</returns>
-
         public async Task<UpdateInstallTimeInfo> GetUpdateInstallTime()
         {
             return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);
         }
 
         #region Data contract
+
         /// <summary>
         /// Status information.
         /// </summary>
@@ -47,7 +44,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class StatusInfo
         {
             /// <summary>
-            ///  Gets Last check time.
+            /// Gets last update check time. 
             /// </summary>
             [DataMember(Name = "lastCheckTime")]
             public string lastCheckTime;
@@ -61,18 +58,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             ///  Gets update status.
             /// </summary>
-            [DataMember]
+            [DataMember(Name = "updateState")]
             public int updateState;
 
             /// <summary>
             ///  Gets update status message.
             /// </summary>
-            [DataMember]
+            [DataMember(Name = "updateStatusMessage")]
             public string updateStatusMessage;
-
-
         }
-
 
         /// <summary>
         /// Update install time information.
@@ -80,7 +74,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class UpdateInstallTimeInfo
         {
             /// <summary>
-            ///  Gets information if reboot is scheduled.
+            ///  Returns true if a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
             public int rebootscheduled;

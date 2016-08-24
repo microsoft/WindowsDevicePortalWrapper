@@ -62,9 +62,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.DateTimeInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DisplayOrientationApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DeviceNameApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.SetTimezoneInfoApi),
-
-            
+            new Endpoint(HttpMethods.Get, DevicePortal.DisplayResolutionApi),
         };
 
         /// <summary>

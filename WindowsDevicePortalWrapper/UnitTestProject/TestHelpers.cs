@@ -45,7 +45,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                     HttpMethods.Get);
             }
           
-
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 
             Task connectTask = TestHelpers.Portal.Connect(updateConnection: false);

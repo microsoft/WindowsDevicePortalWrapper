@@ -14,21 +14,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
     public partial class DevicePortal
     {
-
         public static readonly string RemoteSettingsStatusApi = "api/iot/remote/status";
-        public static readonly string RemoteSettingsEnableApi = "api/iot/remote/enable";
-        public static readonly string RemoteSettingsDisableApi = "api/iot/remote/disable";
 
         /// <summary>
         /// Gets the Remote Settings Status Information.
         /// </summary>
         /// <returns>String containing the Remote Settings Status information.</returns>
-
         public async Task<RemoteSettingsStatusInfo> GetRemoteSettingsStatusInfo()
         {
             return await this.Get<RemoteSettingsStatusInfo>(RemoteSettingsStatusApi);
         }
+
         #region Data contract
+
         /// <summary>
         /// Remote Settings Status information.
         /// </summary>
@@ -36,19 +34,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class RemoteSettingsStatusInfo
         {
             /// <summary>
-            ///  Gets operation status of device.
+            /// Returns true if the service is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
             public bool IsRunning;
 
             /// <summary>
-            ///  Gets schedule status of device.
+            ///  Returns true if the service is scheduled.
             /// </summary>
             [DataMember(Name = "IsScheduled")]
             public bool IsScheduled;
-
-
-
         }
         #endregion // Data contract
     }

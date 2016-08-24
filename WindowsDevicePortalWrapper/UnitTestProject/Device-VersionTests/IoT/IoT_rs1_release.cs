@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
 
             // Check some known things about this response.
-            Assert.AreEqual("beta2", getTask.Result);
+            Assert.AreEqual("myrpi3", getTask.Result);
         }
 
         /// <summary>
@@ -140,11 +140,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<controllerDriverInfo> getTask = TestHelpers.Portal.GetControllerDriverInfo();
+            Task<ControllerDriverInfo> getTask = TestHelpers.Portal.GetControllerDriverInfo();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
-            controllerDriverInfo controllerDriver = getTask.Result;
+            ControllerDriverInfo controllerDriver = getTask.Result;
             // Check some known things about this response.
             Assert.AreEqual("Inbox Driver", controllerDriver.CurrentDriver);
         }
@@ -168,7 +168,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             DateTimeInfo dateTime = getTask.Result;
             // Check some known things about this response.
            
-            Assert.AreEqual(22, dateTime.Current.day);
+            Assert.AreEqual(22, dateTime.CurrentDateTime.day);
             
 
         }
@@ -191,7 +191,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             TimezoneInfo timezone = getTask.Result;
             // Check some known things about this response.
 
-            Assert.AreEqual("(UTC-06:00) Central Time (US & Canada)", timezone.Current.description);
+            Assert.AreEqual("(UTC-06:00) Central Time (US & Canada)", timezone.CurrentTimeZone.description);
             Assert.AreEqual("(UTC-11:00) Coordinated Universal Time-11", timezone.Timezones[1].description);
 
         }
