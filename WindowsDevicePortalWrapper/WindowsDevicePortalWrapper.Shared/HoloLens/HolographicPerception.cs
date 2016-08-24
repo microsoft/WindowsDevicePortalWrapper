@@ -4,6 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
@@ -20,5 +24,65 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for controlling the Holographic Perception Simulation control stream.
         /// </summary>
         public static readonly string HolographicSimulationStreamApi = "api/holographic/simulation/control/Stream";
+
+        /// <summary>
+        /// Gets the perception simulation control mode.
+        /// </summary>
+        /// <returns>The simulation control mode.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task<SimulationControlMode> GetPerceptionSimulationControlMode()
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            PerceptionSimulationControlMode controlMode = await this.Get<PerceptionSimulationControlMode>(HolographicSimulationModeApi);
+            return controlMode.Mode;
+        }
+
+        /// <summary>
+        /// Sets the perception simulation control mode.
+        /// </summary>
+        /// <param name="mode">The simulation control mode.</param>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task SetPerceptionSimulationControlMode(SimulationControlMode mode)
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            string payload = string.Format(
+                "mode={0}",
+                (int)mode);
+            await this.Post(HolographicSimulationModeApi, payload);
+        }
+
+        #region Data contract
+        /// <summary>
+        /// Enumeration defining the control modes used by the Holographic Perception Simulation.
+        /// </summary>
+        public enum SimulationControlMode
+        {
+            Default = 0,
+            Simulation,
+            Remote,
+            Legacy
+        }
+
+        /// <summary>
+        /// Object representation of Perception Simulation control mode.
+        /// </summary>
+        [DataContract]
+        public class PerceptionSimulationControlMode
+        {
+            /// <summary>
+            /// Gets or sets the control mode.
+            /// </summary>
+            [DataMember(Name = "mode")]
+            public SimulationControlMode Mode { get; set; }
+        }
+        #endregion // Data contract
     }
 }
