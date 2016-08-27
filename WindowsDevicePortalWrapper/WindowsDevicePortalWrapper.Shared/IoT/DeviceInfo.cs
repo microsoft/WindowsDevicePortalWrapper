@@ -23,7 +23,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string DisplayResolutionApi = "api/iot/device/displayresolution";
         public static readonly string DisplayOrientationApi = "api/iot/device/displayorientation";
         public static readonly string DeviceNameApi = "api/iot/device/name";
-
+        public static readonly string ResetPasswordApi = "api/iot/device/password";
+        public static readonly string NewRemoteDebuggingPinApi = "api/iot/device/remotedebuggingpin";
+        public static readonly string SetTimeZoneApi = "api/iot/device/settimezone";
+        
         /// <summary>
         /// Gets the IoT OS Information.
         /// </summary>
@@ -86,6 +89,65 @@ namespace Microsoft.Tools.WindowsDevicePortal
             await this.Post(DeviceNameApi, string.Format("newdevicename={0}", Utilities.Hex64Encode(name)));
         }
 
+        /// <summary>
+        /// Sets a new password.
+        /// </summary>
+        public async Task SetNewPassword(string oldPassword, string newPassword)
+        {
+            await this.Post(
+                ResetPasswordApi,
+                string.Format("oldpassword={0}&newpassword={1}", Utilities.Hex64Encode(oldPassword), Utilities.Hex64Encode(newPassword)));
+        }
+
+        /// <summary>
+        /// Sets a new remote debugging pin.
+        /// </summary>
+        public async Task SetNewRemoteDebuggingPin(string newPin)
+        {
+            await this.Post(
+                 NewRemoteDebuggingPinApi,
+                string.Format("newpin={0}", Utilities.Hex64Encode(newPin)));
+        }
+
+        /// <summary>
+        /// Sets controllers drivers.
+        /// </summary>
+        public async Task SetControllersDrivers(string newDriver)
+        {
+            await this.Post(
+                 ControllerDriverApi,
+                string.Format("newdriver={0}", Utilities.Hex64Encode(newDriver)));
+        }
+
+        /// <summary>
+        /// Sets Timezone.
+        /// </summary>
+        public async Task SetTimeZone(int index)
+        {
+            await this.Post(
+                 SetTimeZoneApi,
+                string.Format("index={0}", index));
+        }
+
+        /// <summary>
+        /// Sets display resolution.
+        /// </summary>
+        public async Task SetDisplayResolution(string displayResolution)
+        {
+            await this.Post(
+                 DisplayResolutionApi,
+                string.Format("newdisplayresolution={0}", Utilities.Hex64Encode(displayResolution)));
+        }
+
+        /// <summary>
+        /// Set display orientation.
+        /// </summary>
+        public async Task SetDisplayOrientation(string displayOrientation)
+        {
+            await this.Post(
+                 DisplayOrientationApi,
+                string.Format("newdisplayorientation={0}", Utilities.Hex64Encode(displayOrientation)));
+        }
         #region Data contract
 
         /// <summary>
@@ -124,6 +186,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "Current")]
             public Timezone CurrentTimeZone;
+           
             /// <summary>
             /// Gets the list of all timezones
             /// </summary>
@@ -183,31 +246,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public int day { get; set; }
 
             /// <summary>
-            /// Gets the current hour information
+            /// Gets the current hour 
             /// </summary>
             [DataMember(Name = "Hour")]
             public int hour { get; set; }
 
             /// <summary>
-            /// Gets the current minute information
+            /// Gets the current minute
             /// </summary>
             [DataMember(Name = "Minute")]
             public int min { get; set; }
 
             /// <summary>
-            /// Gets the current month information
+            /// Gets the current month 
             /// </summary>
             [DataMember(Name = "Month")]
             public int month { get; set; }
 
             /// <summary>
-            /// Gets the current second information
+            /// Gets the current second 
             /// </summary>
             [DataMember(Name ="Second")]
             public int sec { get; set; }
 
             /// <summary>
-            /// Gets the current year information
+            /// Gets the current year 
             /// </summary>
             [DataMember(Name = "Year")]
             public int year { get; set; }

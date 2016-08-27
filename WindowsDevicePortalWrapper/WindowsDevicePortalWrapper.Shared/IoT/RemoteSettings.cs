@@ -37,13 +37,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Returns true if the service is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
-            public bool IsRunning;
+            public bool IsRunning { get; set; }
 
             /// <summary>
             ///  Returns true if the service is scheduled.
             /// </summary>
             [DataMember(Name = "IsScheduled")]
-            public bool IsScheduled;
+            public bool IsScheduled { get; set; }
         }
         #endregion // Data contract
     }

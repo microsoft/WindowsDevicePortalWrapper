@@ -285,6 +285,44 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(false, installTime.IsRunning);
             Assert.AreEqual(false, installTime.IsScheduled);
         }
+        
+        [TestMethod]
+        public void GetSoftAPSettings_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.SoftAPSettingsApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
 
+            Task<SoftAPSettingsInfo> getTask = TestHelpers.Portal.GetSoftAPSettingsInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            SoftAPSettingsInfo SoftAPSettings = getTask.Result;
+            // Check some known things about this response.
+            Assert.AreEqual("true", SoftAPSettings.SoftAPEnabled);
+            Assert.AreEqual("SoftAPSsid", SoftAPSettings.SoftApSsid);
+        } 
+        
+      
+        [TestMethod]
+        public void GetAllJoynSettings_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.AllJoynSettingsApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<AllJoynSettingsInfo> getTask = TestHelpers.Portal.GetAllJoynSettingsInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            AllJoynSettingsInfo AllJoynSettings = getTask.Result;
+            // Check some known things about this response.
+            Assert.AreEqual("IoTCore Onboarding service", AllJoynSettings.AllJoynOnboardingDefaultDescription);
+            Assert.AreEqual("Microsoft", AllJoynSettings.AllJoynOnboardingDefaultManufacturer);
+        }
     }
 }

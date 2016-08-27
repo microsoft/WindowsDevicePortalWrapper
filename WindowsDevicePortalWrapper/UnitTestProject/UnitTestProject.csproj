@@ -217,6 +217,12 @@
     <None Include="MockData\IoT\rs1_release\api_iot_device_timezones_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_alljoynsettings_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_softapsettings_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_iot_remote_status_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
