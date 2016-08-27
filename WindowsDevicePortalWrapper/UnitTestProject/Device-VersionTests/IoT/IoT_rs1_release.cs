@@ -52,9 +52,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             }
         }
         
-
         /// <summary>
-        /// Gets the battery state using a mock generated on a IoT RasberryPi3.
+        /// Gets the battery state using the mock data generated on a IoT RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetBatteryState_IoT()
@@ -80,7 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Gets the device name using a mock generated on a IoT device RasberryPi3.
+        /// Gets the device name using the mock data generated on a IoT device RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetDeviceName_IoT()
@@ -101,7 +100,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Gets the IP configuration using a mock generated on a RasberryPi3.
+        /// Gets the IP configuration using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetIpConfig_IoT()
@@ -128,8 +127,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("0.0.0.0", ipAddress.Address);
             Assert.AreEqual("0.0.0.0", ipAddress.SubnetMask);
         }
+
         /// <summary>
-        /// Gets the controller driver information using a mock generated on a RasberryPi3.
+        /// Gets the controller driver information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetControllerDriverInfo_IoT()
@@ -148,10 +148,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             Assert.AreEqual("Inbox Driver", controllerDriver.CurrentDriver);
         }
-        /// <summary>
-        /// Gets the current date time information using a mock generated on a RasberryPi3.
-        /// </summary>
 
+        /// <summary>
+        /// Gets the current date time information using the mock data generated on a RasberryPi3.
+        /// </summary>
         [TestMethod]
         public void GetCurrentDateTimeInfo_IoT()
         {
@@ -169,11 +169,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
            
             Assert.AreEqual(22, dateTime.CurrentDateTime.day);
-            
-
         }
+
         /// <summary>
-        /// Gets the timezone information using a mock generated on a RasberryPi3.
+        /// Gets the timezone information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetTimezoneInfo_IoT()
@@ -193,10 +192,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual("(UTC-06:00) Central Time (US & Canada)", timezone.CurrentTimeZone.description);
             Assert.AreEqual("(UTC-11:00) Coordinated Universal Time-11", timezone.Timezones[1].description);
-
         }
+
         /// <summary>
-        /// Gets the device information using a mock generated on a RasberryPi3.
+        /// Gets the device information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetDeviceInfo_IoT()
@@ -216,10 +215,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("Raspberry Pi 3", IoTInfo.Model);
             Assert.AreEqual("beta2", IoTInfo.Name);
             Assert.AreEqual("10.0.14393.67", IoTInfo.OSVersion);
-
         }
+
         /// <summary>
-        /// Gets the status information using a mock generated on a RasberryPi3.
+        /// Gets the status information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetStatusInfo_IoT()
@@ -239,10 +238,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("2016-08-22 at 14:15", stats.lastCheckTime);
             Assert.AreEqual("2016-08-18 at 00:00", stats.lastUpdateTime);
             Assert.AreEqual("Your device is up to date.", stats.updateStatusMessage);
-
         }
+
         /// <summary>
-        /// Gets the update install time information using a mock generated on a RasberryPi3.
+        /// Gets the update install time information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
         public void GetUpdateInstallTime_IoT()
@@ -259,14 +258,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             UpdateInstallTimeInfo installTime = getTask.Result;
             // Check some known things about this response.
-            Assert.AreEqual(0, installTime.rebootscheduled);
-            
+            Assert.AreEqual(0, installTime.rebootscheduled); 
         }
 
         /// <summary>
-        /// Gets theremote settings status information using a mock generated on a RasberryPi3.
+        /// Gets the remote settings status information using the mock data generated on a RasberryPi3.
         /// </summary>
-
         [TestMethod]
         public void GetRemoteSettingsStatus_IoT()
         {
@@ -285,7 +282,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(false, installTime.IsRunning);
             Assert.AreEqual(false, installTime.IsScheduled);
         }
-        
+
+        /// <summary>
+        /// Gets the SoftAP settings information using the mock data generated on a RasberryPi3.
+        /// </summary>
         [TestMethod]
         public void GetSoftAPSettings_IoT()
         {
@@ -303,9 +303,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             Assert.AreEqual("true", SoftAPSettings.SoftAPEnabled);
             Assert.AreEqual("SoftAPSsid", SoftAPSettings.SoftApSsid);
-        } 
-        
-      
+        }
+
+        /// <summary>
+        /// Gets the AllJoyn settings information using the mock data generated on a RasberryPi3.
+        /// </summary>
         [TestMethod]
         public void GetAllJoynSettings_IoT()
         {
