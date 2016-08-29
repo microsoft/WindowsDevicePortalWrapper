@@ -1,104 +1,109 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Collections.Specialized;
 using System.Collections;
 using System.ComponentModel;
+using System;
+using Microsoft.Tools.WindowsDevicePortal;
 
 namespace DeviceLab
 {
-    public static class CommandExtensions
+    public class NewDeviceHelper : ICommand
     {
-        public class ChainedCommand
+        // TODO: Don't close over a DevicePortalViewModel
+        // Instead, should just hook up the CanExecuteChanged events on
+        // the commands
+        private DevicePortalViewModel dpvm;
+        private Queue<ICommand> commandQueue;
+        private bool executionStarted;
+
+        // TODO:
+        public event EventHandler CanExecuteChanged;
+
+        public NewDeviceHelper(DevicePortalViewModel dpvm)
         {
+            this.dpvm = dpvm;
             
-            private ICommand executeMe;
-            private object arg;
+            this.commandQueue = new Queue<ICommand>();
+            this.executionStarted = false;
+        }
 
-            private ChainedCommand nextChainedCommand;
-
-            public ChainedCommand(ICommand executeMe, object arg, bool start = true)
+        public void Enqueue(ICommand command)
+        {
+            if (this.executionStarted)
             {
-                this.executeMe = executeMe;
-                this.arg = arg;
-                this.nextChainedCommand = null;
-                this.Status = State.NotStarted;
-                if(start)
+                throw new InvalidOperationException("Execution already started");
+            }
+
+            this.commandQueue.Enqueue(command);
+        }
+
+        private void Dpvm_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "Ready")
+            {
+                if(this.dpvm.Ready)
                 {
-                    Start();
-                }
-            }
-
-            public enum State
-            {
-                NotStarted,
-                Waiting,
-                Canceled,
-                Completed
-            };
-
-            public State Status { get; private set; }
-
-            public void Start()
-            {
-                if(this.Status != State.NotStarted)
-                {
-                    throw new InvalidOperationException("Must be in the NotStarted state");
-                }
-                this.Status = State.Waiting;
-                this.executeMe.CanExecuteChanged += ExecuteMe_CanExecuteChanged;
-                TryExecute();
-            }
-
-            public State Cancel()
-            {
-                this.executeMe.CanExecuteChanged -= ExecuteMe_CanExecuteChanged;
-                State oldState = this.Status;
-                this.Status = State.Canceled;
-                return oldState;
-            }
-
-            public ChainedCommand ExecuteNext(ICommand next, object arg)
-            {
-                this.nextChainedCommand = new ChainedCommand(next, arg, false);
-                TryExecuteNext();
-                return this.nextChainedCommand;
-            }
-
-            private void ExecuteMe_CanExecuteChanged(object sender, EventArgs e)
-            {
-                TryExecute();
-            }
-
-            private void TryExecute()
-            {
-                if (this.executeMe.CanExecute(arg))
-                {
-                    this.executeMe.Execute(arg);
-                    this.executeMe.CanExecuteChanged -= ExecuteMe_CanExecuteChanged;
-                    this.Status = State.Completed;
-                    TryExecuteNext();
-                }
-            }
-
-            private void TryExecuteNext()
-            {
-                if(this.Status == State.Completed && this.nextChainedCommand != null)
-                {
-                    this.nextChainedCommand.Start();
+                    DoNextCommand();
                 }
             }
         }
 
-        public static ChainedCommand ExecuteWhenReady(this ICommand executeMe, object arg)
+        private void DoNextCommand()
         {
-            return new ChainedCommand(executeMe, arg);
+            if(this.commandQueue == null)
+            {
+                throw new InvalidOperationException("Attempting to execute commands without a command queue");
+            }
+
+            if(this.commandQueue.Count == 0)
+            {
+                throw new InvalidOperationException("Attempting to execute command on an empty command queue");
+            }
+
+            if(this.commandQueue.Peek().CanExecute(null))
+            {
+                ICommand nextCommand = this.commandQueue.Dequeue();
+
+                if (this.commandQueue.Count == 0)
+                {
+                    // Executing the next command will probably trigger property changed
+                    // events and since this is the last command we want to disconnect from 
+                    // those events
+                    this.dpvm.PropertyChanged -= Dpvm_PropertyChanged;
+                    this.executionStarted = false;
+                }
+                nextCommand.Execute(null);
+            }
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            if(this.executionStarted)
+            {
+                return false;
+            }
+
+            if(this.commandQueue.Count > 0)
+            {
+                return this.commandQueue.Peek().CanExecute(null);
+            }
+
+            return false;
+        }
+
+        public void Execute(object parameter)
+        {
+            if(this.executionStarted)
+            {
+                throw new InvalidOperationException("Execution already started");
+            }
+
+            dpvm.PropertyChanged += Dpvm_PropertyChanged;
+            DoNextCommand();
         }
     }
 
@@ -124,13 +129,20 @@ namespace DeviceLab
             this.ConnectedDevices.CollectionChanged += OnConnectedDevicesChanged;
         }
 
-
         private void OnSignInAttemptCompleted(DeviceSignInViewModel sender, DeviceSignInEventArgs args)
         {
-            if(args.StatusCode == System.Net.HttpStatusCode.OK)
+            DevicePortal portal = args.Portal;
+            // See if the device is already in the list
+            foreach (DevicePortalViewModel dpvm in this.ConnectedDevices)
             {
-                this.ConnectedDevices.Add(new DevicePortalViewModel(args.Portal, Diagnostics));
+                if(dpvm.Address == portal.Address)
+                {
+                    this.Diagnostics.OutputDiagnosticString("[!!] The device with address {0} is already in the list\n", portal.Address);
+                    return;
+                }
             }
+
+            this.ConnectedDevices.Add(new DevicePortalViewModel(args.Portal, Diagnostics));
         }
         #endregion // Constructors
 
@@ -325,39 +337,44 @@ namespace DeviceLab
         #endregion // RebootSelectedDevicesCommand
 
         #region RemoveDeviceCommand
-        private DelegateCommand<DevicePortalViewModel> removeDeviceCommand;
+        // NOTE: Ideally, the template parameter would be DevicePortalViewMOdel, rather than object.
+        // Unfortunately, this would sporadically throw an invalid cast exception from within the
+        // DelegateCommand<> constructor in the PRISM library. Apparently, the object passed to the
+        // constructor cannot always be cast to something that would rightfully belong to the 
+        // collection. 
+        private DelegateCommand<object> removeDeviceCommand;
         public ICommand RemoveDeviceCommand
         {
             get
             {
                 if(this.removeDeviceCommand == null)
                 {
-                    this.removeDeviceCommand = new DelegateCommand<DevicePortalViewModel>(ExecuteRemoveDeviceCommand, CanExecuteRemoveDeviceCommand);
+                    this.removeDeviceCommand = new DelegateCommand<object>(ExecuteRemoveDeviceCommand, CanExecuteRemoveDeviceCommand);
                     this.removeDeviceCommand.ObservesProperty(() => SomeDevicesReady);
                 }
                 return this.removeDeviceCommand;
             }
         }
 
-        private bool CanExecuteRemoveDeviceCommand(DevicePortalViewModel arg)
+        private bool CanExecuteRemoveDeviceCommand(object arg)
         {
-            if (arg != null)
+            DevicePortalViewModel dpvm = arg as DevicePortalViewModel;
+            if (dpvm != null)
             {
-                return arg.Ready;
+                return dpvm.Ready;
             }
             return false;
         }
 
-        private void ExecuteRemoveDeviceCommand(DevicePortalViewModel obj)
+        private void ExecuteRemoveDeviceCommand(object obj)
         {
-            if (obj != null)
+            DevicePortalViewModel dpvm = obj as DevicePortalViewModel;
+            if (dpvm != null)
             {
-                OnDeviceRemoved(obj);
-                this.ConnectedDevices.Remove(obj);
+                this.ConnectedDevices.Remove(dpvm);
             }
         }
         #endregion // RemoveDeviceCommand
-
         #endregion // Commands
 
         private void OnConnectedDevicesChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -378,7 +395,7 @@ namespace DeviceLab
                 {
                     foreach(DevicePortalViewModel dpvm in e.OldItems)
                     {
-                        //OnDeviceRemoved(dpvm);
+                        OnDeviceRemoved(dpvm);
                     }
                 }
             }
@@ -387,7 +404,17 @@ namespace DeviceLab
         private void OnDeviceAdded(DevicePortalViewModel dpvm)
         {
             dpvm.PropertyChanged += DevicePropertyChanged;
-            dpvm.RefreshDeviceNameCommand.ExecuteWhenReady(this).ExecuteNext(dpvm.StartListeningForSystemPerfCommand, this);
+            // TODO:
+            //CompositeCommand command = new CompositeCommand();
+            //command.RegisterCommand(dpvm.RefreshDeviceNameCommand);
+            //command.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);
+            //command.Execute(null);
+
+            NewDeviceHelper ndh = new NewDeviceHelper(dpvm);
+            ndh.Enqueue(dpvm.ReestablishConnectionCommand);
+            ndh.Enqueue(dpvm.RefreshDeviceNameCommand);
+            ndh.Enqueue(dpvm.StartListeningForSystemPerfCommand);
+            ndh.Execute(null);
         }
 
         private void OnDeviceRemoved(DevicePortalViewModel dpvm)

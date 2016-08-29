@@ -68,6 +68,9 @@
       <DependentUpon>DeviceSignInView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="NumberEntryBox.xaml.cs">
+      <DependentUpon>NumberEntryBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectionListBox.cs" />
     <Compile Include="XboxDevicePortalConnection.cs" />
     <Page Include="BindablePassword.xaml">
@@ -99,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NumberEntryBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\CustomStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

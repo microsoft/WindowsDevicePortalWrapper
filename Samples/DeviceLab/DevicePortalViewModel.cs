@@ -35,6 +35,7 @@ namespace DeviceLab
         #region Constructors
         public DevicePortalViewModel(DevicePortal portal, IDiagnosticSink diags)
         {
+            this.ConnectionRetryAttempts = 5;
             this.diagnostics = diags;
             this.portal = portal;
             this.Ready = true;
@@ -160,7 +161,7 @@ namespace DeviceLab
         }
         #endregion // PlatformName
 
-        #region // CPULoad
+        #region CPULoad
         private int cpuLoad;
         public string CPULoad
         {
@@ -170,6 +171,22 @@ namespace DeviceLab
             }
         }
         #endregion // CPULoad
+
+        #region ConnectionRetryAttempts
+        private int connectionRetryAttempts;
+        public int ConnectionRetryAttempts
+        {
+            get
+            {
+                return this.connectionRetryAttempts;
+            }
+
+            set
+            {
+                SetProperty(ref this.connectionRetryAttempts, value);
+            }
+        }
+        #endregion // ConnectionRetryAttempts
         #endregion // Properties
 
         //-------------------------------------------------------------------
@@ -286,6 +303,7 @@ namespace DeviceLab
 
         private async Task ExecuteRebootAsync()
         {
+            await ExecuteStopListeningForSystemPerfAsync();
             this.Ready = false;
             try
             {
@@ -301,6 +319,7 @@ namespace DeviceLab
                 ReportException("Reboot", exn);
             }
             await ExecuteReestablishConnectionAsync();
+            await ExecuteStartListeningForSystemPerfAsync();
         }
         #endregion // Reboot Command
 
@@ -349,7 +368,7 @@ namespace DeviceLab
                 {
                     await this.portal.Connect();
                     ++numTries;
-                } while (this.portal.ConnectionHttpStatusCode != HttpStatusCode.OK);
+                } while (this.portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries < this.ConnectionRetryAttempts);
                 this.Ready = true;
             }
             catch (Exception exn)
@@ -384,9 +403,15 @@ namespace DeviceLab
         {
             this.Ready = false;
             this.portal.SystemPerfMessageReceived += OnSystemPerfReceived;
-            await this.portal.StartListeningForSystemPerf();
+            await Task.Run(StartListeningHelper);
             this.Ready = true;
         }
+
+        private async Task StartListeningHelper()
+        {
+            await this.portal.StartListeningForSystemPerf().ConfigureAwait(false);
+        }
+
         #endregion // StartListeningForSystemPerfCommand
 
         #region StopListeningForSystemPerfCommand
@@ -413,8 +438,15 @@ namespace DeviceLab
         {
             this.Ready = false;
             this.portal.SystemPerfMessageReceived -= OnSystemPerfReceived;
-            await this.portal.StopListeningForSystemPerf();
+            await StopListeningHelper();
+            //await Task.Run(StopListeningHelper);
+            await StopListeningHelper();
             this.Ready = true;
+        }
+
+        private async Task StopListeningHelper()
+        {
+            await this.portal.StopListeningForSystemPerf();
         }
         #endregion // StopListeningForSystemPerfCommand
         #endregion // Commands

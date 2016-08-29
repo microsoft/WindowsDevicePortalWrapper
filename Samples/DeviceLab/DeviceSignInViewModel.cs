@@ -51,15 +51,14 @@ namespace DeviceLab
 
     public class DeviceSignInEventArgs : System.EventArgs
     {
-        internal DeviceSignInEventArgs(HttpStatusCode statusCode, DevicePortal portal)
+        internal DeviceSignInEventArgs(DevicePortal portal, IDevicePortalConnection conn)
         {
-            this.StatusCode = statusCode;
             this.Portal = portal;
+            this.Connection = conn;
         }
 
-        public HttpStatusCode StatusCode { get; private set; }
-
         public DevicePortal Portal { get; private set; }
+        public IDevicePortalConnection Connection { get; private set; }
     }
 
     public class DeviceSignInViewModel : BindableBase
@@ -175,7 +174,9 @@ namespace DeviceLab
             {
                 if (connectCommand == null)
                 {
-                    connectCommand = DelegateCommand.FromAsyncHandler(ExecuteConnectAsync, CanExecuteConnect);
+                    // TODO
+                    //connectCommand = DelegateCommand.FromAsyncHandler(ExecuteConnect, CanExecuteConnect);
+                    connectCommand = new DelegateCommand(ExecuteConnect, CanExecuteConnect);
                     connectCommand.ObservesProperty(() => this.DeviceIP);
                     connectCommand.ObservesProperty(() => this.UserName);
                     connectCommand.ObservesProperty(() => this.Password);
@@ -186,46 +187,54 @@ namespace DeviceLab
             }
         }
 
-        private async Task ExecuteConnectAsync()
+        private void ExecuteConnect()
         {
-            this.diagnostics.OutputDiagnosticString("[{0}] Attempting to connect.\n", this.deviceIP);
-
             IDevicePortalConnection conn = this.ConnectionTypeSelection.CreateConnection(this.DeviceIP, this.UserName, this.Password);
-
             DevicePortal portal = new DevicePortal(conn);
-            DeviceConnectionStatusEventHandler handler = (DevicePortal sender, DeviceConnectionStatusEventArgs args) =>
-            {
-                this.diagnostics.OutputDiagnosticString("[{0}] Connection status update: Status: {1}, Phase: {2}\n", portal.Address, args.Status, args.Phase);
-                if (args.Status == DeviceConnectionStatus.Connected)
-                {
-                    this.diagnostics.OutputDiagnosticString("[{0}] Language: {1}\n", portal.Address, conn.OsInfo.Language);
-                    this.diagnostics.OutputDiagnosticString("[{0}] Name: {1}\n", portal.Address, conn.OsInfo.Name);
-                    this.diagnostics.OutputDiagnosticString("[{0}] OsEdition: {1}\n", portal.Address, conn.OsInfo.OsEdition);
-                    this.diagnostics.OutputDiagnosticString("[{0}] OsEditionId: {1}\n", portal.Address, conn.OsInfo.OsEditionId);
-                    this.diagnostics.OutputDiagnosticString("[{0}] OsVersionString: {1}\n", portal.Address, conn.OsInfo.OsVersionString);
-                    this.diagnostics.OutputDiagnosticString("[{0}] Platform: {1}\n", portal.Address, conn.OsInfo.Platform);
-                    this.diagnostics.OutputDiagnosticString("[{0}] PlatformName: {1}\n", portal.Address, conn.OsInfo.PlatformName);
-                }
-                else if (args.Status == DeviceConnectionStatus.Failed)
-                {
-                    this.diagnostics.OutputDiagnosticString("[{0}] Bummer.\n", portal.Address);
-                }
-            };
-            portal.ConnectionStatus += handler;
-
-            try
-            {
-                this.Ready = false;
-                await portal.Connect();
-            }
-            catch (Exception exn)
-            {
-                this.diagnostics.OutputDiagnosticString("[{0}] Exception when trying to connect:\n[{0}] {1}\nStackTrace: \n[{0}] {2}\n", portal.Address, exn.Message, exn.StackTrace);
-            }
-            this.SignInAttempts?.Invoke(this, new DeviceSignInEventArgs(portal.ConnectionHttpStatusCode, portal));
-            portal.ConnectionStatus -= handler;
-            this.Ready = true;
+            this.SignInAttempts?.Invoke(this, new DeviceSignInEventArgs(portal, conn));
         }
+
+        // TODO
+        //private async Task OldExecuteConnectAsync()
+        //{
+        //    this.diagnostics.OutputDiagnosticString("[{0}] Attempting to connect.\n", this.deviceIP);
+
+        //    IDevicePortalConnection conn = this.ConnectionTypeSelection.CreateConnection(this.DeviceIP, this.UserName, this.Password);
+
+        //    DevicePortal portal = new DevicePortal(conn);
+        //    DeviceConnectionStatusEventHandler handler = (DevicePortal sender, DeviceConnectionStatusEventArgs args) =>
+        //    {
+        //        this.diagnostics.OutputDiagnosticString("[{0}] Connection status update: Status: {1}, Phase: {2}\n", portal.Address, args.Status, args.Phase);
+        //        if (args.Status == DeviceConnectionStatus.Connected)
+        //        {
+        //            this.diagnostics.OutputDiagnosticString("[{0}] Language: {1}\n", portal.Address, conn.OsInfo.Language);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] Name: {1}\n", portal.Address, conn.OsInfo.Name);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] OsEdition: {1}\n", portal.Address, conn.OsInfo.OsEdition);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] OsEditionId: {1}\n", portal.Address, conn.OsInfo.OsEditionId);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] OsVersionString: {1}\n", portal.Address, conn.OsInfo.OsVersionString);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] Platform: {1}\n", portal.Address, conn.OsInfo.Platform);
+        //            this.diagnostics.OutputDiagnosticString("[{0}] PlatformName: {1}\n", portal.Address, conn.OsInfo.PlatformName);
+        //        }
+        //        else if (args.Status == DeviceConnectionStatus.Failed)
+        //        {
+        //            this.diagnostics.OutputDiagnosticString("[{0}] Bummer.\n", portal.Address);
+        //        }
+        //    };
+        //    portal.ConnectionStatus += handler;
+
+        //    try
+        //    {
+        //        this.Ready = false;
+        //        await portal.Connect();
+        //    }
+        //    catch (Exception exn)
+        //    {
+        //        this.diagnostics.OutputDiagnosticString("[{0}] Exception when trying to connect:\n[{0}] {1}\nStackTrace: \n[{0}] {2}\n", portal.Address, exn.Message, exn.StackTrace);
+        //    }
+        //    this.SignInAttempts?.Invoke(this, new DeviceSignInEventArgs(portal.ConnectionHttpStatusCode, portal));
+        //    portal.ConnectionStatus -= handler;
+        //    this.Ready = true;
+        //}
 
         private bool CanExecuteConnect()
         {
