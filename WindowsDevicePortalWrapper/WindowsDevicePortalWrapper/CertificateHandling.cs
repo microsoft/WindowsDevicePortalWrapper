@@ -19,125 +19,95 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// Gets or sets handler for untrusted certificate handling
+        /// </summary>
+        public event UnvalidatedCertEventHandler UnvalidatedCert;
+
+        /// <summary>
         /// Gets the root certificate from the device.
         /// </summary>
         /// <returns>The device certificate.</returns>
-        private async Task<X509Certificate2> GetDeviceCertificate()
+        public async Task<X509Certificate2> GetDeviceCertificate()
         {
             X509Certificate2 certificate = null;
-            bool useHttps = true;
 
-            // try https then http
-            while (true)
+            Uri uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
+
+            using (Stream stream = await this.Get(uri))
             {
-                Uri uri = null;
-
-                if (useHttps)
+                using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
-                }
-                else
-                {
-                    Uri baseUri = new Uri(string.Format("http://{0}", this.deviceConnection.Connection.Authority));
-                    uri = Utilities.BuildEndpoint(baseUri, RootCertificateEndpoint);
-                }
-
-                try
-                {
-                    using (Stream stream = await this.Get(uri, false))
-                    {
-                        using (BinaryReader reader = new BinaryReader(stream))
-                        {
-                            byte[] certData = reader.ReadBytes((int)stream.Length);
-
-                            // Validate the issuer.
-                            certificate = new X509Certificate2(certData);
-                            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
-                            {
-                                certificate = null;
-                                throw new DevicePortalException(
-                                    (HttpStatusCode)0,
-                                    "Invalid certificate issuer",
-                                    uri,
-                                    "Failed to get the device certificate");
-                            }
-                        }
-                    }
-
-                    return certificate;
-                }
-                catch (Exception e)
-                {
-                    if (useHttps)
-                    {
-                        useHttps = false;
-                    }
-                    else
-                    {
-                        throw e;
-                    }
+                    byte[] certData = reader.ReadBytes((int)stream.Length);
+                    certificate = new X509Certificate2(certData);
                 }
             }
+
+            return certificate;
         }
 
         /// <summary>
         /// Validate the server certificate
         /// </summary>
         /// <param name="sender">The sender object</param>
-        /// <param name="cert">The server's certificate</param>
+        /// <param name="certificate">The server's certificate</param>
         /// <param name="chain">The cert chain</param>
-        /// <param name="policyErrors">Policy Errors</param>
+        /// <param name="sslPolicyErrors">Policy Errors</param>
         /// <returns>whether the cert passes validation</returns>
-        private bool ServerCertificateValidation(
-            object sender,
-            X509Certificate cert,
-            X509Chain chain,
-            SslPolicyErrors policyErrors)
+        private bool ServerCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            byte[] deviceCertData = this.deviceConnection.GetDeviceCertificateData();
+            X509Certificate2 manualCert = this.deviceConnection.GetDeviceCertificate();
 
-            if (deviceCertData == null)
+            if (manualCert != null)
             {
-                // No certificate, fail validation.
-                return false;
+                chain.ChainPolicy.ExtraStore.Add(manualCert);
             }
 
-            X509Certificate deviceCert = new X509Certificate(deviceCertData);
+            X509Certificate2 certv2 = new X509Certificate2(certificate);
+            bool isValid = chain.Build(certv2);
 
-            // Check the certificate
-            // * First, make sure we are in the date range
-            DateTime now = DateTime.Now;
-            if ((now < DateTime.Parse(cert.GetEffectiveDateString())) ||
-                (now > DateTime.Parse(cert.GetExpirationDateString())))
+            // If chain validation failed but we have a manual cert, we can still
+            // check the chain to see if the server cert chains up to our manual cert
+            // (or matches it) in which case this is valid.
+            if (!isValid && manualCert != null)
             {
-                // The current date is out of bounds, fail validation.
-                return false;
+                foreach (X509ChainElement element in chain.ChainElements)
+                {
+                    foreach (X509ChainStatus status in element.ChainElementStatus)
+                    {
+                        // Check if this is a failure that should cause the chain to be rejected
+                        if (status.Status != X509ChainStatusFlags.NoError &&
+                            status.Status != X509ChainStatusFlags.UntrustedRoot &&
+                            status.Status != X509ChainStatusFlags.RevocationStatusUnknown)
+                        {
+                            return false;
+                        }
+                    }
+
+                    // This cert chained to our provided cert. Continue walking
+                    // the chain to ensure we don't hit a failure that would
+                    // cause our chain to be rejected.
+                    if (element.Certificate.Issuer == manualCert.Issuer &&
+                        element.Certificate.Thumbprint == manualCert.Thumbprint)
+                    {
+                        isValid = true;
+                        break;
+                    }
+                }
             }
 
-            // * Next, compare the issuer
-            if (deviceCert.Issuer != cert.Issuer)
+            // If this still appears invalid, we give the app a chance via a handler
+            // to override the trust decision.
+            if (!isValid)
             {
-                return false;
+                bool? overridenIsValid = this.UnvalidatedCert?.Invoke(this, certificate, chain, sslPolicyErrors);
+
+                if (overridenIsValid != null && overridenIsValid == true)
+                {
+                    isValid = true;
+                }
             }
 
-            return true;
-        }
-
-        /// <summary>
-        /// No-op version of cert validation for skipping the validation
-        /// </summary>
-        /// <param name="sender">the sender</param>
-        /// <param name="cert">the certificate</param>
-        /// <param name="chain">cert chain</param>
-        /// <param name="policyErrors">policy Errors</param>
-        /// <returns>Always returns true since validation is skipped.</returns>
-        private bool ServerCertificateNonValidation(
-            object sender,
-            X509Certificate cert,
-            X509Chain chain,
-            SslPolicyErrors policyErrors)
-        {
-            return true;
+            return isValid;
         }
     }
 }

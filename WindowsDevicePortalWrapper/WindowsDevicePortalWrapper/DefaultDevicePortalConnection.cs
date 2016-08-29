@@ -6,6 +6,7 @@
 
 using System;
 using System.Net;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
@@ -114,41 +115,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
+        /// Gets the provided device certificate.
         /// </summary>
-        public bool AllowCertOverride
+        /// <returns>Stored device certificate.</returns>
+        public X509Certificate2 GetDeviceCertificate()
         {
-            get;
-            set;
+            return this.deviceCertificate;
         }
 
         /// <summary>
-        /// Gets the raw device certificate.
-        /// </summary>
-        /// <returns>Byte array containing the raw certificate data.</returns>
-        public byte[] GetDeviceCertificateData()
-        {
-            return this.deviceCertificate.GetRawCertData();
-        }
-
-        /// <summary>
-        /// Validates and sets the device certificate.
+        /// Stores a manually provided device certificate.
         /// </summary>
         /// <param name="certificate">The device's root certificate.</param>
         public void SetDeviceCertificate(X509Certificate2 certificate)
         {
-            if (!this.AllowCertOverride)
-            {
-                if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
-                {
-                    throw new DevicePortalException(
-                        (HttpStatusCode)0,
-                        "Invalid certificate issuer",
-                        null,
-                        "Failed to download device certificate");
-                }
-            }
-
             this.deviceCertificate = certificate;
         }
 

@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>The device certificate.</returns>
 #pragma warning disable 1998
-        private async Task<Certificate> GetDeviceCertificate()
+        public async Task<Certificate> GetDeviceCertificate()
         {
             Certificate certificate = null;
             bool useHttps = true;

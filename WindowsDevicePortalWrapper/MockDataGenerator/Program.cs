@@ -100,9 +100,9 @@ namespace MockDataGenerator
 
             if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
             {
-                if (portal.ConnectionHttpStatusCode != 0)
+                if (!string.IsNullOrEmpty(portal.ConnectionFailedDescription))
                 {
-                    Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
+                    Console.WriteLine(string.Format("Failed to connect to WDP (HTTP {0}) : {1}", (int)portal.ConnectionHttpStatusCode, portal.ConnectionFailedDescription));
                 }
                 else
                 {
