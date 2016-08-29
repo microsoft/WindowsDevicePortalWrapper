@@ -11,102 +11,6 @@ using Microsoft.Tools.WindowsDevicePortal;
 
 namespace DeviceLab
 {
-    public class NewDeviceHelper : ICommand
-    {
-        // TODO: Don't close over a DevicePortalViewModel
-        // Instead, should just hook up the CanExecuteChanged events on
-        // the commands
-        private DevicePortalViewModel dpvm;
-        private Queue<ICommand> commandQueue;
-        private bool executionStarted;
-
-        // TODO:
-        public event EventHandler CanExecuteChanged;
-
-        public NewDeviceHelper(DevicePortalViewModel dpvm)
-        {
-            this.dpvm = dpvm;
-            
-            this.commandQueue = new Queue<ICommand>();
-            this.executionStarted = false;
-        }
-
-        public void Enqueue(ICommand command)
-        {
-            if (this.executionStarted)
-            {
-                throw new InvalidOperationException("Execution already started");
-            }
-
-            this.commandQueue.Enqueue(command);
-        }
-
-        private void Dpvm_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if(e.PropertyName == "Ready")
-            {
-                if(this.dpvm.Ready)
-                {
-                    DoNextCommand();
-                }
-            }
-        }
-
-        private void DoNextCommand()
-        {
-            if(this.commandQueue == null)
-            {
-                throw new InvalidOperationException("Attempting to execute commands without a command queue");
-            }
-
-            if(this.commandQueue.Count == 0)
-            {
-                throw new InvalidOperationException("Attempting to execute command on an empty command queue");
-            }
-
-            if(this.commandQueue.Peek().CanExecute(null))
-            {
-                ICommand nextCommand = this.commandQueue.Dequeue();
-
-                if (this.commandQueue.Count == 0)
-                {
-                    // Executing the next command will probably trigger property changed
-                    // events and since this is the last command we want to disconnect from 
-                    // those events
-                    this.dpvm.PropertyChanged -= Dpvm_PropertyChanged;
-                    this.executionStarted = false;
-                }
-                nextCommand.Execute(null);
-            }
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            if(this.executionStarted)
-            {
-                return false;
-            }
-
-            if(this.commandQueue.Count > 0)
-            {
-                return this.commandQueue.Peek().CanExecute(null);
-            }
-
-            return false;
-        }
-
-        public void Execute(object parameter)
-        {
-            if(this.executionStarted)
-            {
-                throw new InvalidOperationException("Execution already started");
-            }
-
-            dpvm.PropertyChanged += Dpvm_PropertyChanged;
-            DoNextCommand();
-        }
-    }
-
     public class MainViewModel : BindableBase
     {
         //-------------------------------------------------------------------
@@ -128,6 +32,8 @@ namespace DeviceLab
 
             this.ConnectedDevices.CollectionChanged += OnConnectedDevicesChanged;
         }
+        #endregion // Constructors
+
 
         private void OnSignInAttemptCompleted(DeviceSignInViewModel sender, DeviceSignInEventArgs args)
         {
@@ -144,7 +50,6 @@ namespace DeviceLab
 
             this.ConnectedDevices.Add(new DevicePortalViewModel(args.Portal, Diagnostics));
         }
-        #endregion // Constructors
 
         //-------------------------------------------------------------------
         //  Properties
@@ -404,17 +309,12 @@ namespace DeviceLab
         private void OnDeviceAdded(DevicePortalViewModel dpvm)
         {
             dpvm.PropertyChanged += DevicePropertyChanged;
-            // TODO:
-            //CompositeCommand command = new CompositeCommand();
-            //command.RegisterCommand(dpvm.RefreshDeviceNameCommand);
-            //command.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);
-            //command.Execute(null);
-
-            NewDeviceHelper ndh = new NewDeviceHelper(dpvm);
-            ndh.Enqueue(dpvm.ReestablishConnectionCommand);
-            ndh.Enqueue(dpvm.RefreshDeviceNameCommand);
-            ndh.Enqueue(dpvm.StartListeningForSystemPerfCommand);
-            ndh.Execute(null);
+            
+            CommandSequence cmdSeq = new CommandSequence();
+            cmdSeq.RegisterCommand(dpvm.ReestablishConnectionCommand);
+            cmdSeq.RegisterCommand(dpvm.RefreshDeviceNameCommand);
+            cmdSeq.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);
+            cmdSeq.Execute(null);
         }
 
         private void OnDeviceRemoved(DevicePortalViewModel dpvm)

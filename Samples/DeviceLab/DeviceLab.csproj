@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AutoScrollTextBox.cs" />
+    <Compile Include="CommandSequence.cs" />
     <Compile Include="DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>

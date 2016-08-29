@@ -12,6 +12,8 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace DeviceLab
 {
+
+
     public class DevicePortalViewModel : BindableBase
     {
         //-------------------------------------------------------------------
