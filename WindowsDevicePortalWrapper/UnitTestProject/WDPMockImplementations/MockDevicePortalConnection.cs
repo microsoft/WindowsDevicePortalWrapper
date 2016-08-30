@@ -6,6 +6,7 @@
 
 using System;
 using System.Net;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using Microsoft.Tools.WindowsDevicePortal;
@@ -18,11 +19,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     /// </summary>
     public class MockDevicePortalConnection : IDevicePortalConnection
     {
-        /// <summary>
-        /// Device Certificate
-        /// </summary>
-        private X509Certificate2 deviceCertificate = null;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDevicePortalConnection"/> class.
         /// </summary>
@@ -98,21 +94,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
-        /// </summary>
-        public bool AllowCertOverride
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Returns certificate data
         /// </summary>
         /// <returns>certificate data</returns>
-        public byte[] GetDeviceCertificateData()
+        public X509Certificate2 GetDeviceCertificate()
         {
-            return this.deviceCertificate.GetRawCertData();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -121,35 +108,26 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <param name="certificate">The device's root certificate.</param>
         public void SetDeviceCertificate(X509Certificate2 certificate)
         {
-            if (!certificate.IssuerName.Name.Contains(DevicePortalCertificateIssuer))
-            {
-                throw new DevicePortalException(
-                    (HttpStatusCode)0,
-                    "Invalid certificate issuer",
-                    null,
-                    "Failed to download device certificate");
-            }
-
-            this.deviceCertificate = certificate;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Xbox will never update the connection.
+        /// The Mock will never update the connection.
         /// </summary>
         /// <param name="requiresHttps">https required</param>
         public void UpdateConnection(bool requiresHttps)
         {
-            return;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        ///  Xbox will never update the connection.
+        ///  The Mock will never update the connection.
         /// </summary>
         /// <param name="ipConfig">IP info</param>
         /// <param name="requiresHttps">https required</param>
         public void UpdateConnection(IpConfiguration ipConfig, bool requiresHttps)
         {
-            return;
+            throw new NotImplementedException();
         }
     }
 }

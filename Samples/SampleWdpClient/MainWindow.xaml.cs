@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +29,11 @@ namespace SampleWdpClient
         /// The device portal to which we are connecting.
         /// </summary>
         private DevicePortal portal;
+
+        /// <summary>
+        /// An SSL thumbprint that we'll accept.
+        /// </summary>
+        private string thumbprint;
 
         /// <summary>
         /// The main page constructor.
@@ -76,6 +83,9 @@ namespace SampleWdpClient
                     this.username.Text,
                     this.password.Password));
 
+            // Add additional handling for untrusted certs.
+            portal.UnvalidatedCert += DoCertValidation;
+
             StringBuilder sb = new StringBuilder();
             Task connectTask = new Task(
                 async () =>
@@ -117,7 +127,8 @@ namespace SampleWdpClient
                     this.MarshalEnableConnectionControls(true);
                 });
 
-            connectTask.Start();        }
+            connectTask.Start();
+        }
 
         /// <summary>
         /// Enables or disables the Connect button based on the current state of the
@@ -330,7 +341,7 @@ namespace SampleWdpClient
         }
 
         /// <summary>
-        /// Executes the update of the text displayed in the command output UI element ont he UI thread.
+        /// Executes the update of the text displayed in the command output UI element on the UI thread.
         /// </summary>
         /// <param name="output">The text to display in the command output UI element.</param>
         private void MarshalUpdateCommandOutput(string output)
@@ -451,6 +462,43 @@ namespace SampleWdpClient
         private void Username_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.EnableConnectButton();
+        }
+
+        /// <summary>
+        /// Validate the server certificate
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="certificate">The server's certificate</param>
+        /// <param name="chain">The cert chain</param>
+        /// <param name="sslPolicyErrors">Policy Errors</param>
+        /// <returns>whether the cert passes validation</returns>
+        private bool DoCertValidation(DevicePortal sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            X509Certificate2 cert = new X509Certificate2(certificate);
+
+            // If we have previously said to accept this cert, don't prompt again for this session.
+            if (!string.IsNullOrEmpty(this.thumbprint) && this.thumbprint.Equals(cert.Thumbprint, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // We could alternatively ask the user if they wanted to always trust
+            // this device and we could persist the thumbprint in some way (registry, database, filesystem, etc).
+            MessageBoxResult result = MessageBox.Show(string.Format(
+                                "Do you want to accept the following certificate?\n\nThumbprint:\n  {0}\nIssuer:\n  {1}", 
+                                cert.Thumbprint,
+                                cert.Issuer),
+                            "Untrusted Certificate Detected", 
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question,
+                            MessageBoxResult.No);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                thumbprint = cert.Thumbprint;
+                return true;
+            }
+            return false;
         }
     }
 }

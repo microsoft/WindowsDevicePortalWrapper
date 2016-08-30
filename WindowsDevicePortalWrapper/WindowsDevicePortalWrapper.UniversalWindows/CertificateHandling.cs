@@ -23,9 +23,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets the root certificate from the device.
         /// </summary>
+        /// <param name="acceptUntrustedCerts">Whether or not we should accept untrusted certificates.</param>
         /// <returns>The device certificate.</returns>
 #pragma warning disable 1998
-        private async Task<Certificate> GetDeviceCertificate()
+        public async Task<Certificate> GetRootDeviceCertificate(bool acceptUntrustedCerts = false)
         {
             Certificate certificate = null;
             bool useHttps = true;
@@ -48,8 +49,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 try
                 {
                     HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
-                    requestSettings.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
                     requestSettings.AllowUI = false;
+
+                    if (acceptUntrustedCerts)
+                    {
+                        requestSettings.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+                    }
 
                     using (HttpClient client = new HttpClient(requestSettings))
                     {

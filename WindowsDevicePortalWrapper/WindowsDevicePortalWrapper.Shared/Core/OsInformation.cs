@@ -244,7 +244,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         }
                     }
                     catch
-                    { }
+                    {
+                    }
 
                     return platform;
                 }

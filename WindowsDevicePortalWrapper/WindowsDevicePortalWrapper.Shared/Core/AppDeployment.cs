@@ -280,7 +280,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             /// Presents a user readable representation of a list of AppPackages
             /// </summary>
-            /// <returns></returns>
+            /// <returns>User readable list of AppPackages.</returns>
             public override string ToString()
             {
                 string output = "Packages:\n";
@@ -288,6 +288,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     output += package;
                 }
+
                 return output;
             }
         }
