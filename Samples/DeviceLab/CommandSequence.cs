@@ -7,21 +7,73 @@ using System.Windows.Input;
 
 namespace DeviceLab
 {
+    public class ObservableCommandQueue
+    {
+        private Queue<ICommand> commands;
+
+        public ObservableCommandQueue()
+        {
+            this.commands = new Queue<ICommand>();
+        }
+
+        public event EventHandler QueueChanged;
+
+        public int Count
+        {
+            get
+            {
+                return this.commands.Count;
+            }
+        }
+
+        public void Clear()
+        {
+            this.commands.Clear();
+            OnQueueChanged();
+        }
+
+        public ICommand Peek()
+        {
+            return this.commands.Peek();
+        }
+
+        public void Enqueue(ICommand cmd)
+        {
+            this.commands.Enqueue(cmd);
+            OnQueueChanged();
+        }
+
+        public ICommand Dequeue()
+        {
+            ICommand cmd = this.commands.Dequeue();
+            OnQueueChanged();
+            return cmd;
+        }
+
+        private void OnQueueChanged()
+        {
+            this.QueueChanged?.Invoke(this, new EventArgs());
+        }
+    }
+
+
     public class CommandSequence : ICommand
     {
         private List<ICommand> registeredCommands;
-        private Queue<ICommand> commandQueue;
+        private ObservableCommandQueue commandQueue;
         private object sharedParameter;
 
         //-------------------------------------------------------------------
         // Constructor
         //-------------------------------------------------------------------
         #region Constructor
-        public CommandSequence(Queue<ICommand> commandQueue = null)
+        public CommandSequence(ObservableCommandQueue commandQueue = null)
         {
             this.registeredCommands = new List<ICommand>();
-            this.commandQueue = commandQueue == null ? new Queue<ICommand>() : commandQueue;
+            this.commandQueue = commandQueue == null ? new ObservableCommandQueue() : commandQueue;
+            this.commandQueue.QueueChanged += CommandQueue_QueueChanged;
         }
+
         #endregion // Constructor
 
         //-------------------------------------------------------------------
@@ -44,26 +96,46 @@ namespace DeviceLab
                 CommandSequence seq = cmd as CommandSequence;
                 if (seq == null)
                 {
-                    this.registeredCommands.Add(cmd);
+                    AddCommand(cmd);
                 }
                 else
                 {
                     foreach (ICommand subcmd in seq.registeredCommands)
                     {
-                        this.registeredCommands.Add(subcmd);
+                        AddCommand(subcmd);
                     }
                 }
             }
             OnCanExecuteChanged();
         }
 
+        private void AddCommand(ICommand cmd)
+        {
+            if(this.registeredCommands.Count == 0)
+            {
+                cmd.CanExecuteChanged += Forward_CanExecuteChanged;
+            }
+            this.registeredCommands.Add(cmd);
+        }
+
         //-------------------------------------------------------------------
         // ICommand Implementation
         //-------------------------------------------------------------------
         public event EventHandler CanExecuteChanged;
+
         private void OnCanExecuteChanged()
         {
             this.CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Forward on the CanExecuteChanged event from the first command in the list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Forward_CanExecuteChanged(object sender, EventArgs e)
+        {
+            this.CanExecuteChanged?.Invoke(sender, e);
         }
 
         public bool CanExecute(object parameter)
@@ -106,8 +178,11 @@ namespace DeviceLab
         private void CurrentCommand_CanExecuteChanged(object sender, EventArgs e)
         {
             ICommand cmd = sender as ICommand;
-            cmd.CanExecuteChanged -= CurrentCommand_CanExecuteChanged;
-            ExecuteNext();
+            if (cmd.CanExecute(this.sharedParameter))
+            {
+                cmd.CanExecuteChanged -= CurrentCommand_CanExecuteChanged;
+                ExecuteNext();
+            }
         }
 
         private void ExecuteNext()
@@ -124,11 +199,12 @@ namespace DeviceLab
                 {
                     this.commandQueue.Peek().CanExecuteChanged += CurrentCommand_CanExecuteChanged;
                 }
-                else
-                {
-                    OnCanExecuteChanged();
-                }
             }
+        }
+
+        private void CommandQueue_QueueChanged(object sender, EventArgs e)
+        {
+            OnCanExecuteChanged();
         }
     }
 }

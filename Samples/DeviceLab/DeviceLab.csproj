@@ -64,6 +64,7 @@
     <Compile Include="DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DevicePortalCommandModel.cs" />
     <Compile Include="DevicePortalViewModel.cs" />
     <Compile Include="DeviceSignInView.xaml.cs">
       <DependentUpon>DeviceSignInView.xaml</DependentUpon>

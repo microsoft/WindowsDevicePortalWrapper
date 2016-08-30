@@ -33,8 +33,7 @@ namespace DeviceLab
             this.ConnectedDevices.CollectionChanged += OnConnectedDevicesChanged;
         }
         #endregion // Constructors
-
-
+        
         private void OnSignInAttemptCompleted(DeviceSignInViewModel sender, DeviceSignInEventArgs args)
         {
             DevicePortal portal = args.Portal;
@@ -309,8 +308,8 @@ namespace DeviceLab
         private void OnDeviceAdded(DevicePortalViewModel dpvm)
         {
             dpvm.PropertyChanged += DevicePropertyChanged;
-            
-            CommandSequence cmdSeq = new CommandSequence();
+
+            CommandSequence cmdSeq = dpvm.CreateCommandSequence();
             cmdSeq.RegisterCommand(dpvm.ReestablishConnectionCommand);
             cmdSeq.RegisterCommand(dpvm.RefreshDeviceNameCommand);
             cmdSeq.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);

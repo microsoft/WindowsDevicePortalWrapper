@@ -12,35 +12,16 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace DeviceLab
 {
-
-
-    public class DevicePortalViewModel : BindableBase
+    public class DevicePortalViewModel : DevicePortalCommandModel
     {
-        //-------------------------------------------------------------------
-        //  Private Members
-        //-------------------------------------------------------------------
-        #region Private Members
-        private IDiagnosticSink diagnostics;
-
-        private string diagnosticMoniker
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(this.deviceName) ? this.deviceName : this.Address;
-            }
-        }
-        #endregion // Private Members
-        
         //-------------------------------------------------------------------
         //  Constructors
         //-------------------------------------------------------------------
         #region Constructors
         public DevicePortalViewModel(DevicePortal portal, IDiagnosticSink diags)
+            : base(portal, diags)
         {
             this.ConnectionRetryAttempts = 5;
-            this.diagnostics = diags;
-            this.portal = portal;
-            this.Ready = true;
         }
         #endregion // Cosntructors
 
@@ -48,38 +29,15 @@ namespace DeviceLab
         //  Properties
         //-------------------------------------------------------------------
         #region Properties
-        #region Portal
-        private DevicePortal portal;
-
-        private DevicePortal Portal
-        {
-            get { return this.portal; }
-            set
-            {
-                SetProperty(ref this.portal, value);
-                OnPropertyChanged("Address");
-                OnPropertyChanged("DeviceFamily");
-                OnPropertyChanged("OperatingSystemVersion");
-                OnPropertyChanged("Platform");
-                OnPropertyChanged("PlatformName");
-            }
-        }
-        #endregion // Portal
-
-        #region Ready
-        private bool ready;
-        public bool Ready
+        #region Diagnostic Moniker
+        private string diagnosticMoniker
         {
             get
             {
-                return this.ready;
-            }
-            private set
-            {
-                SetProperty(ref this.ready, value);
+                return !string.IsNullOrWhiteSpace(this.deviceName) ? this.deviceName : this.Address;
             }
         }
-        #endregion // Ready
+        #endregion // Diagnostic Moniker
 
         #region DeviceName
         private string deviceName;
@@ -197,16 +155,20 @@ namespace DeviceLab
         #region Commands
 
         #region RenameCommand
-        private DelegateCommand renameCommand;
+        private CommandSequence renameCommand;
         public ICommand RenameCommand
         {
             get
             {
                 if(this.renameCommand == null)
                 {
-                    this.renameCommand = DelegateCommand.FromAsyncHandler(ExecuteRenameAsync, CanExecuteRename);
-                    this.renameCommand.ObservesProperty(() => this.Ready);
-                    this.renameCommand.ObservesProperty(() => this.DeviceNameEntry);
+                    this.renameCommand = CreateCommandSequence();
+                    DelegateCommand renameDC = DelegateCommand.FromAsyncHandler(ExecuteRenameAsync, CanExecuteRename);
+                    renameDC.ObservesProperty(() => this.Ready);
+                    renameDC.ObservesProperty(() => this.DeviceNameEntry);
+                    this.renameCommand.RegisterCommand(renameDC);
+                    this.renameCommand.RegisterCommand(this.RebootCommand);
+                    this.renameCommand.RegisterCommand(this.RefreshDeviceNameCommand);
                 }
                 return this.renameCommand;
             }
@@ -214,6 +176,8 @@ namespace DeviceLab
 
         private bool CanExecuteRename()
         {
+            //return
+            //    this.Ready;
             return
                 this.Ready &&
                 !string.IsNullOrWhiteSpace(this.deviceNameEntry);
@@ -221,42 +185,35 @@ namespace DeviceLab
 
         private async Task ExecuteRenameAsync()
         {
+            this.diagnostics.OutputDiagnosticString("[{0}] ExecuteRenameAsync\n", this.diagnosticMoniker);
             this.Ready = false;
             try
             {
                 string newName = this.deviceNameEntry;
                 this.DeviceNameEntry = "";
                 this.diagnostics.OutputDiagnosticString("[{0}] Attempting to rename device to {1}\n", this.diagnosticMoniker, newName);
-                await this.Portal.SetDeviceName(newName);
+                await this.portal.SetDeviceName(newName);
             }
             catch (Exception exn)
             {
                 ReportException("Rename", exn);
             }
-            await ExecuteRebootAsync();
-                        
-            if (this.Ready)
-            {
-                await RefreshDeviceNameAsync();
-            }
-            else
-            {
-                // TODO: Need to decide what to do if this.Ready == false;
-                // ALTERNATIVLEY: Need to decide how to recover after an error
-            }
+            this.Ready = true;
         }
         #endregion // RenameCommand
 
         #region RefreshDeviceName
-        private DelegateCommand refreshDeviceNameCommand;
+        private CommandSequence refreshDeviceNameCommand;
         public ICommand RefreshDeviceNameCommand
         {
             get
             {
                 if(this.refreshDeviceNameCommand == null)
                 {
-                    this.refreshDeviceNameCommand = DelegateCommand.FromAsyncHandler(RefreshDeviceNameAsync, CanExecuteRefreshDeviceName);
-                    this.refreshDeviceNameCommand.ObservesProperty(() => this.Ready);
+                    DelegateCommand refreshDeviceNameDC = DelegateCommand.FromAsyncHandler(RefreshDeviceNameAsync, CanExecuteRefreshDeviceName);
+                    refreshDeviceNameDC.ObservesProperty(() => this.Ready);
+                    this.refreshDeviceNameCommand = CreateCommandSequence();
+                    this.refreshDeviceNameCommand.RegisterCommand(refreshDeviceNameDC);
                 }
                 return this.refreshDeviceNameCommand;
             }
@@ -269,30 +226,36 @@ namespace DeviceLab
 
         private async Task RefreshDeviceNameAsync()
         {
+            this.diagnostics.OutputDiagnosticString("[{0}] RefreshDeviceNameAsync\n", this.diagnosticMoniker);
             this.Ready = false;
             try
             {
-                this.DeviceName = await this.Portal.GetDeviceName();
+                this.DeviceName = await this.portal.GetDeviceName();
             }
             catch (Exception exn)
             {
                 ReportException("RefreshDeviceName", exn);
             }
-            this.diagnostics.OutputDiagnosticString("[{0}] Retrieved device name.\n", this.diagnosticMoniker);
             this.Ready = true;
         }
         #endregion // RefreshDeviceName
 
         #region Reboot Command
-        private DelegateCommand rebootCommand;
+        private CommandSequence rebootCommand;
         public ICommand RebootCommand
         {
             get
             {
                 if(this.rebootCommand == null)
                 {
-                    this.rebootCommand = DelegateCommand.FromAsyncHandler(ExecuteRebootAsync, CanExecuteReboot);
-                    this.rebootCommand.ObservesProperty(() => this.Ready);
+                    this.rebootCommand = CreateCommandSequence();
+                    DelegateCommand rebootDC = DelegateCommand.FromAsyncHandler(ExecuteRebootAsync, CanExecuteReboot);
+                    rebootDC.ObservesProperty(() => this.Ready);
+                    this.rebootCommand.RegisterCommand(StopListeningForSystemPerfCommand);
+                    this.rebootCommand.RegisterCommand(rebootDC);
+                    this.rebootCommand.RegisterCommand(this.ReestablishConnectionCommand);
+                    this.rebootCommand.RegisterCommand(this.refreshDeviceNameCommand);
+                    this.rebootCommand.RegisterCommand(this.StartListeningForSystemPerfCommand);
                 }
                 return this.rebootCommand;
             }
@@ -305,12 +268,12 @@ namespace DeviceLab
 
         private async Task ExecuteRebootAsync()
         {
-            await ExecuteStopListeningForSystemPerfAsync();
+            this.diagnostics.OutputDiagnosticString("[{0}] ExecuteRebootAsync\n", this.diagnosticMoniker);
             this.Ready = false;
             try
             {
                 this.diagnostics.OutputDiagnosticString("[{0}] Attempting to reboot device.\n", this.diagnosticMoniker);
-                await this.Portal.Reboot();
+                await this.portal.Reboot();
 
                 // Sometimes able to reestablish the connection prematurely before the console has a chance to shut down
                 // So adding a delay here before trying to reestablish the connection.
@@ -320,21 +283,22 @@ namespace DeviceLab
             {
                 ReportException("Reboot", exn);
             }
-            await ExecuteReestablishConnectionAsync();
-            await ExecuteStartListeningForSystemPerfAsync();
+            this.Ready = true;
         }
         #endregion // Reboot Command
 
         #region ReestablishConnectionCommand
-        private DelegateCommand reestablishConnectionCommand;
+        private CommandSequence reestablishConnectionCommand;
         public ICommand ReestablishConnectionCommand
         {
             get
             {
                 if(this.reestablishConnectionCommand == null)
                 {
-                    this.reestablishConnectionCommand = DelegateCommand.FromAsyncHandler(ExecuteReestablishConnectionAsync, CanExecuteReestablishConnection);
-                    this.reestablishConnectionCommand.ObservesProperty(() => this.Ready);
+                    this.reestablishConnectionCommand = CreateCommandSequence();
+                    DelegateCommand reestablishConnectionDC = DelegateCommand.FromAsyncHandler(ExecuteReestablishConnectionAsync, CanExecuteReestablishConnection);
+                    reestablishConnectionDC.ObservesProperty(() => this.Ready);
+                    this.reestablishConnectionCommand.RegisterCommand(reestablishConnectionDC);
                 }
                 return this.reestablishConnectionCommand;
             }
@@ -347,6 +311,7 @@ namespace DeviceLab
 
         private async Task ExecuteReestablishConnectionAsync()
         {
+            this.diagnostics.OutputDiagnosticString("[{0}] ExecuteReestablishConnectionAsync\n", this.diagnosticMoniker);
             int numTries = 1;
 
             DeviceConnectionStatusEventHandler handler = (DevicePortal sender, DeviceConnectionStatusEventArgs args) =>
@@ -371,26 +336,28 @@ namespace DeviceLab
                     await this.portal.Connect();
                     ++numTries;
                 } while (this.portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries < this.ConnectionRetryAttempts);
-                this.Ready = true;
             }
             catch (Exception exn)
             {
                 ReportException("ReestablishConnection", exn);
             }
             this.portal.ConnectionStatus -= handler;
+            this.Ready = true;
         }
         #endregion // ReestablishConnectionCommand
 
         #region StartListeningForSystemPerfCommand
-        private DelegateCommand startListeningForSystemPerfCommand;
+        private CommandSequence startListeningForSystemPerfCommand;
         public ICommand StartListeningForSystemPerfCommand
         {
             get
             {
                 if(this.startListeningForSystemPerfCommand == null)
                 {
-                    this.startListeningForSystemPerfCommand = DelegateCommand.FromAsyncHandler(ExecuteStartListeningForSystemPerfAsync, CanStartListeningForSystemPerf);
-                    this.startListeningForSystemPerfCommand.ObservesProperty(() => this.Ready);
+                    this.startListeningForSystemPerfCommand = CreateCommandSequence();
+                    DelegateCommand startListeningForSystemPerfDC = DelegateCommand.FromAsyncHandler(ExecuteStartListeningForSystemPerfAsync, CanStartListeningForSystemPerf);
+                    startListeningForSystemPerfDC.ObservesProperty(() => this.Ready);
+                    this.startListeningForSystemPerfCommand.RegisterCommand(startListeningForSystemPerfDC);
                 }
                 return startListeningForSystemPerfCommand;
             }
@@ -403,9 +370,17 @@ namespace DeviceLab
 
         private async Task ExecuteStartListeningForSystemPerfAsync()
         {
+            this.diagnostics.OutputDiagnosticString("[{0}] ExecuteStartListeningForSystemPerfAsync\n", this.diagnosticMoniker);
             this.Ready = false;
-            this.portal.SystemPerfMessageReceived += OnSystemPerfReceived;
-            await Task.Run(StartListeningHelper);
+            try
+            {
+                this.portal.SystemPerfMessageReceived += OnSystemPerfReceived;
+                await Task.Run(StartListeningHelper);
+            }
+            catch(Exception exn)
+            {
+                ReportException("StartListeningForSystemPerf", exn);
+            }
             this.Ready = true;
         }
 
@@ -413,19 +388,20 @@ namespace DeviceLab
         {
             await this.portal.StartListeningForSystemPerf().ConfigureAwait(false);
         }
-
         #endregion // StartListeningForSystemPerfCommand
 
         #region StopListeningForSystemPerfCommand
-        private DelegateCommand stopListeningForSystemPerfCommand;
+        private CommandSequence stopListeningForSystemPerfCommand;
         public ICommand StopListeningForSystemPerfCommand
         {
             get
             {
                 if(this.stopListeningForSystemPerfCommand == null)
                 {
-                    this.stopListeningForSystemPerfCommand = DelegateCommand.FromAsyncHandler(ExecuteStopListeningForSystemPerfAsync, CanStopListeningForSystemPerf);
-                    this.stopListeningForSystemPerfCommand.ObservesProperty(() => this.Ready);
+                    this.stopListeningForSystemPerfCommand = CreateCommandSequence();
+                    DelegateCommand stopListeningForSystemPerfDC = DelegateCommand.FromAsyncHandler(ExecuteStopListeningForSystemPerfAsync, CanStopListeningForSystemPerf);
+                    stopListeningForSystemPerfDC.ObservesProperty(() => this.Ready);
+                    this.stopListeningForSystemPerfCommand.RegisterCommand(stopListeningForSystemPerfDC);
                 }
                 return stopListeningForSystemPerfCommand;
             }
@@ -438,11 +414,18 @@ namespace DeviceLab
 
         private async Task ExecuteStopListeningForSystemPerfAsync()
         {
+            this.diagnostics.OutputDiagnosticString("[{0}] ExecuteStopListeningForSystemPerfAsync\n", this.diagnosticMoniker);
             this.Ready = false;
-            this.portal.SystemPerfMessageReceived -= OnSystemPerfReceived;
-            await StopListeningHelper();
-            //await Task.Run(StopListeningHelper);
-            await StopListeningHelper();
+            try
+            {
+                this.portal.SystemPerfMessageReceived -= OnSystemPerfReceived;
+                await StopListeningHelper();
+                await StopListeningHelper();
+            }
+            catch(Exception exn)
+            {
+                ReportException("StopListeningForSystemPerf", exn);
+            }
             this.Ready = true;
         }
 
@@ -452,8 +435,6 @@ namespace DeviceLab
         }
         #endregion // StopListeningForSystemPerfCommand
         #endregion // Commands
-             
-
 
         private void OnSystemPerfReceived(DevicePortal sender, WebSocketMessageReceivedEventArgs<DevicePortal.SystemPerformanceInformation> args)
         {
@@ -466,6 +447,10 @@ namespace DeviceLab
             this.diagnostics.OutputDiagnosticString(
                 "[{0}] Exception during {1} command:\n[{0}] {2}\nStackTrace: \n[{0}] {3}\n",
                 this.diagnosticMoniker, commandName, exn.Message, exn.StackTrace);
+
+            // Clear the command queue to prevent executing any more commands
+            this.diagnostics.OutputDiagnosticString("[{0}] Clearing any queued commands\n", this.diagnosticMoniker);
+            ClearCommandQueue();
         }
     }
 }
