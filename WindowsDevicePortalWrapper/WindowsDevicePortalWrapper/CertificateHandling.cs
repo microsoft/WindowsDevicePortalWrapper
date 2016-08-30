@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the root certificate from the device.
         /// </summary>
         /// <returns>The device certificate.</returns>
-        public async Task<X509Certificate2> GetDeviceCertificate()
+        public async Task<X509Certificate2> GetRootDeviceCertificate()
         {
             X509Certificate2 certificate = null;
 
