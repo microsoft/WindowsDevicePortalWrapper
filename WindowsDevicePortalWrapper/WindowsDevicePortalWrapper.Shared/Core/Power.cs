@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting a sleep study report.
         /// </summary>
-        private static readonly string SleepStudyTransformApi = "api/power/sleepstudy/transform";
+        public static readonly string SleepStudyTransformApi = "api/power/sleepstudy/transform";
 
         /// <summary>
         /// Returns the current active power scheme.

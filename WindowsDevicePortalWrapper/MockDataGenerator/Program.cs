@@ -56,7 +56,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
 
-            //IoT specific endpoints
+            // IoT specific endpoints
             new Endpoint(HttpMethods.Get, DevicePortal.IoTOsInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.TimezoneInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DateTimeInfoApi),
