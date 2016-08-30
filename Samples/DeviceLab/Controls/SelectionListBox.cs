@@ -1,9 +1,9 @@
-﻿using System;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="SelectionListBox.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,31 +11,43 @@ namespace DeviceLab
 {
     /// <summary>
     /// Custom ListBox that exposes a SelectionList Dependency property to enable two-way binding.
-    /// Internally, SelectionList is kept in sink with the SelectedItems property of the base
-    /// class
+    /// Internally, SelectionList is kept in sink with the SelectedItems property of the base class
     /// </summary>
     public class SelectionListBox : ListBox
     {
+        //-------------------------------------------------------------------
+        // Constructors
+        //-------------------------------------------------------------------
+        #region Constructors
+        /// <summary>
+        /// Initializes static members of the <see cref="SelectionListBox" /> class.
+        /// </summary>
         static SelectionListBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SelectionListBox), new FrameworkPropertyMetadata(typeof(SelectionListBox)));
         }
+        #endregion // Cosntructors
 
-        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
-        {
-            base.OnSelectionChanged(e);
-            SetValue(SelectionListProperty, this.SelectedItems);
-        }
+        //-------------------------------------------------------------------
+        // Depenency Properties
+        //-------------------------------------------------------------------
+        #region Dependency Properties
+        #region SelectionList Dependency Property
 
+        /// <summary>
+        /// Gets or sets the SelectionList dependency property for the instance of the class
+        /// </summary>
         public IList SelectionList
         {
             get { return (IList)GetValue(SelectionListProperty); }
-            set { SetValue(SelectionListProperty, value); }
+            set { this.SetValue(SelectionListProperty, value); }
         }
 
+        /// <summary>
+        /// SelectionList Dependency Property static association
+        /// </summary>
         public static readonly DependencyProperty SelectionListProperty =
             DependencyProperty.Register("SelectionList", typeof(IList), typeof(SelectionListBox), new PropertyMetadata(null, null, CoerceSelectionList));
-
  
         /// <summary>
         /// Coerce the value of SelectionList so that it is identical to (i.e. the same object as) the
@@ -73,5 +85,17 @@ namespace DeviceLab
 
             return selectedItems;
         }
+
+        /// <summary>
+        /// OnSelectionChange needs to drive changes to the SelectionList Dependency Property
+        /// </summary>
+        /// <param name="e">The arguments associated with this event</param>
+        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+        {
+            base.OnSelectionChanged(e);
+            this.SetValue(SelectionListProperty, this.SelectedItems);
+        }
+        #endregion // SelectionList Dependency Property
+        #endregion // Dependency Properties
     }
 }

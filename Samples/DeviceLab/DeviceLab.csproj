@@ -59,31 +59,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AutoScrollTextBox.cs" />
-    <Compile Include="CommandSequence.cs" />
-    <Compile Include="DeviceCollectionView.xaml.cs">
+    <Compile Include="Controls\AutoScrollTextBox.cs" />
+    <Compile Include="ViewModels\CommandSequence.cs" />
+    <Compile Include="Views\DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DevicePortalCommandModel.cs" />
-    <Compile Include="DevicePortalViewModel.cs" />
-    <Compile Include="DeviceSignInView.xaml.cs">
+    <Compile Include="ViewModels\DevicePortalCommandModel.cs" />
+    <Compile Include="ViewModels\DevicePortalViewModel.cs" />
+    <Compile Include="Views\DeviceSignInView.xaml.cs">
       <DependentUpon>DeviceSignInView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="NumberEntryBox.xaml.cs">
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Controls\NumberEntryBox.xaml.cs">
       <DependentUpon>NumberEntryBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectionListBox.cs" />
+    <Compile Include="Controls\SelectionListBox.cs" />
     <Compile Include="XboxDevicePortalConnection.cs" />
-    <Page Include="BindablePassword.xaml">
+    <Page Include="Views\BindablePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DeviceCollectionView.xaml">
+    <Page Include="Views\DeviceCollectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DeviceSignInView.xaml">
+    <Page Include="Views\DeviceSignInView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,16 +95,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BindablePassword.xaml.cs">
+    <Compile Include="Views\BindablePassword.xaml.cs">
       <DependentUpon>BindablePassword.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DeviceSignInViewModel.cs" />
-    <Compile Include="DiagnosticOutputViewModel.cs" />
+    <Compile Include="ViewModels\DeviceSignInViewModel.cs" />
+    <Compile Include="ViewModels\DiagnosticOutputViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NumberEntryBox.xaml">
+    <Page Include="Controls\NumberEntryBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
