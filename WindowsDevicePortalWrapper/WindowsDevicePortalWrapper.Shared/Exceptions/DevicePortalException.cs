@@ -205,34 +205,34 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class HttpErrorResponse
         {
             /// <summary>
-            /// Gets or sets the ErrorCode
+            /// Gets the ErrorCode
             /// </summary>
             [DataMember(Name = "ErrorCode")]
-            public int ErrorCode { get; set; }
+            public int ErrorCode { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Code (used by some endpoints instead of ErrorCode).
+            /// Gets the Code (used by some endpoints instead of ErrorCode).
             /// </summary>
             [DataMember(Name = "Code")]
-            public int Code { get; set; }
+            public int Code { get; private set; }
 
             /// <summary>
-            /// Gets or sets the ErrorMessage
+            /// Gets the ErrorMessage
             /// </summary>
             [DataMember(Name = "ErrorMessage")]
-            public string ErrorMessage { get; set; }
+            public string ErrorMessage { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Reason (used by some endpoints instead of ErrorMessage).
+            /// Gets the Reason (used by some endpoints instead of ErrorMessage).
             /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether the operation succeeded. For an error this should generally be false if present.
+            /// Gets a value indicating whether the operation succeeded. For an error this should generally be false if present.
             /// </summary>
             [DataMember(Name = "Success")]
-            public bool Success { get; set; }
+            public bool Success { get; private set; }
         }
 
         #endregion

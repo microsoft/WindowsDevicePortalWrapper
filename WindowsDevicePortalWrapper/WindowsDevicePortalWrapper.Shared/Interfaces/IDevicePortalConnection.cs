@@ -40,11 +40,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         string Family { get; set; }
 
         /// <summary>
-        /// Gets the friendly name of the device (ex: LivingRoomPC).
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets or sets information describing the operating system installed on the device.
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }

@@ -211,22 +211,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class IoTOSInfo
         {
             /// <summary>
-            /// Gets or sets the device model
+            /// Gets the device model
             /// </summary>
             [DataMember(Name = "DeviceModel")]
-            public string Model { get; set; }
+            public string Model { get; private set; }
 
             /// <summary>
-            ///  Gets or sets the device name.
+            ///  Gets the device name.
             /// </summary>
             [DataMember(Name = "DeviceName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the OS version
+            /// Gets the OS version
             /// </summary>
             [DataMember(Name = "OSVersion")]
-            public string OSVersion { get; set; }
+            public string OSVersion { get; private set; }
         }
 
         /// <summary>
@@ -236,16 +236,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class TimezoneInfo
         {
             /// <summary>
-            /// Gets or sets the current timezone
+            /// Gets the current timezone
             /// </summary>
             [DataMember(Name = "Current")]
-            public Timezone CurrentTimeZone { get; set; }
+            public Timezone CurrentTimeZone { get; private set; }
 
             /// <summary>
-            /// Gets or sets the list of all timezones
+            /// Gets the list of all timezones
             /// </summary>
             [DataMember(Name = "Timezones")]
-            public Timezone[] Timezones { get; set; }
+            public Timezone[] Timezones { get; private set; }
         }
 
         /// <summary>
@@ -255,22 +255,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public partial class Timezone
         {
             /// <summary>
-            /// Gets or sets the timezone description
+            /// Gets the timezone description
             /// </summary>
             [DataMember(Name = "Description")]
-            public string Description { get; set; }
+            public string Description { get; private set; }
 
             /// <summary>
-            /// Gets or sets the timezone index
+            /// Gets the timezone index
             /// </summary>
             [DataMember(Name = "Index")]
-            public int Index { get; set; }
+            public int Index { get; private set; }
 
             /// <summary>
-            /// Gets or sets the timezone name
+            /// Gets the timezone name
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
         }
 
         /// <summary>
@@ -280,10 +280,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DateTimeInfo
         {
             /// <summary>
-            /// Gets or sets the current date time
+            /// Gets the current date time
             /// </summary>
             [DataMember(Name = "Current")]
-            public DateTimeDescription CurrentDateTime { get; set; }
+            public DateTimeDescription CurrentDateTime { get; private set; }
         }
 
         /// <summary>
@@ -293,40 +293,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public partial class DateTimeDescription
         {
             /// <summary>
-            /// Gets or sets the current day
+            /// Gets the current day
             /// </summary>
             [DataMember(Name = "Day")]
-            public int Day { get; set; }
+            public int Day { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current hour 
+            /// Gets the current hour 
             /// </summary>
             [DataMember(Name = "Hour")]
-            public int Hour { get; set; }
+            public int Hour { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current minute
+            /// Gets the current minute
             /// </summary>
             [DataMember(Name = "Minute")]
-            public int Min { get; set; }
+            public int Min { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current month 
+            /// Gets the current month 
             /// </summary>
             [DataMember(Name = "Month")]
-            public int Month { get; set; }
+            public int Month { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current second 
+            /// Gets the current second 
             /// </summary>
             [DataMember(Name = "Second")]
-            public int Sec { get; set; }
+            public int Sec { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current year 
+            /// Gets the current year 
             /// </summary>
             [DataMember(Name = "Year")]
-            public int Year { get; set; }
+            public int Year { get; private set; }
         }
 
         /// <summary>
@@ -336,16 +336,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ControllerDriverInfo
         {
             /// <summary>
-            /// Gets or sets the current driver information
+            /// Gets the current driver information
             /// </summary>
             [DataMember(Name = "CurrentDriver")]
-            public string CurrentDriver { get; set; }
+            public string CurrentDriver { get; private set; }
 
             /// <summary>
-            /// Gets or sets the list of all the controller drivers information
+            /// Gets the list of all the controller drivers information
             /// </summary>         
             [DataMember(Name = "ControllersDrivers")]
-            public string[] ControllersDrivers { get; set; }
+            public string[] ControllersDrivers { get; private set; }
         }
 
         /// <summary>
@@ -355,10 +355,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DisplayOrientationInfo
         {
             /// <summary>
-            /// Gets or sets the dispaly orientation information
+            /// Gets the dispaly orientation information
             /// </summary>
             [DataMember(Name = "Orientation")]
-            public int Orientation { get; set; }
+            public int Orientation { get; private set; }
         }
 
         /// <summary>
@@ -368,16 +368,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DisplayResolutionInfo
         {
             /// <summary>
-            /// Gets or sets the current display resolution
+            /// Gets the current display resolution
             /// </summary>
             [DataMember(Name = "Current")]
-            public Resolution CurrentResolution { get; set; }
+            public Resolution CurrentResolution { get; private set; }
 
             /// <summary>
-            /// Gets or sets the list of resolution specifications
+            /// Gets the list of resolution specifications
             /// </summary>
             [DataMember(Name = "Resolutions")]
-            public Resolution[] Resolutions { get; set; }
+            public Resolution[] Resolutions { get; private set; }
         }
 
         /// <summary>
@@ -387,16 +387,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public partial class Resolution
         {
             /// <summary>
-            /// Gets or sets the list of supported display resolutions 
+            /// Gets the list of supported display resolutions 
             /// </summary>
             [DataMember(Name = "Resolution")]
-            public string ResolutionDetail { get; set; }
+            public string ResolutionDetail { get; private set; }
 
             /// <summary>
-            /// Gets or sets the index for the resolution information
+            /// Gets the index for the resolution information
             /// </summary>
             [DataMember(Name = "Index")]
-            public int Index { get; set; }
+            public int Index { get; private set; }
         }
         #endregion // Data contract
     }

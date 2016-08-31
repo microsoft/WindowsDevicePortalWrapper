@@ -39,16 +39,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class RemoteSettingsStatusInfo
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the service is running.
+            /// Gets a value indicating whether the service is running.
             /// </summary>
             [DataMember(Name = "IsRunning")]
-            public bool IsRunning { get; set; }
+            public bool IsRunning { get; private set; }
 
             /// <summary>
-            ///  Gets or sets a value indicating whether the service is scheduled.
+            ///  Gets a value indicating whether the service is scheduled.
             /// </summary>
             [DataMember(Name = "IsScheduled")]
-            public bool IsScheduled { get; set; }
+            public bool IsScheduled { get; private set; }
         }
         #endregion // Data contract
     }

@@ -53,22 +53,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class SoftAPSettingsInfo
         {
             /// <summary>
-            /// Gets or sets whether Soft AP is enabled.
+            /// Gets whether Soft AP is enabled.
             /// </summary>
             [DataMember(Name = "SoftAPEnabled")]
-            public string SoftAPEnabled { get; set; }
+            public string SoftAPEnabled { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Soft AP Password.
+            /// Gets the Soft AP Password.
             /// </summary>
             [DataMember(Name = "SoftApPassword")]
-            public string SoftApPassword { get; set; }
+            public string SoftApPassword { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Soft AP SSID.
+            /// Gets the Soft AP SSID.
             /// </summary>
             [DataMember(Name = "SoftApSsid")]
-            public string SoftApSsid { get; set; }
+            public string SoftApSsid { get; private set; }
         }
 
         /// <summary>
@@ -78,28 +78,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AllJoynSettingsInfo
         {
             /// <summary>
-            /// Gets or sets the Default description.
+            /// Gets the Default description.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingDefaultDescription")]
-            public string AllJoynOnboardingDefaultDescription { get; set; }
+            public string AllJoynOnboardingDefaultDescription { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Default Manufacturer.
+            /// Gets the Default Manufacturer.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingDefaultManufacturer")]
-            public string AllJoynOnboardingDefaultManufacturer { get; set; }
+            public string AllJoynOnboardingDefaultManufacturer { get; private set; }
 
             /// <summary>
-            /// Gets or sets whether this is enabled.
+            /// Gets whether this is enabled.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingEnabled")]
-            public string AllJoynOnboardingEnabled { get; set; }
+            public string AllJoynOnboardingEnabled { get; private set; }
 
             /// <summary>
-            /// Gets or sets the model number.
+            /// Gets the model number.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingModelNumber")]
-            public string AllJoynOnboardingModelNumber { get; set; }
+            public string AllJoynOnboardingModelNumber { get; private set; }
         }
         #endregion // Data contract
     }

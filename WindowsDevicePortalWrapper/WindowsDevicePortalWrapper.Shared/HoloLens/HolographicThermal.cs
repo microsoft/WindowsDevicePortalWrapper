@@ -71,10 +71,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ThermalStage
         {
             /// <summary>
-            /// Gets or sets the raw stage value
+            /// Gets the raw stage value
             /// </summary>
             [DataMember(Name = "CurrentStage")]
-            public int StageRaw { get; set; }
+            public int StageRaw { get; private set; }
 
             /// <summary>
             /// Gets the enumeration value of the thermal stage

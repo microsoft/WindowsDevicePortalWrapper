@@ -275,14 +275,14 @@ namespace MockDataGenerator
             }
 
             /// <summary>
-            /// Gets or sets the HTTP Method.
+            /// Gets the HTTP Method.
             /// </summary>
-            public HttpMethods Method { get; set; }
+            public HttpMethods Method { get; private set; }
 
             /// <summary>
-            /// Gets or sets the endpoint value.
+            /// Gets the endpoint value.
             /// </summary>
-            public string Value { get; set; }
+            public string Value { get; private set; }
 
             /// <summary>
             /// Overridden ToString method.
