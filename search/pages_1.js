@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['running_20tests',['Running Tests',['../md_Testing.html',1,'']]]
+  ['installing_20the_20project',['Installing the project',['../md_GettingStarted.html',1,'']]]
 ];

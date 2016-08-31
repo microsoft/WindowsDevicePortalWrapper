@@ -133,7 +133,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Run '&lt;Doxygen Install Location&gt;\doxygen.exe DocConfig.txt'. This will update the files under the html folder relative to the root directory.</li>
 <li>Delete everything but the html folder, then bring the contents of html/ to root.</li>
 <li>Commit, and PR to the gh-pages branch.</li>
-<li>Ponder a better way to do this. </li>
+<li>Ponder a better way to do this.</li>
+</ol>
+<p>Alternate:</p>
+<ol type="1">
+<li>First time, do steps 1-3 above, only make the gh-pages branch a second clone of the repository to keep things cleaner and easier for the helper script and for the future.</li>
+<li>Run the helper script from a command prompt starting at the root of this second clone: 'updateDocs.cmd &lt;path to your master repository&gt;'</li>
+<li>Verify the docs look right on the <a href="https://microsoft.github.io/WindowsDevicePortalWrapper/">main site</a> </li>
 </ol>
 </div></div><!-- contents -->
 <!-- start footer part -->

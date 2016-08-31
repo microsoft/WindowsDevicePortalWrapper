@@ -8,6 +8,7 @@ var searchData=
   ['mrclivestreamlowresapi',['MrcLiveStreamLowResApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a1b08f4f8bece0723e25223c1ed31f0c5',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['mrclivestreammediumresapi',['MrcLiveStreamMediumResApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ada593c940fce4c938ed46704a14882ef',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['mrcphotoapi',['MrcPhotoApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a47452e35c11f57317011cb3f9ad0f398',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['mrcsettingsapi',['MrcSettingsApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a04f9fac84809bddceeda41eb6e9fd894',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['mrcstartrecordingapi',['MrcStartRecordingApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#aa4b93589ca4ea01db2ff071c358e2549',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['mrcstatusapi',['MrcStatusApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ac0a656ff0f383d68a28c4604ff791383',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['mrcstoprecordingapi',['MrcStopRecordingApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a52ddfa079f51f95de29251eb3c3b7a1e',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],

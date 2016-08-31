@@ -115,11 +115,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0837b7b807fe25d209cb1bd5cea27264"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a0837b7b807fe25d209cb1bd5cea27264">DefaultDevicePortalConnection</a> (string address, string userName, string password)</td></tr>
 <tr class="memdesc:a0837b7b807fe25d209cb1bd5cea27264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html" title="Default implementation of the IDevicePortalConnection interface. This implementation is designed to b...">DefaultDevicePortalConnection</a> class.  <a href="#a0837b7b807fe25d209cb1bd5cea27264">More...</a><br /></td></tr>
 <tr class="separator:a0837b7b807fe25d209cb1bd5cea27264"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50e6d25e415a7500922967388097b2e7"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a50e6d25e415a7500922967388097b2e7">GetDeviceCertificateData</a> ()</td></tr>
-<tr class="memdesc:a50e6d25e415a7500922967388097b2e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the raw device certificate.  <a href="#a50e6d25e415a7500922967388097b2e7">More...</a><br /></td></tr>
-<tr class="separator:a50e6d25e415a7500922967388097b2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f3ef5bf4922c336d281593559b27027"><td class="memItemLeft" align="right" valign="top">X509Certificate2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a6f3ef5bf4922c336d281593559b27027">GetDeviceCertificate</a> ()</td></tr>
+<tr class="memdesc:a6f3ef5bf4922c336d281593559b27027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the provided device certificate.  <a href="#a6f3ef5bf4922c336d281593559b27027">More...</a><br /></td></tr>
+<tr class="separator:a6f3ef5bf4922c336d281593559b27027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a364febe1ca479b9c99bcd83247bffec4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a364febe1ca479b9c99bcd83247bffec4">SetDeviceCertificate</a> (X509Certificate2 certificate)</td></tr>
-<tr class="memdesc:a364febe1ca479b9c99bcd83247bffec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates and sets the device certificate.  <a href="#a364febe1ca479b9c99bcd83247bffec4">More...</a><br /></td></tr>
+<tr class="memdesc:a364febe1ca479b9c99bcd83247bffec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a manually provided device certificate.  <a href="#a364febe1ca479b9c99bcd83247bffec4">More...</a><br /></td></tr>
 <tr class="separator:a364febe1ca479b9c99bcd83247bffec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bf2e4ab324ed45bbc6436217e236e1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a7bf2e4ab324ed45bbc6436217e236e1b">UpdateConnection</a> (bool requiresHttps)</td></tr>
 <tr class="memdesc:a7bf2e4ab324ed45bbc6436217e236e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the device's connection Uri.  <a href="#a7bf2e4ab324ed45bbc6436217e236e1b">More...</a><br /></td></tr>
@@ -130,19 +130,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0837b7b807fe25d209cb1bd5cea27264"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a0837b7b807fe25d209cb1bd5cea27264">DefaultDevicePortalConnection</a> (string address, string userName, string password)</td></tr>
 <tr class="memdesc:a0837b7b807fe25d209cb1bd5cea27264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html" title="Default implementation of the IDevicePortalConnection interface. This implementation is designed to b...">DefaultDevicePortalConnection</a> class.  <a href="#a0837b7b807fe25d209cb1bd5cea27264">More...</a><br /></td></tr>
 <tr class="separator:a0837b7b807fe25d209cb1bd5cea27264"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fe059408ae6f1002baff2e4597bf67b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a1fe059408ae6f1002baff2e4597bf67b">SetDeviceCertificate</a> (Certificate certificate)</td></tr>
-<tr class="memdesc:a1fe059408ae6f1002baff2e4597bf67b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device's root certificate in the certificate store.  <a href="#a1fe059408ae6f1002baff2e4597bf67b">More...</a><br /></td></tr>
-<tr class="separator:a1fe059408ae6f1002baff2e4597bf67b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bf2e4ab324ed45bbc6436217e236e1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a7bf2e4ab324ed45bbc6436217e236e1b">UpdateConnection</a> (bool requiresHttps)</td></tr>
 <tr class="memdesc:a7bf2e4ab324ed45bbc6436217e236e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the device's connection Uri.  <a href="#a7bf2e4ab324ed45bbc6436217e236e1b">More...</a><br /></td></tr>
 <tr class="separator:a7bf2e4ab324ed45bbc6436217e236e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a98c785880b8bf692e700f916cd74ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_default_device_portal_connection.html#a3a98c785880b8bf692e700f916cd74ac">UpdateConnection</a> (IpConfiguration ipConfig, bool requiresHttps=false)</td></tr>
 <tr class="memdesc:a3a98c785880b8bf692e700f916cd74ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the device's connection Uri.  <a href="#a3a98c785880b8bf692e700f916cd74ac">More...</a><br /></td></tr>
 <tr class="separator:a3a98c785880b8bf692e700f916cd74ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a></td></tr>
-<tr class="memitem:a0c4117efb8b63e25767f52e1a0252379 inherit pub_methods_interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#a0c4117efb8b63e25767f52e1a0252379">SetDeviceCertificate</a> (System.Security.Cryptography.X509Certificates.X509Certificate2 certificate)</td></tr>
-<tr class="memdesc:a0c4117efb8b63e25767f52e1a0252379 inherit pub_methods_interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates and sets the device certificate.  <a href="#a0c4117efb8b63e25767f52e1a0252379">More...</a><br /></td></tr>
-<tr class="separator:a0c4117efb8b63e25767f52e1a0252379 inherit pub_methods_interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -288,7 +281,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a50e6d25e415a7500922967388097b2e7"></a>
+<a class="anchor" id="a6f3ef5bf4922c336d281593559b27027"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -296,7 +289,7 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">byte [] Microsoft.Tools.WindowsDevicePortal.DefaultDevicePortalConnection.GetDeviceCertificateData </td>
+          <td class="memname">X509Certificate2 Microsoft.Tools.WindowsDevicePortal.DefaultDevicePortalConnection.GetDeviceCertificate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -309,42 +302,10 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the raw device certificate. </p>
-<dl class="section return"><dt>Returns</dt><dd>Byte array containing the raw certificate data.</dd></dl>
+<p>Gets the provided device certificate. </p>
+<dl class="section return"><dt>Returns</dt><dd>Stored device certificate.</dd></dl>
 
-<p>Implements <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#ad744c0610355739d44820f3bb1010f4e">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1fe059408ae6f1002baff2e4597bf67b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Microsoft.Tools.WindowsDevicePortal.DefaultDevicePortalConnection.SetDeviceCertificate </td>
-          <td>(</td>
-          <td class="paramtype">Certificate&#160;</td>
-          <td class="paramname"><em>certificate</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the device's root certificate in the certificate store. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">certificate</td><td>The device's root certificate.</td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Implements <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#a35635fa3672566630f7be25c7d7f06c0">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a>.</p>
 
 </div>
 </div>
@@ -370,13 +331,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Validates and sets the device certificate. </p>
+<p>Stores a manually provided device certificate. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">certificate</td><td>The device's root certificate.</td></tr>
   </table>
   </dd>
 </dl>
+
+<p>Implements <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#ac387abeb74e136189dd482cf5e17731b">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['post',['Post',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a3c9db9126f53fec96711064f3fd6ef00a03d947a2158373c3b9d74325850cb8b9',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['put',['Put',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a3c9db9126f53fec96711064f3fd6ef00ad0bf1810982e9728fcf3ac444a015373',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['none',['None',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a6d809b60c74a8dfeca3698554f0afb6da6adf97f83acf6453d4a6a4b1070f3754',1,'Microsoft.Tools.WindowsDevicePortal.None()'],['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#acbff0faba4b2b8843a2ca4e6333a9407a6adf97f83acf6453d4a6a4b1070f3754',1,'Microsoft.Tools.WindowsDevicePortal.None()']]],
+  ['normal',['Normal',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#aba1cf1ca5947296337c5aedd4fa37bf4a960b44c579bc2f6818d2daaf9e4c16f0',1,'Microsoft::Tools::WindowsDevicePortal']]]
 ];

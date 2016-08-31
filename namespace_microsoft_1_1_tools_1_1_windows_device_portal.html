@@ -173,6 +173,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a5dfb79f32ed30c50be62194ee566c7df"><td class="memItemLeft" align="right" valign="top">delegate bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a5dfb79f32ed30c50be62194ee566c7df">UnvalidatedCertEventHandler</a> (<a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a> sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)</td></tr>
+<tr class="memdesc:a5dfb79f32ed30c50be62194ee566c7df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler for when an unvalidated cert is received.  <a href="#a5dfb79f32ed30c50be62194ee566c7df">More...</a><br /></td></tr>
+<tr class="separator:a5dfb79f32ed30c50be62194ee566c7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf35e29112489102fd9522f1f986c256"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#adf35e29112489102fd9522f1f986c256">ApplicationInstallStatusEventHandler</a> (<a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a> sender, <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_application_install_status_event_args.html">ApplicationInstallStatusEventArgs</a> args)</td></tr>
 <tr class="memdesc:adf35e29112489102fd9522f1f986c256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application install status event handler  <a href="#adf35e29112489102fd9522f1f986c256">More...</a><br /></td></tr>
 <tr class="separator:adf35e29112489102fd9522f1f986c256"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -438,6 +441,56 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a5dfb79f32ed30c50be62194ee566c7df"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delegate bool Microsoft.Tools.WindowsDevicePortal.UnvalidatedCertEventHandler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html">DevicePortal</a>&#160;</td>
+          <td class="paramname"><em>sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">X509Certificate&#160;</td>
+          <td class="paramname"><em>certificate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">X509Chain&#160;</td>
+          <td class="paramname"><em>chain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SslPolicyErrors&#160;</td>
+          <td class="paramname"><em>sslPolicyErrors</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handler for when an unvalidated cert is received. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sender</td><td>The sender of the event.</td></tr>
+    <tr><td class="paramname">certificate</td><td>The server's certificate.</td></tr>
+    <tr><td class="paramname">chain</td><td>The cert chain.</td></tr>
+    <tr><td class="paramname">sslPolicyErrors</td><td>Policy Errors.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>whether the cert should still pass validation.</dd></dl>
 
 </div>
 </div>

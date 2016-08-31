@@ -136,6 +136,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <td>/Method </td><td>HTTP method to use (default is GET) </td></tr>
 <tr>
 <td>/Directory </td><td>Directory to save mock data file(s) (default is .) </td></tr>
+<tr>
+<td>/requestBody </td><td>File to use for the request body. Only applicable when /Endpoint is present. </td></tr>
+<tr>
+<td>/requestBodyMultiPartFile </td><td>Normally the requestBody file is considered JSON and provided as is. Specify this parameter to include it as a multipart file instead. </td></tr>
 </table>
 <h3><a class="el" href="namespace_mock_data_generator.html">MockDataGenerator</a> File Name Format</h3>
 <p>All mock data is saved as files in the &lt;endpoint&gt;_&lt;platform&gt;_&lt;friendly OS version&gt;.dat format, such as api_os_devicefamily_XboxOne_rs1_xbox_rel_1608.dat.</p>
@@ -150,7 +154,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;MockDataGenerator.exe  /ip: 10.0.0.1:11443 /user:TestUser /pwd:SuperSecret /endpoint:api/os/devicefamily</div></div><!-- fragment --><p> or </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;MockDataGenerator.exe  /ip: 10.0.0.1:11443 /user:TestUser /pwd:SuperSecret /endpoint:api/os/devicefamily /method:Get</div></div><!-- fragment --><ul>
 <li>Generate mock for the System Performance API web socket connection and store it in .</li>
 </ul>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;MockDataGenerator.exe  /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/resourcemanager/systemperf /method:WebSocket</div></div><!-- fragment --><h2>Adding Mock Data to the Solution</h2>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;MockDataGenerator.exe  /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/resourcemanager/systemperf /method:WebSocket</div></div><!-- fragment --><ul>
+<li><p class="startli">Generate mock for a POST call to upload a file, specifying the file to use for the request body.</p>
+<p class="startli">```shell MockDataGenerator.exe /ip: 10.0.0.1:11443/user:TestUser /pwd:SuperSecret /endpoint:api/filesystem/apps/file?knownfolderid=LocalAppData&amp;packagefullname=MyTestPackage_Fullname /method:Post /requestBody:myfile.txt /requestBodyMultiPartFile ```</p>
+</li>
+</ul>
+<h2>Adding Mock Data to the Solution</h2>
 <ol type="1">
 <li>Mock data should be added to the UnitTestProject in the MockData directory.<ul>
 <li><p class="startli">Default mock data should be added to the MockData directory.</p>

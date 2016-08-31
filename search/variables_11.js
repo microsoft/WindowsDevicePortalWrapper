@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['verboseflag',['VerboseFlag',['../class_xbox_wdp_driver_1_1_parameter_helper.html#ab416a1b0e7eb1595ce658b44772a4a01',1,'XboxWdpDriver::ParameterHelper']]]
+  ['uploadpackagefolderapi',['UploadPackageFolderApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a066e0f3dfcaff527e870cef48b537fd9',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
 ];
