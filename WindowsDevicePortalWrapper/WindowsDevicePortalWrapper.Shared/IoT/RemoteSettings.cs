@@ -15,6 +15,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         public static readonly string RemoteSettingsStatusApi = "api/iot/remote/status";
+        public static readonly string RemoteSettingsEnableApi = "api/iot/remote/enable";
+        public static readonly string RemoteSettingsDisableApi = "api/iot/remote/disable";
 
         /// <summary>
         /// Gets the Remote Settings Status Information.
@@ -23,6 +25,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task<RemoteSettingsStatusInfo> GetRemoteSettingsStatusInfo()
         {
             return await this.Get<RemoteSettingsStatusInfo>(RemoteSettingsStatusApi);
+        }
+
+        /// <summary>
+        /// Enables the remote settings.
+        /// </summary>
+        public async Task<RemoteSettingsStatusInfo> RemoteSettingsEnable()
+        {
+            return await this.Post<RemoteSettingsStatusInfo>(
+                RemoteSettingsEnableApi);
+        }
+
+        /// <summary>
+        /// Disables the remote settings.
+        /// </summary>
+        public async Task<RemoteSettingsStatusInfo> RemoteSettingsDisable()
+        {
+            return await this.Post<RemoteSettingsStatusInfo>(
+                RemoteSettingsDisableApi);
         }
 
         #region Data contract

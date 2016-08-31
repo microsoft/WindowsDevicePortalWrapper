@@ -120,7 +120,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             // Check some known things about this response.
             NetworkAdapterInfo adapter = ipconfig.Adapters[0];
-            Assert.AreEqual("Bluetooth Device (Personal Area Network)", adapter.Description);
+            Assert.AreEqual("
+                
+                
+                Device (Personal Area Network)", adapter.Description);
             Assert.AreEqual("b8-27-eb-8d-0b-c5", adapter.MacAddress);
             Assert.AreEqual(4, adapter.Index);
             IpAddressInfo ipAddress = adapter.IpAddresses[0];

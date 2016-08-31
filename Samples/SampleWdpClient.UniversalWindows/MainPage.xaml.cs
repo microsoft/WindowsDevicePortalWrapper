@@ -183,7 +183,16 @@ namespace SampleWdpClient.UniversalWindows
                     try
                     {
                         IpConfiguration ipconfig = await portal.GetIpConfig();
+                        //GetAvailableBluetoothDevicesInfo(portal);
+                        //AvailableBluetoothDevicesInfo dev = portal.GetPairedBluetoothDevicesInfo();
+                        //AvailableBluetoothDevicesInfo dev1 = portal.GetAvailableBluetoothDevicesInfo();
+                        // sb.AppendLine(dev.AvailableDevices.Length.ToString());
 
+                        // sb.AppendLine(dev1.AvailableDevices.Length.ToString());
+                        //RemoteSettingsStatusInfo enable = await portal.RemoteSettingsDisable();
+                        //sb.AppendLine(enable.IsRunning.ToString());
+                         RunCommandOutputInfo output =  await portal.RunCommandWithoutOutput("tlist.exe","false","10000");
+                        sb.AppendLine(output.output);
                         foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
                         {
                             sb.Append(" ");
