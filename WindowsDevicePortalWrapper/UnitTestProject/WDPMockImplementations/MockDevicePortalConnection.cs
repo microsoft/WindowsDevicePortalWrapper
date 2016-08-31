@@ -67,27 +67,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Gets or sets the device name
-        /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets device OS Info
         /// </summary>
         public OperatingSystemInformation OsInfo
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the device's qualified name
-        /// </summary>
-        public string QualifiedName
         {
             get;
             set;

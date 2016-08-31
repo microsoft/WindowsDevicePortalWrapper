@@ -37,12 +37,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private WebSocket<SystemPerformanceInformation> systemPerfWebSocket;
 
         /// <summary>
-        /// Gets or sets the running processes message received handler.
+        /// The running processes message received handler.
         /// </summary>
         public event WebSocketMessageReceivedEventHandler<RunningProcesses> RunningProcessesMessageReceived;
 
         /// <summary>
-        /// Gets or sets the system perf message received handler.
+        /// The system perf message received handler.
         /// </summary>
         public event WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> SystemPerfMessageReceived;
 
@@ -189,28 +189,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ProcessVersion
         {
             /// <summary>
-            /// Gets or sets the major version number
+            /// Gets the major version number
             /// </summary>
             [DataMember(Name = "Major")]
-            public uint Major { get; set; }
+            public uint Major { get; private set; }
 
             /// <summary>
-            /// Gets or sets the minor version number
+            /// Gets the minor version number
             /// </summary>
             [DataMember(Name = "Minor")]
-            public uint Minor { get; set; }
+            public uint Minor { get; private set; }
 
             /// <summary>
-            /// Gets or sets the build number
+            /// Gets the build number
             /// </summary>
             [DataMember(Name = "Build")]
-            public uint Build { get; set; }
+            public uint Build { get; private set; }
 
             /// <summary>
-            /// Gets or sets the revision number
+            /// Gets the revision number
             /// </summary>
             [DataMember(Name = "Revision")]
-            public uint Revision { get; set; }
+            public uint Revision { get; private set; }
         }
 
         /// <summary>
@@ -220,100 +220,100 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DeviceProcessInfo
         {
             /// <summary>
-            /// Gets or sets the app name
+            /// Gets the app name
             /// </summary>
             [DataMember(Name = "AppName")]
-            public string AppName { get; set; }
+            public string AppName { get; private set; }
 
             /// <summary>
-            /// Gets or sets CPU usage
+            /// Gets CPU usage
             /// </summary>
             [DataMember(Name = "CPUUsage")]
-            public float CpuUsage { get; set; }
+            public float CpuUsage { get; private set; }
 
             /// <summary>
-            /// Gets or sets the image name
+            /// Gets the image name
             /// </summary>
             [DataMember(Name = "ImageName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the process id
+            /// Gets the process id
             /// </summary>
             [DataMember(Name = "ProcessId")]
-            public int ProcessId { get; set; }
+            public int ProcessId { get; private set; }
 
             /// <summary>
-            /// Gets or sets the owner name
+            /// Gets the owner name
             /// </summary>
             [DataMember(Name = "UserName")]
-            public string UserName { get; set; }
+            public string UserName { get; private set; }
 
             /// <summary>
-            /// Gets or sets the package full name
+            /// Gets the package full name
             /// </summary>
             [DataMember(Name = "PackageFullName")]
-            public string PackageFullName { get; set; }
+            public string PackageFullName { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Page file usage info
+            /// Gets the Page file usage info
             /// </summary>
             [DataMember(Name = "PageFileUsage")]
-            public uint PageFile { get; set; }
+            public uint PageFile { get; private set; }
 
             /// <summary>
-            /// Gets or sets the working set size
+            /// Gets the working set size
             /// </summary>
             [DataMember(Name = "WorkingSetSize")]
-            public uint WorkingSet { get; set; }
+            public uint WorkingSet { get; private set; }
 
             /// <summary>
-            /// Gets or sets package working set
+            /// Gets package working set
             /// </summary>
             [DataMember(Name = "PrivateWorkingSet")]
-            public double PrivateWorkingSet { get; set; }
+            public double PrivateWorkingSet { get; private set; }
 
             /// <summary>
-            /// Gets or sets session id
+            /// Gets session id
             /// </summary>
             [DataMember(Name = "SessionId")]
-            public uint SessionId { get; set; }
+            public uint SessionId { get; private set; }
 
             /// <summary>
-            /// Gets or sets total commit
+            /// Gets total commit
             /// </summary>
             [DataMember(Name = "TotalCommit")]
-            public double TotalCommit { get; set; }
+            public double TotalCommit { get; private set; }
 
             /// <summary>
-            /// Gets or sets virtual size
+            /// Gets virtual size
             /// </summary>
             [DataMember(Name = "VirtualSize")]
-            public double VirtualSize { get; set; }
+            public double VirtualSize { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether or not the process is running
+            /// Gets a value indicating whether or not the process is running
             /// </summary>
             [DataMember(Name = "IsRunning")]
-            public bool IsRunning { get; set; }
+            public bool IsRunning { get; private set; }
 
             /// <summary>
-            /// Gets or sets publisher
+            /// Gets publisher
             /// </summary>
             [DataMember(Name = "Publisher")]
-            public string Publisher { get; set; }
+            public string Publisher { get; private set; }
 
             /// <summary>
-            /// Gets or sets version
+            /// Gets version
             /// </summary>
             [DataMember(Name = "Version")]
-            public ProcessVersion Version { get; set; }
+            public ProcessVersion Version { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether or not the package is a XAP package
+            /// Gets a value indicating whether or not the package is a XAP package
             /// </summary>
             [DataMember(Name = "IsXAP")]
-            public bool IsXAP { get; set; }
+            public bool IsXAP { get; private set; }
 
             /// <summary>
             /// String representation of a process
@@ -332,40 +332,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class GpuAdapter
         {
             /// <summary>
-            /// Gets or sets total Dedicated memory
+            /// Gets total Dedicated memory
             /// </summary>
             [DataMember(Name = "DedicatedMemory")]
-            public uint DedicatedMemory { get; set; }
+            public uint DedicatedMemory { get; private set; }
 
             /// <summary>
-            /// Gets or sets used Dedicated memory
+            /// Gets used Dedicated memory
             /// </summary>
             [DataMember(Name = "DedicatedMemoryUsed")]
-            public uint DedicatedMemoryUsed { get; set; }
+            public uint DedicatedMemoryUsed { get; private set; }
 
             /// <summary>
-            /// Gets or sets description
+            /// Gets description
             /// </summary>
             [DataMember(Name = "Description")]
-            public string Description { get; set; }
+            public string Description { get; private set; }
 
             /// <summary>
-            /// Gets or sets system memory
+            /// Gets system memory
             /// </summary>
             [DataMember(Name = "SystemMemory")]
-            public uint SystemMemory { get; set; }
+            public uint SystemMemory { get; private set; }
 
             /// <summary>
-            /// Gets or sets memory used
+            /// Gets memory used
             /// </summary>
             [DataMember(Name = "SystemMemoryUsed")]
-            public uint SystemMemoryUsed { get; set; }
+            public uint SystemMemoryUsed { get; private set; }
 
             /// <summary>
-            /// Gets or sets engines utilization
+            /// Gets engines utilization
             /// </summary>
             [DataMember(Name = "EnginesUtilization")]
-            public List<float> EnginesUtilization { get; set; }
+            public List<float> EnginesUtilization { get; private set; }
         }
 
         /// <summary>
@@ -375,10 +375,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class GpuPerformanceData
         {
             /// <summary>
-            /// Gets or sets list of available adapters
+            /// Gets list of available adapters
             /// </summary>
             [DataMember(Name = "AvailableAdapters")]
-            public List<GpuAdapter> Adapters { get; set; }
+            public List<GpuAdapter> Adapters { get; private set; }
         }
 
         /// <summary>
@@ -388,16 +388,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class NetworkPerformanceData
         {
             /// <summary>
-            /// Gets or sets bytes in
+            /// Gets bytes in
             /// </summary>
             [DataMember(Name = "NetworkInBytes")]
-            public int BytesIn { get; set; }
+            public int BytesIn { get; private set; }
 
             /// <summary>
-            ///  Gets or sets bytes out
+            ///  Gets bytes out
             /// </summary>
             [DataMember(Name = "NetworkOutBytes")]
-            public int BytesOut { get; set; }
+            public int BytesOut { get; private set; }
         }
 
         /// <summary>
@@ -407,10 +407,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class RunningProcesses
         {
             /// <summary>
-            /// Gets or sets processes info
+            /// Gets processes info
             /// </summary>
             [DataMember(Name = "Processes")]
-            public DeviceProcessInfo[] Processes { get; set; }
+            public DeviceProcessInfo[] Processes { get; private set; }
 
             /// <summary>
             /// Checks to see if this process Id is in the list of processes
@@ -472,88 +472,88 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class SystemPerformanceInformation
         {
             /// <summary>
-            /// Gets or sets available pages
+            /// Gets available pages
             /// </summary>
             [DataMember(Name = "AvailablePages")]
-            public int AvailablePages { get; set; }
+            public int AvailablePages { get; private set; }
 
             /// <summary>
-            /// Gets or sets commit limit
+            /// Gets commit limit
             /// </summary>
             [DataMember(Name = "CommitLimit")]
-            public int CommitLimit { get; set; }
+            public int CommitLimit { get; private set; }
 
             /// <summary>
-            /// Gets or sets committed pages
+            /// Gets committed pages
             /// </summary>
             [DataMember(Name = "CommittedPages")]
-            public int CommittedPages { get; set; }
+            public int CommittedPages { get; private set; }
 
             /// <summary>
-            /// Gets or sets CPU load
+            /// Gets CPU load
             /// </summary>
             [DataMember(Name = "CpuLoad")]
-            public int CpuLoad { get; set; }
+            public int CpuLoad { get; private set; }
 
             /// <summary>
-            /// Gets or sets IO Other Speed
+            /// Gets IO Other Speed
             /// </summary>
             [DataMember(Name = "IOOtherSpeed")]
-            public int IoOtherSpeed { get; set; }
+            public int IoOtherSpeed { get; private set; }
 
             /// <summary>
-            /// Gets or sets IO Read speed
+            /// Gets IO Read speed
             /// </summary>
             [DataMember(Name = "IOReadSpeed")]
-            public int IoReadSpeed { get; set; }
+            public int IoReadSpeed { get; private set; }
 
             /// <summary>
-            /// Gets or sets IO write speed
+            /// Gets IO write speed
             /// </summary>
             [DataMember(Name = "IOWriteSpeed")]
-            public int IoWriteSpeed { get; set; }
+            public int IoWriteSpeed { get; private set; }
 
             /// <summary>
-            /// Gets or sets Non paged pool pages
+            /// Gets Non paged pool pages
             /// </summary>
             [DataMember(Name = "NonPagedPoolPages")]
-            public int NonPagedPoolPages { get; set; }
+            public int NonPagedPoolPages { get; private set; }
 
             /// <summary>
-            /// Gets or sets page size
+            /// Gets page size
             /// </summary>
             [DataMember(Name = "PageSize")]
-            public int PageSize { get; set; }
+            public int PageSize { get; private set; }
 
             /// <summary>
-            /// Gets or sets paged pool pages
+            /// Gets paged pool pages
             /// </summary>
             [DataMember(Name = "PagedPoolPages")]
-            public int PagedPoolPages { get; set; }
+            public int PagedPoolPages { get; private set; }
 
             /// <summary>
-            /// Gets or sets total installed in KB
+            /// Gets total installed in KB
             /// </summary>
             [DataMember(Name = "TotalInstalledInKb")]
-            public int TotalInstalledKb { get; set; }
+            public int TotalInstalledKb { get; private set; }
 
             /// <summary>
-            /// Gets or sets total pages
+            /// Gets total pages
             /// </summary>
             [DataMember(Name = "TotalPages")]
-            public int TotalPages { get; set; }
+            public int TotalPages { get; private set; }
 
             /// <summary>
-            /// Gets or sets GPU data
+            /// Gets GPU data
             /// </summary>
             [DataMember(Name = "GPUData")]
-            public GpuPerformanceData GpuData { get; set; }
+            public GpuPerformanceData GpuData { get; private set; }
 
             /// <summary>
-            /// Gets or sets Networking data
+            /// Gets Networking data
             /// </summary>
             [DataMember(Name = "NetworkingData")]
-            public NetworkPerformanceData NetworkData { get; set; }
+            public NetworkPerformanceData NetworkData { get; private set; }
         }
 
 #endregion // Device contract

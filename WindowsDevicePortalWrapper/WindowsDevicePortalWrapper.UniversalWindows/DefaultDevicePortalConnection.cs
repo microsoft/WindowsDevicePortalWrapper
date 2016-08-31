@@ -88,15 +88,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets the device name.
-        /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the operating system information.
         /// </summary>
         public OperatingSystemInformation OsInfo

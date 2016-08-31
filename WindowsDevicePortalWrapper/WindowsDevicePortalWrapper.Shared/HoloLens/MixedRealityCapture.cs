@@ -257,10 +257,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcFileList
         {
             /// <summary>
-            /// Gets or sets the list of files
+            /// Gets the list of files
             /// </summary>
             [DataMember(Name = "MrcRecordings")]
-            public List<MrcFileInformation> Files { get; set; }
+            public List<MrcFileInformation> Files { get; private set; }
         }
 
         /// <summary>
@@ -270,22 +270,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcFileInformation
         {
             /// <summary>
-            /// Gets or sets the raw creation time
+            /// Gets the raw creation time
             /// </summary>
             [DataMember(Name = "CreationTime")]
-            public long CreationTimeRaw { get; set; }
+            public long CreationTimeRaw { get; private set; }
 
             /// <summary>
-            /// Gets or sets the filename
+            /// Gets the filename
             /// </summary>
             [DataMember(Name = "FileName")]
-            public string FileName { get; set; }
+            public string FileName { get; private set; }
 
             /// <summary>
-            /// Gets or sets the file size
+            /// Gets the file size
             /// </summary>
             [DataMember(Name = "FileSize")]
-            public uint FileSize { get; set; }
+            public uint FileSize { get; private set; }
 
             /// <summary>
             /// Gets the thumbnail
@@ -308,16 +308,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcStatus
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the device is recording
+            /// Gets a value indicating whether the device is recording
             /// </summary>
             [DataMember(Name = "IsRecording")]
-            public bool IsRecording { get; set; }
+            public bool IsRecording { get; private set; }
 
             /// <summary>
-            /// Gets or sets the recording status
+            /// Gets the recording status
             /// </summary>
             [DataMember(Name = "ProcessStatus")]
-            public ProcessStatus Status { get; set; }
+            public ProcessStatus Status { get; private set; }
         }
 
         /// <summary>
@@ -327,10 +327,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ProcessStatus
         {
             /// <summary>
-            /// Gets or sets the process status
+            /// Gets the process status
             /// </summary>
             [DataMember(Name = "MrcProcess")]
-            public string MrcProcess { get; set; }  // TODO this should be an enum
+            public string MrcProcess { get; private set; }  // TODO this should be an enum
         }
         #endregion Data contract
     }

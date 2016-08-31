@@ -53,28 +53,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class StatusInfo
         {
             /// <summary>
-            /// Gets or sets last update check time. 
+            /// Gets last update check time. 
             /// </summary>
             [DataMember(Name = "lastCheckTime")]
-            public string LastCheckTime { get; set; }
+            public string LastCheckTime { get; private set; }
 
             /// <summary>
-            ///  Gets or sets last update time.
+            ///  Gets last update time.
             /// </summary>
             [DataMember(Name = "lastUpdateTime")]
-            public string LastUpdateTime { get; set; }
+            public string LastUpdateTime { get; private set; }
 
             /// <summary>
-            ///  Gets or sets update status.
+            ///  Gets update status.
             /// </summary>
             [DataMember(Name = "updateState")]
-            public int UpdateState { get; set; }
+            public int UpdateState { get; private set; }
 
             /// <summary>
-            ///  Gets or sets update status message.
+            ///  Gets update status message.
             /// </summary>
             [DataMember(Name = "updateStatusMessage")]
-            public string UpdateStatusMessage { get; set; }
+            public string UpdateStatusMessage { get; private set; }
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class UpdateInstallTimeInfo
         {
             /// <summary>
-            /// Gets or sets whether a reboot is scheduled. 
+            /// Gets whether a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
-            public int Rebootscheduled { get; set; }
+            public int Rebootscheduled { get; private set; }
         }
 
         #endregion // Data contract

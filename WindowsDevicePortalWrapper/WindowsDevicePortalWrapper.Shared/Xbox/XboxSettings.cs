@@ -123,17 +123,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string Value { get; set; }
 
             /// <summary>
-            /// Gets or sets the category for this setting.
+            /// Gets the category for this setting.
             /// </summary>
             [DataMember(Name = "Category", EmitDefaultValue = false)]
-            public string Category { get; set; }
+            public string Category { get; private set; }
 
             /// <summary>
-            /// Gets or sets whether changing this setting.
+            /// Gets whether changing this setting.
             /// requires a reboot to take effect.
             /// </summary>
             [DataMember(Name = "RequiresReboot", EmitDefaultValue = false)]
-            public string RequiresReboot { get; set; }
+            public string RequiresReboot { get; private set; }
 
             /// <summary>
             /// Returns a string representation of a Setting.

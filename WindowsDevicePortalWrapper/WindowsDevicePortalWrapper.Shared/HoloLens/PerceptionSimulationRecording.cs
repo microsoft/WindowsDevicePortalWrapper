@@ -138,10 +138,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class HolographicSimulationStopRecordingError
         {
             /// <summary>
-            /// Gets or sets the Reason string.
+            /// Gets the Reason string.
             /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
         }
 
         /// <summary>
@@ -151,10 +151,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class HolographicSimulationRecordingStatus
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the simulation is recording.
+            /// Gets a value indicating whether the simulation is recording.
             /// </summary>
             [DataMember(Name = "recording")]
-            public bool IsRecording { get; set; }
+            public bool IsRecording { get; private set; }
         }
         #endregion // Data contract
     }

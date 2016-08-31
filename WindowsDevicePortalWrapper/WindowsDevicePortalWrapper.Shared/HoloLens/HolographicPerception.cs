@@ -94,10 +94,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class PerceptionSimulationControlMode
         {
             /// <summary>
-            /// Gets or sets the control mode.
+            /// Gets the control mode.
             /// </summary>
             [DataMember(Name = "mode")]
-            public SimulationControlMode Mode { get; set; }
+            public SimulationControlMode Mode { get; private set; }
         }
         #endregion // Data contract
     }

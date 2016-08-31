@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string PackageManagerApi = "api/app/packagemanager/package";
 
         /// <summary>
-        /// Gets or sets install status handler.
+        /// App Install Status handler.
         /// </summary>
         public event ApplicationInstallStatusEventHandler AppInstallStatus;
 
@@ -272,10 +272,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AppPackages
         {
             /// <summary>
-            /// Gets or sets a list of the packages
+            /// Gets a list of the packages
             /// </summary>
             [DataMember(Name = "InstalledPackages")]
-            public List<PackageInfo> Packages { get; set; }
+            public List<PackageInfo> Packages { get; private set; }
 
             /// <summary>
             /// Presents a user readable representation of a list of AppPackages
@@ -300,28 +300,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class InstallState
         {
             /// <summary>
-            /// Gets or sets install state code
+            /// Gets install state code
             /// </summary>
             [DataMember(Name = "Code")]
-            public int Code { get; set; }
+            public int Code { get; private set; }
 
             /// <summary>
-            /// Gets or sets message text
+            /// Gets message text
             /// </summary>
             [DataMember(Name = "CodeText")]
-            public string CodeText { get; set; }
+            public string CodeText { get; private set; }
 
             /// <summary>
-            /// Gets or sets reason for state
+            /// Gets reason for state
             /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether this was successful
+            /// Gets a value indicating whether this was successful
             /// </summary>
             [DataMember(Name = "Success")]
-            public bool WasSuccessful { get; set; }
+            public bool WasSuccessful { get; private set; }
         }
 
         /// <summary>
@@ -331,40 +331,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class PackageInfo
         {
             /// <summary>
-            /// Gets or sets package name
+            /// Gets package name
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets package family name
+            /// Gets package family name
             /// </summary>
             [DataMember(Name = "PackageFamilyName")]
-            public string FamilyName { get; set; }
+            public string FamilyName { get; private set; }
 
             /// <summary>
-            /// Gets or sets package full name
+            /// Gets package full name
             /// </summary>
             [DataMember(Name = "PackageFullName")]
-            public string FullName { get; set; }
+            public string FullName { get; private set; }
 
             /// <summary>
-            /// Gets or sets package relative Id
+            /// Gets package relative Id
             /// </summary>
             [DataMember(Name = "PackageRelativeId")]
-            public string AppId { get; set; }
+            public string AppId { get; private set; }
 
             /// <summary>
-            /// Gets or sets package publisher
+            /// Gets package publisher
             /// </summary>
             [DataMember(Name = "Publisher")]
-            public string Publisher { get; set; }
+            public string Publisher { get; private set; }
 
             /// <summary>
-            /// Gets or sets package version
+            /// Gets package version
             /// </summary>
             [DataMember(Name = "Version")]
-            public PackageVersion Version { get; set; }
+            public PackageVersion Version { get; private set; }
 
             /// <summary>
             /// Get a string representation of the package
@@ -383,28 +383,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class PackageVersion
         {
             /// <summary>
-            ///  Gets or sets version build
+            ///  Gets version build
             /// </summary>
             [DataMember(Name = "Build")]
-            public int Build { get; set; }
+            public int Build { get; private set; }
 
             /// <summary>
-            /// Gets or sets package Major number
+            /// Gets package Major number
             /// </summary>
             [DataMember(Name = "Major")]
-            public int Major { get; set; }
+            public int Major { get; private set; }
 
             /// <summary>
-            /// Gets or sets package minor number
+            /// Gets package minor number
             /// </summary>
             [DataMember(Name = "Minor")]
-            public int Minor { get; set; }
+            public int Minor { get; private set; }
 
             /// <summary>
-            /// Gets or sets package revision
+            /// Gets package revision
             /// </summary>
             [DataMember(Name = "Revision")]
-            public int Revision { get; set; }
+            public int Revision { get; private set; }
 
             /// <summary>
             /// Gets package version
