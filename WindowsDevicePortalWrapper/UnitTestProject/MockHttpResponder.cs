@@ -80,11 +80,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 string filepath = Path.Combine("MockData", "IoT", friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
                 response.Content = this.LoadContentFromFile(filepath);
             }
-            else {
+            else
+            {
                 string filepath = Path.Combine("MockData", platform.ToString(), friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
                 response.Content = this.LoadContentFromFile(filepath);
             }
-            
 
             this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }

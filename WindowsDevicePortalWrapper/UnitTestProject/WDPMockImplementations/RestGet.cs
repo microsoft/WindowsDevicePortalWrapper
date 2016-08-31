@@ -21,7 +21,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http get request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
-        /// /// <param name="validateCertificate">Whether the certificate should be validated.</param>
         /// <returns>Response data as a stream.</returns>
         private async Task<Stream> Get(
             Uri uri)

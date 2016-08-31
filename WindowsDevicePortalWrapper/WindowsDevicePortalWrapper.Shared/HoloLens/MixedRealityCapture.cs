@@ -82,6 +82,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task DeleteMrcFile(string fileName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -188,6 +189,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeMicrophone">Whether to include microphone data</param>
         /// <param name="includeAudio">Whether to include audio data</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task StartMrcRecording(
             bool includeHolograms = true,
             bool includeColorCamera = true,
@@ -210,11 +212,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 MrcStartRecordingApi,
                 payload);
         }
-        
+
         /// <summary>
         /// Stops the Mixed Reality Capture recording
         /// </summary>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task StopMrcRecording()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -231,6 +234,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeHolograms">Whether to include holograms</param>
         /// <param name="includeColorCamera">Whether to include the color camera</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task TakeMrcPhoto(
             bool includeHolograms = true,
             bool includeColorCamera = true)

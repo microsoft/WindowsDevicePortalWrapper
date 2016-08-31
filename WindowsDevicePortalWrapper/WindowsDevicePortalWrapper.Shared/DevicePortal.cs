@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint used to access the certificate.
         /// </summary>
-        private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+        public static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
         /// Expected number of OS version sections once the OS version is split by period characters
