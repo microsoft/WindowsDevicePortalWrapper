@@ -182,10 +182,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #region Device contract
 
         /// <summary>
-        /// Object representing the process version.
+        /// Object representing the app version.  Only present if the process is an app. 
         /// </summary>
         [DataContract]
-        public class ProcessVersion
+        public class AppVersion
         {
             /// <summary>
             /// Gets the major version number
@@ -213,19 +213,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Process Info
+        /// Process Info.  Contains app information if the process is an app. 
         /// </summary>
         [DataContract]
         public class DeviceProcessInfo
         {
             /// <summary>
-            /// Gets the app name
+            /// Gets the app name. Only present if the process is an app. 
             /// </summary>
             [DataMember(Name = "AppName")]
             public string AppName { get; private set; }
 
             /// <summary>
-            /// Gets CPU usage
+            /// Gets CPU Usage as a percentage of available CPU resources (0-100)
             /// </summary>
             [DataMember(Name = "CPUUsage")]
             public float CpuUsage { get; private set; }
@@ -237,19 +237,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string Name { get; private set; }
 
             /// <summary>
-            /// Gets the process id
+            /// Gets the process id (pid)
             /// </summary>
             [DataMember(Name = "ProcessId")]
             public int ProcessId { get; private set; }
 
             /// <summary>
-            /// Gets the owner name
+            /// Gets the user the process is running as. 
             /// </summary>
             [DataMember(Name = "UserName")]
             public string UserName { get; private set; }
 
             /// <summary>
-            /// Gets the package full name
+            /// Gets the package full name.  Only present if the process is an app. 
             /// </summary>
             [DataMember(Name = "PackageFullName")]
             public string PackageFullName { get; private set; }
@@ -279,37 +279,39 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public uint SessionId { get; private set; }
 
             /// <summary>
-            /// Gets total commit
+            /// Gets total commit in bytes
             /// </summary>
             [DataMember(Name = "TotalCommit")]
             public double TotalCommit { get; private set; }
 
             /// <summary>
-            /// Gets virtual size
+            /// Gets virtual size in bytes
             /// </summary>
             [DataMember(Name = "VirtualSize")]
             public double VirtualSize { get; private set; }
 
             /// <summary>
-            /// Gets a value indicating whether or not the process is running
+            /// Gets a value indicating whether or not the app is running 
+            /// (versus suspended). Only present if the process is an app.
             /// </summary>
             [DataMember(Name = "IsRunning")]
             public bool IsRunning { get; private set; }
 
             /// <summary>
-            /// Gets publisher
+            /// Gets publisher. Only present if the process is an app.
             /// </summary>
             [DataMember(Name = "Publisher")]
             public string Publisher { get; private set; }
 
             /// <summary>
-            /// Gets version
+            /// Gets version. Only present if the process is an app.
             /// </summary>
             [DataMember(Name = "Version")]
-            public ProcessVersion Version { get; private set; }
+            public AppVersion Version { get; private set; }
 
             /// <summary>
-            /// Gets a value indicating whether or not the package is a XAP package
+            /// Gets a value indicating whether or not the package is a XAP 
+            /// package. Only present if the process is an app.
             /// </summary>
             [DataMember(Name = "IsXAP")]
             public bool IsXAP { get; private set; }
@@ -331,13 +333,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class GpuAdapter
         {
             /// <summary>
-            /// Gets total Dedicated memory
+            /// Gets total Dedicated memory in bytes
             /// </summary>
             [DataMember(Name = "DedicatedMemory")]
             public uint DedicatedMemory { get; private set; }
 
             /// <summary>
-            /// Gets used Dedicated memory
+            /// Gets used Dedicated memory in bytes
             /// </summary>
             [DataMember(Name = "DedicatedMemoryUsed")]
             public uint DedicatedMemoryUsed { get; private set; }
@@ -349,19 +351,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string Description { get; private set; }
 
             /// <summary>
-            /// Gets system memory
+            /// Gets system memory in bytes
             /// </summary>
             [DataMember(Name = "SystemMemory")]
             public uint SystemMemory { get; private set; }
 
             /// <summary>
-            /// Gets memory used
+            /// Gets memory used in bytes
             /// </summary>
             [DataMember(Name = "SystemMemoryUsed")]
             public uint SystemMemoryUsed { get; private set; }
 
             /// <summary>
-            /// Gets engines utilization
+            /// Gets engines utilization as percent of maximum. 
             /// </summary>
             [DataMember(Name = "EnginesUtilization")]
             public List<float> EnginesUtilization { get; private set; }
@@ -387,13 +389,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class NetworkPerformanceData
         {
             /// <summary>
-            /// Gets bytes in
+            /// Gets current download speed in bytes per second
             /// </summary>
             [DataMember(Name = "NetworkInBytes")]
             public int BytesIn { get; private set; }
 
             /// <summary>
-            ///  Gets bytes out
+            ///  Gets current upload speed in bytes per second
             /// </summary>
             [DataMember(Name = "NetworkOutBytes")]
             public int BytesOut { get; private set; }
@@ -406,7 +408,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class RunningProcesses
         {
             /// <summary>
-            /// Gets processes info
+            /// Gets list of running processes.
             /// </summary>
             [DataMember(Name = "Processes")]
             public DeviceProcessInfo[] Processes { get; private set; }
@@ -477,7 +479,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public int AvailablePages { get; private set; }
 
             /// <summary>
-            /// Gets commit limit
+            /// Gets commit limit in bytes
             /// </summary>
             [DataMember(Name = "CommitLimit")]
             public int CommitLimit { get; private set; }
@@ -489,25 +491,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public int CommittedPages { get; private set; }
 
             /// <summary>
-            /// Gets CPU load
+            /// Gets CPU load as percent of maximum (0 - 100)
             /// </summary>
             [DataMember(Name = "CpuLoad")]
             public int CpuLoad { get; private set; }
 
             /// <summary>
-            /// Gets IO Other Speed
+            /// Gets IO Other Speed in bytes per second
             /// </summary>
             [DataMember(Name = "IOOtherSpeed")]
             public int IoOtherSpeed { get; private set; }
 
             /// <summary>
-            /// Gets IO Read speed
+            /// Gets IO Read speed in bytes per second. 
             /// </summary>
             [DataMember(Name = "IOReadSpeed")]
             public int IoReadSpeed { get; private set; }
 
             /// <summary>
-            /// Gets IO write speed
+            /// Gets IO write speed in bytes per second
             /// </summary>
             [DataMember(Name = "IOWriteSpeed")]
             public int IoWriteSpeed { get; private set; }
