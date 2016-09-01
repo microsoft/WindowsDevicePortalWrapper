@@ -4,12 +4,9 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Net.Http;
-using System.Net;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -148,6 +145,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             ControllerDriverInfo controllerDriver = getTask.Result;
+
             // Check some known things about this response.
             Assert.AreEqual("Inbox Driver", controllerDriver.CurrentDriver);
         }
@@ -169,9 +167,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             DateTimeInfo dateTime = getTask.Result;
-            // Check some known things about this response.
-           
-            Assert.AreEqual(22, dateTime.CurrentDateTime.day);
+
+            // Check some known things about this response.           
+            Assert.AreEqual(22, dateTime.CurrentDateTime.Day);
         }
 
         /// <summary>
@@ -191,10 +189,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             TimezoneInfo timezone = getTask.Result;
-            // Check some known things about this response.
 
-            Assert.AreEqual("(UTC-06:00) Central Time (US & Canada)", timezone.CurrentTimeZone.description);
-            Assert.AreEqual("(UTC-11:00) Coordinated Universal Time-11", timezone.Timezones[1].description);
+            // Check some known things about this response.
+            Assert.AreEqual("(UTC-06:00) Central Time (US & Canada)", timezone.CurrentTimeZone.Description);
+            Assert.AreEqual("(UTC-11:00) Coordinated Universal Time-11", timezone.Timezones[1].Description);
         }
 
         /// <summary>
@@ -213,11 +211,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
-            IoTOSInfo IoTInfo = getTask.Result;
+            IoTOSInfo deviceIoTInfo = getTask.Result;
+
             // Check some known things about this response.
-            Assert.AreEqual("Raspberry Pi 3", IoTInfo.Model);
-            Assert.AreEqual("beta2", IoTInfo.Name);
-            Assert.AreEqual("10.0.14393.67", IoTInfo.OSVersion);
+            Assert.AreEqual("Raspberry Pi 3", deviceIoTInfo.Model);
+            Assert.AreEqual("beta2", deviceIoTInfo.Name);
+            Assert.AreEqual("10.0.14393.67", deviceIoTInfo.OSVersion);
         }
 
         /// <summary>
@@ -237,10 +236,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             StatusInfo stats = getTask.Result;
+
             // Check some known things about this response.
-            Assert.AreEqual("2016-08-22 at 14:15", stats.lastCheckTime);
-            Assert.AreEqual("2016-08-18 at 00:00", stats.lastUpdateTime);
-            Assert.AreEqual("Your device is up to date.", stats.updateStatusMessage);
+            Assert.AreEqual("2016-08-22 at 14:15", stats.LastCheckTime);
+            Assert.AreEqual("2016-08-18 at 00:00", stats.LastUpdateTime);
+            Assert.AreEqual("Your device is up to date.", stats.UpdateStatusMessage);
         }
 
         /// <summary>
@@ -260,8 +260,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             UpdateInstallTimeInfo installTime = getTask.Result;
+
             // Check some known things about this response.
-            Assert.AreEqual(0, installTime.rebootscheduled); 
+            Assert.AreEqual(0, installTime.Rebootscheduled); 
         }
 
         /// <summary>
@@ -281,6 +282,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             RemoteSettingsStatusInfo installTime = getTask.Result;
+
             // Check some known things about this response.
             Assert.AreEqual(false, installTime.IsRunning);
             Assert.AreEqual(false, installTime.IsScheduled);
@@ -302,10 +304,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
-            SoftAPSettingsInfo SoftAPSettings = getTask.Result;
+            SoftAPSettingsInfo softAPSettings = getTask.Result;
+
             // Check some known things about this response.
-            Assert.AreEqual("true", SoftAPSettings.SoftAPEnabled);
-            Assert.AreEqual("SoftAPSsid", SoftAPSettings.SoftApSsid);
+            Assert.AreEqual("true", softAPSettings.SoftAPEnabled);
+            Assert.AreEqual("SoftAPSsid", softAPSettings.SoftApSsid);
         }
 
         /// <summary>
@@ -324,10 +327,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
-            AllJoynSettingsInfo AllJoynSettings = getTask.Result;
+            AllJoynSettingsInfo allJoynSettings = getTask.Result;
+
             // Check some known things about this response.
-            Assert.AreEqual("IoTCore Onboarding service", AllJoynSettings.AllJoynOnboardingDefaultDescription);
-            Assert.AreEqual("Microsoft", AllJoynSettings.AllJoynOnboardingDefaultManufacturer);
+            Assert.AreEqual("IoTCore Onboarding service", allJoynSettings.AllJoynOnboardingDefaultDescription);
+            Assert.AreEqual("Microsoft", allJoynSettings.AllJoynOnboardingDefaultManufacturer);
         }
     }
 }

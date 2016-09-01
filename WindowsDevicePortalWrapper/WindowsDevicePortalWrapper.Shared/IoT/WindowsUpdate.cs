@@ -11,10 +11,19 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <summary>
+    /// Windows update APIs for IoT.
+    /// </summary>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// Install time API.
+        /// </summary>
         public static readonly string InstallTimeApi = "api/iot/windowsupdate/installtime";
+
+        /// <summary>
+        /// Update status API.
+        /// </summary>
         public static readonly string StatusApi = "api/iot/windowsupdate/status";
 
         /// <summary>
@@ -29,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets the update install time information.
         /// </summary>
-        /// <returns>String containing the update install timne information.</returns>
+        /// <returns>String containing the update install time information.</returns>
         public async Task<UpdateInstallTimeInfo> GetUpdateInstallTime()
         {
             return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);
@@ -47,25 +56,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets last update check time. 
             /// </summary>
             [DataMember(Name = "lastCheckTime")]
-            public string lastCheckTime;
+            public string LastCheckTime { get; private set; }
 
             /// <summary>
             ///  Gets last update time.
             /// </summary>
             [DataMember(Name = "lastUpdateTime")]
-            public string lastUpdateTime;
+            public string LastUpdateTime { get; private set; }
 
             /// <summary>
             ///  Gets update status.
             /// </summary>
             [DataMember(Name = "updateState")]
-            public int updateState;
+            public int UpdateState { get; private set; }
 
             /// <summary>
             ///  Gets update status message.
             /// </summary>
             [DataMember(Name = "updateStatusMessage")]
-            public string updateStatusMessage;
+            public string UpdateStatusMessage { get; private set; }
         }
 
         /// <summary>
@@ -74,10 +83,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class UpdateInstallTimeInfo
         {
             /// <summary>
-            ///  Returns true if a reboot is scheduled. 
+            /// Gets whether a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
-            public int rebootscheduled;
+            public int Rebootscheduled { get; private set; }
         }
 
         #endregion // Data contract

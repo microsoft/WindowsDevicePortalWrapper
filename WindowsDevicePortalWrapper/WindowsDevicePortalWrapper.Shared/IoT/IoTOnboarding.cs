@@ -11,24 +11,28 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <summary>
+    /// Wrappers for some IoT methods.
+    /// </summary>
     public partial class DevicePortal
     {
+
         public static readonly string SoftAPSettingsApi = "api/iot/iotonboarding/softapsettings";
         public static readonly string AllJoynSettingsApi = "api/iot/iotonboarding/alljoynsettings";
 
         /// <summary>
-        /// Gets SoftAp Settings.
+        /// Retrieves the Soft AP Settings Info.
         /// </summary>
+        /// <returns>SoftAPSettingsInfo for this device.</returns>
         public async Task<SoftAPSettingsInfo> GetSoftAPSettingsInfo()
         {
             return await this.Get<SoftAPSettingsInfo>(SoftAPSettingsApi);
         }
 
-        /// <summary>
-        /// Gets AllJoyn Settings.
+        /// Retrieves the All Joyn Settings Info.
         /// </summary>
-        public async Task <AllJoynSettingsInfo> GetAllJoynSettingsInfo()
+        /// <returns>AllJoynSettingsInfo for this device.</returns>
+        public async Task<AllJoynSettingsInfo> GetAllJoynSettingsInfo()
         {
             return await this.Get<AllJoynSettingsInfo>(AllJoynSettingsApi);
         }
@@ -57,60 +61,62 @@ namespace Microsoft.Tools.WindowsDevicePortal
        
         /// <summary>
         /// SoftAp Settings.
+        /// Object representation for Soft AP Settings.
         /// </summary>
         [DataContract]
         public class SoftAPSettingsInfo
         {
+
             /// <summary>
-            /// Gets or sets SoftAp status 
+            /// Gets whether Soft AP is enabled.
             /// </summary>
             [DataMember(Name = "SoftAPEnabled")]
-            public string SoftAPEnabled { get; set; }
+            public string SoftAPEnabled { get; private set; }
 
             /// <summary>
-            /// Gets or sets SoftAp password
+            /// Gets the Soft AP Password.
             /// </summary>
             [DataMember(Name = "SoftApPassword")]
-            public string SoftApPassword { get; set; }
+            public string SoftApPassword { get; private set; }
 
             /// <summary>
-            /// Gets or sets SoftAp SSID
+            /// Gets the Soft AP SSID.
             /// </summary>
             [DataMember(Name = "SoftApSsid")]
-            public string SoftApSsid { get; set; }
-
+            public string SoftApSsid { get; private set; }
         }
 
         /// <summary>
-        /// AllJoyn Settings.
+        /// Object represenation of All Joyn Settings.
         /// </summary>
         [DataContract]
         public class AllJoynSettingsInfo
         {
 
             /// <summary>
-            /// Gets or sets AllJoyn Onboarding Default Description
+            /// Gets the Default description.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingDefaultDescription")]
-            public string AllJoynOnboardingDefaultDescription { get; set; }
+            public string AllJoynOnboardingDefaultDescription { get; private set; }
 
             /// <summary>
-            /// Gets or sets AllJoyn Onboarding Default Manufacturer
+            /// Gets the Default Manufacturer.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingDefaultManufacturer")]
-            public string AllJoynOnboardingDefaultManufacturer { get; set; }
+            public string AllJoynOnboardingDefaultManufacturer { get; private set; }
 
             /// <summary>
-            /// Gets or sets AllJoyn Onboarding status
+            /// Gets whether this is enabled.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingEnabled")]
-            public string AllJoynOnboardingEnabled { get; set; }
+            public string AllJoynOnboardingEnabled { get; private set; }
 
             /// <summary>
-            /// Gets or sets AllJoyn Onboarding Model Number
+            /// Gets the model number.
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingModelNumber")]
-            public string AllJoynOnboardingModelNumber { get; set; }
+            public string AllJoynOnboardingModelNumber { get; private set; }
+
         }
         #endregion // Data contract
     }

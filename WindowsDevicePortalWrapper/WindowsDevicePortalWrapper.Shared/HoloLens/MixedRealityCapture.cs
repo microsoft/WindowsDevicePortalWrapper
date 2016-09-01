@@ -82,6 +82,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task DeleteMrcFile(string fileName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -188,6 +189,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeMicrophone">Whether to include microphone data</param>
         /// <param name="includeAudio">Whether to include audio data</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task StartMrcRecording(
             bool includeHolograms = true,
             bool includeColorCamera = true,
@@ -210,11 +212,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 MrcStartRecordingApi,
                 payload);
         }
-        
+
         /// <summary>
         /// Stops the Mixed Reality Capture recording
         /// </summary>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task StopMrcRecording()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -231,6 +234,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeHolograms">Whether to include holograms</param>
         /// <param name="includeColorCamera">Whether to include the color camera</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task TakeMrcPhoto(
             bool includeHolograms = true,
             bool includeColorCamera = true)
@@ -253,10 +257,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcFileList
         {
             /// <summary>
-            /// Gets or sets the list of files
+            /// Gets the list of files
             /// </summary>
             [DataMember(Name = "MrcRecordings")]
-            public List<MrcFileInformation> Files { get; set; }
+            public List<MrcFileInformation> Files { get; private set; }
         }
 
         /// <summary>
@@ -266,22 +270,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcFileInformation
         {
             /// <summary>
-            /// Gets or sets the raw creation time
+            /// Gets the raw creation time
             /// </summary>
             [DataMember(Name = "CreationTime")]
-            public long CreationTimeRaw { get; set; }
+            public long CreationTimeRaw { get; private set; }
 
             /// <summary>
-            /// Gets or sets the filename
+            /// Gets the filename
             /// </summary>
             [DataMember(Name = "FileName")]
-            public string FileName { get; set; }
+            public string FileName { get; private set; }
 
             /// <summary>
-            /// Gets or sets the file size
+            /// Gets the file size
             /// </summary>
             [DataMember(Name = "FileSize")]
-            public uint FileSize { get; set; }
+            public uint FileSize { get; private set; }
 
             /// <summary>
             /// Gets the thumbnail
@@ -304,16 +308,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class MrcStatus
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the device is recording
+            /// Gets a value indicating whether the device is recording
             /// </summary>
             [DataMember(Name = "IsRecording")]
-            public bool IsRecording { get; set; }
+            public bool IsRecording { get; private set; }
 
             /// <summary>
-            /// Gets or sets the recording status
+            /// Gets the recording status
             /// </summary>
             [DataMember(Name = "ProcessStatus")]
-            public ProcessStatus Status { get; set; }
+            public ProcessStatus Status { get; private set; }
         }
 
         /// <summary>
@@ -323,10 +327,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ProcessStatus
         {
             /// <summary>
-            /// Gets or sets the process status
+            /// Gets the process status
             /// </summary>
             [DataMember(Name = "MrcProcess")]
-            public string MrcProcess { get; set; }  // TODO this should be an enum
+            public string MrcProcess { get; private set; }  // TODO this should be an enum
         }
         #endregion Data contract
     }

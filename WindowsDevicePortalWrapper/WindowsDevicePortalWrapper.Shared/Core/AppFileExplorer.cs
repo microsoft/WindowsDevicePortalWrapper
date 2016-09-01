@@ -200,10 +200,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class KnownFolders
         {
             /// <summary>
-            /// Gets or sets the list of known folders.
+            /// Gets the list of known folders.
             /// </summary>
             [DataMember(Name = "KnownFolders")]
-            public List<string> Folders { get; set; }
+            public List<string> Folders { get; private set; }
 
             /// <summary>
             /// Overridden ToString method providing a user readable
@@ -234,10 +234,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class FolderContents
         {
             /// <summary>
-            /// Gets or sets the list of folders and files in this folder.
+            /// Gets the list of folders and files in this folder.
             /// </summary>
             [DataMember(Name = "Items")]
-            public List<FileOrFolderInformation> Contents { get; set; }
+            public List<FileOrFolderInformation> Contents { get; private set; }
 
             /// <summary>
             /// Overridden ToString method providing a user readable
@@ -269,46 +269,46 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class FileOrFolderInformation
         {
             /// <summary>
-            /// Gets or sets the current directory.
+            /// Gets the current directory.
             /// </summary>
             [DataMember(Name = "CurrentDir")]
-            public string CurrentDir { get; set; }
+            public string CurrentDir { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current directory.
+            /// Gets the current directory.
             /// </summary>
             [DataMember(Name = "DateCreated")]
-            public long DateCreated { get; set; }
+            public long DateCreated { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Id.
+            /// Gets the Id.
             /// </summary>
             [DataMember(Name = "Id")]
-            public string Id { get; set; }
+            public string Id { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Name.
+            /// Gets the Name.
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the SubPath (equivalent to CurrentDir for files).
+            /// Gets the SubPath (equivalent to CurrentDir for files).
             /// </summary>
             [DataMember(Name = "SubPath")]
-            public string SubPath { get; set; }
+            public string SubPath { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Type.
+            /// Gets the Type.
             /// </summary>
             [DataMember(Name = "Type")]
-            public int Type { get; set; }
+            public int Type { get; private set; }
 
             /// <summary>
-            /// Gets or sets the size of the file (0 for folders).
+            /// Gets the size of the file (0 for folders).
             /// </summary>
             [DataMember(Name = "FileSize")]
-            public long SizeInBytes { get; set; }
+            public long SizeInBytes { get; private set; }
 
             /// <summary>
             /// Overridden ToString method providing a user readable

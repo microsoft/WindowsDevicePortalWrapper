@@ -88,51 +88,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets the device name.
-        /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the operating system information.
         /// </summary>
         public OperatingSystemInformation OsInfo
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
-        /// </summary>
-        public bool AllowCertOverride
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Sets the device's root certificate in the certificate store. 
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        public void SetDeviceCertificate(Certificate certificate)
-        {
-            if (!this.AllowCertOverride)
-            {
-                // Verify that the certificate is one we recognize.
-                if (!certificate.Issuer.Contains(DevicePortalCertificateIssuer))
-                {
-                    certificate = null;
-                    throw new DevicePortalException(
-                        (Windows.Web.Http.HttpStatusCode)0,
-                        "Invalid certificate issuer",
-                        null,
-                        "Failed to set the device certificate");
-                }
-            }
         }
 
         /// <summary>

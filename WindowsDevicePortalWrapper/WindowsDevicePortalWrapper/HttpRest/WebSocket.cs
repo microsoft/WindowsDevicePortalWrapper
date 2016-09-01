@@ -38,9 +38,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private ClientWebSocket websocket = new ClientWebSocket();
 
         /// <summary>
-        /// <see cref="ManualResetEvent" /> used to indicate that the <see cref="WebSocket{T}" /> has stopped receiving messages.
+        /// <see cref="Task" /> for receiving messages.
         /// </summary>
-        private ManualResetEvent stoppedReceivingMessages = new ManualResetEvent(false);
+        private Task receivingMessagesTask;
 
         /// <summary>
         /// The handler used to validate server certificates.
@@ -95,8 +95,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Wait for web socket to no longer be receiving messages.
                 if (this.IsListeningForMessages)
                 {
-                    this.stoppedReceivingMessages.WaitOne();
-                    this.stoppedReceivingMessages.Reset();
+                    await this.receivingMessagesTask;
+                    this.receivingMessagesTask = null;
                 }
 
                 // Reset websocket as WDP will abort the connection once it receives the close message.
@@ -110,72 +110,76 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The task of listening for messages from the websocket.</returns>
         private async Task ListenForMessagesInternal()
         {
-            try
+            this.receivingMessagesTask = Task.Run(async () =>
             {
-                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[MaxChunkSizeInBytes]);
-
-                // Once close message is sent do not try to get any more messages as WDP will abort the web socket connection.
-                while (this.websocket.State == WebSocketState.Open)
+                try
                 {
-                    // Receive single message in chunks.
-                    using (var ms = new MemoryStream())
+                    ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[MaxChunkSizeInBytes]);
+
+                    // Once close message is sent do not try to get any more messages as WDP will abort the web socket connection.
+                    while (this.websocket.State == WebSocketState.Open)
                     {
-                        WebSocketReceiveResult result;
-
-                        do
+                        // Receive single message in chunks.
+                        using (var ms = new MemoryStream())
                         {
-                            result = await this.websocket.ReceiveAsync(buffer, CancellationToken.None);
+                            WebSocketReceiveResult result;
 
-                            if (result.MessageType == WebSocketMessageType.Close)
+                            do
                             {
-                                await this.websocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                                return;
-                            }
+                                result = await this.websocket.ReceiveAsync(buffer, CancellationToken.None);
 
-                            if (result.Count > MaxChunkSizeInBytes)
+                                if (result.MessageType == WebSocketMessageType.Close)
+                                {
+                                    await this.websocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                                    return;
+                                }
+
+                                if (result.Count > MaxChunkSizeInBytes)
+                                {
+                                    throw new InvalidOperationException("Buffer not large enough");
+                                }
+
+                                ms.Write(buffer.Array, buffer.Offset, result.Count);
+                            }
+                            while (!result.EndOfMessage);
+
+                            ms.Seek(0, SeekOrigin.Begin);
+
+                            if (result.MessageType == WebSocketMessageType.Text)
                             {
-                                throw new InvalidOperationException("Buffer not large enough");
+                                Stream stream = new MemoryStream();
+
+                                await ms.CopyToAsync(stream);
+
+                                // Ensure we return with the stream pointed at the origin.
+                                stream.Position = 0;
+
+                                this.ConvertStreamToMessage(stream);
                             }
-
-                            ms.Write(buffer.Array, buffer.Offset, result.Count);
-                        }
-                        while (!result.EndOfMessage);
-
-                        ms.Seek(0, SeekOrigin.Begin);
-
-                        if (result.MessageType == WebSocketMessageType.Text)
-                        {
-                            Stream stream = new MemoryStream();
-
-                            await ms.CopyToAsync(stream);
-
-                            // Ensure we return with the stream pointed at the origin.
-                            stream.Position = 0;
-
-                            this.ConvertStreamToMessage(stream);
                         }
                     }
                 }
-            }
-            catch (WebSocketException e)
-            {
-                // If WDP aborted the web socket connection ignore the exception.
-                SocketException socketException = e.InnerException?.InnerException as SocketException;
-                if (socketException != null)
+                catch (WebSocketException e)
                 {
-                    if (socketException.NativeErrorCode == WSAECONNRESET)
+                    // If WDP aborted the web socket connection ignore the exception.
+                    SocketException socketException = e.InnerException?.InnerException as SocketException;
+                    if (socketException != null)
                     {
-                        return;
+                        if (socketException.NativeErrorCode == WSAECONNRESET)
+                        {
+                            return;
+                        }
                     }
-                }
 
-                throw;
-            }
-            finally
-            {
-                this.stoppedReceivingMessages.Set();
-                this.IsListeningForMessages = false;
-            }
+                    throw;
+                }
+                finally
+                {
+                    this.IsListeningForMessages = false;
+                }
+            });
+
+            await this.receivingMessagesTask;
         }
 
         /// <summary>

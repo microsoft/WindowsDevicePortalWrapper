@@ -58,19 +58,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="str">The string to encode.</param>
         /// <returns>Base64 encoded version of the string data.</returns>
-        internal static string Hex64Encode(string str)
+        public static string Hex64Encode(string str)
         {
             return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(str));
         }
 
-        public static bool IsHoloLens(DevicePortalPlatforms platform,
-                                    string deviceFamily)
+        /// <summary>
+        /// Checks if this device is a hololens.
+        /// </summary>
+        /// <param name="platform">The platform.</param>
+        /// <param name="deviceFamily">The device family.</param>
+        /// <returns>Whether this is a hololens.</returns>
+        public static bool IsHoloLens(
+            DevicePortalPlatforms platform,
+            string deviceFamily)
         {
             bool isHoloLens = false;
 
             if ((platform == DevicePortalPlatforms.HoloLens) ||
-                ((platform == DevicePortalPlatforms.VirtualMachine) &&
-                    (deviceFamily == "Windows.Holographic")) )
+                ((platform == DevicePortalPlatforms.VirtualMachine) && (deviceFamily == "Windows.Holographic")))
             {
                 isHoloLens = true;
             }
@@ -97,6 +103,5 @@ namespace Microsoft.Tools.WindowsDevicePortal
             endpoint = endpoint.Replace('=', '_');
             endpoint = endpoint.Replace('&', '_');
         }
-
     }
 }

@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the root certificate from the device.
         /// </summary>
         /// <returns>The device certificate.</returns>
-        private async Task<X509Certificate2> GetDeviceCertificate()
+        private async Task<X509Certificate2> GetRootDeviceCertificate()
         {
             throw new NotSupportedException();
         }
@@ -43,23 +43,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             SslPolicyErrors policyErrors)
         {
             return false;
-        }
-
-        /// <summary>
-        /// No-op version of cert validation for skipping the validation
-        /// </summary>
-        /// <param name="sender">the sender</param>
-        /// <param name="cert">the certificate</param>
-        /// <param name="chain">cert chain</param>
-        /// <param name="policyErrors">policy Errors</param>
-        /// <returns>Always returns true since validation is skipped.</returns>
-        private bool ServerCertificateNonValidation(
-            object sender,
-            X509Certificate cert,
-            X509Chain chain,
-            SslPolicyErrors policyErrors)
-        {
-            return true;
         }
     }
 }

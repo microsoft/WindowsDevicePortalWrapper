@@ -78,12 +78,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ServiceTags
         {
             /// <summary>
-            /// Gets or sets the DNS-SD service tags
+            /// Gets the DNS-SD service tags
             /// </summary>
             [DataMember(Name = "tags")]
             public List<string> Tags
             {
-                get; set;
+                get; private set;
             }
 
             #endregion Data contract
