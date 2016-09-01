@@ -44,20 +44,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }
 
-#if !WINDOWS_UWP
-        /// <summary>
-        /// Gets the provided device certificate.
-        /// </summary>
-        /// <returns>Stored device certificate.</returns>
-        X509Certificate2 GetDeviceCertificate();
-
-        /// <summary>
-        /// Stores a manually provided device certificate.
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        void SetDeviceCertificate(X509Certificate2 certificate);
-#endif
-
         /// <summary>
         /// Updates the http security requirements for device communication.
         /// </summary>
