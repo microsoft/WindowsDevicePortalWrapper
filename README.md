@@ -13,7 +13,7 @@ To start contributing, see [Contributing](https://github.com/Microsoft/WindowsDe
 ---
 ---
 
-For source code documentation, see https://Microsoft.github.io/WindowsDevicePortalWrapper
+For source code documentation, see https://microsoft.github.io/WindowsDevicePortalWrapper/annotated.html
 
 ---
 ---

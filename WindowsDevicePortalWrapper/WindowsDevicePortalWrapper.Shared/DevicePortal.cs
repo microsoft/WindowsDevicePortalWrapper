@@ -181,13 +181,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ssid">Optional network SSID.</param>
         /// <param name="ssidKey">Optional network key.</param>
         /// <param name="updateConnection">Indicates whether we should update this connection's IP address after connecting.</param>
+        /// <param name="manualCertificate">A manually provided X509 Certificate for trust validation against this device.</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
+        [method: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "manualCertificate param doesn't really span multiple lines, it just has a different type for UWP and .NET implementations.")]
         public async Task Connect(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true)
+            bool updateConnection = true,
+#if WINDOWS_UWP
+            Certificate manualCertificate = null)
+#else
+            X509Certificate2 manualCertificate = null)
+#endif
         {
 #if WINDOWS_UWP
             this.ConnectionHttpStatusCode = HttpStatusCode.Ok;
@@ -195,6 +202,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             this.ConnectionHttpStatusCode = HttpStatusCode.OK;
 #endif // WINDOWS_UWP
             string connectionPhaseDescription = string.Empty;
+
+            if (manualCertificate != null)
+            {
+                this.SetManualCertificate(manualCertificate);
+            }
 
             try 
             {
@@ -207,8 +219,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
-                // Default to using HTTPS.
-                bool requiresHttps = true;
+                // Default to using whatever was specified in the connection.
+                bool requiresHttps = this.IsUsingHttps();
 
                 // HoloLens is the only device that supports the GetIsHttpsRequired method.
                 if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
@@ -444,6 +456,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string message = "")
         {
             this.ConnectionStatus?.Invoke(this, new DeviceConnectionStatusEventArgs(status, phase, message));
+        }
+
+        /// <summary>
+        /// Helper method to determine if our connection is using HTTPS
+        /// </summary>
+        /// <returns>Whether we are using HTTPS</returns>
+        private bool IsUsingHttps()
+        {
+            return this.deviceConnection.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

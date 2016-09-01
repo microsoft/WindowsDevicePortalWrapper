@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Security.Cryptography.Certificates;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Runtime.CompilerServices;
-using Windows.UI.Core;
 
 namespace SampleWdpClient.UniversalWindows
 {
@@ -28,6 +23,8 @@ namespace SampleWdpClient.UniversalWindows
         /// The device portal to which we are connecting.
         /// </summary>
         private DevicePortal portal;
+
+        private Certificate certificate;
 
         /// <summary>
         /// The main page constructor.
@@ -72,6 +69,8 @@ namespace SampleWdpClient.UniversalWindows
 
             this.ClearOutput();
 
+            bool allowUntrusted = this.allowUntrustedCheckbox.IsChecked.Value;
+
             portal = new DevicePortal(
                 new DefaultDevicePortalConnection(
                     this.address.Text,
@@ -82,36 +81,41 @@ namespace SampleWdpClient.UniversalWindows
             Task connectTask = new Task(
                 async () =>
                 {
-                        sb.Append(this.MarshalGetCommandOutput());
-                        sb.AppendLine("Connecting...");
-                        this.MarshalUpdateCommandOutput(sb.ToString());
-                        portal.ConnectionStatus += (portal, connectArgs) =>
-                        {
-                            if (connectArgs.Status == DeviceConnectionStatus.Connected) 
-                            { 
-                                sb.Append("Connected to: ");
-                                sb.AppendLine(portal.Address);
-                                sb.Append("OS version: ");
-                                sb.AppendLine(portal.OperatingSystemVersion);
-                                sb.Append("Device family: ");
-                                sb.AppendLine(portal.DeviceFamily);
-                                sb.Append("Platform: ");
-                                sb.AppendLine(String.Format("{0} ({1})",
-                                    portal.PlatformName,
-                                    portal.Platform.ToString()));
-                            }
-                            else if (connectArgs.Status == DeviceConnectionStatus.Failed)
-                            { 
-                                sb.AppendLine("Failed to connect to the device.");
-                                sb.AppendLine(connectArgs.Message);
-                            }
-                        };
+                    sb.Append(this.MarshalGetCommandOutput());
+                    sb.AppendLine("Connecting...");
+                    this.MarshalUpdateCommandOutput(sb.ToString());
+                    portal.ConnectionStatus += (portal, connectArgs) =>
+                    {
+                        if (connectArgs.Status == DeviceConnectionStatus.Connected) 
+                        { 
+                            sb.Append("Connected to: ");
+                            sb.AppendLine(portal.Address);
+                            sb.Append("OS version: ");
+                            sb.AppendLine(portal.OperatingSystemVersion);
+                            sb.Append("Device family: ");
+                            sb.AppendLine(portal.DeviceFamily);
+                            sb.Append("Platform: ");
+                            sb.AppendLine(String.Format("{0} ({1})",
+                                portal.PlatformName,
+                                portal.Platform.ToString()));
+                        }
+                        else if (connectArgs.Status == DeviceConnectionStatus.Failed)
+                        { 
+                            sb.AppendLine("Failed to connect to the device.");
+                            sb.AppendLine(connectArgs.Message);
+                        }
+                    };
 
-                        // TODO: Support proper certificate validation instead of blindly trusting this cert (Issue #154/#145).
+                    // If the user wants to allow untrusted connections, make a call to GetRootDeviceCertificate
+                    // with acceptUntrustedCerts set to true. This will enable untrusted connections for the
+                    // remainder of this session.
+                    if (allowUntrusted)
+                    {
                         await portal.GetRootDeviceCertificate(true);
-                        await portal.Connect();
+                    }
+                    await portal.Connect(manualCertificate: this.certificate);
 
-                        this.MarshalUpdateCommandOutput(sb.ToString());
+                    this.MarshalUpdateCommandOutput(sb.ToString());
                 });
 
             Task continuationTask = connectTask.ContinueWith(
@@ -465,6 +469,46 @@ namespace SampleWdpClient.UniversalWindows
         private void Username_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnableConnectButton();
+        }
+
+        /// <summary>
+        /// Loads a cert file for cert validation.
+        /// </summary>
+        /// <param name="sender">The caller of this method.</param>
+        /// <param name="e">The arguments associated with this event.</param>
+        private async void LoadCertificate_Click(object sender, RoutedEventArgs e)
+        {
+            await LoadCertificate();
+        }
+
+        /// <summary>
+        /// Loads a certificates asynchronously (runs on the UI thread).
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadCertificate()
+        {
+            try
+            {
+                FileOpenPicker filePicker = new FileOpenPicker();
+                filePicker.SuggestedStartLocation = PickerLocationId.Downloads;
+                filePicker.FileTypeFilter.Add(".cer");
+
+                StorageFile file = await filePicker.PickSingleFileAsync();
+
+                if (file != null)
+                {
+                    IBuffer cerBlob = await FileIO.ReadBufferAsync(file);
+
+                    if (cerBlob != null)
+                    {
+                        certificate = new Certificate(cerBlob);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.commandOutput.Text = "Failed to get cert file: " + exception.Message;
+            }
         }
     }
 }

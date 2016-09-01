@@ -23,7 +23,8 @@
         <Button x:Name="rebootDevice" Content="Reboot" Grid.Column="0" HorizontalAlignment="Left" Margin="114,123,0,0" VerticalAlignment="Top" Width="93" Click="RebootDevice_Click" IsEnabled="False" Height="32"/>
         <Button x:Name="shutdownDevice" Content="Shutdown" Grid.Column="0" HorizontalAlignment="Left" Margin="212,123,0,0" VerticalAlignment="Top" Width="93" Click="ShutdownDevice_Click" IsEnabled="False" Height="32"/>
 
-        <TextBlock x:Name="UnsecureCertWarning" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold" FontSize="16" Margin="12,231,0,0" Height="60" Text="Note: The UWP Sample App does not currently support certificate validation for HTTPS communication" />
+        <Button x:Name="loadCert" Content="Add Trusted Certificate" Grid.Column="0" HorizontalAlignment="Left" Margin="12,225,0,0" VerticalAlignment="Top" Width="175" Click="LoadCertificate_Click" Height="32"/>
+        <CheckBox x:Name="allowUntrustedCheckbox" Content="Allow Untrusted Connections (Not Recommended)" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="27,257,0,0"></CheckBox>
 
         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Height="1" Margin="15,160,15,0" VerticalAlignment="Top"/>
 
