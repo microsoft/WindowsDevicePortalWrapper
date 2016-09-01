@@ -56,8 +56,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="recordHands">Should hand data be recorded? The default value is true.</param>
         /// <param name="recordSpatialMapping">Should Spatial Mapping data be recorded? The default value is true.</param>
         /// <param name="recordEnvironment">Should environment data be recorded? The default value is true.</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task StartHolographicSimulationRecording(
             string name,
             bool recordHead = true,

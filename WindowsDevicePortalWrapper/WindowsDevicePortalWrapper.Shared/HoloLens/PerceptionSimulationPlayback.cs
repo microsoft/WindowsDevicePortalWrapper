@@ -63,9 +63,41 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string HolographicSimulationPlaybackDataTypesApi = "api/holographic/simulation/playback/session/types";
 
         /// <summary>
+        /// Enumeration describing the available Holgraphic Simulation playback states.
+        /// </summary>
+        public enum HolographicSimulationPlaybackStates
+        {
+            /// <summary>
+            /// The simulation has been stopped.
+            /// </summary>
+            Stopped = 0,
+
+            /// <summary>
+            /// The simulation is playing.
+            /// </summary>
+            Playing,
+
+            /// <summary>
+            /// The simulation has been paused.
+            /// </summary>
+            Paused,
+
+            /// <summary>
+            /// Playback has completed.
+            /// </summary>
+            Complete,
+
+            /// <summary>
+            /// Playback is in an unexpected / unknown state.
+            /// </summary>
+            Unexpected = 9999
+        }
+
+        /// <summary>
         /// Deletes the specified Holographic Simulation recording.
         /// </summary>
         /// <param name="name">The name of the recording to delete (ex: testsession.xef).</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task DeleteHolographicSimulationRecording(string name)
         {
@@ -94,7 +126,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            HolographicSimulationPlaybackStates playbackState = HolographicSimulationPlaybackStates.Unknown;
+            HolographicSimulationPlaybackStates playbackState = HolographicSimulationPlaybackStates.Unexpected;
 
             string payload = string.Format(
                 "recording={0}",
@@ -135,6 +167,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Loads the specified Holographic Simulation recording.
         /// </summary>
         /// <param name="name">The name of the recording to load (ex: testsession.xef).</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task LoadHolographicSimulationRecording(string name)
         {
@@ -154,6 +187,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Unloads the specified Holographic Simulation recording.
         /// </summary>
         /// <param name="name">The name of the recording to unload (ex: testsession.xef).</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task UnloadHolographicSimulationRecording(string name)
         {
@@ -171,20 +205,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         #region Data contract
         /// <summary>
-        /// Enumeration describing the available Holgraphic Simulation playback states.
-        /// </summary>
-        public enum HolographicSimulationPlaybackStates
-        {
-            Unknown = -1,
-            Stopped = 0,
-            Playing,
-            Paused,
-            Complete,
-
-            Unexpected = 9999
-        }
-
-        /// <summary>
         /// Object representation of the Holographic Simulation playback state
         /// </summary>
         [DataContract]
@@ -194,7 +214,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the state value as a string
             /// </summary>
             [DataMember(Name = "state")]
-            public string stateRaw { get; private set; }
+            public string StateRaw { get; private set; }
 
             /// <summary>
             /// Gets the playback session state
@@ -203,9 +223,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 get 
                 {
-                    HolographicSimulationPlaybackStates state = HolographicSimulationPlaybackStates.Unknown;
+                    HolographicSimulationPlaybackStates state = HolographicSimulationPlaybackStates.Unexpected;
 
-                    switch (stateRaw)
+                    switch (this.StateRaw)
                     {
                         case "stopped":
                             state = HolographicSimulationPlaybackStates.Stopped;
