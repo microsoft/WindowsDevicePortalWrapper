@@ -104,13 +104,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationStopRecordingError));
-                    HolographicSimulationStopRecordingError error = null;
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
+                    HolographicSimulationError error = null;
  
                     try
                     {
                         // Try to get / interpret an error response.
-                        error = (HolographicSimulationStopRecordingError)serializer.ReadObject(dataStream);
+                        error = (HolographicSimulationError)serializer.ReadObject(dataStream);
                     }
                     catch
                     {
@@ -133,9 +133,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         #region Data contract
         /// <summary>
-        /// Object representation of a Holographic Simulation Stop Recording error.
+        /// Object representation of a Holographic Simulation (playback or recording) error.
         /// </summary>
-        public class HolographicSimulationStopRecordingError
+        [DataContract]
+        public class HolographicSimulationError
         {
             /// <summary>
             /// Gets the Reason string.
