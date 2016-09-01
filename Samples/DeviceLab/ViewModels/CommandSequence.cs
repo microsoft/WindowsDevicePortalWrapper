@@ -50,12 +50,22 @@ namespace DeviceLab
         /// and then executing each command as it becomes ready
         /// </summary>
         private ObservableCommandQueue commandQueue;
+        
+        /// <summary>
+        /// The parameter passed to execute and subsequently shared with each command when it executes
+        /// </summary>
         private object sharedParameter;
         #endregion // Private Class Members
 
         //-------------------------------------------------------------------
         // Command Registration
         //-------------------------------------------------------------------
+        #region Command Registration
+        /// <summary>
+        /// Register a command with the CommandSequence
+        /// Commands are composed in the same order that they are registered
+        /// </summary>
+        /// <param name="cmd">Command to register with this CommandSequence</param>
         public void RegisterCommand(ICommand cmd)
         {
             if (cmd == null)
@@ -73,63 +83,86 @@ namespace DeviceLab
                 CommandSequence seq = cmd as CommandSequence;
                 if (seq == null)
                 {
-                    AddCommand(cmd);
+                    this.AddCommand(cmd);
                 }
                 else
                 {
+                    // If the command is itself a CommandSequence then we crack it open
+                    // and add the individual commands within it. This enables composing
+                    // commands with other CommandSequences. Flattening is required in
+                    // the case when multiple command sequences share the same queue
                     foreach (ICommand subcmd in seq.registeredCommands)
                     {
-                        AddCommand(subcmd);
+                        this.AddCommand(subcmd);
                     }
                 }
             }
-            OnCanExecuteChanged();
+
+            this.OnCanExecuteChanged();
         }
 
+        /// <summary>
+        /// Internal helper to add a command to the list of commands.
+        /// </summary>
+        /// <param name="cmd">Command to add to this CommandSequence</param>
         private void AddCommand(ICommand cmd)
         {
-            if(this.registeredCommands.Count == 0)
+            if (this.registeredCommands.Count == 0)
             {
-                cmd.CanExecuteChanged += Forward_CanExecuteChanged;
+                cmd.CanExecuteChanged += this.Forward_CanExecuteChanged;
             }
+
             this.registeredCommands.Add(cmd);
         }
+        #endregion // Command Registration
 
         //-------------------------------------------------------------------
         // ICommand Implementation
         //-------------------------------------------------------------------
+        #region ICommand Implementation
+        #region CanExecuteChanged event
+        /// <summary>
+        /// Event signals when the ability to execute the CommandSequence has changed
+        /// </summary>
         public event EventHandler CanExecuteChanged;
 
+        /// <summary>
+        /// Invoke the CanExecuteChanged event handler
+        /// </summary>
         private void OnCanExecuteChanged()
         {
             this.CanExecuteChanged?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
-        /// Forward on the CanExecuteChanged event from the first command in the list
+        /// Forward on the CanExecuteChanged event from the first command in the list.
+        /// See CanExecute for the conditions under which the CommandSequence can execute.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Originator of the event</param>
+        /// <param name="e">The arguments associated with this event</param>
         private void Forward_CanExecuteChanged(object sender, EventArgs e)
         {
             this.CanExecuteChanged?.Invoke(sender, e);
         }
+        #endregion // CanExecuteChanged event
 
+        /// <summary>
+        /// Predicate indicates whether the CommandSequence is ready to execute
+        /// </summary>
+        /// <param name="parameter">Value passed to Execute/CanExecute for the commands in the sequence</param>
+        /// <returns>Indicates whether this CommandSequence is ready to execute</returns>
         public bool CanExecute(object parameter)
         {
-            if (this.registeredCommands.Count == 0)
-            {
-                return false;
-            }
-
-            if (this.commandQueue.Count > 0)
-            {
-                return false;
-            }
-
-            return this.registeredCommands[0].CanExecute(parameter);
+            return
+                this.registeredCommands.Count > 0                    // Must have at least one command to execute
+                && this.commandQueue.Count == 0                      // The queue must not be in use already
+                && this.registeredCommands[0].CanExecute(parameter); // First command must be ready to execute
         }
 
+        /// <summary>
+        /// Execute each command in the CommandSequence as they become ready
+        /// </summary>
+        /// <param name="parameter">The command parameter to be passed to all of the commands</param>
         public void Execute(object parameter)
         {
             lock (this.commandQueue)
@@ -148,20 +181,29 @@ namespace DeviceLab
                 }
             }
 
-            OnCanExecuteChanged();
-            ExecuteNext();
+            this.OnCanExecuteChanged();
+            this.ExecuteNext();
         }
 
+        /// <summary>
+        /// Event handler used determine when the command at the head of the queue is ready to execute
+        /// </summary>
+        /// <param name="sender">The originator of the event should be the command at the front of the queue</param>
+        /// <param name="e">The arguments associated with this event</param>
         private void CurrentCommand_CanExecuteChanged(object sender, EventArgs e)
         {
             ICommand cmd = sender as ICommand;
             if (cmd.CanExecute(this.sharedParameter))
             {
-                cmd.CanExecuteChanged -= CurrentCommand_CanExecuteChanged;
-                ExecuteNext();
+                cmd.CanExecuteChanged -= this.CurrentCommand_CanExecuteChanged;
+                this.ExecuteNext();
             }
         }
 
+        /// <summary>
+        /// Execute all the commands from the front of the queue that are already ready then hook up the
+        /// event to receive the signal when the next one is ready.
+        /// </summary>
         private void ExecuteNext()
         {
             lock (this.commandQueue)
@@ -174,105 +216,21 @@ namespace DeviceLab
 
                 if (this.commandQueue.Count > 0)
                 {
-                    this.commandQueue.Peek().CanExecuteChanged += CurrentCommand_CanExecuteChanged;
+                    this.commandQueue.Peek().CanExecuteChanged += this.CurrentCommand_CanExecuteChanged;
                 }
             }
         }
 
+        /// <summary>
+        /// The ObservableCommandQueue informs the CommandSequence when queue contents change so
+        /// that the CommandSequence can fire the CanExecuteChanged.
+        /// </summary>
+        /// <param name="sender">ObservableCommandQueue that originated the event</param>
+        /// <param name="e">The arguments associated with this event</param>
         private void CommandQueue_QueueChanged(object sender, EventArgs e)
         {
-            OnCanExecuteChanged();
+            this.OnCanExecuteChanged();
         }
-    }
-
-    /// <summary>
-    /// A simple queue of commands that provides notifications whenever the contents changed.
-    /// </summary>
-    public class ObservableCommandQueue
-    {
-        /// <summary>
-        /// Underlying Queue for the commands
-        /// </summary>
-        private Queue<ICommand> commands;
-
-        //-------------------------------------------------------------------
-        // Constructor
-        //-------------------------------------------------------------------
-        #region Constructor
-        /// <summary>
-        /// blah blah blah StyleCop will tell me what to put here
-        /// </summary>
-        public ObservableCommandQueue()
-        {
-            this.commands = new Queue<ICommand>();
-        }
-        #endregion
-
-        //-------------------------------------------------------------------
-        // Queue Operations
-        //-------------------------------------------------------------------
-        #region Queue Operations
-        /// <summary>
-        /// Gets the Count of elements contained in the queue
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return this.commands.Count;
-            }
-        }
-
-        /// <summary>
-        /// Clears all elements from the queue
-        /// </summary>
-        public void Clear()
-        {
-            this.commands.Clear();
-            this.OnQueueChanged();
-        }
-
-        /// <summary>
-        /// Retrieves the element at the front of the queue without modifying the contents of the queue
-        /// </summary>
-        /// <returns>The element at the front of the queue</returns>
-        public ICommand Peek()
-        {
-            return this.commands.Peek();
-        }
-
-        /// <summary>
-        /// Inserts a new element at the back of the queue
-        /// </summary>
-        /// <param name="cmd">The new element to be inserted</param>
-        public void Enqueue(ICommand cmd)
-        {
-            this.commands.Enqueue(cmd);
-            OnQueueChanged();
-        }
-
-        /// <summary>
-        /// Removes the element at the front of the queue
-        /// </summary>
-        /// <returns>The element that was removed from the front of the queue</returns>
-        public ICommand Dequeue()
-        {
-            ICommand cmd = this.commands.Dequeue();
-            this.OnQueueChanged();
-            return cmd;
-        }
-        #endregion // Queue Operations
-
-        //-------------------------------------------------------------------
-        // QueueChanged Event
-        //-------------------------------------------------------------------
-        #region QueueChanged Event
-        public event EventHandler QueueChanged;
-
-        private void OnQueueChanged()
-        {
-            this.QueueChanged?.Invoke(this, new EventArgs());
-        }
-        #endregion // QueueChanged Event
+        #endregion // ICommand Implementation
     }
 }

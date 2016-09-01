@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="DeviceCollectionView.xaml.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DeviceLab
 {
@@ -20,11 +13,19 @@ namespace DeviceLab
     /// </summary>
     public partial class DeviceCollectionView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceCollectionView" /> class.
+        /// </summary>
         public DeviceCollectionView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Eats any mouse clicks so that they won't be handled by the ListBox control
+        /// </summary>
+        /// <param name="sender">Object that originated the event</param>
+        /// <param name="e">Arguments for the event</param>
         private void EatMouseClicks(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;

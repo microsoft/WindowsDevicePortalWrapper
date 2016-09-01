@@ -61,6 +61,10 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AutoScrollTextBox.cs" />
     <Compile Include="ViewModels\CommandSequence.cs" />
+    <Compile Include="ViewModels\DiagnosticSinks.cs" />
+    <Compile Include="ViewModels\GenericDevicePortalConnectionFactory.cs" />
+    <Compile Include="ViewModels\ObservableCommandQueue.cs" />
+    <Compile Include="ViewModels\XboxDevicePortalConnectionFactory.cs" />
     <Compile Include="Views\DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
@@ -75,7 +79,7 @@
     </Compile>
     <Compile Include="Controls\SelectionListBox.cs" />
     <Compile Include="XboxDevicePortalConnection.cs" />
-    <Page Include="Views\BindablePassword.xaml">
+    <Page Include="Controls\BindablePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -95,7 +99,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\BindablePassword.xaml.cs">
+    <Compile Include="Controls\BindablePassword.xaml.cs">
       <DependentUpon>BindablePassword.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DeviceSignInViewModel.cs" />

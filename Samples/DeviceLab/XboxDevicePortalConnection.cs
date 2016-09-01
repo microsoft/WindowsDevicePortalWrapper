@@ -1,4 +1,9 @@
-﻿using System;
+﻿//----------------------------------------------------------------------------------------------
+// <copyright file="XboxDevicePortalConnection.cs" company="Microsoft Corporation">
+//     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
+// </copyright>
+//----------------------------------------------------------------------------------------------
+using System;
 using System.Net;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -7,6 +12,9 @@ using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
+    /// <summary>
+    /// IDevicePortalConnection implementation for Xbox One devices
+    /// </summary>
     public class XboxDevicePortalConnection : IDevicePortalConnection
     {
         /// <summary>
@@ -123,6 +131,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             set;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether cert overrides should be allowed.
+        /// </summary>
         public bool AllowCertOverride
         {
             get
