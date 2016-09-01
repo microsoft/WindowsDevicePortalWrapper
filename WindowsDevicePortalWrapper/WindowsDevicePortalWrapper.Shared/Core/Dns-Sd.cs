@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string TagsApi = "api/dns-sd/tags";
 
         /// <summary>
-        /// Gets the name of the device.
+        /// Gets a list of DNS-SD tags being broadcast by this device. 
         /// </summary>
         /// <returns>Array of strings, each one an individual tag.</returns>
         public async Task<List<string>> GetServiceTags()

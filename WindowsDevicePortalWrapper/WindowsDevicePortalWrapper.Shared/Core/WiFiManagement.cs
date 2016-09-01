@@ -32,7 +32,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string WifiNetworksApi = "api/wifi/networks";
 
         /// <summary>
-        /// Connect to a WiFi network.
+        /// Connect to a WiFi network using a given network adapter and SSID. 
         /// </summary>
         /// <param name="networkAdapter">Network adaptor GUID.</param>
         /// <param name="ssid">SSID of the network.</param>
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets WiFi networks.
+        /// Gets WiFi networks as seen from a WiFi interface.
         /// </summary>
         /// <param name="interfaceGuid">Interface to get networks from.</param>
         /// <returns>List of available networks.</returns>
@@ -171,7 +171,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public bool IsConnectable { get; private set; }
 
             /// <summary>
-            /// Gets the infrastructure type.
+            /// Gets the infrastructure type - ad hoc or standard. 
             /// </summary>
             [DataMember(Name = "InfrastructureType")]
             public string InfrastructureType { get; private set; }
