@@ -16,6 +16,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(X509Certificate2 cert)
+        {
+            // Do nothing.
+        }
+
         // Disable warning about async method lacking 'await'
 #pragma warning disable 1998
         /// <summary>
