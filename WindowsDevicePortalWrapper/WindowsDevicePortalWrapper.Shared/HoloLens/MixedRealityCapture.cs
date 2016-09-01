@@ -317,14 +317,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the recording status
             /// </summary>
             [DataMember(Name = "ProcessStatus")]
-            public ProcessStatus Status { get; private set; }
+            public MrcProcessStatus Status { get; private set; }
         }
 
         /// <summary>
         /// Object representation of the recording process status
         /// </summary>
         [DataContract]
-        public class ProcessStatus
+        public class MrcProcessStatus
         {
             /// <summary>
             /// Gets the process status
