@@ -67,10 +67,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             /// <summary>
-            ///  Gets or sets the Users list
+            ///  Gets the Users list
             /// </summary>
             [DataMember(Name = "Users")]
-            public List<UserInfo> Users { get; set; }
+            public List<UserInfo> Users { get; private set; }
 
             /// <summary>
             /// Returns a string representation of a user list
@@ -128,10 +128,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public bool? AutoSignIn { get; set; }
 
             /// <summary>
-            /// Gets or sets the gamer tag
+            /// Gets the gamer tag
             /// </summary>
             [DataMember(Name = "Gamertag", EmitDefaultValue = false)]
-            public string Gamertag { get; set; }
+            public string Gamertag { get; private set; }
 
             /// <summary>
             /// Gets or sets the user as signed in
@@ -152,10 +152,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public bool? SponsoredUser { get; set; }
 
             /// <summary>
-            /// Gets or sets the Xbox User Id.
+            /// Gets the Xbox User Id.
             /// </summary>
             [DataMember(Name = "XboxUserId", EmitDefaultValue = false)]
-            public string XboxUserId { get; set; }
+            public string XboxUserId { get; private set; }
 
             /// <summary>
             /// Returns a string representation of a user

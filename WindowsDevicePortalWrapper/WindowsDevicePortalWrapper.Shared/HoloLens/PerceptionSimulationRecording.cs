@@ -56,8 +56,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="recordHands">Should hand data be recorded? The default value is true.</param>
         /// <param name="recordSpatialMapping">Should Spatial Mapping data be recorded? The default value is true.</param>
         /// <param name="recordEnvironment">Should environment data be recorded? The default value is true.</param>
-        /// <param name="singleSpatialMappingFrame">Should the spatial mapping data be limited to a single frame? The default value is false.</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task StartHolographicSimulationRecording(
             string name,
             bool recordHead = true,
@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 recordHead ? 1 : 0,
                 recordHands ? 1 : 0,
                 recordSpatialMapping ? 1 : 0,
-                recordEnvironment ? 1: 0,
+                recordEnvironment ? 1 : 0,
                 name);
             await this.Post(StartHolographicSimulationRecordingApi, payload);
         }
@@ -132,12 +132,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         #region Data contract
+        /// <summary>
+        /// Object representation of a Holographic Simulation Stop Recording error.
+        /// </summary>
         public class HolographicSimulationStopRecordingError
         {
+            /// <summary>
+            /// Gets the Reason string.
+            /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
         }
-
 
         /// <summary>
         /// Object representation of Holographic Simulation recording status.
@@ -146,10 +151,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class HolographicSimulationRecordingStatus
         {
             /// <summary>
-            /// Gets or sets the recording status.
+            /// Gets a value indicating whether the simulation is recording.
             /// </summary>
             [DataMember(Name = "recording")]
-            public bool IsRecording { get; set; }
+            public bool IsRecording { get; private set; }
         }
         #endregion // Data contract
     }

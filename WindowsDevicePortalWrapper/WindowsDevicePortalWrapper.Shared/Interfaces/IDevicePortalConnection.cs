@@ -6,6 +6,10 @@
 
 using System;
 using System.Net;
+#if !WINDOWS_UWP
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+#endif
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -36,38 +40,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
         string Family { get; set; }
 
         /// <summary>
-        /// Gets the friendly name of the device (ex: LivingRoomPC).
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets or sets information describing the operating system installed on the device.
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether or not we are allowing cert override which may specify a proxy instead of the web management service.
-        /// </summary>
-        bool AllowCertOverride { get; set; }
-
 #if !WINDOWS_UWP
         /// <summary>
-        /// Get the raw data of the device's root certificate.
+        /// Gets the provided device certificate.
         /// </summary>
-        /// <returns>Byte array containing the certificate data.</returns>
-        byte[] GetDeviceCertificateData();
-#endif
+        /// <returns>Stored device certificate.</returns>
+        X509Certificate2 GetDeviceCertificate();
 
         /// <summary>
-        /// Validates and sets the device certificate.
+        /// Stores a manually provided device certificate.
         /// </summary>
         /// <param name="certificate">The device's root certificate.</param>
-        /// <remarks>How this data is used and/or stored is implementation specific.</remarks>
-#if WINDOWS_UWP
-        void SetDeviceCertificate(Windows.Security.Cryptography.Certificates.Certificate certificate);
-#else
-        void SetDeviceCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2 certificate);
+        void SetDeviceCertificate(X509Certificate2 certificate);
 #endif
+
         /// <summary>
         /// Updates the http security requirements for device communication.
         /// </summary>

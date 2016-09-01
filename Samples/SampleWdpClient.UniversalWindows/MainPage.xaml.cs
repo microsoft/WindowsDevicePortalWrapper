@@ -106,7 +106,9 @@ namespace SampleWdpClient.UniversalWindows
                                 sb.AppendLine(connectArgs.Message);
                             }
                         };
-                    
+
+                        // TODO: Support proper certificate validation instead of blindly trusting this cert (Issue #154/#145).
+                        await portal.GetRootDeviceCertificate(true);
                         await portal.Connect();
 
                         this.MarshalUpdateCommandOutput(sb.ToString());

@@ -11,9 +11,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <summary>
+    /// Wrappers for remote settings for IoT.
+    /// </summary>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// Remote status API.
+        /// </summary>
         public static readonly string RemoteSettingsStatusApi = "api/iot/remote/status";
 
         /// <summary>
@@ -34,16 +39,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class RemoteSettingsStatusInfo
         {
             /// <summary>
-            /// Returns true if the service is running
+            /// Gets a value indicating whether the service is running.
             /// </summary>
             [DataMember(Name = "IsRunning")]
-            public bool IsRunning { get; set; }
+            public bool IsRunning { get; private set; }
 
             /// <summary>
-            ///  Returns true if the service is scheduled.
+            ///  Gets a value indicating whether the service is scheduled.
             /// </summary>
             [DataMember(Name = "IsScheduled")]
-            public bool IsScheduled { get; set; }
+            public bool IsScheduled { get; private set; }
         }
         #endregion // Data contract
     }

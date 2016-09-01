@@ -56,7 +56,7 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
 
-            //IoT specific endpoints
+            // IoT specific endpoints
             new Endpoint(HttpMethods.Get, DevicePortal.IoTOsInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.TimezoneInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DateTimeInfoApi),
@@ -108,9 +108,9 @@ namespace MockDataGenerator
 
             if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
             {
-                if (portal.ConnectionHttpStatusCode != 0)
+                if (!string.IsNullOrEmpty(portal.ConnectionFailedDescription))
                 {
-                    Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
+                    Console.WriteLine(string.Format("Failed to connect to WDP (HTTP {0}) : {1}", (int)portal.ConnectionHttpStatusCode, portal.ConnectionFailedDescription));
                 }
                 else
                 {
@@ -275,14 +275,14 @@ namespace MockDataGenerator
             }
 
             /// <summary>
-            /// Gets or sets the HTTP Method.
+            /// Gets the HTTP Method.
             /// </summary>
-            public HttpMethods Method { get; set; }
+            public HttpMethods Method { get; private set; }
 
             /// <summary>
-            /// Gets or sets the endpoint value.
+            /// Gets the endpoint value.
             /// </summary>
-            public string Value { get; set; }
+            public string Value { get; private set; }
 
             /// <summary>
             /// Overridden ToString method.

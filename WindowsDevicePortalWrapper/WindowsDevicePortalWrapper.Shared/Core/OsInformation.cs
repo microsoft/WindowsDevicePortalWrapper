@@ -138,10 +138,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DeviceName
         {
             /// <summary>
-            /// Gets or sets the name.
+            /// Gets the name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
         }
 
         /// <summary>
@@ -151,10 +151,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DeviceOsFamily
         {
             /// <summary>
-            /// Gets or sets the device family name.
+            /// Gets the device family name.
             /// </summary>
             [DataMember(Name = "DeviceType")]
-            public string Family { get; set; }
+            public string Family { get; private set; }
         }
 
         /// <summary>
@@ -164,40 +164,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class OperatingSystemInformation
         {
             /// <summary>
-            ///  Gets or sets the OS name.
+            ///  Gets the OS name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the language
+            /// Gets the language
             /// </summary>
             [DataMember(Name = "Language")]
-            public string Language { get; set; }
+            public string Language { get; private set; }
 
             /// <summary>
-            /// Gets or sets the edition
+            /// Gets the edition
             /// </summary>
             [DataMember(Name = "OsEdition")]
-            public string OsEdition { get; set; }
+            public string OsEdition { get; private set; }
 
             /// <summary>
-            /// Gets or sets the edition Id
+            /// Gets the edition Id
             /// </summary>
             [DataMember(Name = "OsEditionId")]
-            public uint OsEditionId { get; set; }
+            public uint OsEditionId { get; private set; }
 
             /// <summary>
-            /// Gets or sets the OS version
+            /// Gets the OS version
             /// </summary>
             [DataMember(Name = "OsVersion")]
-            public string OsVersionString { get; set; }
+            public string OsVersionString { get; private set; }
 
             /// <summary>
-            /// Gets or sets the raw platform type
+            /// Gets the raw platform type
             /// </summary>
             [DataMember(Name = "Platform")]
-            public string PlatformName { get; set; }
+            public string PlatformName { get; private set; }
 
             /// <summary>
             /// Gets the platform
@@ -244,7 +244,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         }
                     }
                     catch
-                    { }
+                    {
+                    }
 
                     return platform;
                 }

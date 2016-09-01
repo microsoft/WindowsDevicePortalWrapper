@@ -109,10 +109,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WebManagementHttpSettings
         {
             /// <summary>
-            /// Gets or sets a value indicating whether HTTPS is required
+            /// Gets a value indicating whether HTTPS is required
             /// </summary>
             [DataMember(Name = "httpsRequired")]
-            public bool IsHttpsRequired { get; set; }
+            public bool IsHttpsRequired { get; private set; }
         }
 
         /// <summary>
@@ -122,10 +122,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class InterPupilaryDistance
         {
             /// <summary>
-            /// Gets or sets the raw interpupilary distance
+            /// Gets the raw interpupilary distance
             /// </summary>
             [DataMember(Name = "ipd")]
-            public int IpdRaw { get; set; }
+            public int IpdRaw { get; private set; }
 
             /// <summary>
             /// Gets or sets the interpupilary distance

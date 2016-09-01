@@ -16,15 +16,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// IOT device information API.
+        /// </summary>
         public static readonly string IoTOsInfoApi = "api/iot/device/information";
+
+        /// <summary>
+        /// IOT device timezone API.
+        /// </summary>
         public static readonly string TimezoneInfoApi = "api/iot/device/timezones";
+
+        /// <summary>
+        /// IOT device datetime API.
+        /// </summary>
         public static readonly string DateTimeInfoApi = "api/iot/device/datetime";
+
+        /// <summary>
+        /// IOT device Controller Driver API.
+        /// </summary>
         public static readonly string ControllerDriverApi = "api/iot/device/controllersdriver";
+
+        /// <summary>
+        /// IOT display resolution API.
+        /// </summary>
         public static readonly string DisplayResolutionApi = "api/iot/device/displayresolution";
+
+        /// <summary>
+        /// IOT display orientation API.
+        /// </summary>
         public static readonly string DisplayOrientationApi = "api/iot/device/displayorientation";
+
+        /// <summary>
+        /// IOT device name API.
+        /// </summary>
         public static readonly string DeviceNameApi = "api/iot/device/name";
+
+        /// <summary>
+        /// IOT Device password API.
+        /// </summary>
         public static readonly string ResetPasswordApi = "api/iot/device/password";
+
+        /// <summary>
+        /// IOT remote debugging pin API.
+        /// </summary>
         public static readonly string NewRemoteDebuggingPinApi = "api/iot/device/remotedebuggingpin";
+
+        /// <summary>
+        /// IOT set timezone API.
+        /// </summary>
         public static readonly string SetTimeZoneApi = "api/iot/device/settimezone";
         
         /// <summary>
@@ -84,6 +123,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets the Device Name.
         /// </summary>
+        /// <param name="name">Name to set for the device.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetIoTDeviceName(string name)
         {
             await this.Post(DeviceNameApi, string.Format("newdevicename={0}", Utilities.Hex64Encode(name)));
@@ -92,6 +133,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets a new password.
         /// </summary>
+        /// <param name="oldPassword">Old password.</param>
+        /// <param name="newPassword">New desired password.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetNewPassword(string oldPassword, string newPassword)
         {
             await this.Post(
@@ -102,6 +146,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets a new remote debugging pin.
         /// </summary>
+        /// <param name="newPin">New pin.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetNewRemoteDebuggingPin(string newPin)
         {
             await this.Post(
@@ -112,6 +158,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets controllers drivers.
         /// </summary>
+        /// <param name="newDriver">Driver to set.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetControllersDrivers(string newDriver)
         {
             await this.Post(
@@ -122,6 +170,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets Timezone.
         /// </summary>
+        /// <param name="index">Timezone index.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetTimeZone(int index)
         {
             await this.Post(
@@ -132,6 +182,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets display resolution.
         /// </summary>
+        /// <param name="displayResolution">New display resolution.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetDisplayResolution(string displayResolution)
         {
             await this.Post(
@@ -142,6 +194,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Set display orientation.
         /// </summary>
+        /// <param name="displayOrientation">Desired orientation.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetDisplayOrientation(string displayOrientation)
         {
             await this.Post(
@@ -160,19 +214,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the device model
             /// </summary>
             [DataMember(Name = "DeviceModel")]
-            public string Model { get; set; }
+            public string Model { get; private set; }
 
             /// <summary>
-            ///  Gets or sets the device name.
+            ///  Gets the device name.
             /// </summary>
             [DataMember(Name = "DeviceName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
             /// Gets the OS version
             /// </summary>
             [DataMember(Name = "OSVersion")]
-            public string OSVersion { get; set; }
+            public string OSVersion { get; private set; }
         }
 
         /// <summary>
@@ -185,14 +239,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the current timezone
             /// </summary>
             [DataMember(Name = "Current")]
-            public Timezone CurrentTimeZone;
-           
+            public Timezone CurrentTimeZone { get; private set; }
+
             /// <summary>
             /// Gets the list of all timezones
             /// </summary>
             [DataMember(Name = "Timezones")]
-            public Timezone[] Timezones;
-            
+            public Timezone[] Timezones { get; private set; }
         }
 
         /// <summary>
@@ -205,19 +258,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the timezone description
             /// </summary>
             [DataMember(Name = "Description")]
-            public string description { get; set; }
+            public string Description { get; private set; }
 
             /// <summary>
             /// Gets the timezone index
             /// </summary>
             [DataMember(Name = "Index")]
-            public int index { get; set; }
+            public int Index { get; private set; }
 
             /// <summary>
             /// Gets the timezone name
             /// </summary>
             [DataMember(Name = "Name")]
-            public string name { get; set; }
+            public string Name { get; private set; }
         }
 
         /// <summary>
@@ -230,7 +283,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the current date time
             /// </summary>
             [DataMember(Name = "Current")]
-            public DateTimeDescription CurrentDateTime;
+            public DateTimeDescription CurrentDateTime { get; private set; }
         }
 
         /// <summary>
@@ -243,37 +296,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the current day
             /// </summary>
             [DataMember(Name = "Day")]
-            public int day { get; set; }
+            public int Day { get; private set; }
 
             /// <summary>
             /// Gets the current hour 
             /// </summary>
             [DataMember(Name = "Hour")]
-            public int hour { get; set; }
+            public int Hour { get; private set; }
 
             /// <summary>
             /// Gets the current minute
             /// </summary>
             [DataMember(Name = "Minute")]
-            public int min { get; set; }
+            public int Min { get; private set; }
 
             /// <summary>
             /// Gets the current month 
             /// </summary>
             [DataMember(Name = "Month")]
-            public int month { get; set; }
+            public int Month { get; private set; }
 
             /// <summary>
             /// Gets the current second 
             /// </summary>
-            [DataMember(Name ="Second")]
-            public int sec { get; set; }
+            [DataMember(Name = "Second")]
+            public int Sec { get; private set; }
 
             /// <summary>
             /// Gets the current year 
             /// </summary>
             [DataMember(Name = "Year")]
-            public int year { get; set; }
+            public int Year { get; private set; }
         }
 
         /// <summary>
@@ -286,13 +339,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the current driver information
             /// </summary>
             [DataMember(Name = "CurrentDriver")]
-            public string CurrentDriver  { get; set; }
+            public string CurrentDriver { get; private set; }
 
             /// <summary>
             /// Gets the list of all the controller drivers information
             /// </summary>         
             [DataMember(Name = "ControllersDrivers")]
-            public string[] ControllersDrivers { get; set; }
+            public string[] ControllersDrivers { get; private set; }
         }
 
         /// <summary>
@@ -305,7 +358,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the dispaly orientation information
             /// </summary>
             [DataMember(Name = "Orientation")]
-            public int Orientation { get; set; }
+            public int Orientation { get; private set; }
         }
 
         /// <summary>
@@ -318,13 +371,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the current display resolution
             /// </summary>
             [DataMember(Name = "Current")]
-            public Resolution CurrentResolution;
-            
+            public Resolution CurrentResolution { get; private set; }
+
             /// <summary>
             /// Gets the list of resolution specifications
             /// </summary>
             [DataMember(Name = "Resolutions")]
-            public Resolution[] Resolutions;
+            public Resolution[] Resolutions { get; private set; }
         }
 
         /// <summary>
@@ -337,13 +390,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of supported display resolutions 
             /// </summary>
             [DataMember(Name = "Resolution")]
-            public string ResolutionDetail { get; set; }
-            
+            public string ResolutionDetail { get; private set; }
+
             /// <summary>
             /// Gets the index for the resolution information
             /// </summary>
             [DataMember(Name = "Index")]
-            public int Index { get; set; }
+            public int Index { get; private set; }
         }
         #endregion // Data contract
     }

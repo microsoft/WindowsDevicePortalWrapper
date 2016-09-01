@@ -26,6 +26,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string HolographicSimulationStreamApi = "api/holographic/simulation/control/Stream";
 
         /// <summary>
+        /// Enumeration defining the control modes used by the Holographic Perception Simulation.
+        /// </summary>
+        public enum SimulationControlMode
+        {
+            /// <summary>
+            /// Default mode.
+            /// </summary>
+            Default = 0,
+
+            /// <summary>
+            /// Simulation mode.
+            /// </summary>
+            Simulation,
+
+            /// <summary>
+            /// Remote mode.
+            /// </summary>
+            Remote,
+
+            /// <summary>
+            /// Legacy mode.
+            /// </summary>
+            Legacy
+        }
+
+        /// <summary>
         /// Gets the perception simulation control mode.
         /// </summary>
         /// <returns>The simulation control mode.</returns>
@@ -46,6 +72,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="mode">The simulation control mode.</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetPerceptionSimulationControlMode(SimulationControlMode mode)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -61,27 +88,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         #region Data contract
         /// <summary>
-        /// Enumeration defining the control modes used by the Holographic Perception Simulation.
-        /// </summary>
-        public enum SimulationControlMode
-        {
-            Default = 0,
-            Simulation,
-            Remote,
-            Legacy
-        }
-
-        /// <summary>
         /// Object representation of Perception Simulation control mode.
         /// </summary>
         [DataContract]
         public class PerceptionSimulationControlMode
         {
             /// <summary>
-            /// Gets or sets the control mode.
+            /// Gets the control mode.
             /// </summary>
             [DataMember(Name = "mode")]
-            public SimulationControlMode Mode { get; set; }
+            public SimulationControlMode Mode { get; private set; }
         }
         #endregion // Data contract
     }

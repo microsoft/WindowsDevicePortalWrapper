@@ -43,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint used to access the certificate.
         /// </summary>
-        private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+        public static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
         /// Expected number of OS version sections once the OS version is split by period characters
@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets handler for reporting connection status.
+        /// Handler for reporting connection status.
         /// </summary>
         public event DeviceConnectionStatusEventHandler ConnectionStatus;
 
@@ -117,6 +117,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the status code for establishing our connection.
         /// </summary>
         public HttpStatusCode ConnectionHttpStatusCode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a description of why the connection failed.
+        /// </summary>
+        public string ConnectionFailedDescription
         {
             get;
             private set;
@@ -172,15 +181,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ssid">Optional network SSID.</param>
         /// <param name="ssidKey">Optional network key.</param>
         /// <param name="updateConnection">Indicates whether we should update this connection's IP address after connecting.</param>
-        /// <param name="rawManualCertificate">Allows specifying the raw certificate manually. This allows loading it from a local file or loading an override for a web proxy.</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
         public async Task Connect(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true,
-            byte[] rawManualCertificate = null)
+            bool updateConnection = true)
         {
 #if WINDOWS_UWP
             this.ConnectionHttpStatusCode = HttpStatusCode.Ok;
@@ -191,43 +198,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             try 
             {
-                // Get the device certificate
-                bool certificateAcquired = false;
-
-                if (rawManualCertificate == null)
-                {
-                    try
-                    {
-                        connectionPhaseDescription = "Acquiring device certificate";
-                        this.SendConnectionStatus(
-                            DeviceConnectionStatus.Connecting,
-                            DeviceConnectionPhase.AcquiringCertificate,
-                            connectionPhaseDescription);
-
-                        this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
-
-                        certificateAcquired = true;
-                    }
-                    catch
-                    {
-                        // This device does not support the root certificate endpoint.
-                        this.SendConnectionStatus(
-                            DeviceConnectionStatus.Connecting,
-                            DeviceConnectionPhase.AcquiringCertificate,
-                            "No device certificate available");
-                    }
-                }
-                else
-                {
-#if WINDOWS_UWP
-                    this.deviceConnection.SetDeviceCertificate(new Certificate(rawManualCertificate.AsBuffer()));
-#else
-                    this.deviceConnection.SetDeviceCertificate(new X509Certificate2(rawManualCertificate));
-#endif // WINDOWS_UWP
-
-                    certificateAcquired = true;
-                }
-
                 // Get the device family and operating system information.
                 connectionPhaseDescription = "Requesting operating system information";
                 this.SendConnectionStatus(
@@ -237,8 +207,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Family = await this.GetDeviceFamily();
                 this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
 
-                // Default to using HTTPS if we were successful in acquiring the device's root certificate.
-                bool requiresHttps = certificateAcquired;
+                // Default to using HTTPS.
+                bool requiresHttps = true;
 
                 // HoloLens is the only device that supports the GetIsHttpsRequired method.
                 if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
@@ -289,16 +259,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if (dpe != null)
                 {
                     this.ConnectionHttpStatusCode = dpe.StatusCode;
+                    this.ConnectionFailedDescription = dpe.Message;
                 }
                 else
                 {
                     this.ConnectionHttpStatusCode = HttpStatusCode.Conflict;
+
+                    // Get to the innermost exception for our return message.
+                    Exception innermostException = e;
+                    while (innermostException.InnerException != null)
+                    {
+                        innermostException = innermostException.InnerException;
+                    }
+
+                    this.ConnectionFailedDescription = innermostException.Message;
                 }
 
                 this.SendConnectionStatus(
                     DeviceConnectionStatus.Failed,
                     DeviceConnectionPhase.Idle,
-                    string.Format("Device connection failed: {0}", connectionPhaseDescription));
+                    string.Format("Device connection failed: {0}, {1}", connectionPhaseDescription, this.ConnectionFailedDescription));
             }
         }
 
