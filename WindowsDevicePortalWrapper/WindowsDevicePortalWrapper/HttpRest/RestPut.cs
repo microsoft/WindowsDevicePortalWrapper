@@ -51,9 +51,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         // If this isn't a retry and it failed due to a bad CSRF
                         // token, issue a GET to refresh the token and then retry.
-                        if (allowRetry && response.StatusCode == HttpStatusCode.Forbidden && response.ReasonPhrase.Equals("CSRF Token Invalid"))
+                        if (allowRetry && this.IsBadCsrfToken(response))
                         {
-                            await this.GetOperatingSystemInformation();
+                            await this.RefreshCsrfToken();
                             return await this.Put(uri, body, false);
                         }
 
