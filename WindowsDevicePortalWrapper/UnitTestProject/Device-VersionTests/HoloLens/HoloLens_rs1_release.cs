@@ -119,10 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             Assert.AreEqual(2, ipconfig.Adapters.Count);
             NetworkAdapterInfo adapter = ipconfig.Adapters[0];
-            Assert.AreEqual("
-                
-                
-                Device (Personal Area Network)", adapter.Description);
+            Assert.AreEqual("Device (Personal Area Network)", adapter.Description);
             Assert.AreEqual("4c-0b-be-ff-bd-64", adapter.MacAddress);
             Assert.AreEqual(7, adapter.Index);
             Assert.AreEqual(Guid.Parse("{765C05C8-7B46-4CE6-BEC9-33C6112234B4}"), adapter.Id);

@@ -11,12 +11,29 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <content>
+    /// Wrappers for Application Management.
+    /// </content>
     public partial class DevicePortal
     {
-        public static readonly string AppsListApi = "api/iot/appx/default";
+        /// <summary>
+        /// IoT device application list API.
+        /// </summary>
+        public static readonly string AppsListApi = "api/IoT/appx/default";
+
+        /// <summary>
+        /// IoT device headless application list API.
+        /// </summary>
         public static readonly string HeadlessAppsListApi = "api/iot/appx/listHeadlessApps";
+
+        /// <summary>
+        /// IoT device headless startup application API.
+        /// </summary>
         public static readonly string HeadlessStartupAppApi = "api/iot/appx/startupHeadlessApp";
+
+        /// <summary>
+        /// IoT device package activation API.
+        /// </summary>
         public static readonly string ActivatePackageApi = "api/iot/appx/app";
 
         /// <summary>
@@ -27,10 +44,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<AppsListInfo>(AppsListApi);
         }
 
-       /// <summary>
+        /// <summary>
         /// Gets list of headless apps.
         /// </summary>
-        public async Task<HeadlessAppsListInfo> GetHeadlessAppListInfo()
+        public async Task<HeadlessAppsListInfo> GetHeadlessAppsListInfo()
         {
             return await this.Get<HeadlessAppsListInfo>(HeadlessAppsListApi);
         }
@@ -70,7 +87,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public async Task ActivatePackage(string appId)
         {
-            await this.Delete(
+            await this.Post(
                  ActivatePackageApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }

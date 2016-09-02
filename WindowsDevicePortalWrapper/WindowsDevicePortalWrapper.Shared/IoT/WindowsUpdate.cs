@@ -25,7 +25,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Update status API.
         /// </summary>
         public static readonly string StatusApi = "api/iot/windowsupdate/status";
-
+        public static readonly string UpdateNowApi = "api/iot/windowsupdate/updatenow";
+        public static readonly string UpdateRestartApi = "api/iot/windowsupdate/updaterestart";
+      
         /// <summary>
         /// Gets Status information.
         /// </summary>
@@ -44,6 +46,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);
         }
 
+        /// <summary>
+        /// Sets SoftAp Settings.
+        /// </summary>
+        public async Task SetUpdateInstallTime()
+        {
+            await this.Post(
+                 InstallTimeApi);
+        }
+
+        /// <summary>
+        /// Sets SoftAp Settings.
+        /// </summary>
+        public async Task SetUpdateNow()
+        {
+            await this.Post(
+                 UpdateNowApi);
+        }
+
+        /// <summary>
+        /// Sets SoftAp Settings.
+        /// </summary>
+        public async Task SetUpdateRestart()
+        {
+            await this.Post(
+                  UpdateRestartApi);
+        }
         #region Data contract
 
         /// <summary>

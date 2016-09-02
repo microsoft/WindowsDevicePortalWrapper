@@ -136,9 +136,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="oldPassword">Old password.</param>
         /// <param name="newPassword">New desired password.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetNewPassword(string oldPassword, string newPassword)
+        public async Task<ErrorInformation> SetNewPassword(string oldPassword, string newPassword)
         {
-            await this.Post(
+            return await this.Post<ErrorInformation>(
                 ResetPasswordApi,
                 string.Format("oldpassword={0}&newpassword={1}", Utilities.Hex64Encode(oldPassword), Utilities.Hex64Encode(newPassword)));
         }
@@ -160,9 +160,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="newDriver">Driver to set.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetControllersDrivers(string newDriver)
+        public async Task<ControllerDriverInfo> SetControllersDrivers(string newDriver)
         {
-            await this.Post(
+            return await this.Post<ControllerDriverInfo>(
                  ControllerDriverApi,
                 string.Format("newdriver={0}", Utilities.Hex64Encode(newDriver)));
         }
@@ -172,9 +172,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="index">Timezone index.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetTimeZone(int index)
+        public async Task<ErrorInformation> SetTimeZone(int index)
         {
-            await this.Post(
+            return await this.Post<ErrorInformation>(
                  SetTimeZoneApi,
                 string.Format("index={0}", index));
         }
@@ -346,6 +346,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>         
             [DataMember(Name = "ControllersDrivers")]
             public string[] ControllersDrivers { get; private set; }
+
+            /// <summary>
+            /// Gets the request for reboot
+            /// </summary>
+            [DataMember(Name = "RequestReboot")]
+            public string RequestReboot { get; private set; }
         }
 
         /// <summary>
@@ -398,6 +404,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "Index")]
             public int Index { get; private set; }
         }
+
+        /// <summary>
+        /// Error information if a request fails.
+        /// </summary>
+        [DataContract]
+        public partial class ErrorInformation
+        {
+            /// <summary>
+            /// Gets the error code
+            /// </summary>
+            [DataMember(Name = "ErrorCode")]
+            public int ErrorCode { get; private set; }
+
+            /// <summary>
+            /// Gets the status of the request
+            /// </summary>
+            [DataMember(Name = "Status")]
+            public string Status { get; private set; }
+        }
+
+
         #endregion // Data contract
     }
 }
