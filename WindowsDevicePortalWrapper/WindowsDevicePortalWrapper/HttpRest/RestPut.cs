@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,10 +22,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the put request will be issued.</param>
         /// <param name="body">The HTTP content comprising the body of the request.</param>
+        /// <param name="allowRetry">Allow the Post to be retried after issuing a Get call. Currently used for CSRF failures.</param>
         /// <returns>Task tracking the PUT completion.</returns>
         private async Task<Stream> Put(
             Uri uri,
-            HttpContent body = null)
+            HttpContent body = null,
+            bool allowRetry = true)
         {
             MemoryStream dataStream = null;
 
@@ -46,8 +49,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     if (!response.IsSuccessStatusCode)
                     {
+                        // If this isn't a retry and it failed due to a bad CSRF
+                        // token, issue a GET to refresh the token and then retry.
+                        if (allowRetry && this.IsBadCsrfToken(response))
+                        {
+                            await this.RefreshCsrfToken();
+                            return await this.Put(uri, body, false);
+                        }
+
                         throw new DevicePortalException(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {

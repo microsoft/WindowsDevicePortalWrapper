@@ -106,14 +106,21 @@ namespace SampleWdpClient.UniversalWindows
                         }
                     };
 
-                    // If the user wants to allow untrusted connections, make a call to GetRootDeviceCertificate
-                    // with acceptUntrustedCerts set to true. This will enable untrusted connections for the
-                    // remainder of this session.
-                    if (allowUntrusted)
+                    try
                     {
-                        await portal.GetRootDeviceCertificate(true);
+                        // If the user wants to allow untrusted connections, make a call to GetRootDeviceCertificate
+                        // with acceptUntrustedCerts set to true. This will enable untrusted connections for the
+                        // remainder of this session.
+                        if (allowUntrusted)
+                        {
+                            await portal.GetRootDeviceCertificate(true);
+                        }
+                        await portal.Connect(manualCertificate: this.certificate);
                     }
-                    await portal.Connect(manualCertificate: this.certificate);
+                    catch (Exception exception)
+                    {
+                        sb.AppendLine(exception.Message);
+                    }
 
                     this.MarshalUpdateCommandOutput(sb.ToString());
                 });
