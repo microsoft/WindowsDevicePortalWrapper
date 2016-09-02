@@ -21,16 +21,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// Sets the manual certificate.
-        /// </summary>
-        /// <param name="cert">Manual certificate</param>
-        private void SetManualCertificate(Certificate cert)
-        {
-            CertificateStore store = CertificateStores.TrustedRootCertificationAuthorities;
-            store.Add(cert);
-        }
-
-        /// <summary>
         /// Gets the root certificate from the device.
         /// </summary>
         /// <param name="acceptUntrustedCerts">Whether or not we should accept untrusted certificates.</param>
@@ -80,5 +70,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return certificate;
         }
 #pragma warning restore 1998
+
+        /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(Certificate cert)
+        {
+            CertificateStore store = CertificateStores.TrustedRootCertificationAuthorities;
+            store.Add(cert);
+        }
     }
 }
