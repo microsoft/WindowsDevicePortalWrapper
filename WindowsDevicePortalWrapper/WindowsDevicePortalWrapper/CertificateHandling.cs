@@ -24,15 +24,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private X509Certificate2 manualCertificate = null;
 
         /// <summary>
-        /// Sets the manual certificate.
-        /// </summary>
-        /// <param name="cert">Manual certificate</param>
-        private void SetManualCertificate(X509Certificate2 cert)
-        {
-            this.manualCertificate = cert;
-        }
-
-        /// <summary>
         /// Gets or sets handler for untrusted certificate handling
         /// </summary>
         public event UnvalidatedCertEventHandler UnvalidatedCert;
@@ -57,6 +48,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             return certificate;
+        }
+
+        /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(X509Certificate2 cert)
+        {
+            this.manualCertificate = cert;
         }
 
         /// <summary>
