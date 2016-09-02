@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string KnownFoldersApi = "api/filesystem/apps/knownfolders";
 
         /// <summary>
-        /// Calls the API to retrieve the list of known folders.
+        /// Gets a list of Known Folders on the device. 
         /// </summary>
         /// <returns>List of known folders available on this device.</returns>
         public async Task<KnownFolders> GetKnownFolders()
@@ -47,7 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Calls the API to retrieve the contents of a given folder.
+        /// Gets a list of files in a Known Folder (e.g. LocalAppData).
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Calls the API to download a file.
+        /// Gets a file from LocalAppData or another Known Folder on the device. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are downloading.</param>
@@ -90,7 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Calls the API to upload a file.
+        /// Uploads a file to a Known Folder (e.g. LocalAppData)
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filepath">The path to the file we are uploading.</param>
@@ -112,7 +112,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Calls the API to delete a file.
+        /// Deletes a file from a Known Folder. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are deleting.</param>
@@ -133,7 +133,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Calls the API to rename a file.
+        /// Renames a file in a Known Folder. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are renaming.</param>
