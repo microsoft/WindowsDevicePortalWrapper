@@ -54,6 +54,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             return await this.Get<RunningProcesses>(RunningProcessApi);
         }
+
         /// <summary>
         /// Starts listening for the running processes on the device with them being returned via the RunningProcessesMessageReceived event handler.
         /// </summary>

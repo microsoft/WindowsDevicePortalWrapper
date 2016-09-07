@@ -145,7 +145,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "rebootscheduledtime")]
             public int rebootscheduledtime { get; private set; }
-
         }
 
         #endregion // Data contract

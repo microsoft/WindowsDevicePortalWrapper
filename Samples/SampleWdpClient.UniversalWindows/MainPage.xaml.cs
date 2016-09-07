@@ -193,10 +193,10 @@ namespace SampleWdpClient.UniversalWindows
                     sb.AppendLine("Getting IP configuration...");
                     this.MarshalUpdateCommandOutput(sb.ToString());
 
-
                     try
                     {
                         IpConfiguration ipconfig = await portal.GetIpConfig();
+
                         foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
                         {
                             sb.Append(" ");
@@ -212,12 +212,14 @@ namespace SampleWdpClient.UniversalWindows
                             sb.AppendLine(adapterInfo.Dhcp.Address.Address);
                         }
                     }
+
                     catch (Exception ex)
                     {
                         sb.AppendLine("Failed to get IP config info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                     }
-                } );
+
+                });
 
             Task continuationTask = getTask.ContinueWith(
                 (t) =>

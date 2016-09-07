@@ -47,6 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets SoftAp Settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetSoftApSettings(string softApStatus, string softApSsid, string softApPassword)
         {
             await this.Post(
@@ -57,6 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets AllJoyn Settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetAllJoynSettings(string allJoynStatus, string allJoynDescription, string allJoynManufacturer, string allJoynModelNumber)
         {
             await this.Post(
@@ -67,7 +69,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         #region Data contract
        
         /// <summary>
-        /// SoftAp Settings.
         /// Object representation for Soft AP Settings.
         /// </summary>
         [DataContract]
@@ -121,7 +122,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "AllJoynOnboardingModelNumber")]
             public string AllJoynOnboardingModelNumber { get; private set; }
-
         }
         #endregion // Data contract
     }
