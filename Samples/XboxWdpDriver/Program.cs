@@ -379,6 +379,19 @@ namespace XboxWdpDriver
                     }
                 }
             }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is DevicePortalException)
+                {
+                    DevicePortalException innerException = e.InnerException as DevicePortalException;
+
+                    Console.WriteLine(string.Format("Exception encountered: {0}, hr = 0x{1:X} : {2}", innerException.StatusCode, innerException.HResult, innerException.Reason));
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
+                }
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);

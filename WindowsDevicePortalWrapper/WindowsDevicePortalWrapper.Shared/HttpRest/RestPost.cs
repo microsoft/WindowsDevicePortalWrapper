@@ -80,12 +80,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
+        /// <param name="allowRetry">Allow the Post to be retried after issuing a Get call. Currently used for CSRF failures.</param>
         /// <returns>Task tracking the POST completion.</returns>
         private async Task<T> Post<T>(
             string apiPath,
             string payload = null,
             Stream requestStream = null,
-            string requestStreamContentType = null) where T : new()
+            string requestStreamContentType = null,
+            bool allowRetry = true) where T : new()
         {
             T data = default(T);
 
@@ -96,15 +98,34 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.Post(uri, requestStream, requestStreamContentType))
+            try
             {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
+                using (Stream dataStream = await this.Post(uri, requestStream, requestStreamContentType))
                 {
-                    JsonFormatCheck<T>(dataStream);
+                    if ((dataStream != null) &&
+                        (dataStream.Length != 0))
+                    {
+                        JsonFormatCheck<T>(dataStream);
 
-                    object response = deserializer.ReadObject(dataStream);
-                    data = (T)response;
+                        object response = deserializer.ReadObject(dataStream);
+                        data = (T)response;
+                    }
+                }
+            }
+            catch (DevicePortalException e)
+            {
+                // If this isn't a retry and it failed due to a bad CSRF
+                // token, refresh the token and then retry. 
+                // Note: due to the stream already being disposed, we can't
+                // retry a POST unless a body stream isn't being provided.
+                if (allowRetry && this.IsBadCsrfToken(e) && requestStream == null)
+                {
+                    await this.RefreshCsrfToken();
+                    return await this.Post<T>(apiPath, payload, null, null, false);
+                }
+                else
+                {
+                    throw e;
                 }
             }
 
