@@ -196,10 +196,21 @@ namespace SampleWdpClient.UniversalWindows
 
                     try
                     {
-                        await portal.SetCaptureVolume("100");
-                        AvailableBluetoothDevicesInfo bdevice = portal.GetAvailableBluetoothDevicesInfo();
-                        sb.AppendLine(bdevice.AvailableDevices[0].Name);
-
+                        IpConfiguration ipconfig = await portal.GetIpConfig();
+                        foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
+                        {
+                            sb.Append(" ");
+                            sb.AppendLine(adapterInfo.Description);
+                            sb.Append("  MAC address :");
+                            sb.AppendLine(adapterInfo.MacAddress);
+                            foreach (IpAddressInfo address in adapterInfo.IpAddresses)
+                            {
+                                sb.Append("  IP address :");
+                                sb.AppendLine(address.Address);
+                            }
+                            sb.Append("  DHCP address :");
+                            sb.AppendLine(adapterInfo.Dhcp.Address.Address);
+                        }
                     }
                     catch (Exception ex)
                     {

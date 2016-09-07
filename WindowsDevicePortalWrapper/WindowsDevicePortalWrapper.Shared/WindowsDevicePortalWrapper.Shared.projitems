@@ -46,7 +46,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\AthensAppx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\AthensAudio.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IoT\AthensBluetooth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\ProcessManagement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\IcsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\IoTOnboarding.cs" />
