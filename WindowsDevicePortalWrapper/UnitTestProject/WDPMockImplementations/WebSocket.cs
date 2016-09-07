@@ -54,6 +54,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Stops listneing for messages from the websocket and closes the connection to the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
+#pragma warning disable 1998
         private async Task StopListeningForMessagesInternal()
         {
             if (this.IsListeningForMessages)
@@ -68,6 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
         }
+#pragma warning restore 1998
 
         /// <summary>
         /// Connects to the websocket and starts listening for messages from the websocket.

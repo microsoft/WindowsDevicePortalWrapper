@@ -19,6 +19,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// A manually provided certificate for trust validation.
+        /// </summary>
+        private X509Certificate2 manualCertificate = null;
+
+        /// <summary>
         /// Gets or sets handler for untrusted certificate handling
         /// </summary>
         public event UnvalidatedCertEventHandler UnvalidatedCert;
@@ -46,6 +51,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(X509Certificate2 cert)
+        {
+            this.manualCertificate = cert;
+        }
+
+        /// <summary>
         /// Validate the server certificate
         /// </summary>
         /// <param name="sender">The sender object</param>
@@ -55,11 +69,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>whether the cert passes validation</returns>
         private bool ServerCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            X509Certificate2 manualCert = this.deviceConnection.GetDeviceCertificate();
-
-            if (manualCert != null)
+            if (this.manualCertificate != null)
             {
-                chain.ChainPolicy.ExtraStore.Add(manualCert);
+                chain.ChainPolicy.ExtraStore.Add(this.manualCertificate);
             }
 
             X509Certificate2 certv2 = new X509Certificate2(certificate);
@@ -68,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             // If chain validation failed but we have a manual cert, we can still
             // check the chain to see if the server cert chains up to our manual cert
             // (or matches it) in which case this is valid.
-            if (!isValid && manualCert != null)
+            if (!isValid && this.manualCertificate != null)
             {
                 foreach (X509ChainElement element in chain.ChainElements)
                 {
@@ -86,8 +98,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // This cert chained to our provided cert. Continue walking
                     // the chain to ensure we don't hit a failure that would
                     // cause our chain to be rejected.
-                    if (element.Certificate.Issuer == manualCert.Issuer &&
-                        element.Certificate.Thumbprint == manualCert.Thumbprint)
+                    if (element.Certificate.Issuer == this.manualCertificate.Issuer &&
+                        element.Certificate.Thumbprint == this.manualCertificate.Thumbprint)
                     {
                         isValid = true;
                         break;

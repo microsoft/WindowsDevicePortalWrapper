@@ -20,7 +20,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
-        /// API for getting installation status.
+        /// Gets the status of a pending or most recent installation, if any. 
         /// </summary>
         /// <returns>The status</returns>
         public async Task<ApplicationInstallStatus> GetInstallStatus()

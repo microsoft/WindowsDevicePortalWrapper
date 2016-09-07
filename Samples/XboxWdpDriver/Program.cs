@@ -220,6 +220,8 @@ namespace XboxWdpDriver
                     }
                 }
 
+                X509Certificate2 cert = null;
+
                 IDevicePortalConnection connection = new DefaultDevicePortalConnection(finalConnectionAddress, userName, password);
 
                 DevicePortal portal = new DevicePortal(connection);
@@ -230,7 +232,7 @@ namespace XboxWdpDriver
 
                     try
                     {
-                        connection.SetDeviceCertificate(new System.Security.Cryptography.X509Certificates.X509Certificate2(certFile));
+                        cert = new X509Certificate2(certFile);
                     }
                     catch (Exception e)
                     {
@@ -257,7 +259,7 @@ namespace XboxWdpDriver
                     }
                 }
 
-                Task connectTask = portal.Connect(updateConnection: false);
+                Task connectTask = portal.Connect(updateConnection: false, manualCertificate: cert);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)

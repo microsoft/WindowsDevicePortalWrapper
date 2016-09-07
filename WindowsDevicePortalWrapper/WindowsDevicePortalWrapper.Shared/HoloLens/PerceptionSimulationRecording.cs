@@ -56,8 +56,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="recordHands">Should hand data be recorded? The default value is true.</param>
         /// <param name="recordSpatialMapping">Should Spatial Mapping data be recorded? The default value is true.</param>
         /// <param name="recordEnvironment">Should environment data be recorded? The default value is true.</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         public async Task StartHolographicSimulationRecording(
             string name,
             bool recordHead = true,
@@ -104,13 +104,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationStopRecordingError));
-                    HolographicSimulationStopRecordingError error = null;
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
+                    HolographicSimulationError error = null;
  
                     try
                     {
                         // Try to get / interpret an error response.
-                        error = (HolographicSimulationStopRecordingError)serializer.ReadObject(dataStream);
+                        error = (HolographicSimulationError)serializer.ReadObject(dataStream);
                     }
                     catch
                     {
@@ -133,9 +133,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         #region Data contract
         /// <summary>
-        /// Object representation of a Holographic Simulation Stop Recording error.
+        /// Object representation of a Holographic Simulation (playback or recording) error.
         /// </summary>
-        public class HolographicSimulationStopRecordingError
+        [DataContract]
+        public class HolographicSimulationError
         {
             /// <summary>
             /// Gets the Reason string.
