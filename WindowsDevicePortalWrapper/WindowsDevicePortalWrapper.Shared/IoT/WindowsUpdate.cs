@@ -25,7 +25,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Update status API.
         /// </summary>
         public static readonly string StatusApi = "api/iot/windowsupdate/status";
+
+        /// <summary>
+        /// Update Now API.
+        /// </summary>
         public static readonly string UpdateNowApi = "api/iot/windowsupdate/updatenow";
+
+
+        /// <summary>
+        /// Update restart API.
+        /// </summary>
         public static readonly string UpdateRestartApi = "api/iot/windowsupdate/updaterestart";
       
         /// <summary>
@@ -49,6 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets SoftAp Settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetUpdateInstallTime()
         {
             await this.Post(
@@ -58,6 +68,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets SoftAp Settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetUpdateNow()
         {
             await this.Post(
@@ -67,6 +78,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets SoftAp Settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetUpdateRestart()
         {
             await this.Post(
@@ -87,10 +99,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string LastCheckTime { get; private set; }
 
             /// <summary>
+            /// Gets the staging progress. 
+            /// </summary>
+            [DataMember(Name = "stagingProgress")]
+            public string stagingProgress { get; private set; }
+
+            /// <summary>
             ///  Gets last update time.
             /// </summary>
             [DataMember(Name = "lastUpdateTime")]
             public string LastUpdateTime { get; private set; }
+
+            /// <summary>
+            ///  Gets last fail time.
+            /// </summary>
+            [DataMember(Name = "lastFailTime")]
+            public string LastFailTime { get; private set; }
 
             /// <summary>
             ///  Gets update status.
@@ -115,6 +139,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
             public int Rebootscheduled { get; private set; }
+
+            /// <summary>
+            /// Gets the time when a reboot is scheduled. 
+            /// </summary>
+            [DataMember(Name = "rebootscheduledtime")]
+            public int rebootscheduledtime { get; private set; }
+
         }
 
         #endregion // Data contract

@@ -12,12 +12,18 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// Wrappers for some IoT methods.
+    /// Wrappers for IoT Onboarding methods.
     /// </summary>
     public partial class DevicePortal
     {
-
+        /// <summary>
+        /// IOT SoftAP Settings API.
+        /// </summary>
         public static readonly string SoftAPSettingsApi = "api/iot/iotonboarding/softapsettings";
+
+        /// <summary>
+        /// IOT  AllJoyn Settings API.
+        /// </summary>
         public static readonly string AllJoynSettingsApi = "api/iot/iotonboarding/alljoynsettings";
 
         /// <summary>
@@ -29,6 +35,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<SoftAPSettingsInfo>(SoftAPSettingsApi);
         }
 
+        /// <summary>
         /// Retrieves the All Joyn Settings Info.
         /// </summary>
         /// <returns>AllJoynSettingsInfo for this device.</returns>
@@ -66,7 +73,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataContract]
         public class SoftAPSettingsInfo
         {
-
             /// <summary>
             /// Gets whether Soft AP is enabled.
             /// </summary>
@@ -92,7 +98,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataContract]
         public class AllJoynSettingsInfo
         {
-
             /// <summary>
             /// Gets the Default description.
             /// </summary>

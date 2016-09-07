@@ -39,6 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets List of apps.
         /// </summary>
+        /// <returns>String containing the list of applications.</returns>
         public async Task<AppsListInfo> GetAppsListInfo()
         {
             return await this.Get<AppsListInfo>(AppsListApi);
@@ -47,24 +48,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets list of headless apps.
         /// </summary>
+        /// <returns>String containing the list of headless applications.</returns>
         public async Task<HeadlessAppsListInfo> GetHeadlessAppsListInfo()
         {
             return await this.Get<HeadlessAppsListInfo>(HeadlessAppsListApi);
         }
-        
+
         /// <summary>
         /// Sets selected app as the startup app.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task UpdateStartupApp(string appId)
         {
             await this.Post(
                  AppsListApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }
-        
+
         /// <summary>
         /// Sets the selected app as the headless startup app.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task UpdateHeadlessStartupApp(string appId)
         {
             await this.Post(
@@ -75,6 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Removes the selected app from the headless startup app list.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task RemoveHeadlessStartupApp(string appId)
         {
             await this.Delete(
@@ -85,6 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Activiates the selected app package.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task ActivatePackage(string appId)
         {
             await this.Post(
@@ -110,8 +116,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "AppPackages")]
             public AppPackage[] AppPackages { get; set; }
-
         }
+
         [DataContract]
         public partial class AppPackage
         {

@@ -11,15 +11,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <content>
+    /// Wrappers for IoT Process Management.
+    /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// IOT Run Command API.
+        /// </summary>
         public static readonly string RunCommandApi = "api/iot/processmanagement/runcommand";
+
+        /// <summary>
+        /// IOT Run Command Without Output API.
+        /// </summary>
         public static readonly string RunCommandWithoutOutputApi = "api/iot/processmanagement/runcommandwithoutput";
 
         /// <summary>
         /// Runs the command.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task RunCommand(string command,string runAsDefaultAccount)
         {
             await this.Post(

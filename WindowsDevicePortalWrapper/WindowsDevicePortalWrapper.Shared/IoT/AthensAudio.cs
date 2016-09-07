@@ -11,11 +11,24 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <content>
+    /// Wrappers for Athens Audio Devices.
+    /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// IOT List Audio Devices API.
+        /// </summary>
         public static readonly string AudioDeviceListApi = "api/iot/audio/listdevices";
+
+        /// <summary>
+        /// API to set render volume on audio devices connected to IoT.
+        /// </summary>
         public static readonly string SetRenderVolumeApi = "api/iot/audio/setrendervolume";
+
+        /// <summary>
+        /// API to set capture volume on audio devices connected to IoT.
+        /// </summary>
         public static readonly string SetCaptureVolumeApi = "api/iot/audio/setcapturevolume";
         
         /// <summary>
@@ -30,6 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets volume for the audio devices.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetRenderVolume(string renderVolume)
         {
             await this.Post(
@@ -40,6 +54,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets volume for the audio devices.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetCaptureVolume(string captureVolume)
         {
             await this.Post(
@@ -66,6 +81,30 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "RenderVolume")]
             public string RenderVolume { get; set; }
+
+            /// <summary>
+            /// Gets the microphones name
+            /// </summary>
+            [DataMember(Name = "CaptureName")]
+            public string CaptureName { get; set; }
+
+            /// <summary>
+            ///  Gets the microphones volume
+            /// </summary>
+            [DataMember(Name = "CaptureVolume")]
+            public string CaptureVolume { get; set; }
+
+            /// <summary>
+            ///  Gets the status of a failed devices 
+            /// </summary>
+            [DataMember(Name = "LabelStatus")]
+            public string LabelStatus { get; set; }
+
+            /// <summary>
+            ///  Gets the error code for the device failure 
+            /// </summary>
+            [DataMember(Name = "LabelErrorCode")]
+            public string LabelErrorCode { get; set; }
         }
         #endregion // Data contract
     }

@@ -202,7 +202,12 @@
     <None Include="MockData\IoT\rs1_release\api_iot_appx_default_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MockData\IoT\rs1_release\api_iot_appx_listHeadlessApps_IoTRaspberryPi3_rs1_release.dat" />
+    <None Include="MockData\IoT\rs1_release\api_iot_appx_listHeadlessApps_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_audio_listdevices_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_iot_device_controllersdriver_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -219,6 +224,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_iot_device_timezones_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_ics_interfaces_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_alljoynsettings_IoTRaspberryPi3_rs1_release.dat">

@@ -20,7 +20,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Remote status API.
         /// </summary>
         public static readonly string RemoteSettingsStatusApi = "api/iot/remote/status";
+
+        /// <summary>
+        /// Enable Remote Settings API.
+        /// </summary>
         public static readonly string RemoteSettingsEnableApi = "api/iot/remote/enable";
+
+        /// <summary>
+        /// Disable Remote Settings API.
+        /// </summary>
         public static readonly string RemoteSettingsDisableApi = "api/iot/remote/disable";
 
         /// <summary>
@@ -35,6 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Enables the remote settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task<RemoteSettingsStatusInfo> RemoteSettingsEnable()
         {
             return await this.Post<RemoteSettingsStatusInfo>(
@@ -44,6 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Disables the remote settings.
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task<RemoteSettingsStatusInfo> RemoteSettingsDisable()
         {
             return await this.Post<RemoteSettingsStatusInfo>(

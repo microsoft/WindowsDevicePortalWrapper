@@ -11,10 +11,19 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
-
+    /// <content>
+    /// Wrappers for Internet Connection Sharing(ICS) Settings.
+    /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// IOT ICS Interface API.
+        /// </summary>
         public static readonly string IcsInterfacesApi = "api/iot/ics/interfaces";
+
+        /// <summary>
+        /// IOT ICS Sharing API.
+        /// </summary>
         public static readonly string IcSharingApi = "api/iot/ics/sharing";
 
         /// <summary>
@@ -29,6 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Starts the internet connection sharing(ICS).
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task IcSharingStart(string privateInterface, string publicInterface)
         {
             await this.Post(
@@ -38,6 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         ///  Stops the internet connection sharing(ICS).
         /// </summary>
+        /// <returns>Task tracking completion of the REST call.</returns>
         public async Task IcSharingStop(string privateInterface, string publicInterface)
         {
             await this.Delete(

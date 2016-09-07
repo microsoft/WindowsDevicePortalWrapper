@@ -193,40 +193,20 @@ namespace SampleWdpClient.UniversalWindows
                     sb.AppendLine("Getting IP configuration...");
                     this.MarshalUpdateCommandOutput(sb.ToString());
 
+
                     try
                     {
-                        IpConfiguration ipconfig = await portal.GetIpConfig();
-                        //GetAvailableBluetoothDevicesInfo(portal);
-                        //AvailableBluetoothDevicesInfo dev = portal.GetPairedBluetoothDevicesInfo();
-                        //AvailableBluetoothDevicesInfo dev1 = portal.GetAvailableBluetoothDevicesInfo();
-                        // sb.AppendLine(dev.AvailableDevices.Length.ToString());
+                        await portal.SetCaptureVolume("100");
+                        AvailableBluetoothDevicesInfo bdevice = portal.GetAvailableBluetoothDevicesInfo();
+                        sb.AppendLine(bdevice.AvailableDevices[0].Name);
 
-                        // sb.AppendLine(dev1.AvailableDevices.Length.ToString());
-                        //RemoteSettingsStatusInfo enable = await portal.RemoteSettingsDisable();
-                        //sb.AppendLine(enable.IsRunning.ToString());
-                         RunCommandOutputInfo output =  await portal.RunCommandWithoutOutput("tlist.exe","false","10000");
-                        sb.AppendLine(output.output);
-                        foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
-                        {
-                            sb.Append(" ");
-                            sb.AppendLine(adapterInfo.Description);
-                            sb.Append("  MAC address :");
-                            sb.AppendLine(adapterInfo.MacAddress);
-                            foreach (IpAddressInfo address in adapterInfo.IpAddresses)
-                            {
-                                sb.Append("  IP address :");
-                                sb.AppendLine(address.Address);
-                            }
-                            sb.Append("  DHCP address :");
-                            sb.AppendLine(adapterInfo.Dhcp.Address.Address);
-                        }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         sb.AppendLine("Failed to get IP config info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
                     }
-                });
+                } );
 
             Task continuationTask = getTask.ContinueWith(
                 (t) =>
