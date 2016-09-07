@@ -152,11 +152,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Checks a response to see if it failed due to a bad CSRF token.
         /// </summary>
-        /// <param name="response">The response from the REST call.</param>
+        /// <param name="exception">The DevicePortalException from the REST call.</param>
         /// <returns>Whether the response failed due to the bad CSRF token.</returns>
-        private bool IsBadCsrfToken(HttpResponseMessage response)
+        private bool IsBadCsrfToken(DevicePortalException exception)
         {
-            return response.StatusCode == HttpStatusCode.Forbidden && response.ReasonPhrase.Equals("CSRF Token Invalid");
+            return exception.StatusCode == HttpStatusCode.Forbidden && exception.Reason.Equals("CSRF Token Invalid");
         }
 
         /// <summary>

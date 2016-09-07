@@ -57,11 +57,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <param name="allowRetry">Allow the Put to be retried after refreshing the CSRF token.</param>
         /// <returns>Task tracking the PUT completion, optional response body.</returns>
         private async Task<T> Put<T, K>(
             string apiPath,
             K bodyData = null,
-            string payload = null) where T : new()
+            string payload = null,
+            bool allowRetry = true) where T : new()
                                    where K : class
         {
             T data = default(T);
@@ -96,15 +98,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.Put(uri, streamContent))
+            try
             {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
+                using (Stream dataStream = await this.Put(uri, streamContent))
                 {
-                    JsonFormatCheck<T>(dataStream);
+                    if ((dataStream != null) &&
+                        (dataStream.Length != 0))
+                    {
+                        JsonFormatCheck<T>(dataStream);
 
-                    object response = deserializer.ReadObject(dataStream);
-                    data = (T)response;
+                        object response = deserializer.ReadObject(dataStream);
+                        data = (T)response;
+                    }
+                }
+            }
+            catch (DevicePortalException e)
+            {
+                // If this isn't a retry and it failed due to a bad CSRF
+                // token, refresh the token and then retry.
+                if (allowRetry && this.IsBadCsrfToken(e))
+                {
+                    await this.RefreshCsrfToken();
+                    return await this.Put<T, K>(apiPath, bodyData, payload, false);
+                }
+                else
+                {
+                    throw e;
                 }
             }
 
