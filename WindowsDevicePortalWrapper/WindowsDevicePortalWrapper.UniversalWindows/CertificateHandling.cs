@@ -52,8 +52,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 using (HttpResponseMessage response = responseOperation.GetResults())
                 {
-                    this.RetrieveCsrfToken(response);
-
                     using (IHttpContent messageContent = response.Content)
                     {
                         IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();

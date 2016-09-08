@@ -63,8 +63,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         throw new DevicePortalException(response);
                     }
 
-                    this.RetrieveCsrfToken(response);
-
                     if (response.Content != null)
                     {
                         using (IHttpContent messageContent = response.Content)
