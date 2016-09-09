@@ -32,7 +32,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string password)
         {
             this.Connection = new Uri(address);
-            this.Credentials = new NetworkCredential(userName, password);
+            // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+            this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
         }
 
         /// <summary>
