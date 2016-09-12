@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 using System.Net.Http;
 using System.Net;
+using System.Threading;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -404,7 +405,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string SoftApEnabled = "true";
             string SoftApSsid = "SoftAPSsid";
             string SoftApPassword = "p@ssw0rd";
-
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
@@ -836,51 +836,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Simple test to set Update Install Time on the IoT device.
-        /// </summary>
-        [TestMethod]
-        public void SetUpdateInstallTimeTest_IoT()
-        {
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.InstallTimeApi, response, HttpMethods.Post);
-
-            Task updateInstallTime = TestHelpers.Portal.SetUpdateInstallTime();
-            updateInstallTime.Wait();
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, updateInstallTime.Status);
-        }
-
-        /// <summary>
-        /// Simple test to Update the IoT device now.
-        /// </summary>
-        [TestMethod]
-        public void SetUpdateNowTest_IoT()
-        {
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.UpdateNowApi, response, HttpMethods.Post);
-
-            Task updateNow = TestHelpers.Portal.SetUpdateNow();
-            updateNow.Wait();
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, updateNow.Status);
-        }
-
-        /// <summary>
-        /// Simple test to Restart the IoT device now.
-        /// </summary>
-        [TestMethod]
-        public void SetUpdateRestartTest_IoT()
-        {
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.UpdateRestartApi, response, HttpMethods.Post);
-
-            Task updateRestart = TestHelpers.Portal.SetUpdateRestart();
-            updateRestart.Wait();
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, updateRestart.Status);
-        }
-
-        /// <summary>
         /// Simple test to Enable the Remote Settings on the IoT device now.
         /// </summary>
         [TestMethod]
@@ -916,6 +871,152 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             remoteSettingsDisable.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsDisable.Status);
+        }
+
+        /// <summary>
+        /// <summary>Tests the Get response for TPM Settings of the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmSettingsInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.TpmSettingsApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmSettingsInfo> getTask = TestHelpers.Portal.GetTpmSettingsInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmSettingsInfo tpmSettings = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("TpmOk", tpmSettings.TPMStatus);
+        }
+
+        /// <summary>
+        /// <summary>Tests the Get response for TPM ACPI Tables Information.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmAcpiTablesInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.TpmAcpiTablesApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmAcpiTablesInfo> getTask = TestHelpers.Portal.GetTpmAcpiTablesInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmAcpiTablesInfo tpmAcpiTables = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("Software TPM Emulator (NoSecurity)", tpmAcpiTables.AcpiTables[1]);
+        }
+
+        /// <summary>
+        /// <summary>Tests the Get response for TPM Logical Device Settings for the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmLogicalDeviceSettingsInfo_IoT()
+        {
+            int logicalDeviceId = 1;
+
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId),
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmLogicalDeviceSettingsInfo> getTask = TestHelpers.Portal.GetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmLogicalDeviceSettingsInfo tpmSettings = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(" a28a2715cb06bf65c8c41c5e0e3885b2d02321b8d450bb9409f322e708bc0099", tpmSettings.DeviceId);
+        }
+
+        /// <summary>
+        /// Simple test to Set the TPM ACPI Tables on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetTpmAcpiTablesTest_IoT()
+        {
+            string acpiTableIndex = "1";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.TpmAcpiTablesApi, response, HttpMethods.Post);
+
+            Task tpmAcpiTables = TestHelpers.Portal.SetTpmAcpiTablesInfo(acpiTableIndex);
+            tpmAcpiTables.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmAcpiTables.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Set the TPM Logical Device Settings on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetTpmLogicalDeviceSettingsTest_IoT()
+        {
+            int logicalDeviceId = 1;
+            string azureUri = "";
+            string azureKey = "";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
+
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.SetTpmLogicalDeviceSettingsInfo(logicalDeviceId, azureUri, azureKey);
+            tpmLogicalDeviceSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Reset the TPM Logical Device Settings on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void ResetTpmLogicalDeviceSettingsTest_IoT()
+        {
+            int logicalDeviceId = 1;
+           
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
+
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.ResetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            tpmLogicalDeviceSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
+        }
+
+        /// <summary>
+        /// <summary>Tests the Get response for TPM Azure Token Info for the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmAzureTokenInfo_IoT()
+        {
+            int logicalDeviceId = 0;
+            string validity = "18000";
+
+            TestHelpers.MockHttpResponder.AddMockResponse(
+               string.Format("{0}/{1}", TpmAzureTokenApi, logicalDeviceId),
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.GetTpmAzureTokenInfo(logicalDeviceId, validity);
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmAzureTokenInfo tpmAzureToken = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("HostName=q;DeviceId=q;SharedAccessSignature=SharedAccessSignature sr=q/devices/q&sig=SCPRMahoAA%2belCZ3KvTLFEcVk2C2SYZ0G00zqZ5yH2k%3d&se=1473400166", tpmAzureToken.AzureToken);
         }
     }
 }

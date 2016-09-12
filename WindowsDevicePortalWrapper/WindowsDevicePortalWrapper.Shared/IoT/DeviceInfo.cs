@@ -290,7 +290,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Current Datetime information.
         /// </summary>
         [DataContract]
-        public partial class DateTimeDescription
+        public class DateTimeDescription
         {
             /// <summary>
             /// Gets the current day
@@ -390,7 +390,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Dispaly resolution specifications.
         /// </summary>
         [DataContract]
-        public partial class Resolution
+        public class Resolution
         {
             /// <summary>
             /// Gets the list of supported display resolutions 
@@ -409,7 +409,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Error information if a request fails.
         /// </summary>
         [DataContract]
-        public partial class ErrorInformation
+        public class ErrorInformation
         {
             /// <summary>
             /// Gets the error code
@@ -423,8 +423,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "Status")]
             public string Status { get; private set; }
         }
-
-
+        
         #endregion // Data contract
     }
 }

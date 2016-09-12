@@ -29,6 +29,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Runs the command.
         /// </summary>
+        /// <param name="command">Command.</param>
+        /// /// <param name="runAsDefaultAccount">Run As Default Account.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task RunCommand(string command,string runAsDefaultAccount)
         {
@@ -39,6 +41,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Runs the command.
         /// </summary>
+        /// <param name="commandWithoutOutput">Command Without Output.</param>
+        /// <param name="runAsDefaultAccount">Run As Default Account.</param>
+        /// <param name="timeout">Timeout.</param>
         /// <returns>String containing the output after the command is executed.</returns>
         public async Task<RunCommandOutputInfo> RunCommandWithoutOutput(string commandWithoutOutput, string runAsDefaultAccount, string timeout)
         {
@@ -58,7 +63,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Returns the output for the command executed.
             /// </summary>
             [DataMember(Name = "output")]
-            public string output { get; set; }
+            public string output { get; private set; }
         }
         #endregion // Data contract
 

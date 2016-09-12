@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Utility class for common functions
     /// </summary>
-    internal static class Utilities
+    internal class Utilities
     {
         /// <summary>
         /// Constructs a fully formed REST API endpoint uri.

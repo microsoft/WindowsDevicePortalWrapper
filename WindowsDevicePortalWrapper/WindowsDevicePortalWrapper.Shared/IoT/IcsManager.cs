@@ -36,8 +36,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Starts the internet connection sharing(ICS).
+        /// Starts internet connection sharing(ICS).
         /// </summary>
+        /// <param name="privateInterface">Private Interface.</param>
+        /// <param name="publicInterface">Public Interface.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task IcSharingStart(string privateInterface, string publicInterface)
         {
@@ -46,8 +48,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        ///  Stops the internet connection sharing(ICS).
+        ///  Stops internet connection sharing(ICS).
         /// </summary>
+        /// <param name="privateInterface">Private Interface.</param>
+        /// <param name="publicInterface">Public Interface.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task IcSharingStop(string privateInterface, string publicInterface)
         {

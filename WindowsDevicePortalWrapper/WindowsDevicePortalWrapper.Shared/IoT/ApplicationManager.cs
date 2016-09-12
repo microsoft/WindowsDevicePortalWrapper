@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="AthensAppx.cs" company="Microsoft Corporation">
+// <copyright file="ApplicationManager.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// IoT device application list API.
         /// </summary>
-        public static readonly string AppsListApi = "api/IoT/appx/default";
+        public static readonly string AppsListApi = "api/iot/appx/default";
 
         /// <summary>
         /// IoT device headless application list API.
@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets List of apps.
         /// </summary>
-        /// <returns>String containing the list of applications.</returns>
+        /// <returns>Object containing the list of applications.</returns>
         public async Task<AppsListInfo> GetAppsListInfo()
         {
             return await this.Get<AppsListInfo>(AppsListApi);
@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets list of headless apps.
         /// </summary>
-        /// <returns>String containing the list of headless applications.</returns>
+        /// <returns>Object containing the list of headless applications.</returns>
         public async Task<HeadlessAppsListInfo> GetHeadlessAppsListInfo()
         {
             return await this.Get<HeadlessAppsListInfo>(HeadlessAppsListApi);
@@ -57,6 +57,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets selected app as the startup app.
         /// </summary>
+        /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task UpdateStartupApp(string appId)
         {
@@ -68,6 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets the selected app as the headless startup app.
         /// </summary>
+        /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task UpdateHeadlessStartupApp(string appId)
         {
@@ -79,6 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Removes the selected app from the headless startup app list.
         /// </summary>
+        /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task RemoveHeadlessStartupApp(string appId)
         {
@@ -90,6 +93,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Activiates the selected app package.
         /// </summary>
+        /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task ActivatePackage(string appId)
         {
@@ -109,13 +113,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets the default application 
             /// </summary>
             [DataMember(Name = "DefaultApp")]
-            public string DefaultApp { get; set; }
+            public string DefaultApp { get; private set; }
 
             /// <summary>
             /// Gets or sets the application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; set; }
+            public AppPackage[] AppPackages { get; private set; }
         }
 
         [DataContract]
@@ -125,13 +129,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets an app as the startup app
             /// </summary>
             [DataMember(Name = "IsStartup")]
-            public bool IsStartup { get; set; }
+            public bool IsStartup { get; private set; }
 
             /// <summary>
             /// Gets the complate package name
             /// </summary>
             [DataMember(Name = "PackageFullName")]
-            public string PackageFullName { get; set; }
+            public string PackageFullName { get; private set; }
         }
 
         /// <summary>
@@ -144,7 +148,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets the list of headless application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; set; }
+            public AppPackage[] AppPackages { get; private set; }
         }
        
         #endregion // Data contract

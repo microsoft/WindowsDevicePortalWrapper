@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="AthensAudio.cs" company="Microsoft Corporation">
+// <copyright file="AudioDevices.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -12,22 +12,22 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Wrappers for Athens Audio Devices.
+    /// Wrappers for Audio Devices.
     /// </content>
     public partial class DevicePortal
     {
         /// <summary>
-        /// IOT List Audio Devices API.
+        /// List Audio Devices API.
         /// </summary>
         public static readonly string AudioDeviceListApi = "api/iot/audio/listdevices";
 
         /// <summary>
-        /// API to set render volume on audio devices connected to IoT.
+        /// API to set render volume on audio devices connected to IoT Core devices.
         /// </summary>
         public static readonly string SetRenderVolumeApi = "api/iot/audio/setrendervolume";
 
         /// <summary>
-        /// API to set capture volume on audio devices connected to IoT.
+        /// API to set capture volume on audio devices connected to IoT Core devices.
         /// </summary>
         public static readonly string SetCaptureVolumeApi = "api/iot/audio/setcapturevolume";
         
@@ -43,6 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets volume for the audio devices.
         /// </summary>
+        /// <param name="renderVolume">Render Volume.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetRenderVolume(string renderVolume)
         {
@@ -54,6 +55,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Sets volume for the audio devices.
         /// </summary>
+        /// <param name="captureVolume">Capture Volume.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetCaptureVolume(string captureVolume)
         {
@@ -74,37 +76,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the audio device name
             /// </summary>
             [DataMember(Name = "RenderName")]
-            public string RenderName { get; set; }
+            public string RenderName { get; private set; }
 
             /// <summary>
             ///  Gets the audio device volume
             /// </summary>
             [DataMember(Name = "RenderVolume")]
-            public string RenderVolume { get; set; }
+            public string RenderVolume { get; private set; }
 
             /// <summary>
             /// Gets the microphones name
             /// </summary>
             [DataMember(Name = "CaptureName")]
-            public string CaptureName { get; set; }
+            public string CaptureName { get; private set; }
 
             /// <summary>
             ///  Gets the microphones volume
             /// </summary>
             [DataMember(Name = "CaptureVolume")]
-            public string CaptureVolume { get; set; }
+            public string CaptureVolume { get; private set; }
 
             /// <summary>
             ///  Gets the status of a failed devices 
             /// </summary>
             [DataMember(Name = "LabelStatus")]
-            public string LabelStatus { get; set; }
+            public string LabelStatus { get; private set; }
 
             /// <summary>
             ///  Gets the error code for the device failure 
             /// </summary>
             [DataMember(Name = "LabelErrorCode")]
-            public string LabelErrorCode { get; set; }
+            public string LabelErrorCode { get; private set; }
         }
         #endregion // Data contract
     }
