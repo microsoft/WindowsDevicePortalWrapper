@@ -7,6 +7,7 @@
 using System;
 using System.Net;
 using System.Net.Security;
+//using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
@@ -53,7 +54,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public DefaultDevicePortalConnection(
             string address,
             string userName,
-            SecureString password)
+            System.Security.SecureString password)
         {
             this.Connection = new Uri(string.Format("https://{0}:11443", address));
             this.Credentials = new NetworkCredential(userName, password);

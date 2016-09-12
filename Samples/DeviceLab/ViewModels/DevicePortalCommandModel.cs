@@ -11,9 +11,9 @@ namespace DeviceLab
 {
     /// <summary>
     /// Base class for ViewModel classes that wrap a DevicePortal object.
-    /// Provides status for pending DevicePortal operations and an
-    /// ObservableCommandQueue to enable composing commands using
-    /// CommandSequences.
+    /// Provides status for pending DevicePortal operations, diagnostic
+    /// output support, an ObservableCommandQueue to enable composing
+    /// commands using CommandSequences, etc.
     /// </summary>
     public class DevicePortalCommandModel : BindableBase
     {
@@ -231,8 +231,8 @@ namespace DeviceLab
         protected virtual void ReportException(string commandName, Exception exn)
         {
             this.OutputDiagnosticString("Exception during {0} command:\n", commandName);
-            this.OutputDiagnosticString(exn.Message);
-            this.OutputDiagnosticString(exn.StackTrace);
+            this.OutputDiagnosticString(exn.Message + "\n");
+            this.OutputDiagnosticString(exn.StackTrace + "\n");
 
             // Clear the command queue to prevent executing any more commands
             this.OutputDiagnosticString("Clearing any queued commands\n");

@@ -35,7 +35,6 @@ namespace DeviceLab
             DiagnosticSinks.AggregateDiagnosticSink aggDiags = new DiagnosticSinks.AggregateDiagnosticSink(this.Diagnostics, debugDiags);
 
             this.SignIn = new DeviceSignInViewModel(aggDiags);
-            this.SignIn.AddDevicePortalConnectionFactory(new XboxDevicePortalConnectionFactory());
             this.SignIn.AddDevicePortalConnectionFactory(new GenericDevicePortalConnectionFactory());
 
             this.SignIn.SignInAttempted += this.OnSignInAttemptCompleted;

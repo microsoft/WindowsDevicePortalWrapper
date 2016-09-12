@@ -64,7 +64,6 @@
     <Compile Include="ViewModels\DiagnosticSinks.cs" />
     <Compile Include="ViewModels\GenericDevicePortalConnectionFactory.cs" />
     <Compile Include="ViewModels\ObservableCommandQueue.cs" />
-    <Compile Include="ViewModels\XboxDevicePortalConnectionFactory.cs" />
     <Compile Include="Views\DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
@@ -78,7 +77,6 @@
       <DependentUpon>NumberEntryBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SelectionListBox.cs" />
-    <Compile Include="XboxDevicePortalConnection.cs" />
     <Page Include="Controls\BindablePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

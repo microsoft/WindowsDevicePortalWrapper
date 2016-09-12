@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Tools.WindowsDevicePortal;
 using Prism.Commands;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows;
+using System.Net.Security;
 
 namespace DeviceLab
 {
@@ -29,7 +32,11 @@ namespace DeviceLab
         public DevicePortalViewModel(DevicePortal portal, IDiagnosticSink diags)
             : base(portal, diags)
         {
-            this.ConnectionRetryAttempts = 5;
+            // Add additional handling for untrusted certs.
+            this.Portal.UnvalidatedCert += DoCertValidation;
+
+            // Default number of retry attempts to make when reestablishing the connection
+            this.ConnectionRetryAttempts = 3;
         }
         #endregion // Cosntructors
 
@@ -383,6 +390,7 @@ namespace DeviceLab
                     this.OutputDiagnosticString("Connection failed after {0} tries.\n", numTries);
                 }
             };
+
             this.Portal.ConnectionStatus += handler;
 
             this.Ready = false;
@@ -393,7 +401,12 @@ namespace DeviceLab
                     await this.Portal.Connect();
                     ++numTries;
                 }
-                while (this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries < this.ConnectionRetryAttempts);
+                while (this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries <= this.ConnectionRetryAttempts);
+
+                if(this.Portal.ConnectionHttpStatusCode !=HttpStatusCode.OK)
+                {
+                    throw new Exception(string.Format("Unable to connect after {0} tries.", numTries - 1));
+                }
             }
             catch (Exception exn)
             {
@@ -450,7 +463,7 @@ namespace DeviceLab
             try
             {
                 this.Portal.SystemPerfMessageReceived += this.OnSystemPerfReceived;
-                await Task.Run(this.StartListeningHelper);
+                await this.Portal.StartListeningForSystemPerf();
             }
             catch (Exception exn)
             {
@@ -458,17 +471,6 @@ namespace DeviceLab
             }
 
             this.Ready = true;
-        }
-
-        /// <summary>
-        /// StartListeningForSystemPerf would deadlock when called from the main thread.
-        /// This helper exists so that the asynchronous operation can be run on the
-        /// thread pool and avoid the deadlock
-        /// </summary>
-        /// <returns>A task the captures the continuation of the start listening call</returns>
-        private async Task StartListeningHelper()
-        {
-            await this.Portal.StartListeningForSystemPerf().ConfigureAwait(false);
         }
         #endregion // StartListeningForSystemPerfCommand
 
@@ -517,8 +519,7 @@ namespace DeviceLab
             try
             {
                 this.Portal.SystemPerfMessageReceived -= this.OnSystemPerfReceived;
-                await this.StopListeningHelper();
-                await this.StopListeningHelper();
+                await this.Portal.StopListeningForSystemPerf();
             }
             catch (Exception exn)
             {
@@ -526,17 +527,6 @@ namespace DeviceLab
             }
 
             this.Ready = true;
-        }
-
-        /// <summary>
-        /// StopListeningForSystemPerf would deadlock when called from the main thread.
-        /// This helper exists so that the asynchronous operation can be run on the
-        /// thread pool and avoid the deadlock
-        /// </summary>
-        /// <returns>Task the captures the continuation of the asynchronous action</returns>
-        private async Task StopListeningHelper()
-        {
-            await this.Portal.StopListeningForSystemPerf();
         }
         #endregion // StopListeningForSystemPerfCommand
         #endregion // Commands
@@ -550,6 +540,48 @@ namespace DeviceLab
         {
             this.cpuLoad = args.Message.CpuLoad;
             this.OnPropertyChanged("CPULoad");
+        }
+
+        /// <summary>
+        /// An SSL thumbprint that we'll accept.
+        /// </summary>
+        private string thumbprint;
+
+        /// <summary>
+        /// Validate the server certificate
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="certificate">The server's certificate</param>
+        /// <param name="chain">The cert chain</param>
+        /// <param name="sslPolicyErrors">Policy Errors</param>
+        /// <returns>whether the cert passes validation</returns>
+        private bool DoCertValidation(DevicePortal sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            X509Certificate2 cert = new X509Certificate2(certificate);
+
+            // If we have previously said to accept this cert, don't prompt again for this session.
+            if (!string.IsNullOrEmpty(this.thumbprint) && this.thumbprint.Equals(cert.Thumbprint, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // We could alternatively ask the user if they wanted to always trust
+            // this device and we could persist the thumbprint in some way (registry, database, filesystem, etc).
+            MessageBoxResult result = MessageBox.Show(string.Format(
+                                "Do you want to accept the following certificate?\n\nThumbprint:\n  {0}\nIssuer:\n  {1}",
+                                cert.Thumbprint,
+                                cert.Issuer),
+                            "Untrusted Certificate Detected",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question,
+                            MessageBoxResult.No);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                thumbprint = cert.Thumbprint;
+                return true;
+            }
+            return false;
         }
     }
 }
