@@ -47,8 +47,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         throw new DevicePortalException(response);
                     }
 
-                    this.RetrieveCsrfToken(response);
-
                     using (HttpContent content = response.Content)
                     {
                         dataStream = new MemoryStream();

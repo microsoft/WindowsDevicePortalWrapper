@@ -41,7 +41,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (!string.IsNullOrEmpty(userName) &&
                 !string.IsNullOrEmpty(password))
             {
-                this.Credentials = new NetworkCredential(userName, password);
+                // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+                this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
             }
         }
 
