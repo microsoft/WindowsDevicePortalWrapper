@@ -30,7 +30,7 @@ namespace MockDataGenerator
         /// Endpoints for REST calls to populate. Feel free to override this list (especially locally) to
         /// facilitate generating a large number of mock files all simultaneously.
         /// </summary>
-        private static readonly Endpoint[] Endpoints = 
+        private static readonly Endpoint[] Endpoints =
         {
             new Endpoint(HttpMethods.Get, DevicePortal.DeviceFamilyApi),
             new Endpoint(HttpMethods.Get, DevicePortal.MachineNameApi),
@@ -62,8 +62,8 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.DateTimeInfoApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DisplayOrientationApi),
             new Endpoint(HttpMethods.Get, DevicePortal.DeviceNameApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.DisplayResolutionApi),   
-    };
+            new Endpoint(HttpMethods.Get, DevicePortal.DisplayResolutionApi),
+        };
 
         /// <summary>
         /// Main entry point
