@@ -874,7 +874,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// <summary>Tests the Get response for TPM Settings of the IoT device.
+        /// Tests the Get response for TPM Settings of the IoT device.
         /// </summary>
         [TestMethod]
         public void GetTpmSettingsInfo_IoT()
@@ -896,7 +896,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// <summary>Tests the Get response for TPM ACPI Tables Information.
+        /// Tests the Get response for TPM ACPI Tables Information.
         /// </summary>
         [TestMethod]
         public void GetTpmAcpiTablesInfo_IoT()
@@ -918,7 +918,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// <summary>Tests the Get response for TPM Logical Device Settings for the IoT device.
+        /// Tests the Get response for TPM Logical Device Settings for the IoT device.
         /// </summary>
         [TestMethod]
         public void GetTpmLogicalDeviceSettingsInfo_IoT()
@@ -995,7 +995,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// <summary>Tests the Get response for TPM Azure Token Info for the IoT device.
+        /// Tests the Get response for TPM Azure Token Info for the IoT device.
         /// </summary>
         [TestMethod]
         public void GetTpmAzureTokenInfo_IoT()
