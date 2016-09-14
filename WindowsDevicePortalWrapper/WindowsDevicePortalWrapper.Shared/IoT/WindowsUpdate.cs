@@ -62,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the staging progress. 
             /// </summary>
             [DataMember(Name = "stagingProgress")]
-            public string stagingProgress { get; private set; }
+            public string StagingProgress { get; private set; }
 
             /// <summary>
             ///  Gets last update time.
@@ -98,13 +98,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets whether a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
-            public int Rebootscheduled { get; private set; }
+            public int RebootScheduled { get; private set; }
 
             /// <summary>
             /// Gets the time when a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduledtime")]
-            public int rebootscheduledtime { get; private set; }
+            public string RebootScheduledTime { get; private set; }
         }
 
         #endregion // Data contract

@@ -110,7 +110,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AppsListInfo
         {
             /// <summary>
-            /// Gets or sets the default application 
+            /// Gets the default application 
             /// </summary>
             [DataMember(Name = "DefaultApp")]
             public string DefaultApp { get; private set; }
@@ -126,7 +126,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AppPackage
         {
             /// <summary>
-            /// Gets or sets an app as the startup app
+            /// Gets an app as the startup app
             /// </summary>
             [DataMember(Name = "IsStartup")]
             public bool IsStartup { get; private set; }
@@ -145,7 +145,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class HeadlessAppsListInfo
         {
             /// <summary>
-            /// Gets or sets the list of headless application packages
+            /// Gets the list of headless application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
             public AppPackage[] AppPackages { get; private set; }
