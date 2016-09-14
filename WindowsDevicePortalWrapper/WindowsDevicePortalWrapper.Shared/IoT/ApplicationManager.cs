@@ -123,7 +123,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         [DataContract]
-        public partial class AppPackage
+        public class AppPackage
         {
             /// <summary>
             /// Gets or sets an app as the startup app
