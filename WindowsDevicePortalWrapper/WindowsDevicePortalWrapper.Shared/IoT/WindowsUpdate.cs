@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>String containing the update install time information.</returns>
         public async Task<UpdateInstallTimeInfo> GetUpdateInstallTime()
         {
-            return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);
+            return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);             
         }
 
         #region Data contract
@@ -105,6 +105,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "rebootscheduledtime")]
             public string RebootScheduledTime { get; private set; }
+
+            /// <summary>
+            /// Gets the time when a reboot is scheduled in DateTime format. 
+            /// </summary>
+            public DateTime rebootscheduledtime
+            {
+                get {
+
+                    DateTime rebootScheduledTime = DateTime.Parse(RebootScheduledTime);
+                    return rebootScheduledTime;
+                }
+
+            }
         }
 
         #endregion // Data contract

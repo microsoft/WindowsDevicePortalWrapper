@@ -305,7 +305,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             UpdateInstallTimeInfo installTime = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual(0, installTime.Rebootscheduled); 
+            Assert.AreEqual(0, installTime.RebootScheduled);
+             
         }
 
         /// <summary>
