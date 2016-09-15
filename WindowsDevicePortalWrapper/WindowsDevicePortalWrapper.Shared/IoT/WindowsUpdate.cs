@@ -111,8 +111,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             public DateTime rebootscheduledtime
             {
-                get {
-
+                get
+                {
                     DateTime rebootScheduledTime = DateTime.Parse(RebootScheduledTime);
                     return rebootScheduledTime;
                 }
