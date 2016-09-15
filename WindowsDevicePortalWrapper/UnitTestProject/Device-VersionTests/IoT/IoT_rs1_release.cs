@@ -4,8 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
@@ -118,7 +120,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             NetworkAdapterInfo adapter = ipconfig.Adapters[0];
             Assert.AreEqual("Bluetooth Device (Personal Area Network)", adapter.Description);
-            Assert.AreEqual("b8-27-eb-8d-0b-c5", adapter.MacAddress);
             Assert.AreEqual(4, adapter.Index);
             IpAddressInfo ipAddress = adapter.IpAddresses[0];
             Assert.AreEqual("0.0.0.0", ipAddress.Address);
@@ -145,6 +146,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             // Check some known things about this response.
             Assert.AreEqual("Inbox Driver", controllerDriver.CurrentDriver);
+            Assert.AreEqual("1", controllerDriver.RequestReboot);
         }
 
         /// <summary>
@@ -193,6 +195,50 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
+        /// Gets the display resolution using the mock data generated on a RasberryPi3.
+        /// </summary>
+        [TestMethod]
+        public void GetDisplayResolutionInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.DisplayResolutionApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<DisplayResolutionInfo> getTask = TestHelpers.Portal.GetDisplayResolutionInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            DisplayResolutionInfo displayRes = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("1680x1050 (60Hz)", displayRes.CurrentResolution.ResolutionDetail);
+        }
+
+        /// <summary>
+        /// Gets the display orientation using the mock data generated on a RasberryPi3.
+        /// </summary>
+        [TestMethod]
+        public void GetDisplayOrientationInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.DisplayOrientationApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<DisplayOrientationInfo> getTask = TestHelpers.Portal.GetDisplayOrientationInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            DisplayOrientationInfo displayOrientation = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(0, displayOrientation.Orientation);
+        }
+
+        /// <summary>
         /// Gets the device information using the mock data generated on a RasberryPi3.
         /// </summary>
         [TestMethod]
@@ -235,7 +281,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             StatusInfo stats = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual("2016-08-22 at 14:15", stats.LastCheckTime);
+            Assert.AreEqual("2016-09-02 at 15:31", stats.LastCheckTime);
             Assert.AreEqual("2016-08-18 at 00:00", stats.LastUpdateTime);
             Assert.AreEqual("Your device is up to date.", stats.UpdateStatusMessage);
         }
@@ -259,7 +305,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             UpdateInstallTimeInfo installTime = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual(0, installTime.Rebootscheduled); 
+            Assert.AreEqual(0, installTime.RebootScheduled);
+             
         }
 
         /// <summary>
@@ -329,6 +376,647 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             // Check some known things about this response.
             Assert.AreEqual("IoTCore Onboarding service", allJoynSettings.AllJoynOnboardingDefaultDescription);
             Assert.AreEqual("Microsoft", allJoynSettings.AllJoynOnboardingDefaultManufacturer);
+        }
+
+        /// <summary>
+        /// Simple test of setting the device name for a IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetDeviceNameTest_IoT()
+        {
+            string deviceName = "test_IoT";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceNameApi, response, HttpMethods.Post);
+
+            Task setIoTDeviceName = TestHelpers.Portal.SetIoTDeviceName(deviceName);
+            setIoTDeviceName.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDeviceName.Status);
+        }
+
+
+        /// <summary>
+        /// Simple test to set SoftAp Settings
+        /// </summary>
+        [TestMethod]
+        public void SetSoftApSettingsTest_IoT()
+        {
+            string SoftApEnabled = "true";
+            string SoftApSsid = "SoftAPSsid";
+            string SoftApPassword = "p@ssw0rd";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
+
+            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettings(SoftApEnabled, SoftApSsid, SoftApPassword);
+            setSoftApSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setSoftApSettings.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set AllJoyn Settings
+        /// </summary>
+        [TestMethod]
+        public void SetAllJoynSettingsTest_IoT()
+        {
+            string allJoynStatus = "true";
+            string allJoynDescription = "IoTCore Onboarding service";
+            string allJoynManufacturer = "Microsoft";
+            string allJoynModelNumber = "IoTCore Onboarding";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AllJoynSettingsApi, response, HttpMethods.Post);
+
+            Task setAllJoynSettings = TestHelpers.Portal.SetAllJoynSettings(allJoynStatus, allJoynDescription, allJoynManufacturer, allJoynModelNumber);
+            setAllJoynSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setAllJoynSettings.Status);
+        }
+
+        /// <summary>
+        /// Simple test of a failed attempt to reset the password
+        /// </summary>
+        [TestMethod]
+        public void SetNewPasswordTest_IoT()
+        {
+            string oldPassword = "invalid password";
+            string newPassword = "qwert";
+            int errorCode = 86;
+            string status = "Change password failed";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"ErrorCode\" : {0}, \"Status\" : \"{1}\"}}", errorCode, status));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ResetPasswordApi, response, HttpMethods.Post);
+
+            Task<ErrorInformation> setIoTNewPassword = TestHelpers.Portal.SetNewPassword(oldPassword, newPassword);
+            setIoTNewPassword.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewPassword.Status);
+            Assert.AreEqual(errorCode, setIoTNewPassword.Result.ErrorCode);
+            Assert.AreEqual(status, setIoTNewPassword.Result.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the new remote debugging pin for an IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetNewRemoteDebuggingPinTest_IoT()
+        {
+            string newPin = "123";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.NewRemoteDebuggingPinApi, response, HttpMethods.Post);
+
+            Task setIoTNewRemoteDebuggingPin = TestHelpers.Portal.SetNewRemoteDebuggingPin(newPin);
+            setIoTNewRemoteDebuggingPin.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewRemoteDebuggingPin.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set a new Controller driver on the IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetControllersDriversTest_IoT()
+        {
+            string newDriver = "Inbox Driver";
+            string requestReboot = "1";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"RequestReboot\" : \"{0}\"}}", requestReboot));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ControllerDriverApi, response, HttpMethods.Post);
+
+            Task<ControllerDriverInfo> setIoTControllersDrivers = TestHelpers.Portal.SetControllersDrivers(newDriver);
+            setIoTControllersDrivers.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTControllersDrivers.Status);
+            Assert.AreEqual(requestReboot, setIoTControllersDrivers.Result.RequestReboot );
+        }
+
+        /// <summary>
+        /// Simple test to set the timezone of an IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetTimeZoneTest_IoT()
+        {
+            int index = 0;
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetTimeZoneApi, response, HttpMethods.Post);
+
+            Task setIoTTimeZone = TestHelpers.Portal.SetTimeZone(index);
+            setIoTTimeZone.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTTimeZone.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the display resolution of an IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetDisplayResolutionTest_IoT()
+        {
+            string displayResolution = "1600x1200 (75Hz)";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayResolutionApi, response, HttpMethods.Post);
+
+            Task setDisplayResolution = TestHelpers.Portal.SetDisplayResolution(displayResolution);
+            setDisplayResolution.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setDisplayResolution.Status);
+        }
+
+         /// <summary>
+        /// Simple test to set the display orientation of an IoT device
+        /// </summary>
+        [TestMethod]
+        public void SetDisplayOrientationTest_IoT()
+        {
+            string displayOrientation = "90";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayOrientationApi, response, HttpMethods.Post);
+
+            Task setIoTDisplayOrientation = TestHelpers.Portal.SetDisplayOrientation(displayOrientation);
+            setIoTDisplayOrientation.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDisplayOrientation.Status);
+        }
+
+        /// <summary>
+        /// Gets the list of applications using the mock data generated on a RasberryPi3.
+        /// </summary>
+        [TestMethod]
+        public void GetAppsListInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.AppsListApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<AppsListInfo> getTask = TestHelpers.Portal.GetAppsListInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            AppsListInfo appsList = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("23983CETAthensQuality.IoTCoreSmartDisplay_7grdn1j1n8awe!App", appsList.DefaultApp);
+        }
+
+        /// <summary>
+        /// Gets the list of applications using the mock data generated on a RasberryPi3.
+        /// </summary>
+        [TestMethod]
+        public void GetHeadlessAppsListInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.HeadlessAppsListApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<HeadlessAppsListInfo> getTask = TestHelpers.Portal.GetHeadlessAppsListInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            HeadlessAppsListInfo appsList = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(true, appsList.AppPackages[0].IsStartup);
+        }
+
+        /// <summary>
+        /// Simple test to set the application as a startup app.
+        /// </summary>
+        [TestMethod]
+        public void UpdateStartupAppTest_IoT()
+        {
+            string startupApp = "23983CETAthensQuality.IoTCoreSmartDisplay_7grdn1j1n8awe!App";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AppsListApi, response, HttpMethods.Post);
+
+            Task setIoTStartupApp = TestHelpers.Portal.UpdateStartupApp(startupApp);
+            setIoTStartupApp.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTStartupApp.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the application as a startup app.
+        /// </summary>
+        [TestMethod]
+        public void UpdateHeadlessStartupAppTest_IoT()
+        {
+            string startupApp = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Post);
+
+            Task setIoTHeadlessStartupApp = TestHelpers.Portal.UpdateHeadlessStartupApp(startupApp);
+            setIoTHeadlessStartupApp.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, setIoTHeadlessStartupApp.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the application as a startup app.
+        /// </summary>
+        [TestMethod]
+        public void RemoveHeadlessStartupAppTest_IoT()
+        {
+            string startupApp = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Delete);
+
+            Task removeIoTHeadlessStartupApp = TestHelpers.Portal.RemoveHeadlessStartupApp(startupApp);
+            removeIoTHeadlessStartupApp.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, removeIoTHeadlessStartupApp.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the application as a startup app.
+        /// </summary>
+        [TestMethod]
+        public void ActivatePackageTest_IoT()
+        {
+            string appId = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ActivatePackageApi, response, HttpMethods.Post);
+
+            Task activatePackage = TestHelpers.Portal.ActivatePackage(appId);
+            activatePackage.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, activatePackage.Status);
+        }
+
+        /// <summary>
+        /// Gets the list of audio devices connected to the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetAudioDeviceListInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.AudioDeviceListApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<AudioDeviceListInfo> getTask = TestHelpers.Portal.GetAudioDeviceListInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            AudioDeviceListInfo audioDeviceList = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("Headset Microphone (2- GN 2000 MS USB)", audioDeviceList.CaptureName);
+        }
+
+        /// <summary>
+        /// Test to set the render volume in audio devices connected to the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetRenderVolumeTest_IoT()
+        {
+            string renderVolume = "80";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetRenderVolumeApi, response, HttpMethods.Post);
+
+            Task RenderVolume = TestHelpers.Portal.SetRenderVolume(renderVolume);
+            RenderVolume.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, RenderVolume.Status);
+        }
+
+        /// <summary>
+        /// Simple test to set the capture volume in audio devices connected to the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetCaptureVolumeTest_IoT()
+        {
+            string captureVolume = "80";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetCaptureVolumeApi, response, HttpMethods.Post);
+
+            Task CaptureVolume = TestHelpers.Portal.SetCaptureVolume(captureVolume);
+            CaptureVolume.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, CaptureVolume.Status);
+        }
+
+        /// <summary>
+        /// Simple test to start the internt sonnection sharing in the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void IcSharingStartTest_IoT()
+        {
+            string privateInterfaceIndex = "0";
+            string publicInterfaceIndex = "1";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Post);
+
+            Task IcsStart = TestHelpers.Portal.IcSharingStart(privateInterfaceIndex, publicInterfaceIndex);
+            IcsStart.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, IcsStart.Status);
+        }
+
+        /// <summary>
+        /// Simple test to stop the internt sonnection sharing in the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void IcSharingStopTest_IoT()
+        {
+            string privateInterfaceIndex = "0";
+            string publicInterfaceIndex = "1";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Delete);
+
+            Task IcsStop = TestHelpers.Portal.IcSharingStop(privateInterfaceIndex, publicInterfaceIndex);
+            IcsStop.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, IcsStop.Status);
+        }
+
+        /// <summary>
+        /// Gets the internet connection sharing interface information of the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetIcsInterfacesInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.IcsInterfacesApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<IscInterfacesInfo> getTask = TestHelpers.Portal.GetIcsInterfacesInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            IscInterfacesInfo icsInterfaceInfo = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("Broadcom 802.11n Wireless SDIO Adapter", icsInterfaceInfo.PrivateInterfaces[0]);
+        }
+
+        /// <summary>
+        /// Simple test to Run Command on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetRunCommandTest_IoT()
+        {
+            string command = "tlist";
+            string runAsDefaultAccount = "true";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandApi, response, HttpMethods.Post);
+
+            Task runCommand = TestHelpers.Portal.RunCommand(command, runAsDefaultAccount);
+            runCommand.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, runCommand.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Run Command without output on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetRunCommandWithoutOutputTest_IoT()
+        {
+            string command = "tlist";
+            string runAsDefaultAccount = "true";
+            string timeout = "10000";
+            string output = "Mockl output";
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"output\" : \"{0}\"}}", output));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandWithoutOutputApi, response, HttpMethods.Post);
+
+            Task<RunCommandOutputInfo> runCommandWithoutOutput = TestHelpers.Portal.RunCommandWithoutOutput(command, runAsDefaultAccount, timeout);
+            runCommandWithoutOutput.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, runCommandWithoutOutput.Status);
+        }
+   
+        /// <summary>
+        /// Gets the Remote Settings Status information of the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetRemoteSettingsStatusInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.RemoteSettingsStatusApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            RemoteSettingsStatusInfo remoteSettingsStatusInfo = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(false, remoteSettingsStatusInfo.IsRunning);
+        }
+
+        /// <summary>
+        /// Simple test to Enable the Remote Settings on the IoT device now.
+        /// </summary>
+        [TestMethod]
+        public void RemoteSettingsEnableTest_IoT()
+        {
+            string isRunning = "true";
+            string isScheduled = "true";
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"IsRunning\" : {0}, \"IsScheduled\" : {1}}}", isRunning, isScheduled));
+
+             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsEnableApi, response, HttpMethods.Post);
+
+            Task<RemoteSettingsStatusInfo> remoteSettingsEnable = TestHelpers.Portal.RemoteSettingsEnable();
+            remoteSettingsEnable.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsEnable.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Disable the Remote Settings on the IoT device now.
+        /// </summary>
+        [TestMethod]
+        public void RemoteSettingsDisableTest_IoT()
+        {
+            string isRunning = "false";
+            string isScheduled = "false";
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(string.Format("{{\"IsRunning\" : {0}, \"IsScheduled\" : {1}}}", isRunning, isScheduled));
+
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsDisableApi, response, HttpMethods.Post);
+
+            Task<RemoteSettingsStatusInfo> remoteSettingsDisable = TestHelpers.Portal.RemoteSettingsDisable();
+            remoteSettingsDisable.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsDisable.Status);
+        }
+
+        /// <summary>
+        /// Tests the Get response for TPM Settings of the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmSettingsInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.TpmSettingsApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmSettingsInfo> getTask = TestHelpers.Portal.GetTpmSettingsInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmSettingsInfo tpmSettings = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("TpmOk", tpmSettings.TPMStatus);
+        }
+
+        /// <summary>
+        /// Tests the Get response for TPM ACPI Tables Information.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmAcpiTablesInfo_IoT()
+        {
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                DevicePortal.TpmAcpiTablesApi,
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmAcpiTablesInfo> getTask = TestHelpers.Portal.GetTpmAcpiTablesInfo();
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmAcpiTablesInfo tpmAcpiTables = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("Software TPM Emulator (NoSecurity)", tpmAcpiTables.AcpiTables[1]);
+        }
+
+        /// <summary>
+        /// Tests the Get response for TPM Logical Device Settings for the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmLogicalDeviceSettingsInfo_IoT()
+        {
+            int logicalDeviceId = 1;
+
+            TestHelpers.MockHttpResponder.AddMockResponse(
+                string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId),
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmLogicalDeviceSettingsInfo> getTask = TestHelpers.Portal.GetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmLogicalDeviceSettingsInfo tpmSettings = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual(" a28a2715cb06bf65c8c41c5e0e3885b2d02321b8d450bb9409f322e708bc0099", tpmSettings.DeviceId);
+        }
+
+        /// <summary>
+        /// Simple test to Set the TPM ACPI Tables on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetTpmAcpiTablesTest_IoT()
+        {
+            string acpiTableIndex = "1";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.TpmAcpiTablesApi, response, HttpMethods.Post);
+
+            Task tpmAcpiTables = TestHelpers.Portal.SetTpmAcpiTablesInfo(acpiTableIndex);
+            tpmAcpiTables.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmAcpiTables.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Set the TPM Logical Device Settings on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void SetTpmLogicalDeviceSettingsTest_IoT()
+        {
+            int logicalDeviceId = 1;
+            string azureUri = "";
+            string azureKey = "";
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
+
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.SetTpmLogicalDeviceSettingsInfo(logicalDeviceId, azureUri, azureKey);
+            tpmLogicalDeviceSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
+        }
+
+        /// <summary>
+        /// Simple test to Reset the TPM Logical Device Settings on the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void ResetTpmLogicalDeviceSettingsTest_IoT()
+        {
+            int logicalDeviceId = 1;
+           
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
+
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.ResetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            tpmLogicalDeviceSettings.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
+        }
+
+        /// <summary>
+        /// Tests the Get response for TPM Azure Token Info for the IoT device.
+        /// </summary>
+        [TestMethod]
+        public void GetTpmAzureTokenInfo_IoT()
+        {
+            int logicalDeviceId = 0;
+            string validity = "18000";
+
+            TestHelpers.MockHttpResponder.AddMockResponse(
+               string.Format("{0}/{1}", TpmAzureTokenApi, logicalDeviceId),
+                this.PlatformType,
+                this.FriendlyOperatingSystemVersion,
+                HttpMethods.Get);
+
+            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.GetTpmAzureTokenInfo(logicalDeviceId, validity);
+            getTask.Wait();
+
+            Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
+            TpmAzureTokenInfo tpmAzureToken = getTask.Result;
+
+            // Check some known things about this response.
+            Assert.AreEqual("HostName=q;DeviceId=q;SharedAccessSignature=SharedAccessSignature sr=q/devices/q&sig=SCPRMahoAA%2belCZ3KvTLFEcVk2C2SYZ0G00zqZ5yH2k%3d&se=1473400166", tpmAzureToken.AzureToken);
         }
     }
 }

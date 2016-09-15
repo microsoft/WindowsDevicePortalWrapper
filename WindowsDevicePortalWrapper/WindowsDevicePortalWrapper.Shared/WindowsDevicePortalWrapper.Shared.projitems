@@ -44,6 +44,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestPut.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\WebSocket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\BluetoothConnectivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\Limpet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\ApplicationManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\AudioDevices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\ProcessManagement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\IcsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\IoTOnboarding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\RemoteSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\DeviceInfo.cs" />

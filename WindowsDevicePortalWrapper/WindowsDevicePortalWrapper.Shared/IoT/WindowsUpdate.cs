@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>String containing the update install time information.</returns>
         public async Task<UpdateInstallTimeInfo> GetUpdateInstallTime()
         {
-            return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);
+            return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);             
         }
 
         #region Data contract
@@ -59,10 +59,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string LastCheckTime { get; private set; }
 
             /// <summary>
+            /// Gets the staging progress. 
+            /// </summary>
+            [DataMember(Name = "stagingProgress")]
+            public string StagingProgress { get; private set; }
+
+            /// <summary>
             ///  Gets last update time.
             /// </summary>
             [DataMember(Name = "lastUpdateTime")]
             public string LastUpdateTime { get; private set; }
+
+            /// <summary>
+            ///  Gets last fail time.
+            /// </summary>
+            [DataMember(Name = "lastFailTime")]
+            public string LastFailTime { get; private set; }
 
             /// <summary>
             ///  Gets update status.
@@ -86,7 +98,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets whether a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduled")]
-            public int Rebootscheduled { get; private set; }
+            public int RebootScheduled { get; private set; }
+
+            /// <summary>
+            /// Gets the time when a reboot is scheduled. 
+            /// </summary>
+            [DataMember(Name = "rebootscheduledtime")]
+            public string RebootScheduledTimeAsString { get; private set; }
+
+            /// <summary>
+            /// Gets the time when a reboot is scheduled in DateTime format. 
+            /// </summary>
+            public DateTime RebootScheduledTime
+            {
+                get
+                {
+                    return DateTime.Parse(RebootScheduledTimeAsString);                  
+                }
+            }
         }
 
         #endregion // Data contract

@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <summary>
-    /// Wrappers for some IoT methods.
+    /// Wrappers for IoT Onboarding methods.
     /// </summary>
     public partial class DevicePortal
     {
         /// <summary>
-        /// Soft AP Settings API
+        /// IOT SoftAP Settings API.
         /// </summary>
         public static readonly string SoftAPSettingsApi = "api/iot/iotonboarding/softapsettings";
 
         /// <summary>
-        /// All Joyn Settings API
+        /// IOT  AllJoyn Settings API.
         /// </summary>
         public static readonly string AllJoynSettingsApi = "api/iot/iotonboarding/alljoynsettings";
 
@@ -44,8 +44,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.Get<AllJoynSettingsInfo>(AllJoynSettingsApi);
         }
 
-        #region Data contract
+        /// <summary>
+        /// Sets SoftAp Settings.
+        /// </summary>
+        /// <param name="softApStatus">SoftAp Status.</param>
+        /// <param name="softApSsid">SoftAp Ssid.</param>
+        /// /// <param name="SoftAp Password">SoftAp Password.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
+        public async Task SetSoftApSettings(string softApStatus, string softApSsid, string softApPassword)
+        {
+            await this.Post(
+                 SoftAPSettingsApi,
+                string.Format("SoftApEnabled={0}&SoftApSsid={1}&SoftApPassword={2}", Utilities.Hex64Encode(softApStatus), Utilities.Hex64Encode(softApSsid), Utilities.Hex64Encode(softApPassword)));
+        }
 
+        /// <summary>
+        /// Sets AllJoyn Settings.
+        /// </summary>
+        /// <param name="allJoynStatus">AllJoyn Status.</param>
+        /// <param name="allJoynDescription">AllJoyn Description.</param>
+        /// <param name=" allJoynManufacturer"> AllJoyn Manufacturer.</param>
+        /// <param name=" allJoynNumber"> AllJoyn Number.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
+        public async Task SetAllJoynSettings(string allJoynStatus, string allJoynDescription, string allJoynManufacturer, string allJoynModelNumber)
+        {
+            await this.Post(
+                 AllJoynSettingsApi,
+                string.Format("AllJoynOnboardingEnabled={0}&AllJoynOnboardingDefaultDescription={1}&AllJoynOnboardingDefaultManufacturer={2}&AllJoynOnboardingModelNumber={3}", Utilities.Hex64Encode(allJoynStatus), Utilities.Hex64Encode(allJoynDescription), Utilities.Hex64Encode(allJoynManufacturer), Utilities.Hex64Encode(allJoynModelNumber)));
+        }
+
+        #region Data contract
+       
         /// <summary>
         /// Object representation for Soft AP Settings.
         /// </summary>
