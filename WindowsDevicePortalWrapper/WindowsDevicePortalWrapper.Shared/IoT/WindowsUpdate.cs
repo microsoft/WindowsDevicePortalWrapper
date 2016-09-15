@@ -104,19 +104,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the time when a reboot is scheduled. 
             /// </summary>
             [DataMember(Name = "rebootscheduledtime")]
-            public string RebootScheduledTime { get; private set; }
+            public string RebootScheduledTimeAsString { get; private set; }
 
             /// <summary>
             /// Gets the time when a reboot is scheduled in DateTime format. 
             /// </summary>
-            public DateTime rebootscheduledtime
+            public DateTime RebootScheduledTime
             {
                 get
                 {
-                    DateTime rebootScheduledTime = DateTime.Parse(RebootScheduledTime);
-                    return rebootScheduledTime;
+                    return DateTime.Parse(RebootScheduledTimeAsString);                  
                 }
-
             }
         }
 
