@@ -76,24 +76,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         }
 
         /// <summary>
-        /// Returns certificate data
-        /// </summary>
-        /// <returns>certificate data</returns>
-        public X509Certificate2 GetDeviceCertificate()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Validates and sets the device certificate.
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        public void SetDeviceCertificate(X509Certificate2 certificate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// The Mock will never update the connection.
         /// </summary>
         /// <param name="requiresHttps">https required</param>

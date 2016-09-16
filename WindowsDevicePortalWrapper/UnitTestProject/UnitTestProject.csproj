@@ -199,6 +199,15 @@
     <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_appx_default_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_appx_listHeadlessApps_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_audio_listdevices_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_iot_device_controllersdriver_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -217,6 +226,9 @@
     <None Include="MockData\IoT\rs1_release\api_iot_device_timezones_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_ics_interfaces_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_alljoynsettings_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -224,6 +236,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_iot_remote_status_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_acpitables_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_azuretoken_0_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_settings_1_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_settings_IoTRaspberryPi3_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\IoT\rs1_release\api_iot_windowsupdate_installtime_IoTRaspberryPi3_rs1_release.dat">
@@ -364,6 +388,12 @@
     <Content Include="MockData\XboxOne\rs1_xbox_rel_1608\xbox_screenshot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj">
+      <Project>{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}</Project>
+      <Name>WindowsDevicePortalWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -193,7 +193,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
 
             // Check some known things about this response.
-            ProcessStatus processStatus = getTask.Result.Status;
+            MrcProcessStatus processStatus = getTask.Result.Status;
             Assert.AreEqual("Running", processStatus.MrcProcess);
         }
 
