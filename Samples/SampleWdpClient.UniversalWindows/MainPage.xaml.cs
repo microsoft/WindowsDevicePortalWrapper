@@ -52,7 +52,7 @@ namespace SampleWdpClient.UniversalWindows
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
-            { 
+            {
                 this.commandOutput.Text = string.Empty;
             }
         }
@@ -86,8 +86,8 @@ namespace SampleWdpClient.UniversalWindows
                     this.MarshalUpdateCommandOutput(sb.ToString());
                     portal.ConnectionStatus += (portal, connectArgs) =>
                     {
-                        if (connectArgs.Status == DeviceConnectionStatus.Connected) 
-                        { 
+                        if (connectArgs.Status == DeviceConnectionStatus.Connected)
+                        {
                             sb.Append("Connected to: ");
                             sb.AppendLine(portal.Address);
                             sb.Append("OS version: ");
@@ -100,7 +100,7 @@ namespace SampleWdpClient.UniversalWindows
                                 portal.Platform.ToString()));
                         }
                         else if (connectArgs.Status == DeviceConnectionStatus.Failed)
-                        { 
+                        {
                             sb.AppendLine("Failed to connect to the device.");
                             sb.AppendLine(connectArgs.Message);
                         }
@@ -186,7 +186,7 @@ namespace SampleWdpClient.UniversalWindows
             this.EnableDeviceControls(false);
 
             StringBuilder sb = new StringBuilder();
-            Task getTask = new Task( 
+            Task getTask = new Task(
                 async () =>
                 {
                     sb.Append(this.MarshalGetCommandOutput());
@@ -212,7 +212,7 @@ namespace SampleWdpClient.UniversalWindows
                             sb.AppendLine(adapterInfo.Dhcp.Address.Address);
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         sb.AppendLine("Failed to get IP config info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
@@ -279,7 +279,7 @@ namespace SampleWdpClient.UniversalWindows
                             }
                         };
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         sb.AppendLine("Failed to get WiFi info.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
@@ -301,7 +301,7 @@ namespace SampleWdpClient.UniversalWindows
         /// Executes the EnabledConnectionControls method on the UI thread.
         /// </summary>
         /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableConnectionControls(bool enable)
+        private void MarshalEnableConnectionControls(bool enable)
         {
             Task t = this.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
@@ -316,7 +316,7 @@ namespace SampleWdpClient.UniversalWindows
         /// Executes the EnabledDeviceControls method on the UI thread.
         /// </summary>
         /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableDeviceControls(bool enable)
+        private void MarshalEnableDeviceControls(bool enable)
         {
             Task t = this.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
@@ -396,7 +396,7 @@ namespace SampleWdpClient.UniversalWindows
                     {
                         await portal.Reboot();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         sb.AppendLine("Failed to reboot the device.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
@@ -440,7 +440,7 @@ namespace SampleWdpClient.UniversalWindows
                     {
                         await portal.Shutdown();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         sb.AppendLine("Failed to shut down the device.");
                         sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
