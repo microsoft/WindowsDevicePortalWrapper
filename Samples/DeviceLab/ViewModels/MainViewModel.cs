@@ -34,8 +34,7 @@ namespace DeviceLab
             DiagnosticSinks.DebugDiagnosticSink debugDiags = new DiagnosticSinks.DebugDiagnosticSink();
             DiagnosticSinks.AggregateDiagnosticSink aggDiags = new DiagnosticSinks.AggregateDiagnosticSink(this.Diagnostics, debugDiags);
 
-            this.SignIn = new DeviceSignInViewModel(aggDiags);
-            this.SignIn.AddDevicePortalConnectionFactory(new GenericDevicePortalConnectionFactory());
+            this.SignIn = new DeviceSignInViewModel();
 
             this.SignIn.SignInAttempted += this.OnSignInAttemptCompleted;
 
@@ -50,18 +49,7 @@ namespace DeviceLab
         /// <param name="args">Arguments for the event</param>
         private void OnSignInAttemptCompleted(DeviceSignInViewModel sender, DeviceSignInViewModel.SignInAttemptEventArgs args)
         {
-            DevicePortal portal = args.Portal;
-            // See if the device is already in the list
-            foreach (DevicePortalViewModel dpvm in this.ConnectedDevices)
-            {
-                if (dpvm.Address == portal.Address)
-                {
-                    this.Diagnostics.OutputDiagnosticString("[!!] The device with address {0} is already in the list\n", portal.Address);
-                    return;
-                }
-            }
-
-            this.ConnectedDevices.Add(new DevicePortalViewModel(args.Portal, this.Diagnostics));
+            this.ConnectedDevices.Add(new DevicePortalViewModel(this, args.Connection, this.Diagnostics));
         }
 
         //-------------------------------------------------------------------
@@ -337,7 +325,7 @@ namespace DeviceLab
         /// Command to remove a device from the collection of connected devices
         /// </summary>
         private DelegateCommand<object> removeDeviceCommand;
-        // NOTE: Ideally, the template parameter would be DevicePortalViewMOdel, rather than object.
+        // NOTE: Ideally, the template parameter would be DevicePortalViewModel, rather than object.
         // Unfortunately, this would sporadically throw an invalid cast exception from within the
         // DelegateCommand<> constructor in the PRISM library. Apparently, the object passed to the
         // constructor cannot always be cast to something that would rightfully belong to the 
@@ -431,6 +419,7 @@ namespace DeviceLab
             CommandSequence cmdSeq = dpvm.CreateCommandSequence();
             cmdSeq.RegisterCommand(dpvm.ReestablishConnectionCommand);
             cmdSeq.RegisterCommand(dpvm.RefreshDeviceNameCommand);
+            cmdSeq.RegisterCommand(dpvm.GetCannonicalIpAddressCommand);
             cmdSeq.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);
             cmdSeq.Execute(null);
         }

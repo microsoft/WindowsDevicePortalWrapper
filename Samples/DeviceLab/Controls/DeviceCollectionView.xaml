@@ -96,8 +96,8 @@
                                         </CheckBox>
                                         <TextBlock Margin="0,0,4,0" Text="Device Name:" />
                                         <TextBlock Text="{Binding DeviceName}"/>
-                                        <TextBlock Margin="50,0,4,0" Text="Device Address:" />
-                                        <TextBlock Text="{Binding Address}"/>
+                                        <TextBlock Margin="50,0,4,0" Text="Cannonical Device Address:" />
+                                        <TextBlock Text="{Binding CannonicalIpAddress}"/>
                                         <Button
                                             DockPanel.Dock="Right"
                                             Height="16" Width="16"
@@ -139,9 +139,10 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="20" Margin="0,5,0,0">
                             <Button Content="Reboot" Width="60" Command="{Binding RebootCommand}" />
-                            <Button Content="Reestablish Connection" Width="140" Margin="2,0,0,0" Command="{Binding ReestablishConnectionCommand}" />
+                            <Button Content="Refresh Connection" Width="140" Margin="2,0,0,0" Command="{Binding RefreshConnectionCommand}" />
                             <TextBlock Text="Retry Attempts:" Width="86" Margin="15,0,-5,0" />
-                            <local:NumberEntryBox Value="{Binding ConnectionRetryAttempts}" />
+                            <local:NumberEntryBox Value="{Binding ConnectionRetryAttempts, Mode=TwoWay}" />
+                            <Button Content="Dump IP Config" Width="100" Margin="4,0,0,0" Command="{Binding DumpIpConfigCommand}" />
                         </StackPanel>
                     </StackPanel>
                 </TabItem>

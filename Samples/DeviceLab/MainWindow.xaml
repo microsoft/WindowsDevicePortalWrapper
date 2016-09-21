@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="*" MinWidth="10"/>
             </Grid.ColumnDefinitions>
 
-            <local:DeviceSignInView Grid.Column="1" DataContext="{Binding SignIn}" />
+            <local:DeviceSignInView Grid.Column="1" DataContext="{Binding SignIn}" Margin="0,0,0,5"/>
 
             <Rectangle Grid.Column="2" Fill="Gray" Width="2" Margin="0,2,0,2"/>
 

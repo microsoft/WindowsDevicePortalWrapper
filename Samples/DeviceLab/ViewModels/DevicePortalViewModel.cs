@@ -12,6 +12,7 @@ using Prism.Commands;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Net.Security;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace DeviceLab
 {
@@ -20,6 +21,8 @@ namespace DeviceLab
     /// </summary>
     public class DevicePortalViewModel : DevicePortalCommandModel
     {
+        MainViewModel mainViewModel;
+
         //-------------------------------------------------------------------
         //  Constructors
         //-------------------------------------------------------------------
@@ -29,9 +32,11 @@ namespace DeviceLab
         /// </summary>
         /// <param name="portal">DevicePortal object enscapsulated by this</param>
         /// <param name="diags">Diagnostic sink for reporting</param>
-        public DevicePortalViewModel(DevicePortal portal, IDiagnosticSink diags)
-            : base(portal, diags)
+        public DevicePortalViewModel(MainViewModel mainViewModel, IDevicePortalConnection connection, IDiagnosticSink diags)
+            : base(connection, diags)
         {
+            this.mainViewModel = mainViewModel;
+
             // Add additional handling for untrusted certs.
             this.Portal.UnvalidatedCert += DoCertValidation;
 
@@ -54,7 +59,11 @@ namespace DeviceLab
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(this.deviceName) ? this.deviceName : base.DiagnosticMoniker;
+                if(string.IsNullOrWhiteSpace(this.deviceName))
+                {
+                    return !string.IsNullOrWhiteSpace(this.CannonicalIpAddress) ? this.CannonicalIpAddress : base.DiagnosticMoniker;
+                }
+                return this.deviceName;
             }
         }
         #endregion // Diagnostic Moniker
@@ -81,6 +90,22 @@ namespace DeviceLab
             }
         }
         #endregion //DeviceName
+
+        #region CannonicalIpAddress
+        private string cannonicalIpAddress;
+        public string CannonicalIpAddress
+        {
+            get
+            {
+                return cannonicalIpAddress;
+            }
+
+            private set
+            {
+                this.SetProperty(ref this.cannonicalIpAddress, value);
+            }
+        }
+        #endregion // CannonicalIpAddress
 
         #region DeviceNameEntry
         /// <summary>
@@ -151,6 +176,183 @@ namespace DeviceLab
         //  Commands
         //-------------------------------------------------------------------
         #region Commands
+        #region GetCannonicalIpAddress
+        private CommandSequence getCannonicalIpAddressCommand;
+        public ICommand GetCannonicalIpAddressCommand
+        {
+            get
+            {
+                if(this.getCannonicalIpAddressCommand == null)
+                {
+                    this.getCannonicalIpAddressCommand = this.CreateCommandSequence();
+                    DelegateCommand getCannonicalIpAddressDC = DelegateCommand.FromAsyncHandler(this.ExecuteGetCannonicalIpAddressAsync, this.CanExecuteGetCannonicalIpAddress);
+                    getCannonicalIpAddressDC.ObservesProperty(() => this.Ready);
+                    this.getCannonicalIpAddressCommand.RegisterCommand(getCannonicalIpAddressDC);
+                }
+                return this.getCannonicalIpAddressCommand;
+            }
+        }
+
+        private bool CanExecuteGetCannonicalIpAddress()
+        {
+            return this.Ready;
+        }
+
+        private async Task ExecuteGetCannonicalIpAddressAsync()
+        {
+            this.OutputDiagnosticString("ExecuteGetCannonicalIpAddress\n");
+            this.Ready = false;
+            try
+            {
+                IpConfiguration config = await this.Portal.GetIpConfig();
+                this.CannonicalIpAddressFromIpConfig(config);
+                this.CheckForDuplicateDevices();
+            }
+            catch (Exception exn)
+            {
+                this.ReportException("GetCannonicalIpAddress", exn);
+            }
+            this.Ready = true;
+        }
+
+        private void CheckForDuplicateDevices()
+        {
+            foreach(DevicePortalViewModel dpvm in this.mainViewModel.ConnectedDevices)
+            {
+                if (dpvm == this)
+                    continue;
+
+                if(this.cannonicalIpAddress == dpvm.cannonicalIpAddress)
+                {
+                    MessageBox.Show(string.Format("You already have a connection for this device address: {0}", this.cannonicalIpAddress),
+                            "Duplicate",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Exclamation);
+                    this.ClearCommandQueue();
+                    this.mainViewModel.RemoveDeviceCommand.Execute(this);
+                }
+            }
+        }
+
+        private void CannonicalIpAddressFromIpConfig(IpConfiguration config)
+        {
+            string firstNonZeroIpAddress = "";
+            string connectionIp = this.StripPort(this.Connection.Connection.Authority);
+            bool ipMatchesConnection = false;
+            foreach(NetworkAdapterInfo naio in config.Adapters)
+            {
+                foreach(IpAddressInfo iai in naio.IpAddresses)
+                {
+                    string addr = iai.Address;
+                    if (string.IsNullOrWhiteSpace(addr))
+                        continue;
+                    if (addr == "0.0.0.0")
+                        continue;
+                    firstNonZeroIpAddress = addr;
+                    if(addr == connectionIp)
+                    {
+                        ipMatchesConnection = true;
+                        break;
+                    }
+                }
+                
+                if(ipMatchesConnection)
+                {
+                    this.CannonicalIpAddress = connectionIp;
+                }
+                else
+                {
+                    this.CannonicalIpAddress = firstNonZeroIpAddress;
+                }
+            }
+        }
+
+        private string StripPort(string authority)
+        {
+            return authority.Split(':')[0];
+        }
+        #endregion // GetCannonicalIpAddress
+
+        #region DumpIpConfigCommand
+        private CommandSequence dumpIpConfigCommand;
+        public ICommand DumpIpConfigCommand
+        {
+            get
+            {
+                if(this.dumpIpConfigCommand == null)
+                {
+                    this.dumpIpConfigCommand = this.CreateCommandSequence();
+                    DelegateCommand dumpIpConfigDC = DelegateCommand.FromAsyncHandler(this.ExecuteDumpIpConfigAsync, this.CanExecuteDumpIpConfig);
+                    dumpIpConfigDC.ObservesProperty(() => this.Ready);
+                    this.dumpIpConfigCommand.RegisterCommand(dumpIpConfigDC);
+                }
+                return this.dumpIpConfigCommand;
+            }
+        }
+
+        private bool CanExecuteDumpIpConfig()
+        {
+            return this.Ready;
+        }
+
+        private async Task ExecuteDumpIpConfigAsync()
+        {
+            this.OutputDiagnosticString("ExecuteDumpIpConfigAsync\n");
+            this.Ready = false;
+            try
+            {
+                IpConfiguration config = await this.Portal.GetIpConfig();
+                this.OutputIpConfiguration(config);
+            }
+            catch (Exception exn)
+            {
+                this.ReportException("DumpIPConfig", exn);
+            }
+            this.Ready = true;
+        }
+
+        private void OutputIpConfiguration(IpConfiguration config)
+        {
+            // For now, just dump out the adapters to the debug output to see what I got
+            this.OutputDiagnosticString("Dumping network adapter information:\n");
+
+            foreach (NetworkAdapterInfo nai in config.Adapters)
+            {
+                this.OutputDiagnosticString("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                this.OutputDiagnosticString("    Description: {0}\n", nai.Description);
+                this.OutputDiagnosticString("    Mac Address: {0}\n", nai.MacAddress);
+                this.OutputDiagnosticString("    Index: {0}\n", nai.Index);
+                this.OutputDiagnosticString("    Id: {0}\n", nai.Id);
+                this.OutputDiagnosticString("    Adapter Type: {0}\n", nai.AdapterType);
+                this.OutputDiagnosticString("    DHCP:\n");
+                this.OutputDHCPInfo(nai.Dhcp);
+                this.OutputDiagnosticString("    Gateways:\n");
+                foreach (IpAddressInfo iai in nai.Gateways)
+                {
+                    this.OutputIpAddressInfo(iai);
+                }
+                this.OutputDiagnosticString("    IP Addresses:\n");
+                foreach (IpAddressInfo iai in nai.IpAddresses)
+                {
+                    this.OutputIpAddressInfo(iai);
+                }
+            }
+        }
+
+        private void OutputDHCPInfo(Dhcp dhcp)
+        {
+            this.OutputIpAddressInfo(dhcp.Address);
+            this.OutputDiagnosticString("        Lease Obtained {0}\n", dhcp.LeaseObtained.ToLocalTime().ToString());
+            this.OutputDiagnosticString("        Lease Expires {0}\n", dhcp.LeaseExpires.ToLocalTime().ToString());
+        }
+
+        private void OutputIpAddressInfo(IpAddressInfo ipAddr)
+        {
+            this.OutputDiagnosticString("        Address: {0}\n", ipAddr.Address);
+            this.OutputDiagnosticString("        Subnet Mask: {0}\n", ipAddr.SubnetMask);            
+        }
+        #endregion // DumpIpConfigCommand
+
         #region RenameCommand
         /// <summary>
         /// Command to rename the device
@@ -170,13 +372,62 @@ namespace DeviceLab
                     DelegateCommand renameDC = DelegateCommand.FromAsyncHandler(this.ExecuteRenameAsync, this.CanExecuteRename);
                     renameDC.ObservesProperty(() => this.Ready);
                     renameDC.ObservesProperty(() => this.DeviceNameEntry);
+                    
+
+                    DelegateCommand resetConnectionAndPortalDC = new DelegateCommand(this.ExecuteResetConnectionAndPortal, this.CanExecuteResetConnectionAndPortal);
+                    resetConnectionAndPortalDC.ObservesProperty(() => this.Ready);
+
                     this.renameCommand.RegisterCommand(renameDC);
+                    this.renameCommand.RegisterCommand(resetConnectionAndPortalDC);
+                    this.renameCommand.RegisterCommand(this.ReestablishConnectionCommand);
                     this.renameCommand.RegisterCommand(this.RebootCommand);
-                    this.renameCommand.RegisterCommand(this.RefreshDeviceNameCommand);
                 }
 
                 return this.renameCommand;
             }
+        }
+
+        private bool CanExecuteResetConnectionAndPortal()
+        {
+            return this.Ready;
+        }
+
+        private void ExecuteResetConnectionAndPortal()
+        {
+            this.OutputDiagnosticString("ExecuteResetConnectionAndPortalAsync\n");
+            this.Ready = false;
+            try
+            {
+                NetworkCredential cred = this.Connection.Credentials;
+                string scheme = this.Connection.Connection.Scheme;
+                string address = this.CannonicalIpAddress;
+                string port = this.Connection.Connection.Port.ToString();
+                string schemeAddressPort = string.Format(@"{0}://{1}:{2}", scheme, address, port);
+                string username = this.StripAutoPrefix(cred.UserName);
+
+                this.Portal.UnvalidatedCert -= DoCertValidation;
+
+                this.Connection = new DefaultDevicePortalConnection(schemeAddressPort, username, cred.SecurePassword);
+                this.Portal = new DevicePortal(this.Connection);
+
+                // Add additional handling for untrusted certs.
+                this.Portal.UnvalidatedCert += DoCertValidation;
+            }
+            catch (Exception exn)
+            {
+                this.ReportException("ResetConnectionAndPortal", exn);
+            }
+
+            this.Ready = true;
+        }
+
+        private string StripAutoPrefix(string userName)
+        {
+            if(userName.Length > 5)
+            {
+                return userName.Substring(5);
+            }
+            return userName;
         }
 
         /// <summary>
@@ -185,8 +436,6 @@ namespace DeviceLab
         /// <returns>Result indicates whether the rename command can execute</returns>
         private bool CanExecuteRename()
         {
-            //return
-            //    this.Ready;
             return
                 this.Ready &&
                 !string.IsNullOrWhiteSpace(this.deviceNameEntry);
@@ -214,6 +463,7 @@ namespace DeviceLab
 
             this.Ready = true;
         }
+        
         #endregion // RenameCommand
 
         #region RefreshDeviceName
@@ -261,6 +511,7 @@ namespace DeviceLab
             try
             {
                 this.DeviceName = await this.Portal.GetDeviceName();
+                this.OutputDiagnosticString("Done refreshing device name\n");
             }
             catch (Exception exn)
             {
@@ -292,7 +543,8 @@ namespace DeviceLab
                     this.rebootCommand.RegisterCommand(this.StopListeningForSystemPerfCommand);
                     this.rebootCommand.RegisterCommand(rebootDC);
                     this.rebootCommand.RegisterCommand(this.ReestablishConnectionCommand);
-                    this.rebootCommand.RegisterCommand(this.refreshDeviceNameCommand);
+                    this.rebootCommand.RegisterCommand(this.RefreshDeviceNameCommand);
+                    this.renameCommand.RegisterCommand(this.GetCannonicalIpAddressCommand);
                     this.rebootCommand.RegisterCommand(this.StartListeningForSystemPerfCommand);
                 }
 
@@ -334,6 +586,26 @@ namespace DeviceLab
             this.Ready = true;
         }
         #endregion // Reboot Command
+
+        #region RefreshConnectionCommand
+        private CommandSequence refreshConnectionCommand;
+        public ICommand RefreshConnectionCommand
+        {
+            get
+            {
+                if(this.refreshConnectionCommand == null)
+                {
+                    this.refreshConnectionCommand = this.CreateCommandSequence();
+                    this.refreshConnectionCommand.RegisterCommand(this.StopListeningForSystemPerfCommand);
+                    this.refreshConnectionCommand.RegisterCommand(this.ReestablishConnectionCommand);
+                    this.refreshConnectionCommand.RegisterCommand(this.RefreshDeviceNameCommand);
+                    this.refreshConnectionCommand.RegisterCommand(this.GetCannonicalIpAddressCommand);
+                    this.refreshConnectionCommand.RegisterCommand(this.StartListeningForSystemPerfCommand);
+                }
+                return this.refreshConnectionCommand;
+            }
+        }
+        #endregion // RefreshConnectionCommand
 
         #region ReestablishConnectionCommand
         /// <summary>
@@ -387,7 +659,10 @@ namespace DeviceLab
                 }
                 else if (args.Status == DeviceConnectionStatus.Failed)
                 {
+                    
                     this.OutputDiagnosticString("Connection failed after {0} tries.\n", numTries);
+                    this.OutputDiagnosticString("HTTP Status: {0}\n", this.Portal.ConnectionHttpStatusCode);
+                    this.OutputDiagnosticString("Failure description: {0}\n", args.Message);
                 }
             };
 
@@ -396,17 +671,40 @@ namespace DeviceLab
             this.Ready = false;
             try
             {
+
                 do
                 {
                     await this.Portal.Connect();
+
+                    if(this.Portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show("Connection Unauthorized. Please double check your authentication credentials",
+                            "Unauthorized",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Exclamation);
+                        this.ClearCommandQueue();
+                        this.mainViewModel.RemoveDeviceCommand.Execute(this);
+                        break;
+                    }
+                    else if(this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries <= this.ConnectionRetryAttempts)
+                    {
+                        await Task.Delay(1000 * 5);
+                    }
+                    
                     ++numTries;
                 }
                 while (this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries <= this.ConnectionRetryAttempts);
 
-                if(this.Portal.ConnectionHttpStatusCode !=HttpStatusCode.OK)
+                if (this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
                 {
                     throw new Exception(string.Format("Unable to connect after {0} tries.", numTries - 1));
                 }
+
+                OnPropertyChanged("Address");
+                OnPropertyChanged("DeviceFamily");
+                OnPropertyChanged("OperatingSystemVersion");
+                OnPropertyChanged("Platform");
+                OnPropertyChanged("PlatformName");
             }
             catch (Exception exn)
             {
@@ -578,7 +876,7 @@ namespace DeviceLab
 
             if (result == MessageBoxResult.Yes)
             {
-                thumbprint = cert.Thumbprint;
+                this.thumbprint = cert.Thumbprint;
                 return true;
             }
             return false;

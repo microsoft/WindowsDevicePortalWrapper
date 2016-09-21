@@ -3,15 +3,84 @@
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
-using System.Collections.ObjectModel;
+using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows;
+
 using System.Security;
-using System.Windows.Input;
 using Microsoft.Tools.WindowsDevicePortal;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Windows.Input;
 
 namespace DeviceLab
 {
+    //-------------------------------------------------------------------
+    //  Value Converters
+    //-------------------------------------------------------------------
+    #region Value Converters
+    /// <summary>
+    ///     Template allows for easy creation of a value converter for bools
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <remarks>
+    ///     See BooleanToVisibilityConverter and BooleanToBrushConverter (below) and usage in Generic.xaml
+    /// </remarks>
+    public class BooleanConverter<T> : IValueConverter
+    {
+        public BooleanConverter(T trueValue, T falseValue)
+        {
+            True = trueValue;
+            False = falseValue;
+        }
+
+        public T True { get; set; }
+        public T False { get; set; }
+
+        public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is bool && ((bool)value) ? True : False;
+        }
+
+        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is T && EqualityComparer<T>.Default.Equals((T)value, True);
+        }
+    }
+
+    /// <summary>
+    /// Converts a boolean to a Visibility value
+    /// </summary>
+    public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
+    {
+        public BooleanToVisibilityConverter() :
+            base(Visibility.Visible, Visibility.Hidden)
+        { }
+    }
+
+    public sealed class BooleanToHttpsConverter : BooleanConverter<string>
+    {
+        public BooleanToHttpsConverter() :
+            base("https", "http")
+        { }
+    }
+    #endregion // Value Converters
+
+    public enum DeviceFamilySelections
+    {
+        XboxOne,
+        HoloLens,
+        Phone,
+        IoT,
+        Desktop
+    }
+
     /// <summary>
     /// ViewModel for the device sign in flow
     /// </summary>
@@ -21,10 +90,6 @@ namespace DeviceLab
         //  Private Members
         //-------------------------------------------------------------------
         #region Private Members
-        /// <summary>
-        /// Destination for reporting diagnostic messages
-        /// </summary>
-        private IDiagnosticSink diagnostics;
         #endregion // Private Members
 
         //-------------------------------------------------------------------
@@ -33,22 +98,11 @@ namespace DeviceLab
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceSignInViewModel" /> class.
-        /// Default constructor creates a null diagnostic sink
         /// </summary>
-        /// <remarks>Diagnostic output will be lost</remarks>
         public DeviceSignInViewModel()
         {
-            this.diagnostics = new DiagnosticSinks.NullDiagnosticSink();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceSignInViewModel" /> class.
-        /// Use this constructor to specify a diagnostic sink for diagnostic output
-        /// </summary>
-        /// <param name="diags">Diagnostic sink that will receive all the diagnostic output</param>
-        public DeviceSignInViewModel(IDiagnosticSink diags)
-        {
-            this.diagnostics = diags;
+            this.DeviceFamily = DeviceFamilySelections.XboxOne;
+            this.ProtocolIsHttps = true;
         }
         #endregion // Constructors
 
@@ -56,21 +110,193 @@ namespace DeviceLab
         //  Properties
         //-------------------------------------------------------------------
         #region Properties
-        #region DeviceIP
-        /// <summary>
-        /// The IP address for the device with which we want to authentication
-        /// </summary>
-        private string deviceIP;
 
-        /// <summary>
-        ///  Gets or sets the IP address for the device with which we want to authenticate
-        /// </summary>
-        public string DeviceIP
+        #region DeviceFamily
+        private DeviceFamilySelections deviceFamily;
+        public DeviceFamilySelections DeviceFamily
         {
-            get { return this.deviceIP; }
-            set { this.SetProperty(ref this.deviceIP, value); }
+            get
+            {
+                return this.deviceFamily;
+            }
+
+            set
+            {
+                this.SetProperty(ref this.deviceFamily, value);
+                OnPropertyChanged("UsbAvailable");
+                OnPropertyChanged("UsbSelected");
+                OnPropertyChanged("ProtocolSelectionEnabled");
+                OnPropertyChanged("Port");
+                OnPropertyChanged("IsPortEntryEnabled");
+                OnPropertyChanged("AddressEntryEnabled");
+                OnPropertyChanged("Address");
+                if (this.DeviceFamily == DeviceFamilySelections.XboxOne)
+                {
+                    this.ProtocolIsHttps = true;
+                }
+            }
         }
-        #endregion // DeviceIP
+        #endregion // DeviceFamily
+
+        #region ProtocolIsHttps
+        private bool protocolIsHttps;
+        public bool ProtocolIsHttps
+        {
+            get
+            {
+                return this.protocolIsHttps;
+            }
+
+            set
+            {
+                this.SetProperty(ref this.protocolIsHttps, value);
+                OnPropertyChanged("Port");
+                OnPropertyChanged("IsPortEntryEnabled");
+                OnPropertyChanged("Address");
+            }
+        }
+        #endregion // ProtocolIsHttps
+
+        #region ProtocolSelectionEnabled
+        public bool ProtocolSelectionEnabled
+        {
+            get
+            {
+                return this.DeviceFamily != DeviceFamilySelections.XboxOne;
+            }
+        }
+        #endregion // ProtocolSelectionEnabled
+
+        #region UsbAvailable
+        public bool UsbAvailable
+        {
+            get
+            {
+                return this.DeviceFamily == DeviceFamilySelections.HoloLens
+                    || this.DeviceFamily == DeviceFamilySelections.Phone;
+            }
+        }
+        #endregion // UsbAvailable
+
+        #region UsbSelected
+        private bool usbSelected;
+        public bool UsbSelected
+        {
+            get
+            {
+                return this.UsbAvailable && this.usbSelected;
+            }
+
+            set
+            {
+                this.SetProperty(ref this.usbSelected, value);
+                OnPropertyChanged("Port");
+                OnPropertyChanged("IsPortEntryEnabled");
+                OnPropertyChanged("Address");
+                OnPropertyChanged("AddressEntryEnabled");
+            }
+        }
+        #endregion // UsbSelected
+
+        #region IsPortEntryEnabled
+        public bool IsPortEntryEnabled
+        {
+            get
+            {
+                switch (this.DeviceFamily)
+                {
+                    case DeviceFamilySelections.HoloLens:
+                    case DeviceFamilySelections.Phone:
+                    case DeviceFamilySelections.XboxOne:
+                        return false;
+
+                    case DeviceFamilySelections.IoT:
+                        return this.ProtocolIsHttps;
+
+                    case DeviceFamilySelections.Desktop:
+                    default:
+                        return true;
+                }
+            }
+        }
+        #endregion // IsPortEntryEnabled
+
+        #region Port
+        private string portUserEntry;
+        public string Port
+        {
+            get
+            {
+                string portForFamily = GetPortForDeviceFamily();
+                if (string.IsNullOrEmpty(portForFamily))
+                {
+                    return portUserEntry;
+                }
+                else
+                {
+                    return portForFamily;
+                }
+            }
+            set
+            {
+                SetProperty(ref portUserEntry, value);
+            }
+        }
+        #endregion // Port
+
+        #region GetPortForDeviceFamily
+        private string GetPortForDeviceFamily()
+        {
+            switch (this.DeviceFamily)
+            {
+                case DeviceFamilySelections.HoloLens:
+                case DeviceFamilySelections.Phone:
+                    {
+                        if (this.UsbSelected)
+                            return "10080";
+                        return this.ProtocolIsHttps ? "443" : "80";
+                    }
+                case DeviceFamilySelections.IoT:
+                    return this.ProtocolIsHttps ? "" : "8080";
+                case DeviceFamilySelections.XboxOne:
+                    return "11443";
+                case DeviceFamilySelections.Desktop:
+                    return "";
+                default:
+                    return "";
+            }
+        }
+        #endregion // GetPortForDeviceFamily
+
+        #region Address
+        private string addressUserEntry;
+        public string Address
+        {
+            get
+            {
+                if (this.UsbAvailable && this.UsbSelected)
+                {
+                    return "localhost";
+                }
+                return addressUserEntry;
+            }
+
+            set
+            {
+                SetProperty(ref this.addressUserEntry, value);
+            }
+        }
+        #endregion // Address
+
+        #region AddressEntryEnabled
+        public bool AddressEntryEnabled
+        {
+            get
+            {
+                return !this.UsbAvailable || !this.UsbSelected;
+            }
+        }
+        #endregion // AddressEntryEnabled
 
         #region UserName
         /// <summary>
@@ -104,44 +330,7 @@ namespace DeviceLab
         }
         #endregion // Password
 
-        #region Connection Types
-        /// <summary>
-        /// Collection of IDevicePortalConnectionFactory objects for use when authenticating with different device types
-        /// </summary>
-        private ObservableCollection<IDevicePortalConnectionFactory> connectionTypes;
-
-        /// <summary>
-        /// Gets the collection of IDevicePortalConnectionFactory objects used for connecting
-        /// </summary>
-        public ObservableCollection<IDevicePortalConnectionFactory> ConnectionTypes
-        {
-            get
-            {
-                if (this.connectionTypes == null)
-                {
-                    this.connectionTypes = new ObservableCollection<IDevicePortalConnectionFactory>();
-                }
-
-                return this.connectionTypes;
-            }
-        }
-        #endregion // Connection Types
-
-        #region ConnectionTypeSelection
-        /// <summary>
-        /// Tracks the IDevicePortalConnectionFactory selected by the user
-        /// </summary>
-        private IDevicePortalConnectionFactory connectionTypeSelection;
-
-        /// <summary>
-        /// Gets or sets the IDevicePortalConnectionFactory selected by the user
-        /// </summary>
-        public IDevicePortalConnectionFactory ConnectionTypeSelection
-        {
-            get { return this.connectionTypeSelection; }
-            set { this.SetProperty(ref this.connectionTypeSelection, value); }
-        }
-        #endregion // ConnectionTypeSelection
+        
         #endregion // Properties
 
         //-------------------------------------------------------------------
@@ -165,10 +354,10 @@ namespace DeviceLab
                 if (this.connectCommand == null)
                 {
                     this.connectCommand = new DelegateCommand(this.ExecuteConnect, this.CanExecuteConnect);
-                    this.connectCommand.ObservesProperty(() => this.DeviceIP);
+                    this.connectCommand.ObservesProperty(() => this.Address);
+                    this.connectCommand.ObservesProperty(() => this.Port);
                     this.connectCommand.ObservesProperty(() => this.UserName);
                     this.connectCommand.ObservesProperty(() => this.Password);
-                    this.connectCommand.ObservesProperty(() => this.ConnectionTypeSelection);
                 }
 
                 return this.connectCommand;
@@ -180,9 +369,14 @@ namespace DeviceLab
         /// </summary>
         private void ExecuteConnect()
         {
-            IDevicePortalConnection conn = this.ConnectionTypeSelection.CreateConnection(this.DeviceIP, this.UserName, this.Password);
-            DevicePortal portal = new DevicePortal(conn);
-            this.SignInAttempted?.Invoke(this, new SignInAttemptEventArgs(portal, conn));
+            string protocolAddressPort = string.Format(
+                @"{0}://{1}:{2}",
+                this.ProtocolIsHttps ? @"https" : @"http",
+                this.Address,
+                this.Port );
+
+            IDevicePortalConnection conn = new DefaultDevicePortalConnection(protocolAddressPort, this.UserName, this.Password);
+            this.SignInAttempted?.Invoke(this, new SignInAttemptEventArgs(conn));
         }
         
         /// <summary>
@@ -191,26 +385,16 @@ namespace DeviceLab
         /// <returns>Result indicates whether the ConnectCommand can execute</returns>
         private bool CanExecuteConnect()
         {
+            
             return
-                !string.IsNullOrWhiteSpace(this.DeviceIP) &&
+                !string.IsNullOrWhiteSpace(this.Address) &&
+                !string.IsNullOrWhiteSpace(this.Port) &&
                 !string.IsNullOrWhiteSpace(this.UserName) &&
                 this.Password != null &&
-                this.Password.Length > 0 &&
-                this.ConnectionTypeSelection != null;
+                this.Password.Length > 0;
         }
         #endregion // Connect Command
         #endregion // Commands
-
-        #region Public Methods
-        /// <summary>
-        /// Add an IDevicePortalConnnectionFactory to be presented to the user for selectoin
-        /// </summary>
-        /// <param name="factory">The factory to be added</param>
-        public void AddDevicePortalConnectionFactory(IDevicePortalConnectionFactory factory)
-        {
-            this.ConnectionTypes.Add(factory);
-        }
-        #endregion // Public Methods
 
         #region Events
         /// <summary>
@@ -230,17 +414,11 @@ namespace DeviceLab
             /// </summary>
             /// <param name="portal">The DevicePortal associated with the sign in attempt</param>
             /// <param name="conn">The IDevicePortalConnection instance associated with the sign in attempt</param>
-            internal SignInAttemptEventArgs(DevicePortal portal, IDevicePortalConnection conn)
+            internal SignInAttemptEventArgs(IDevicePortalConnection conn)
             {
-                this.Portal = portal;
                 this.Connection = conn;
             }
-
-            /// <summary>
-            /// Gets the DevicePortal associated with the sign in attempt
-            /// </summary>
-            public DevicePortal Portal { get; private set; }
-
+                        
             /// <summary>
             ///  Gets the IDevicePortalConnection instance associated with the sign in attempt
             /// </summary>
@@ -252,28 +430,5 @@ namespace DeviceLab
         /// </summary>
         public event SignInAttemptEventHandler SignInAttempted;
         #endregion // Events
-    }
-
-    /// <summary>
-    /// Interface describes a factory class for creating IDevicePortalConnection instances
-    /// </summary>
-    public interface IDevicePortalConnectionFactory
-    {
-        /// <summary>
-        /// Create an instance of IDevicePortalConnection
-        /// </summary>
-        /// <param name="address">IP address to use for connectin</param>
-        /// <param name="userName">User name to use for authenticating</param>
-        /// <param name="password">Password to use for authenticating</param>
-        /// <returns>The new IDevicePortalConnection instance</returns>
-        IDevicePortalConnection CreateConnection(
-            string address,
-            string userName,
-            SecureString password);
-
-        /// <summary>
-        /// Gets a friendly name for the IDevicePortalConnectionFactory that can be presented to the user
-        /// </summary>
-        string Name { get; }
     }
 }

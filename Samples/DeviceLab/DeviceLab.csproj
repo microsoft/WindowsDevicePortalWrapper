@@ -62,14 +62,13 @@
     <Compile Include="Controls\AutoScrollTextBox.cs" />
     <Compile Include="ViewModels\CommandSequence.cs" />
     <Compile Include="ViewModels\DiagnosticSinks.cs" />
-    <Compile Include="ViewModels\GenericDevicePortalConnectionFactory.cs" />
     <Compile Include="ViewModels\ObservableCommandQueue.cs" />
-    <Compile Include="Views\DeviceCollectionView.xaml.cs">
+    <Compile Include="Controls\DeviceCollectionView.xaml.cs">
       <DependentUpon>DeviceCollectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DevicePortalCommandModel.cs" />
     <Compile Include="ViewModels\DevicePortalViewModel.cs" />
-    <Compile Include="Views\DeviceSignInView.xaml.cs">
+    <Compile Include="Controls\DeviceSignInView.xaml.cs">
       <DependentUpon>DeviceSignInView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -81,11 +80,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DeviceCollectionView.xaml">
+    <Page Include="Controls\DeviceCollectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DeviceSignInView.xaml">
+    <Page Include="Controls\DeviceSignInView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

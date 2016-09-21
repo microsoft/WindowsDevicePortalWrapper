@@ -26,14 +26,16 @@ namespace DeviceLab
         /// </summary>
         /// <param name="portal">DevicePortal object enscapsulated by this</param>
         /// <param name="diags">Diagnostic sink for reporting</param>
-        public DevicePortalCommandModel(DevicePortal portal, IDiagnosticSink diags)
+        public DevicePortalCommandModel(IDevicePortalConnection connection, IDiagnosticSink diags)
         {
-            if (portal == null)
+            if (connection == null)
             {
-                throw new ArgumentException("Must provide a valid DevicePortal object");
+                throw new ArgumentException("Must provide a valid IDevicePortalConnection object");
             }
 
-            this.portal = portal;
+            this.Connection = connection;
+            this.Portal = new DevicePortal(connection);
+
             this.diagnostics = diags;
             this.commandQueue = new ObservableCommandQueue();
             this.Ready = true;
@@ -41,27 +43,24 @@ namespace DeviceLab
         #endregion // Constructors
 
         //-------------------------------------------------------------------
+        // Class Members
+        //-------------------------------------------------------------------
+        #region Class Members
+        /// <summary>
+        ///  The DevicePortal object encapsulated by this class
+        /// </summary>
+        public DevicePortal Portal { get; protected set; }
+
+        /// <summary>
+        /// The IDevicePortalConnection object encapsulated by this class
+        /// </summary>
+        public IDevicePortalConnection Connection { get; protected set; }
+        #endregion // Class Members
+
+        //-------------------------------------------------------------------
         //  Properties
         //-------------------------------------------------------------------
         #region Properties
-        #region The DevicePortal
-        /// <summary>
-        /// DevicePortal object encapsulated by this class
-        /// </summary>
-        private DevicePortal portal;
-
-        /// <summary>
-        /// Gets the DevicePortal object encapsulated by this class
-        /// </summary>
-        protected DevicePortal Portal
-        {
-            get
-            {
-                return this.portal;
-            }
-        }
-        #endregion // The DevicePortal
-
         #region Ready
         /// <summary>
         /// The Ready property indicates that there are no RESTful calls in flight via
@@ -94,7 +93,7 @@ namespace DeviceLab
         {
             get
             {
-                return this.portal == null ? "<unknown>" : this.portal.Address;
+                return this.Portal == null ? "<unknown>" : this.Portal.Address;
             }
         }
         #endregion // Address
@@ -107,7 +106,7 @@ namespace DeviceLab
         {
             get
             {
-                return this.portal == null ? "<unknown>" : this.portal.DeviceFamily;
+                return this.Portal == null ? "<unknown>" : this.Portal.DeviceFamily;
             }
         }
         #endregion // DeviceFamily
@@ -120,7 +119,7 @@ namespace DeviceLab
         {
             get
             {
-                return this.portal == null ? "<unknown>" : this.portal.OperatingSystemVersion;
+                return this.Portal == null ? "<unknown>" : this.Portal.OperatingSystemVersion;
             }
         }
         #endregion // OperatingSystemVersion
@@ -133,7 +132,7 @@ namespace DeviceLab
         {
             get
             {
-                return this.portal == null ? "<unknown>" : this.portal.Platform.ToString();
+                return this.Portal == null ? "<unknown>" : this.Portal.Platform.ToString();
             }
         }
         #endregion // Platform
@@ -146,7 +145,7 @@ namespace DeviceLab
         {
             get
             {
-                return this.portal == null ? "<unknown>" : this.portal.PlatformName;
+                return this.Portal == null ? "<unknown>" : this.Portal.PlatformName;
             }
         }
         #endregion // PlatformName

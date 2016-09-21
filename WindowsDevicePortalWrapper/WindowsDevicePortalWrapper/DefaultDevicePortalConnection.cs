@@ -6,8 +6,6 @@
 
 using System;
 using System.Net;
-using System.Net.Security;
-//using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
@@ -57,8 +55,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string userName,
             System.Security.SecureString password)
         {
-            this.Connection = new Uri(string.Format("https://{0}:11443", address));
-            this.Credentials = new NetworkCredential(userName, password);
+            this.Connection = new Uri(address);
+
+
+            if (!string.IsNullOrEmpty(userName) &&
+                password != null &&
+                password.Length > 0)
+            {
+                // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+                this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
+            }
         }
 
         /// <summary>
