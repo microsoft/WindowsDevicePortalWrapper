@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="SampleDeviceCollection.DeviceSignInView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SampleDeviceCollection"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="140" d:DesignWidth="450">
+    <UserControl.Resources>
+        <!-- ObjectDataProvider allows using a standard enum as an items source -->
+        <ObjectDataProvider
+            x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:DeviceFamilySelections" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <local:BooleanToVisibilityConverter
+            x:Key="BoolToVisible"
+            True="Visible"
+            False="Hidden" />
+        <local:BooleanToHttpsConverter x:Key="BoolToProtocol" />
+        <Style x:Key="FieldNameStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Padding" Value="0,0,4,0" />
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="TextTrimming" Value="None"/>
+        </Style>
+        <Style x:Key="FieldStyle" TargetType="{x:Type StackPanel}">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="0,1,0,4" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="White">
+        <!-- Address Field -->
+        <StackPanel Style="{DynamicResource FieldStyle}">
+            <TextBlock Text="Hostname/Address:" Style="{DynamicResource FieldNameStyle}" />
+            <Grid Width="30" HorizontalAlignment="Right">
+                <TextBlock Text="{Binding ProtocolIsHttps, Converter={StaticResource BoolToProtocol}}" HorizontalAlignment="Right"/>
+            </Grid>
+            <TextBlock Text="://" Margin="0,0,2,0" />
+            <TextBox Width="200" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AddressEntryEnabled}" />
+            <TextBlock Text=":" />
+            <TextBox Width="50" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsPortEntryEnabled}"/>
+        </StackPanel>
+        <Grid Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240"/>
+                <ColumnDefinition Width="240"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <!-- Device Family Selection -->
+            <StackPanel Grid.Row="0" Grid.Column="0" Style="{DynamicResource FieldStyle}">
+                <TextBlock Text="Device Family:" Style="{DynamicResource FieldNameStyle}" />
+                <ComboBox
+                Width="150"
+                ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
+                SelectedItem="{Binding DeviceFamily}" />
+            </StackPanel>
+            <!-- Protocol Selection -->
+            <StackPanel Grid.Row="0" Grid.Column="1" Style="{DynamicResource FieldStyle}">
+                <TextBlock Text="Protocol:" Style="{DynamicResource FieldNameStyle}" />
+                <RadioButton IsEnabled="{Binding ProtocolSelectionEnabled}" Content="HTTPS" IsChecked="{Binding ProtocolIsHttps}"/>
+                <RadioButton IsEnabled="{Binding ProtocolSelectionEnabled}" Content="HTTP"/>
+                <CheckBox Content="USB" Margin="8,0,0,0" Visibility="{Binding Path=UsbAvailable, Converter={StaticResource BoolToVisible}}" IsChecked="{Binding UsbSelected}"/>
+            </StackPanel>
+            <!-- User Name Entry -->
+            <StackPanel Grid.Row="1" Grid.Column="0" Style="{DynamicResource FieldStyle}">
+                <TextBlock Text="User Name:" Style="{DynamicResource FieldNameStyle}" />
+                <TextBox Width="150" Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Style="{DynamicResource FieldStyle}">
+            <!-- Password Entry -->
+                <TextBlock Text="Password:" Style="{DynamicResource FieldNameStyle}" />
+                <local:BindablePassword 
+                    Width="150" 
+                    Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    IsEnabled="{Binding Ready}" />
+            </StackPanel>
+            <Button Grid.Row="2" Grid.Column="1"  Width="150" Content="Connect" Command="{Binding ConnectCommand}" HorizontalAlignment="Right"/>
+        </Grid>
+    </StackPanel>
+</UserControl>
