@@ -3,82 +3,28 @@
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
-using System.Windows.Data;
-using System.Windows;
 
+using System;
 using System.Security;
+using System.Windows.Input;
 using Microsoft.Tools.WindowsDevicePortal;
 using Prism.Commands;
 using Prism.Mvvm;
-using System.Windows.Input;
 
 namespace SampleDeviceCollection
 {
-    //-------------------------------------------------------------------
-    //  Value Converters
-    //-------------------------------------------------------------------
-    #region Value Converters
     /// <summary>
-    ///     Template allows for easy creation of a value converter for bools
+    /// Enumerates the device families that may be selected by the user
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <remarks>
-    ///     See BooleanToVisibilityConverter and BooleanToBrushConverter (below) and usage in Generic.xaml
-    /// </remarks>
-    public class BooleanConverter<T> : IValueConverter
-    {
-        public BooleanConverter(T trueValue, T falseValue)
-        {
-            True = trueValue;
-            False = falseValue;
-        }
-
-        public T True { get; set; }
-        public T False { get; set; }
-
-        public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is bool && ((bool)value) ? True : False;
-        }
-
-        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is T && EqualityComparer<T>.Default.Equals((T)value, True);
-        }
-    }
-
-    /// <summary>
-    /// Converts a boolean to a Visibility value
-    /// </summary>
-    public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility>
-    {
-        public BooleanToVisibilityConverter() :
-            base(Visibility.Visible, Visibility.Hidden)
-        { }
-    }
-
-    public sealed class BooleanToHttpsConverter : BooleanConverter<string>
-    {
-        public BooleanToHttpsConverter() :
-            base("https", "http")
-        { }
-    }
-    #endregion // Value Converters
-
     public enum DeviceFamilySelections
     {
         XboxOne,
         HoloLens,
-        Phone,
+        // TODO: Phone is not yet supported
+        // Phone,
         IoT,
-        Desktop
+        Desktop,
+        Other
     }
 
     /// <summary>
@@ -110,9 +56,15 @@ namespace SampleDeviceCollection
         //  Properties
         //-------------------------------------------------------------------
         #region Properties
-
         #region DeviceFamily
+        /// <summary>
+        /// The device family selected by the user
+        /// </summary>
         private DeviceFamilySelections deviceFamily;
+
+        /// <summary>
+        /// Gets or sets the device family selected by the user
+        /// </summary>
         public DeviceFamilySelections DeviceFamily
         {
             get
@@ -123,13 +75,26 @@ namespace SampleDeviceCollection
             set
             {
                 this.SetProperty(ref this.deviceFamily, value);
-                OnPropertyChanged("UsbAvailable");
-                OnPropertyChanged("UsbSelected");
-                OnPropertyChanged("ProtocolSelectionEnabled");
-                OnPropertyChanged("Port");
-                OnPropertyChanged("IsPortEntryEnabled");
-                OnPropertyChanged("AddressEntryEnabled");
-                OnPropertyChanged("Address");
+
+                // Prepopulate some "best guess" values for Desktop
+                if (this.DeviceFamily == DeviceFamilySelections.Desktop)
+                {
+                    this.PrepopulateDesktopPort();
+                }
+
+                // All bets are off for "Other" so clear everything and leave it up to the user
+                if (this.DeviceFamily == DeviceFamilySelections.Other)
+                {
+                    this.portUserEntry = string.Empty;
+                }
+                
+                this.OnPropertyChanged("UsbAvailable");
+                this.OnPropertyChanged("UsbSelected");
+                this.OnPropertyChanged("ProtocolSelectionEnabled");
+                this.OnPropertyChanged("Port");
+                this.OnPropertyChanged("IsPortEntryEnabled");
+                this.OnPropertyChanged("AddressEntryEnabled");
+                this.OnPropertyChanged("Address");
                 if (this.DeviceFamily == DeviceFamilySelections.XboxOne)
                 {
                     this.ProtocolIsHttps = true;
@@ -139,7 +104,14 @@ namespace SampleDeviceCollection
         #endregion // DeviceFamily
 
         #region ProtocolIsHttps
+        /// <summary>
+        /// Bidning for a radio selection to disambiguate the URL protocol scheme for the user. Protocol can be either http or https.
+        /// </summary>
         private bool protocolIsHttps;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the URL protocol scheme is https or http
+        /// </summary>
         public bool ProtocolIsHttps
         {
             get
@@ -150,14 +122,22 @@ namespace SampleDeviceCollection
             set
             {
                 this.SetProperty(ref this.protocolIsHttps, value);
-                OnPropertyChanged("Port");
-                OnPropertyChanged("IsPortEntryEnabled");
-                OnPropertyChanged("Address");
+                if (this.DeviceFamily == DeviceFamilySelections.Desktop)
+                {
+                    this.PrepopulateDesktopPort();
+                }
+
+                this.OnPropertyChanged("Port");
+                this.OnPropertyChanged("IsPortEntryEnabled");
+                this.OnPropertyChanged("Address");
             }
         }
         #endregion // ProtocolIsHttps
-
+                
         #region ProtocolSelectionEnabled
+        /// <summary>
+        /// Gets a value indicating whether the user may select the URL protocol scheme
+        /// </summary>
         public bool ProtocolSelectionEnabled
         {
             get
@@ -168,18 +148,29 @@ namespace SampleDeviceCollection
         #endregion // ProtocolSelectionEnabled
 
         #region UsbAvailable
+        /// <summary>
+        /// Gets a value indicating whether USB selection is available
+        /// </summary>
         public bool UsbAvailable
         {
             get
             {
-                return this.DeviceFamily == DeviceFamilySelections.HoloLens
-                    || this.DeviceFamily == DeviceFamilySelections.Phone;
+                return this.DeviceFamily == DeviceFamilySelections.HoloLens;
+                    // TODO: Phone is not yet supported
+                    // || this.DeviceFamily == DeviceFamilySelections.Phone
             }
         }
         #endregion // UsbAvailable
 
         #region UsbSelected
+        /// <summary>
+        /// Binding property for a checkbox that indictates whether the user is attemptint to connect over USB
+        /// </summary>
         private bool usbSelected;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is attempting to connect over USB
+        /// </summary>
         public bool UsbSelected
         {
             get
@@ -190,15 +181,18 @@ namespace SampleDeviceCollection
             set
             {
                 this.SetProperty(ref this.usbSelected, value);
-                OnPropertyChanged("Port");
-                OnPropertyChanged("IsPortEntryEnabled");
-                OnPropertyChanged("Address");
-                OnPropertyChanged("AddressEntryEnabled");
+                this.OnPropertyChanged("Port");
+                this.OnPropertyChanged("IsPortEntryEnabled");
+                this.OnPropertyChanged("Address");
+                this.OnPropertyChanged("AddressEntryEnabled");
             }
         }
         #endregion // UsbSelected
 
         #region IsPortEntryEnabled
+        /// <summary>
+        /// Gets a value indicating whether the user may enter the port value
+        /// </summary>
         public bool IsPortEntryEnabled
         {
             get
@@ -206,14 +200,15 @@ namespace SampleDeviceCollection
                 switch (this.DeviceFamily)
                 {
                     case DeviceFamilySelections.HoloLens:
-                    case DeviceFamilySelections.Phone:
+                    // TODO: Phone is not yet supported
+                    // case DeviceFamilySelections.Phone:
                     case DeviceFamilySelections.XboxOne:
                         return false;
 
                     case DeviceFamilySelections.IoT:
                         return this.ProtocolIsHttps;
 
-                    case DeviceFamilySelections.Desktop:
+                    case DeviceFamilySelections.Other:
                     default:
                         return true;
                 }
@@ -222,54 +217,76 @@ namespace SampleDeviceCollection
         #endregion // IsPortEntryEnabled
 
         #region Port
+        /// <summary>
+        /// Binding property for a field where the user may enter a port value
+        /// </summary>
         private string portUserEntry;
+
+        /// <summary>
+        /// Gets or sets the port value to use when connecting to the device.
+        /// </summary>
         public string Port
         {
             get
             {
-                string portForFamily = GetPortForDeviceFamily();
+                string portForFamily = this.GetPortForDeviceFamily();
                 if (string.IsNullOrEmpty(portForFamily))
                 {
-                    return portUserEntry;
+                    return this.portUserEntry;
                 }
                 else
                 {
                     return portForFamily;
                 }
             }
+
             set
             {
-                SetProperty(ref portUserEntry, value);
+                this.SetProperty(ref this.portUserEntry, value);
             }
         }
         #endregion // Port
 
         #region GetPortForDeviceFamily
+        /// <summary>
+        /// Gets the port number to use based on the device family, protocol, and USB selections
+        /// </summary>
+        /// <returns>the port number as a string</returns>
         private string GetPortForDeviceFamily()
         {
             switch (this.DeviceFamily)
             {
                 case DeviceFamilySelections.HoloLens:
-                case DeviceFamilySelections.Phone:
+                //case DeviceFamilySelections.Phone:
                     {
                         if (this.UsbSelected)
+                        {
                             return "10080";
+                        }
+
                         return this.ProtocolIsHttps ? "443" : "80";
                     }
+
                 case DeviceFamilySelections.IoT:
-                    return this.ProtocolIsHttps ? "" : "8080";
+                    return this.ProtocolIsHttps ? string.Empty : "8080";
                 case DeviceFamilySelections.XboxOne:
                     return "11443";
-                case DeviceFamilySelections.Desktop:
-                    return "";
+                case DeviceFamilySelections.Other:
                 default:
-                    return "";
+                    return string.Empty;
             }
         }
         #endregion // GetPortForDeviceFamily
 
         #region Address
+        /// <summary>
+        /// Binding property for a field where the user enters the device address
+        /// </summary>
         private string addressUserEntry;
+
+        /// <summary>
+        /// Gets or sets a value containing the device address
+        /// </summary>
         public string Address
         {
             get
@@ -278,17 +295,22 @@ namespace SampleDeviceCollection
                 {
                     return "localhost";
                 }
-                return addressUserEntry;
+
+                return this.addressUserEntry;
             }
 
             set
             {
-                SetProperty(ref this.addressUserEntry, value);
+                this.SetProperty(ref this.addressUserEntry, value);
             }
         }
         #endregion // Address
 
         #region AddressEntryEnabled
+        /// <summary>
+        /// Gets a value indicating whether the user may enter an address for the device.
+        /// (In case it is a USB connection then the address is always localhost.)
+        /// </summary>
         public bool AddressEntryEnabled
         {
             get
@@ -330,7 +352,29 @@ namespace SampleDeviceCollection
         }
         #endregion // Password
 
-        
+        /// <summary>
+        /// Prepopulate the port entry with a best guess value whenever the user selects Desktop
+        /// or when Desktop is already selected and the user changes the protocol
+        /// </summary>
+        private void PrepopulateDesktopPort()
+        {
+            if(this.ProtocolIsHttps)
+            {
+                // Some logic to prevent clobbering the user's entry
+                if(string.IsNullOrWhiteSpace(this.portUserEntry) || this.portUserEntry == "50080")
+                {
+                    this.portUserEntry = "50443";
+                }
+            }
+            else
+            {
+                // Some logic to prevent clobbering the user's entry
+                if (string.IsNullOrWhiteSpace(this.portUserEntry) || this.portUserEntry == "50443")
+                {
+                    this.portUserEntry = "50080";
+                }
+            }
+        }
         #endregion // Properties
 
         //-------------------------------------------------------------------
@@ -373,7 +417,7 @@ namespace SampleDeviceCollection
                 @"{0}://{1}:{2}",
                 this.ProtocolIsHttps ? @"https" : @"http",
                 this.Address,
-                this.Port );
+                this.Port);
 
             IDevicePortalConnection conn = new DefaultDevicePortalConnection(protocolAddressPort, this.UserName, this.Password);
             this.SignInAttempted?.Invoke(this, new SignInAttemptEventArgs(conn));
@@ -385,7 +429,6 @@ namespace SampleDeviceCollection
         /// <returns>Result indicates whether the ConnectCommand can execute</returns>
         private bool CanExecuteConnect()
         {
-            
             return
                 !string.IsNullOrWhiteSpace(this.Address) &&
                 !string.IsNullOrWhiteSpace(this.Port) &&
@@ -395,7 +438,7 @@ namespace SampleDeviceCollection
         }
         #endregion // Connect Command
         #endregion // Commands
-
+        
         #region Events
         /// <summary>
         /// Delegate describes a method for handling SignInAttempt events
@@ -412,7 +455,6 @@ namespace SampleDeviceCollection
             /// <summary>
             /// Initializes a new instance of the <see cref="SignInAttemptEventArgs" /> class.
             /// </summary>
-            /// <param name="portal">The DevicePortal associated with the sign in attempt</param>
             /// <param name="conn">The IDevicePortalConnection instance associated with the sign in attempt</param>
             internal SignInAttemptEventArgs(IDevicePortalConnection conn)
             {

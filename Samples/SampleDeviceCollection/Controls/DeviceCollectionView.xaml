@@ -97,7 +97,7 @@
                                         <TextBlock Margin="0,0,4,0" Text="Device Name:" />
                                         <TextBlock Text="{Binding DeviceName}"/>
                                         <TextBlock Margin="50,0,4,0" Text="Cannonical Device Address:" />
-                                        <TextBlock Text="{Binding CannonicalIpAddress}"/>
+                                        <TextBlock Text="{Binding Address}"/>
                                         <Button
                                             DockPanel.Dock="Right"
                                             Height="16" Width="16"

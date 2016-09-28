@@ -3,11 +3,14 @@
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Net;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Tools.WindowsDevicePortal;
 using Prism.Commands;
@@ -49,7 +52,7 @@ namespace SampleDeviceCollection
         /// <param name="args">Arguments for the event</param>
         private void OnSignInAttemptCompleted(DeviceSignInViewModel sender, DeviceSignInViewModel.SignInAttemptEventArgs args)
         {
-            this.ConnectedDevices.Add(new DevicePortalViewModel(this, args.Connection, this.Diagnostics));
+            this.ConnectedDevices.Add(new DevicePortalViewModel(args.Connection, this.Diagnostics));
         }
 
         //-------------------------------------------------------------------
@@ -373,7 +376,7 @@ namespace SampleDeviceCollection
             DevicePortalViewModel dpvm = obj as DevicePortalViewModel;
             if (dpvm != null)
             {
-                this.ConnectedDevices.Remove(dpvm);
+                this.RemoveDevice(dpvm);
             }
         }
         #endregion // RemoveDeviceCommand
@@ -419,7 +422,6 @@ namespace SampleDeviceCollection
             CommandSequence cmdSeq = dpvm.CreateCommandSequence();
             cmdSeq.RegisterCommand(dpvm.ReestablishConnectionCommand);
             cmdSeq.RegisterCommand(dpvm.RefreshDeviceNameCommand);
-            cmdSeq.RegisterCommand(dpvm.GetCannonicalIpAddressCommand);
             cmdSeq.RegisterCommand(dpvm.StartListeningForSystemPerfCommand);
             cmdSeq.Execute(null);
         }
@@ -438,6 +440,16 @@ namespace SampleDeviceCollection
         }
 
         /// <summary>
+        /// Removes a device from the collection and clears any pending commands
+        /// </summary>
+        /// <param name="removeMe">The device to remove</param>
+        private void RemoveDevice(DevicePortalViewModel removeMe)
+        {
+            removeMe.ClearCommandQueue();
+            this.ConnectedDevices.Remove(removeMe);
+        }
+
+        /// <summary>
         /// Event handler to monitor property changes on each of the elements in the collection of connected devices
         /// </summary>
         /// <param name="sender">Device that originated the event</param>
@@ -448,7 +460,7 @@ namespace SampleDeviceCollection
             {
                 DevicePortalViewModel dpvmSender = sender as DevicePortalViewModel;
                 if (dpvmSender != null && !dpvmSender.Ready)
-                { 
+                {
                     // A device is no-longer ready, so remove it from the current selection
                     List<DevicePortalViewModel> updatedSelection = new List<DevicePortalViewModel>();
                     foreach (DevicePortalViewModel dpvm in this.SelectedDevices)
@@ -465,6 +477,61 @@ namespace SampleDeviceCollection
                 this.OnPropertyChanged("SomeDevicesReady");
                 this.OnPropertyChanged("AllDevicesReady");
             }
+
+            if (e.PropertyName == "ConnectionStatus")
+            {
+                DevicePortalViewModel dpvmSender = sender as DevicePortalViewModel;
+                if (dpvmSender.ConnectionStatus == DeviceConnectionStatus.Failed)
+                {
+                    // Check for authentication failure and warn the user about bad credentials
+                    if (dpvmSender.Portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show(
+                            "Connection Unauthorized. Please double check your authentication credentials",
+                            "Unauthorized",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Exclamation);
+                        this.RemoveDevice(dpvmSender);
+                    }
+                }
+            }
+
+            if (e.PropertyName == "Address")
+            {
+                DevicePortalViewModel dpvmSender = sender as DevicePortalViewModel;
+                if (this.DeviceIsDuplicate(dpvmSender))
+                {
+                    MessageBox.Show(
+                        string.Format("You already have a connection for this device address: {0}", dpvmSender.Address),
+                        "Duplicate",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                    this.RemoveDevice(dpvmSender);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine whether the provided DevicePortalViewModel is already represented in the collection
+        /// </summary>
+        /// <param name="dpvmToCheck">The DevicePortalViewModel for which you want to check for duplicates</param>
+        /// <returns>True if the device is already represented in the collection</returns>
+        private bool DeviceIsDuplicate(DevicePortalViewModel dpvmToCheck)
+        {
+            foreach (DevicePortalViewModel dpvm in this.ConnectedDevices)
+            {
+                if (dpvmToCheck == dpvm)
+                {
+                    continue;
+                }
+
+                if (dpvmToCheck.Address == dpvm.Address)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

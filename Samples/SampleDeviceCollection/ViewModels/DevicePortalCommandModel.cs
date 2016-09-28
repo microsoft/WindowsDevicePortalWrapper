@@ -24,7 +24,7 @@ namespace SampleDeviceCollection
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalCommandModel" /> class.
         /// </summary>
-        /// <param name="portal">DevicePortal object enscapsulated by this</param>
+        /// <param name="connection">IDevicePortalConnection object used for connecting</param>
         /// <param name="diags">Diagnostic sink for reporting</param>
         public DevicePortalCommandModel(IDevicePortalConnection connection, IDiagnosticSink diags)
         {
@@ -47,12 +47,12 @@ namespace SampleDeviceCollection
         //-------------------------------------------------------------------
         #region Class Members
         /// <summary>
-        ///  The DevicePortal object encapsulated by this class
+        ///  Gets or sets the DevicePortal object encapsulated by this class
         /// </summary>
         public DevicePortal Portal { get; protected set; }
 
         /// <summary>
-        /// The IDevicePortalConnection object encapsulated by this class
+        /// Gets or sets the IDevicePortalConnection object encapsulated by this class
         /// </summary>
         public IDevicePortalConnection Connection { get; protected set; }
         #endregion // Class Members
@@ -93,7 +93,7 @@ namespace SampleDeviceCollection
         {
             get
             {
-                return this.Portal == null ? "<unknown>" : this.Portal.Address;
+                return this.Portal == null ? "<unknown>" : this.Portal.Address.Split(':')[0];
             }
         }
         #endregion // Address
@@ -165,7 +165,7 @@ namespace SampleDeviceCollection
         /// <summary>
         /// Clears the shared command queue
         /// </summary>
-        protected void ClearCommandQueue()
+        public void ClearCommandQueue()
         {
             this.commandQueue.Clear();
         }

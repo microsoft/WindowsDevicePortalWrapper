@@ -5,13 +5,13 @@
 //----------------------------------------------------------------------------------------------
 using System;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Tools.WindowsDevicePortal;
 using Prism.Commands;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows;
-using System.Net.Security;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace SampleDeviceCollection
@@ -21,8 +21,6 @@ namespace SampleDeviceCollection
     /// </summary>
     public class DevicePortalViewModel : DevicePortalCommandModel
     {
-        MainViewModel mainViewModel;
-
         //-------------------------------------------------------------------
         //  Constructors
         //-------------------------------------------------------------------
@@ -30,15 +28,15 @@ namespace SampleDeviceCollection
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalViewModel" /> class.
         /// </summary>
-        /// <param name="portal">DevicePortal object enscapsulated by this</param>
+        /// <param name="connection">IDevicePortalConnection used for connecting</param>
         /// <param name="diags">Diagnostic sink for reporting</param>
-        public DevicePortalViewModel(MainViewModel mainViewModel, IDevicePortalConnection connection, IDiagnosticSink diags)
+        public DevicePortalViewModel(IDevicePortalConnection connection, IDiagnosticSink diags)
             : base(connection, diags)
         {
-            this.mainViewModel = mainViewModel;
+            this.connectionStatus = DeviceConnectionStatus.None;
 
             // Add additional handling for untrusted certs.
-            this.Portal.UnvalidatedCert += DoCertValidation;
+            this.Portal.UnvalidatedCert += this.DoCertValidation;
 
             // Default number of retry attempts to make when reestablishing the connection
             this.ConnectionRetryAttempts = 3;
@@ -59,11 +57,7 @@ namespace SampleDeviceCollection
         {
             get
             {
-                if(string.IsNullOrWhiteSpace(this.deviceName))
-                {
-                    return !string.IsNullOrWhiteSpace(this.CannonicalIpAddress) ? this.CannonicalIpAddress : base.DiagnosticMoniker;
-                }
-                return this.deviceName;
+                return !string.IsNullOrWhiteSpace(this.DeviceName) ? this.DeviceName : base.DiagnosticMoniker;
             }
         }
         #endregion // Diagnostic Moniker
@@ -90,22 +84,6 @@ namespace SampleDeviceCollection
             }
         }
         #endregion //DeviceName
-
-        #region CannonicalIpAddress
-        private string cannonicalIpAddress;
-        public string CannonicalIpAddress
-        {
-            get
-            {
-                return cannonicalIpAddress;
-            }
-
-            private set
-            {
-                this.SetProperty(ref this.cannonicalIpAddress, value);
-            }
-        }
-        #endregion // CannonicalIpAddress
 
         #region DeviceNameEntry
         /// <summary>
@@ -170,131 +148,75 @@ namespace SampleDeviceCollection
             }
         }
         #endregion // ConnectionRetryAttempts
+
+        #region ConnectionStatus
+        /// <summary>
+        /// Status of the connection associated with this DevicePortalViewModel
+        /// </summary>
+        private DeviceConnectionStatus connectionStatus;
+
+        /// <summary>
+        /// Gets the status of the connection associated with this DevicePortalViewModel
+        /// </summary>
+        public DeviceConnectionStatus ConnectionStatus
+        {
+            get
+            {
+                return this.connectionStatus;
+            }
+
+            private set
+            {
+                this.SetProperty(ref this.connectionStatus, value);
+            }
+        }
+            
+        #endregion // ConnectionStatus
         #endregion // Properties
 
         //-------------------------------------------------------------------
         //  Commands
         //-------------------------------------------------------------------
         #region Commands
-        #region GetCannonicalIpAddress
-        private CommandSequence getCannonicalIpAddressCommand;
-        public ICommand GetCannonicalIpAddressCommand
-        {
-            get
-            {
-                if(this.getCannonicalIpAddressCommand == null)
-                {
-                    this.getCannonicalIpAddressCommand = this.CreateCommandSequence();
-                    DelegateCommand getCannonicalIpAddressDC = DelegateCommand.FromAsyncHandler(this.ExecuteGetCannonicalIpAddressAsync, this.CanExecuteGetCannonicalIpAddress);
-                    getCannonicalIpAddressDC.ObservesProperty(() => this.Ready);
-                    this.getCannonicalIpAddressCommand.RegisterCommand(getCannonicalIpAddressDC);
-                }
-                return this.getCannonicalIpAddressCommand;
-            }
-        }
-
-        private bool CanExecuteGetCannonicalIpAddress()
-        {
-            return this.Ready;
-        }
-
-        private async Task ExecuteGetCannonicalIpAddressAsync()
-        {
-            this.OutputDiagnosticString("ExecuteGetCannonicalIpAddress\n");
-            this.Ready = false;
-            try
-            {
-                IpConfiguration config = await this.Portal.GetIpConfig();
-                this.CannonicalIpAddressFromIpConfig(config);
-                this.CheckForDuplicateDevices();
-            }
-            catch (Exception exn)
-            {
-                this.ReportException("GetCannonicalIpAddress", exn);
-            }
-            this.Ready = true;
-        }
-
-        private void CheckForDuplicateDevices()
-        {
-            foreach(DevicePortalViewModel dpvm in this.mainViewModel.ConnectedDevices)
-            {
-                if (dpvm == this)
-                    continue;
-
-                if(this.cannonicalIpAddress == dpvm.cannonicalIpAddress)
-                {
-                    MessageBox.Show(string.Format("You already have a connection for this device address: {0}", this.cannonicalIpAddress),
-                            "Duplicate",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
-                    this.ClearCommandQueue();
-                    this.mainViewModel.RemoveDeviceCommand.Execute(this);
-                }
-            }
-        }
-
-        private void CannonicalIpAddressFromIpConfig(IpConfiguration config)
-        {
-            string firstNonZeroIpAddress = "";
-            string connectionIp = this.StripPort(this.Connection.Connection.Authority);
-            bool ipMatchesConnection = false;
-            foreach(NetworkAdapterInfo naio in config.Adapters)
-            {
-                foreach(IpAddressInfo iai in naio.IpAddresses)
-                {
-                    string addr = iai.Address;
-                    if (string.IsNullOrWhiteSpace(addr))
-                        continue;
-                    if (addr == "0.0.0.0")
-                        continue;
-                    firstNonZeroIpAddress = addr;
-                    if(addr == connectionIp)
-                    {
-                        ipMatchesConnection = true;
-                        break;
-                    }
-                }
-                
-                if(ipMatchesConnection)
-                {
-                    this.CannonicalIpAddress = connectionIp;
-                }
-                else
-                {
-                    this.CannonicalIpAddress = firstNonZeroIpAddress;
-                }
-            }
-        }
-
-        private string StripPort(string authority)
-        {
-            return authority.Split(':')[0];
-        }
-        #endregion // GetCannonicalIpAddress
 
         #region DumpIpConfigCommand
+        /// <summary>
+        /// Command to dump the IP configuration for the remote device
+        /// </summary>
         private CommandSequence dumpIpConfigCommand;
+
+        /// <summary>
+        /// Gets the command to dump the IP configuration for the remote device
+        /// </summary>
         public ICommand DumpIpConfigCommand
         {
             get
             {
-                if(this.dumpIpConfigCommand == null)
-                {
+                if (this.dumpIpConfigCommand == null)
+                { 
                     this.dumpIpConfigCommand = this.CreateCommandSequence();
                     DelegateCommand dumpIpConfigDC = DelegateCommand.FromAsyncHandler(this.ExecuteDumpIpConfigAsync, this.CanExecuteDumpIpConfig);
                     dumpIpConfigDC.ObservesProperty(() => this.Ready);
                     this.dumpIpConfigCommand.RegisterCommand(dumpIpConfigDC);
                 }
+
                 return this.dumpIpConfigCommand;
             }
         }
 
+        /// <summary>
+        /// Predicate for the DumpIpConfigCommand
+        /// </summary>
+        /// <returns>Result indicates whether the command can execute</returns>
         private bool CanExecuteDumpIpConfig()
         {
             return this.Ready;
         }
 
+        /// <summary>
+        /// Performs the action for the DumpIPConfigCommand
+        /// </summary>
+        /// <returns>A task capturing the continuation of dumping the IP config</returns>
         private async Task ExecuteDumpIpConfigAsync()
         {
             this.OutputDiagnosticString("ExecuteDumpIpConfigAsync\n");
@@ -308,9 +230,14 @@ namespace SampleDeviceCollection
             {
                 this.ReportException("DumpIPConfig", exn);
             }
+
             this.Ready = true;
         }
 
+        /// <summary>
+        /// Writes an IP configuration to the diagnostic output
+        /// </summary>
+        /// <param name="config">The IP configuration to write out</param>
         private void OutputIpConfiguration(IpConfiguration config)
         {
             // For now, just dump out the adapters to the debug output to see what I got
@@ -331,6 +258,7 @@ namespace SampleDeviceCollection
                 {
                     this.OutputIpAddressInfo(iai);
                 }
+
                 this.OutputDiagnosticString("    IP Addresses:\n");
                 foreach (IpAddressInfo iai in nai.IpAddresses)
                 {
@@ -339,6 +267,10 @@ namespace SampleDeviceCollection
             }
         }
 
+        /// <summary>
+        /// Writes DHCP configuration data to the diagnostic output
+        /// </summary>
+        /// <param name="dhcp">The DHCP configuration data to write</param>
         private void OutputDHCPInfo(Dhcp dhcp)
         {
             this.OutputIpAddressInfo(dhcp.Address);
@@ -346,6 +278,10 @@ namespace SampleDeviceCollection
             this.OutputDiagnosticString("        Lease Expires {0}\n", dhcp.LeaseExpires.ToLocalTime().ToString());
         }
 
+        /// <summary>
+        /// Writes IP address information to the diagnostic output
+        /// </summary>
+        /// <param name="ipAddr">The IP address information to write</param>
         private void OutputIpAddressInfo(IpAddressInfo ipAddr)
         {
             this.OutputDiagnosticString("        Address: {0}\n", ipAddr.Address);
@@ -372,13 +308,8 @@ namespace SampleDeviceCollection
                     DelegateCommand renameDC = DelegateCommand.FromAsyncHandler(this.ExecuteRenameAsync, this.CanExecuteRename);
                     renameDC.ObservesProperty(() => this.Ready);
                     renameDC.ObservesProperty(() => this.DeviceNameEntry);
-                    
-
-                    DelegateCommand resetConnectionAndPortalDC = new DelegateCommand(this.ExecuteResetConnectionAndPortal, this.CanExecuteResetConnectionAndPortal);
-                    resetConnectionAndPortalDC.ObservesProperty(() => this.Ready);
 
                     this.renameCommand.RegisterCommand(renameDC);
-                    this.renameCommand.RegisterCommand(resetConnectionAndPortalDC);
                     this.renameCommand.RegisterCommand(this.ReestablishConnectionCommand);
                     this.renameCommand.RegisterCommand(this.RebootCommand);
                 }
@@ -386,50 +317,7 @@ namespace SampleDeviceCollection
                 return this.renameCommand;
             }
         }
-
-        private bool CanExecuteResetConnectionAndPortal()
-        {
-            return this.Ready;
-        }
-
-        private void ExecuteResetConnectionAndPortal()
-        {
-            this.OutputDiagnosticString("ExecuteResetConnectionAndPortalAsync\n");
-            this.Ready = false;
-            try
-            {
-                NetworkCredential cred = this.Connection.Credentials;
-                string scheme = this.Connection.Connection.Scheme;
-                string address = this.CannonicalIpAddress;
-                string port = this.Connection.Connection.Port.ToString();
-                string schemeAddressPort = string.Format(@"{0}://{1}:{2}", scheme, address, port);
-                string username = this.StripAutoPrefix(cred.UserName);
-
-                this.Portal.UnvalidatedCert -= DoCertValidation;
-
-                this.Connection = new DefaultDevicePortalConnection(schemeAddressPort, username, cred.SecurePassword);
-                this.Portal = new DevicePortal(this.Connection);
-
-                // Add additional handling for untrusted certs.
-                this.Portal.UnvalidatedCert += DoCertValidation;
-            }
-            catch (Exception exn)
-            {
-                this.ReportException("ResetConnectionAndPortal", exn);
-            }
-
-            this.Ready = true;
-        }
-
-        private string StripAutoPrefix(string userName)
-        {
-            if(userName.Length > 5)
-            {
-                return userName.Substring(5);
-            }
-            return userName;
-        }
-
+        
         /// <summary>
         /// Predicate for the rename command
         /// </summary>
@@ -544,7 +432,6 @@ namespace SampleDeviceCollection
                     this.rebootCommand.RegisterCommand(rebootDC);
                     this.rebootCommand.RegisterCommand(this.ReestablishConnectionCommand);
                     this.rebootCommand.RegisterCommand(this.RefreshDeviceNameCommand);
-                    this.renameCommand.RegisterCommand(this.GetCannonicalIpAddressCommand);
                     this.rebootCommand.RegisterCommand(this.StartListeningForSystemPerfCommand);
                 }
 
@@ -588,20 +475,27 @@ namespace SampleDeviceCollection
         #endregion // Reboot Command
 
         #region RefreshConnectionCommand
+        /// <summary>
+        /// Command to refresh the connection with the remote device
+        /// </summary>
         private CommandSequence refreshConnectionCommand;
+
+        /// <summary>
+        /// Gets the command that refreshes the connection with the remote device
+        /// </summary>
         public ICommand RefreshConnectionCommand
         {
             get
             {
-                if(this.refreshConnectionCommand == null)
+                if (this.refreshConnectionCommand == null)
                 {
                     this.refreshConnectionCommand = this.CreateCommandSequence();
                     this.refreshConnectionCommand.RegisterCommand(this.StopListeningForSystemPerfCommand);
                     this.refreshConnectionCommand.RegisterCommand(this.ReestablishConnectionCommand);
                     this.refreshConnectionCommand.RegisterCommand(this.RefreshDeviceNameCommand);
-                    this.refreshConnectionCommand.RegisterCommand(this.GetCannonicalIpAddressCommand);
                     this.refreshConnectionCommand.RegisterCommand(this.StartListeningForSystemPerfCommand);
                 }
+
                 return this.refreshConnectionCommand;
             }
         }
@@ -650,20 +544,24 @@ namespace SampleDeviceCollection
             this.OutputDiagnosticString("ExecuteReestablishConnectionAsync\n");
             int numTries = 1;
 
+            DeviceConnectionStatus finalConnectionStatus = DeviceConnectionStatus.None;
+
             DeviceConnectionStatusEventHandler handler = (DevicePortal sender, DeviceConnectionStatusEventArgs args) =>
             {
                 this.OutputDiagnosticString("Connection status update: Status: {0}, Phase: {1}\n", args.Status, args.Phase);
                 if (args.Status == DeviceConnectionStatus.Connected)
                 {
                     this.OutputDiagnosticString("Connection succeeded after {0} tries.\n", numTries);
+                    this.ConnectionStatus = DeviceConnectionStatus.Connected;
                 }
                 else if (args.Status == DeviceConnectionStatus.Failed)
                 {
-                    
                     this.OutputDiagnosticString("Connection failed after {0} tries.\n", numTries);
                     this.OutputDiagnosticString("HTTP Status: {0}\n", this.Portal.ConnectionHttpStatusCode);
                     this.OutputDiagnosticString("Failure description: {0}\n", args.Message);
                 }
+
+                finalConnectionStatus = args.Status;
             };
 
             this.Portal.ConnectionStatus += handler;
@@ -671,22 +569,16 @@ namespace SampleDeviceCollection
             this.Ready = false;
             try
             {
-
                 do
                 {
                     await this.Portal.Connect();
 
-                    if(this.Portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
+                    if (this.Portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
                     {
-                        MessageBox.Show("Connection Unauthorized. Please double check your authentication credentials",
-                            "Unauthorized",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
-                        this.ClearCommandQueue();
-                        this.mainViewModel.RemoveDeviceCommand.Execute(this);
+                        // Don't try to reconnect when there is an authentication failure
                         break;
                     }
-                    else if(this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries <= this.ConnectionRetryAttempts)
+                    else if (this.Portal.ConnectionHttpStatusCode != HttpStatusCode.OK && numTries <= this.ConnectionRetryAttempts)
                     {
                         await Task.Delay(1000 * 5);
                     }
@@ -700,19 +592,20 @@ namespace SampleDeviceCollection
                     throw new Exception(string.Format("Unable to connect after {0} tries.", numTries - 1));
                 }
 
-                OnPropertyChanged("Address");
-                OnPropertyChanged("DeviceFamily");
-                OnPropertyChanged("OperatingSystemVersion");
-                OnPropertyChanged("Platform");
-                OnPropertyChanged("PlatformName");
+                this.OnPropertyChanged("Address");
+                this.OnPropertyChanged("DeviceFamily");
+                this.OnPropertyChanged("OperatingSystemVersion");
+                this.OnPropertyChanged("Platform");
+                this.OnPropertyChanged("PlatformName");
             }
             catch (Exception exn)
             {
                 this.ReportException("ReestablishConnection", exn);
             }
-
+            
             this.Portal.ConnectionStatus -= handler;
             this.Ready = true;
+            this.ConnectionStatus = finalConnectionStatus;
         }
         #endregion // ReestablishConnectionCommand
 
@@ -865,7 +758,8 @@ namespace SampleDeviceCollection
 
             // We could alternatively ask the user if they wanted to always trust
             // this device and we could persist the thumbprint in some way (registry, database, filesystem, etc).
-            MessageBoxResult result = MessageBox.Show(string.Format(
+            MessageBoxResult result = MessageBox.Show(
+                string.Format(
                                 "Do you want to accept the following certificate?\n\nThumbprint:\n  {0}\nIssuer:\n  {1}",
                                 cert.Thumbprint,
                                 cert.Issuer),
@@ -879,6 +773,7 @@ namespace SampleDeviceCollection
                 this.thumbprint = cert.Thumbprint;
                 return true;
             }
+
             return false;
         }
     }

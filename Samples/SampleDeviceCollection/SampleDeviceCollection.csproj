@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\AutoScrollTextBox.cs" />
+    <Compile Include="BooleanConverter.cs" />
     <Compile Include="ViewModels\CommandSequence.cs" />
     <Compile Include="ViewModels\DiagnosticSinks.cs" />
     <Compile Include="ViewModels\ObservableCommandQueue.cs" />

@@ -173,11 +173,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
+                        string port = "";
+                        string[] addressParts = this.Connection.Authority.Split(':');
+                        if (addressParts.Length == 2)
+                        {
+                            port = string.Format(":{0}", addressParts[1]);
+                        }
+
                         newConnection = new Uri(
                             string.Format(
-                                "{0}://{1}", 
+                                "{0}://{1}{2}",
                                 requiresHttps ? "https" : "http",
-                                this.Connection.Authority));
+                                addressInfo.Address,
+                                port));
                         break;
                     }
                 }
