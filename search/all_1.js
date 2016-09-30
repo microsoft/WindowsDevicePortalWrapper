@@ -1,21 +1,15 @@
 var searchData=
 [
-  ['backgroundactivatedeventargs',['BackgroundActivatedEventArgs',['../class_windows_1_1_application_model_1_1_activation_1_1_background_activated_event_args.html',1,'Windows::ApplicationModel::Activation']]],
   ['basetests',['BaseTests',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_base_tests.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
   ['basetests',['BaseTests',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_base_tests.html#aa6167ce015bf606a813731e4c10f0292',1,'Microsoft::Tools::WindowsDevicePortal::Tests::BaseTests']]],
   ['batterystate',['BatteryState',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_battery_state.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['batterystateapi',['BatteryStateApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a99123459d1716dbdd6aae356473a85ec',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['bindptr_5f_5fsystem_5fprivate_5finterop',['BINDPTR__System_Private_Interop',['../struct_system_1_1_runtime_1_1_interop_services_1_1_com_types_1_1_b_i_n_d_p_t_r_____system___private___interop.html',1,'System::Runtime::InteropServices::ComTypes']]],
   ['bluetoothdeviceinfo',['BluetoothDeviceInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_bluetooth_device_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['bluetoothdevicelistreceived',['BluetoothDeviceListReceived',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a1cdcb6a778ab875ec592ecf30130edf7',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['border',['Border',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_border.html',1,'Windows::UI::Xaml::Controls']]],
-  ['brush',['Brush',['../class_windows_1_1_u_i_1_1_xaml_1_1_media_1_1_brush.html',1,'Windows::UI::Xaml::Media']]],
   ['bssid',['Bssid',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_network_info.html#a0939a5e1fc509900a0669270c4e84d55',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::WifiNetworkInfo']]],
   ['bugcheckfileapi',['BugcheckFileApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ae5a1998b44bab97e47e516f264452890',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['bugchecksettingsapi',['BugcheckSettingsApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a4f044aef9ee55b414115bd802da34db1',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['build',['Build',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_package_version.html#a8e9de8fc8070e2c3cb0722b2cf9c7060',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.PackageVersion.Build()'],['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_app_version.html#ae750ea2b73156c966f66e4fd23c949d3',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.AppVersion.Build()'],['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_version.html#aefa00e022ae747a38105c42127f7fcf2',1,'Microsoft.Tools.WindowsDevicePortal.DevicePortal.ProcessVersion.Build()']]],
-  ['button',['Button',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_button.html',1,'Windows::UI::Xaml::Controls']]],
-  ['buttonbase',['ButtonBase',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_primitives_1_1_button_base.html',1,'Windows::UI::Xaml::Controls::Primitives']]],
   ['bytesin',['BytesIn',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_network_performance_data.html#a2ce7d300110e464ec98d3252ecb3e91c',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::NetworkPerformanceData']]],
   ['bytesout',['BytesOut',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_network_performance_data.html#a1d86b2d5d243e94379c9c8ac9259f624',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal::NetworkPerformanceData']]]
 ];

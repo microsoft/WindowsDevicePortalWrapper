@@ -1,23 +1,9 @@
 var searchData=
 [
-  ['hashalgorithmnames',['HashAlgorithmNames',['../class_windows_1_1_security_1_1_cryptography_1_1_core_1_1_hash_algorithm_names.html',1,'Windows::Security::Cryptography::Core']]],
-  ['hashalgorithmprovider',['HashAlgorithmProvider',['../class_windows_1_1_security_1_1_cryptography_1_1_core_1_1_hash_algorithm_provider.html',1,'Windows::Security::Cryptography::Core']]],
   ['headlessappslistinfo',['HeadlessAppsListInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_headless_apps_list_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['holdingroutedeventargs',['HoldingRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_holding_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
   ['holographicsimulationerror',['HolographicSimulationError',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_holographic_simulation_error.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['holographicsimulationplaybacksessionstate',['HolographicSimulationPlaybackSessionState',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_holographic_simulation_playback_session_state.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['holographicsimulationrecordingstatus',['HolographicSimulationRecordingStatus',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_holographic_simulation_recording_status.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['hololens_5frs1_5frelease',['HoloLens_rs1_release',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_holo_lens__rs1__release.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
-  ['hstring_5f_5fsystem_5fprivate_5finterop',['HSTRING__System_Private_Interop',['../struct_system_1_1_runtime_1_1_interop_services_1_1_h_s_t_r_i_n_g_____system___private___interop.html',1,'System::Runtime::InteropServices']]],
-  ['httpbaseprotocolfilter',['HttpBaseProtocolFilter',['../class_windows_1_1_web_1_1_http_1_1_filters_1_1_http_base_protocol_filter.html',1,'Windows::Web::Http::Filters']]],
-  ['httpclient',['HttpClient',['../class_windows_1_1_web_1_1_http_1_1_http_client.html',1,'Windows::Web::Http']]],
-  ['httpcontentheadercollection',['HttpContentHeaderCollection',['../class_windows_1_1_web_1_1_http_1_1_headers_1_1_http_content_header_collection.html',1,'Windows::Web::Http::Headers']]],
-  ['httperrorresponse',['HttpErrorResponse',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_exception_1_1_http_error_response.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortalException']]],
-  ['httpmediatypeheadervalue',['HttpMediaTypeHeaderValue',['../class_windows_1_1_web_1_1_http_1_1_headers_1_1_http_media_type_header_value.html',1,'Windows::Web::Http::Headers']]],
-  ['httpprogress',['HttpProgress',['../struct_windows_1_1_web_1_1_http_1_1_http_progress.html',1,'Windows::Web::Http']]],
-  ['httprequestheadercollection',['HttpRequestHeaderCollection',['../class_windows_1_1_web_1_1_http_1_1_headers_1_1_http_request_header_collection.html',1,'Windows::Web::Http::Headers']]],
-  ['httprequestmessage',['HttpRequestMessage',['../class_windows_1_1_web_1_1_http_1_1_http_request_message.html',1,'Windows::Web::Http']]],
-  ['httpresponseheadercollection',['HttpResponseHeaderCollection',['../class_windows_1_1_web_1_1_http_1_1_headers_1_1_http_response_header_collection.html',1,'Windows::Web::Http::Headers']]],
-  ['httpresponsemessage',['HttpResponseMessage',['../class_windows_1_1_web_1_1_http_1_1_http_response_message.html',1,'Windows::Web::Http']]],
-  ['httpstreamcontent',['HttpStreamContent',['../class_windows_1_1_web_1_1_http_1_1_http_stream_content.html',1,'Windows::Web::Http']]]
+  ['httperrorresponse',['HttpErrorResponse',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_exception_1_1_http_error_response.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortalException']]]
 ];
