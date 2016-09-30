@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['complete',['Complete',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a7eed66e1e6de366aed90391815f113e2aae94f80b3ce82062a5dd7815daa04f9d',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['completed',['Completed',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a6d809b60c74a8dfeca3698554f0afb6da07ca5050e697392c9ed47e6453f1453f',1,'Microsoft::Tools::WindowsDevicePortal']]],
   ['connected',['Connected',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#acbff0faba4b2b8843a2ca4e6333a9407a2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'Microsoft::Tools::WindowsDevicePortal']]],
   ['connecting',['Connecting',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#acbff0faba4b2b8843a2ca4e6333a9407ae321c53b354930ba96f0243e652df458',1,'Microsoft::Tools::WindowsDevicePortal']]],

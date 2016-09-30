@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['icsharingapi',['IcSharingApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a474551b80977683216a3391e6bbc4cdc',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['icsinterfacesapi',['IcsInterfacesApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a8c82dbd85237f105c6f357f1212925bf',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['installeddevicesapi',['InstalledDevicesApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#aa4d6916284bd1486b021a84d407fe954',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['installedpackagesapi',['InstalledPackagesApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a047abafdf4f14ac647321823ca4521b8',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['installstateapi',['InstallStateApi',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a882e3208e64047ca1395d868dc9ac72f',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],

@@ -1,5 +1,29 @@
 var searchData=
 [
+  ['cachedfileupdateractivatedeventargs',['CachedFileUpdaterActivatedEventArgs',['../class_windows_1_1_application_model_1_1_activation_1_1_cached_file_updater_activated_event_args.html',1,'Windows::ApplicationModel::Activation']]],
+  ['calendar',['Calendar',['../class_windows_1_1_globalization_1_1_calendar.html',1,'Windows::Globalization']]],
+  ['calendaridentifiers',['CalendarIdentifiers',['../class_windows_1_1_globalization_1_1_calendar_identifiers.html',1,'Windows::Globalization']]],
+  ['candidatewindowboundschangedeventargs',['CandidateWindowBoundsChangedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_candidate_window_bounds_changed_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['certificate',['Certificate',['../class_windows_1_1_security_1_1_cryptography_1_1_certificates_1_1_certificate.html',1,'Windows::Security::Cryptography::Certificates']]],
+  ['certificatestore',['CertificateStore',['../class_windows_1_1_security_1_1_cryptography_1_1_certificates_1_1_certificate_store.html',1,'Windows::Security::Cryptography::Certificates']]],
+  ['certificatestores',['CertificateStores',['../class_windows_1_1_security_1_1_cryptography_1_1_certificates_1_1_certificate_stores.html',1,'Windows::Security::Cryptography::Certificates']]],
+  ['checkbox',['CheckBox',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_check_box.html',1,'Windows::UI::Xaml::Controls']]],
+  ['classdatacontractentry',['ClassDataContractEntry',['../struct_class_data_contract_entry.html',1,'']]],
+  ['collectiondatacontractentry',['CollectionDataContractEntry',['../struct_collection_data_contract_entry.html',1,'']]],
+  ['columndefinition',['ColumnDefinition',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_column_definition.html',1,'Windows::UI::Xaml::Controls']]],
+  ['columndefinitioncollection',['ColumnDefinitionCollection',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_column_definition_collection.html',1,'Windows::UI::Xaml::Controls']]],
+  ['commoncontractentry',['CommonContractEntry',['../struct_common_contract_entry.html',1,'']]],
+  ['composableattribute',['ComposableAttribute',['../class_windows_1_1_foundation_1_1_metadata_1_1_composable_attribute.html',1,'Windows::Foundation::Metadata']]],
   ['configoperation',['ConfigOperation',['../class_xbox_wdp_driver_1_1_config_operation.html',1,'XboxWdpDriver']]],
-  ['controllerdriverinfo',['ControllerDriverInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_controller_driver_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['contentcontrol',['ContentControl',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_content_control.html',1,'Windows::UI::Xaml::Controls']]],
+  ['contentpropertyattribute',['ContentPropertyAttribute',['../class_windows_1_1_u_i_1_1_xaml_1_1_markup_1_1_content_property_attribute.html',1,'Windows::UI::Xaml::Markup']]],
+  ['contextmenueventargs',['ContextMenuEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_context_menu_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['contextrequestedeventargs',['ContextRequestedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_context_requested_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['contractversionattribute',['ContractVersionAttribute',['../class_windows_1_1_foundation_1_1_metadata_1_1_contract_version_attribute.html',1,'Windows::Foundation::Metadata']]],
+  ['control',['Control',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_control.html',1,'Windows::UI::Xaml::Controls']]],
+  ['controllerdriverinfo',['ControllerDriverInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_controller_driver_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['coredispatcher',['CoreDispatcher',['../class_windows_1_1_u_i_1_1_core_1_1_core_dispatcher.html',1,'Windows::UI::Core']]],
+  ['corewindow',['CoreWindow',['../class_windows_1_1_u_i_1_1_core_1_1_core_window.html',1,'Windows::UI::Core']]],
+  ['corewindoweventargs',['CoreWindowEventArgs',['../class_windows_1_1_u_i_1_1_core_1_1_core_window_event_args.html',1,'Windows::UI::Core']]],
+  ['cryptographicbuffer',['CryptographicBuffer',['../class_windows_1_1_security_1_1_cryptography_1_1_cryptographic_buffer.html',1,'Windows::Security::Cryptography']]]
 ];

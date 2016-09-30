@@ -114,12 +114,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae213a0e4a9b39c70c3d07f59a0aa7f8d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html#ae213a0e4a9b39c70c3d07f59a0aa7f8d">MockDevicePortalConnection</a> ()</td></tr>
 <tr class="memdesc:ae213a0e4a9b39c70c3d07f59a0aa7f8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html" title="Mock implementation of IDevicePortalConnection ">MockDevicePortalConnection</a> class.  <a href="#ae213a0e4a9b39c70c3d07f59a0aa7f8d">More...</a><br /></td></tr>
 <tr class="separator:ae213a0e4a9b39c70c3d07f59a0aa7f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc53e16623480ff15a5ef6e3f5b0132f"><td class="memItemLeft" align="right" valign="top">X509Certificate2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html#abc53e16623480ff15a5ef6e3f5b0132f">GetDeviceCertificate</a> ()</td></tr>
-<tr class="memdesc:abc53e16623480ff15a5ef6e3f5b0132f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns certificate data  <a href="#abc53e16623480ff15a5ef6e3f5b0132f">More...</a><br /></td></tr>
-<tr class="separator:abc53e16623480ff15a5ef6e3f5b0132f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaac1677ff2b9f737a965d4e47b09527c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html#aaac1677ff2b9f737a965d4e47b09527c">SetDeviceCertificate</a> (X509Certificate2 certificate)</td></tr>
-<tr class="memdesc:aaac1677ff2b9f737a965d4e47b09527c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates and sets the device certificate.  <a href="#aaac1677ff2b9f737a965d4e47b09527c">More...</a><br /></td></tr>
-<tr class="separator:aaac1677ff2b9f737a965d4e47b09527c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc6b01b5b444a1496e334004c9a342f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html#abc6b01b5b444a1496e334004c9a342f0">UpdateConnection</a> (bool requiresHttps)</td></tr>
 <tr class="memdesc:abc6b01b5b444a1496e334004c9a342f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Mock will never update the connection.  <a href="#abc6b01b5b444a1496e334004c9a342f0">More...</a><br /></td></tr>
 <tr class="separator:abc6b01b5b444a1496e334004c9a342f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,68 +184,6 @@ Properties</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="abc53e16623480ff15a5ef6e3f5b0132f"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">X509Certificate2 Microsoft.Tools.WindowsDevicePortal.Tests.MockDevicePortalConnection.GetDeviceCertificate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Returns certificate data </p>
-<dl class="section return"><dt>Returns</dt><dd>certificate data</dd></dl>
-
-<p>Implements <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#a35635fa3672566630f7be25c7d7f06c0">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aaac1677ff2b9f737a965d4e47b09527c"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Microsoft.Tools.WindowsDevicePortal.Tests.MockDevicePortalConnection.SetDeviceCertificate </td>
-          <td>(</td>
-          <td class="paramtype">X509Certificate2&#160;</td>
-          <td class="paramname"><em>certificate</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Validates and sets the device certificate. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">certificate</td><td>The device's root certificate.</td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="interface_microsoft_1_1_tools_1_1_windows_device_portal_1_1_i_device_portal_connection.html#ac387abeb74e136189dd482cf5e17731b">Microsoft.Tools.WindowsDevicePortal.IDevicePortalConnection</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="abc6b01b5b444a1496e334004c9a342f0"></a>
 <div class="memitem">
 <div class="memproto">

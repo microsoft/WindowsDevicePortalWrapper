@@ -97,7 +97,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>Process Info  
+<p>Process Info. Contains app information if the process is an app.  
  <a href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -109,22 +109,22 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:ac63d9f19488faa01e454e3328edff429"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#ac63d9f19488faa01e454e3328edff429">AppName</a><code> [get]</code></td></tr>
-<tr class="memdesc:ac63d9f19488faa01e454e3328edff429"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the app name  <a href="#ac63d9f19488faa01e454e3328edff429">More...</a><br /></td></tr>
+<tr class="memdesc:ac63d9f19488faa01e454e3328edff429"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the app name. Only present if the process is an app.  <a href="#ac63d9f19488faa01e454e3328edff429">More...</a><br /></td></tr>
 <tr class="separator:ac63d9f19488faa01e454e3328edff429"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbc79d7a408b330499d179f651f90ae7"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#abbc79d7a408b330499d179f651f90ae7">CpuUsage</a><code> [get]</code></td></tr>
-<tr class="memdesc:abbc79d7a408b330499d179f651f90ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets CPU usage  <a href="#abbc79d7a408b330499d179f651f90ae7">More...</a><br /></td></tr>
+<tr class="memdesc:abbc79d7a408b330499d179f651f90ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets CPU Usage as a percentage of available CPU resources (0-100)  <a href="#abbc79d7a408b330499d179f651f90ae7">More...</a><br /></td></tr>
 <tr class="separator:abbc79d7a408b330499d179f651f90ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeb6f417949da489c5d8c38568092f66"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#abeb6f417949da489c5d8c38568092f66">Name</a><code> [get]</code></td></tr>
 <tr class="memdesc:abeb6f417949da489c5d8c38568092f66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the image name  <a href="#abeb6f417949da489c5d8c38568092f66">More...</a><br /></td></tr>
 <tr class="separator:abeb6f417949da489c5d8c38568092f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466bcc846553a6c6b090370fc44cb677"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a466bcc846553a6c6b090370fc44cb677">ProcessId</a><code> [get]</code></td></tr>
-<tr class="memdesc:a466bcc846553a6c6b090370fc44cb677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the process id  <a href="#a466bcc846553a6c6b090370fc44cb677">More...</a><br /></td></tr>
+<tr class="memdesc:a466bcc846553a6c6b090370fc44cb677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the process id (pid)  <a href="#a466bcc846553a6c6b090370fc44cb677">More...</a><br /></td></tr>
 <tr class="separator:a466bcc846553a6c6b090370fc44cb677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b799bebba779e69a175dcd67515f78c"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a4b799bebba779e69a175dcd67515f78c">UserName</a><code> [get]</code></td></tr>
-<tr class="memdesc:a4b799bebba779e69a175dcd67515f78c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the owner name  <a href="#a4b799bebba779e69a175dcd67515f78c">More...</a><br /></td></tr>
+<tr class="memdesc:a4b799bebba779e69a175dcd67515f78c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the user the process is running as.  <a href="#a4b799bebba779e69a175dcd67515f78c">More...</a><br /></td></tr>
 <tr class="separator:a4b799bebba779e69a175dcd67515f78c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c3ba190b1b316754b8fce2dbfa2fe05"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a2c3ba190b1b316754b8fce2dbfa2fe05">PackageFullName</a><code> [get]</code></td></tr>
-<tr class="memdesc:a2c3ba190b1b316754b8fce2dbfa2fe05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the package full name  <a href="#a2c3ba190b1b316754b8fce2dbfa2fe05">More...</a><br /></td></tr>
+<tr class="memdesc:a2c3ba190b1b316754b8fce2dbfa2fe05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the package full name. Only present if the process is an app.  <a href="#a2c3ba190b1b316754b8fce2dbfa2fe05">More...</a><br /></td></tr>
 <tr class="separator:a2c3ba190b1b316754b8fce2dbfa2fe05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a996673a4797a026c858381fa9227925d"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a996673a4797a026c858381fa9227925d">PageFile</a><code> [get]</code></td></tr>
 <tr class="memdesc:a996673a4797a026c858381fa9227925d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Page file usage info  <a href="#a996673a4797a026c858381fa9227925d">More...</a><br /></td></tr>
@@ -139,26 +139,26 @@ Properties</h2></td></tr>
 <tr class="memdesc:a57beea52c9016667ea8b190e74a16762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets session id  <a href="#a57beea52c9016667ea8b190e74a16762">More...</a><br /></td></tr>
 <tr class="separator:a57beea52c9016667ea8b190e74a16762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bafc220372b35366de156aa581475ba"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a5bafc220372b35366de156aa581475ba">TotalCommit</a><code> [get]</code></td></tr>
-<tr class="memdesc:a5bafc220372b35366de156aa581475ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets total commit  <a href="#a5bafc220372b35366de156aa581475ba">More...</a><br /></td></tr>
+<tr class="memdesc:a5bafc220372b35366de156aa581475ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets total commit in bytes  <a href="#a5bafc220372b35366de156aa581475ba">More...</a><br /></td></tr>
 <tr class="separator:a5bafc220372b35366de156aa581475ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d4052708d85ad61b7c966666552afbc"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a4d4052708d85ad61b7c966666552afbc">VirtualSize</a><code> [get]</code></td></tr>
-<tr class="memdesc:a4d4052708d85ad61b7c966666552afbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets virtual size  <a href="#a4d4052708d85ad61b7c966666552afbc">More...</a><br /></td></tr>
+<tr class="memdesc:a4d4052708d85ad61b7c966666552afbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets virtual size in bytes  <a href="#a4d4052708d85ad61b7c966666552afbc">More...</a><br /></td></tr>
 <tr class="separator:a4d4052708d85ad61b7c966666552afbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a5ddefba6ce8459d9d11b6059bd1063"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a6a5ddefba6ce8459d9d11b6059bd1063">IsRunning</a><code> [get]</code></td></tr>
-<tr class="memdesc:a6a5ddefba6ce8459d9d11b6059bd1063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value indicating whether or not the process is running  <a href="#a6a5ddefba6ce8459d9d11b6059bd1063">More...</a><br /></td></tr>
+<tr class="memdesc:a6a5ddefba6ce8459d9d11b6059bd1063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value indicating whether or not the app is running (versus suspended). Only present if the process is an app.  <a href="#a6a5ddefba6ce8459d9d11b6059bd1063">More...</a><br /></td></tr>
 <tr class="separator:a6a5ddefba6ce8459d9d11b6059bd1063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f2d245cead27eea355152158da5343e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a4f2d245cead27eea355152158da5343e">Publisher</a><code> [get]</code></td></tr>
-<tr class="memdesc:a4f2d245cead27eea355152158da5343e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets publisher  <a href="#a4f2d245cead27eea355152158da5343e">More...</a><br /></td></tr>
+<tr class="memdesc:a4f2d245cead27eea355152158da5343e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets publisher. Only present if the process is an app.  <a href="#a4f2d245cead27eea355152158da5343e">More...</a><br /></td></tr>
 <tr class="separator:a4f2d245cead27eea355152158da5343e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95cf0d76267dd5ee099fd4ff4662c74a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_version.html">ProcessVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a95cf0d76267dd5ee099fd4ff4662c74a">Version</a><code> [get]</code></td></tr>
-<tr class="memdesc:a95cf0d76267dd5ee099fd4ff4662c74a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets version  <a href="#a95cf0d76267dd5ee099fd4ff4662c74a">More...</a><br /></td></tr>
-<tr class="separator:a95cf0d76267dd5ee099fd4ff4662c74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04fe4097ac57d44cca30597e7bc1f55c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_app_version.html">AppVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#a04fe4097ac57d44cca30597e7bc1f55c">Version</a><code> [get]</code></td></tr>
+<tr class="memdesc:a04fe4097ac57d44cca30597e7bc1f55c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets version. Only present if the process is an app.  <a href="#a04fe4097ac57d44cca30597e7bc1f55c">More...</a><br /></td></tr>
+<tr class="separator:a04fe4097ac57d44cca30597e7bc1f55c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abddd15c8e8c94db574d1829d8ef26ba2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_device_process_info.html#abddd15c8e8c94db574d1829d8ef26ba2">IsXAP</a><code> [get]</code></td></tr>
-<tr class="memdesc:abddd15c8e8c94db574d1829d8ef26ba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value indicating whether or not the package is a XAP package  <a href="#abddd15c8e8c94db574d1829d8ef26ba2">More...</a><br /></td></tr>
+<tr class="memdesc:abddd15c8e8c94db574d1829d8ef26ba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a value indicating whether or not the package is a XAP package. Only present if the process is an app.  <a href="#abddd15c8e8c94db574d1829d8ef26ba2">More...</a><br /></td></tr>
 <tr class="separator:abddd15c8e8c94db574d1829d8ef26ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Process Info </p>
+<div class="textblock"><p>Process Info. Contains app information if the process is an app. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="aa57559f4c44aab8e2fa748a52ab25ed9"></a>
 <div class="memitem">
@@ -205,7 +205,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the app name </p>
+<p>Gets the app name. Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -227,7 +227,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets CPU usage </p>
+<p>Gets CPU Usage as a percentage of available CPU resources (0-100) </p>
 
 </div>
 </div>
@@ -249,7 +249,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets a value indicating whether or not the process is running </p>
+<p>Gets a value indicating whether or not the app is running (versus suspended). Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -271,7 +271,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets a value indicating whether or not the package is a XAP package </p>
+<p>Gets a value indicating whether or not the package is a XAP package. Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -315,7 +315,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the package full name </p>
+<p>Gets the package full name. Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -381,7 +381,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the process id </p>
+<p>Gets the process id (pid) </p>
 
 </div>
 </div>
@@ -403,7 +403,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets publisher </p>
+<p>Gets publisher. Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -447,7 +447,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets total commit </p>
+<p>Gets total commit in bytes </p>
 
 </div>
 </div>
@@ -469,11 +469,11 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the owner name </p>
+<p>Gets the user the process is running as. </p>
 
 </div>
 </div>
-<a class="anchor" id="a95cf0d76267dd5ee099fd4ff4662c74a"></a>
+<a class="anchor" id="a04fe4097ac57d44cca30597e7bc1f55c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -481,7 +481,7 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_version.html">ProcessVersion</a> Microsoft.Tools.WindowsDevicePortal.DevicePortal.DeviceProcessInfo.Version</td>
+          <td class="memname"><a class="el" href="class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_app_version.html">AppVersion</a> Microsoft.Tools.WindowsDevicePortal.DevicePortal.DeviceProcessInfo.Version</td>
         </tr>
       </table>
   </td>
@@ -491,7 +491,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets version </p>
+<p>Gets version. Only present if the process is an app. </p>
 
 </div>
 </div>
@@ -513,7 +513,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets virtual size </p>
+<p>Gets virtual size in bytes </p>
 
 </div>
 </div>

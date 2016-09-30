@@ -1,12 +1,23 @@
 var searchData=
 [
-  ['sandbox',['Sandbox',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_sandbox.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['sandboxoperation',['SandboxOperation',['../class_xbox_wdp_driver_1_1_sandbox_operation.html',1,'XboxWdpDriver']]],
-  ['screenshotoperation',['ScreenshotOperation',['../class_xbox_wdp_driver_1_1_screenshot_operation.html',1,'XboxWdpDriver']]],
-  ['servicetags',['ServiceTags',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_service_tags.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['smbinfo',['SmbInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_smb_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['softapsettingsinfo',['SoftAPSettingsInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_soft_a_p_settings_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['statusinfo',['StatusInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_status_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['systemperfoperation',['SystemPerfOperation',['../class_xbox_wdp_driver_1_1_system_perf_operation.html',1,'XboxWdpDriver']]],
-  ['systemperformanceinformation',['SystemPerformanceInformation',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_system_performance_information.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['package',['Package',['../class_windows_1_1_application_model_1_1_package.html',1,'Windows::ApplicationModel']]],
+  ['packageinfo',['PackageInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_package_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['packageversion',['PackageVersion',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_package_version.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['page',['Page',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_page.html',1,'Windows::UI::Xaml::Controls']]],
+  ['pairbluetoothdevicesinfo',['PairBluetoothDevicesInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_pair_bluetooth_devices_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['pairedbluetoothdevicesinfo',['PairedBluetoothDevicesInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_paired_bluetooth_devices_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['pairresult',['PairResult',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_pair_result.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['panel',['Panel',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_panel.html',1,'Windows::UI::Xaml::Controls']]],
+  ['parameterhelper',['ParameterHelper',['../class_xbox_wdp_driver_1_1_parameter_helper.html',1,'XboxWdpDriver']]],
+  ['parameterhelper',['ParameterHelper',['../class_mock_data_generator_1_1_parameter_helper.html',1,'MockDataGenerator']]],
+  ['passwordbox',['PasswordBox',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_password_box.html',1,'Windows::UI::Xaml::Controls']]],
+  ['passwordcredential',['PasswordCredential',['../class_windows_1_1_security_1_1_credentials_1_1_password_credential.html',1,'Windows::Security::Credentials']]],
+  ['perceptionsimulationcontrolmode',['PerceptionSimulationControlMode',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_perception_simulation_control_mode.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['performancedatatests',['PerformanceDataTests',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_core_1_1_performance_data_tests.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests::Core']]],
+  ['pointerroutedeventargs',['PointerRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_pointer_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['powerstate',['PowerState',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_power_state.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['processinfo',['ProcessInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['processversion',['ProcessVersion',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_process_version.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['program',['Program',['../class_mock_data_generator_1_1_program.html',1,'MockDataGenerator']]],
+  ['program',['Program',['../class_xbox_wdp_driver_1_1_program.html',1,'XboxWdpDriver']]]
 ];

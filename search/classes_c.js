@@ -1,5 +1,22 @@
 var searchData=
 [
-  ['operatingsysteminformation',['OperatingSystemInformation',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_operating_system_information.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['osinformationtests',['OsInformationTests',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_os_information_tests.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]]
+  ['mainpage',['MainPage',['../class_sample_wdp_client_1_1_universal_windows_1_1_main_page.html',1,'SampleWdpClient::UniversalWindows']]],
+  ['mainwindow',['MainWindow',['../class_sample_wdp_client_1_1_main_window.html',1,'SampleWdpClient']]],
+  ['manipulationcompletedroutedeventargs',['ManipulationCompletedRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_manipulation_completed_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['manipulationdeltaroutedeventargs',['ManipulationDeltaRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_manipulation_delta_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['manipulationinertiastartingroutedeventargs',['ManipulationInertiaStartingRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_manipulation_inertia_starting_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['manipulationstartedroutedeventargs',['ManipulationStartedRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_manipulation_started_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['manipulationstartingroutedeventargs',['ManipulationStartingRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_manipulation_starting_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['marshalingbehaviorattribute',['MarshalingBehaviorAttribute',['../class_windows_1_1_foundation_1_1_metadata_1_1_marshaling_behavior_attribute.html',1,'Windows::Foundation::Metadata']]],
+  ['memberentry',['MemberEntry',['../struct_member_entry.html',1,'']]],
+  ['messagewebsocket',['MessageWebSocket',['../class_windows_1_1_networking_1_1_sockets_1_1_message_web_socket.html',1,'Windows::Networking::Sockets']]],
+  ['messagewebsocketcontrol',['MessageWebSocketControl',['../class_windows_1_1_networking_1_1_sockets_1_1_message_web_socket_control.html',1,'Windows::Networking::Sockets']]],
+  ['messagewebsocketmessagereceivedeventargs',['MessageWebSocketMessageReceivedEventArgs',['../class_windows_1_1_networking_1_1_sockets_1_1_message_web_socket_message_received_event_args.html',1,'Windows::Networking::Sockets']]],
+  ['mockdeviceportalconnection',['MockDevicePortalConnection',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_device_portal_connection.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
+  ['mockhttpresponder',['MockHttpResponder',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html',1,'Microsoft::Tools::WindowsDevicePortal::Tests']]],
+  ['mrcfileinformation',['MrcFileInformation',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_file_information.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['mrcfilelist',['MrcFileList',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_file_list.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['mrcprocessstatus',['MrcProcessStatus',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_process_status.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['mrcstatus',['MrcStatus',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_mrc_status.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['museattribute',['MuseAttribute',['../class_windows_1_1_foundation_1_1_metadata_1_1_muse_attribute.html',1,'Windows::Foundation::Metadata']]]
 ];

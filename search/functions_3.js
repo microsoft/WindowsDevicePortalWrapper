@@ -4,6 +4,7 @@ var searchData=
   ['deletealltags',['DeleteAllTags',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a8ce11b2e20f39901b0debe4b26979a4c',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['deleteasync',['DeleteAsync',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_tests_1_1_mock_http_responder.html#aa65ece89e87b58c7aafc44893ef2c19d',1,'Microsoft::Tools::WindowsDevicePortal::Tests::MockHttpResponder']]],
   ['deletefile',['DeleteFile',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a22354f1c577dcd6522f3e3cb37ca0c26',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['deleteholographicsimulationrecording',['DeleteHolographicSimulationRecording',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ae789b396bf1b250b0914aa580709f976',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['deletemrcfile',['DeleteMrcFile',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#a83cf4c3cb73799c3595c452b513155c3',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['deletetag',['DeleteTag',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#aaea50953fe1efac7d8e1dee20932c809',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['deviceconnectionstatuseventhandler',['DeviceConnectionStatusEventHandler',['../namespace_microsoft_1_1_tools_1_1_windows_device_portal.html#a47004ac87cae2edd37908d5e71acb579',1,'Microsoft::Tools::WindowsDevicePortal']]],

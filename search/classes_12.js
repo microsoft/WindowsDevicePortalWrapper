@@ -1,10 +1,24 @@
 var searchData=
 [
-  ['webmanagementhttpsettings',['WebManagementHttpSettings',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_web_management_http_settings.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['websocketmessagereceivedeventargs',['WebSocketMessageReceivedEventArgs',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_web_socket_message_received_event_args.html',1,'Microsoft::Tools::WindowsDevicePortal']]],
-  ['wifiinterface',['WifiInterface',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_interface.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['wifiinterfaces',['WifiInterfaces',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_interfaces.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['wifinetworkinfo',['WifiNetworkInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_network_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['wifinetworkprofile',['WifiNetworkProfile',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_network_profile.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
-  ['wifinetworks',['WifiNetworks',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_wifi_networks.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]]
+  ['tappedroutedeventargs',['TappedRoutedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_input_1_1_tapped_routed_event_args.html',1,'Windows::UI::Xaml::Input']]],
+  ['textblock',['TextBlock',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_block.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textbox',['TextBox',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_box.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textboxtextchangingeventargs',['TextBoxTextChangingEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_box_text_changing_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textchangedeventargs',['TextChangedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_changed_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textcompositionchangedeventargs',['TextCompositionChangedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_composition_changed_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textcompositionendedeventargs',['TextCompositionEndedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_composition_ended_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textcompositionstartedeventargs',['TextCompositionStartedEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_composition_started_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['textcontrolpasteeventargs',['TextControlPasteEventArgs',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_text_control_paste_event_args.html',1,'Windows::UI::Xaml::Controls']]],
+  ['thermalstage',['ThermalStage',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_thermal_stage.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['threadingattribute',['ThreadingAttribute',['../class_windows_1_1_foundation_1_1_metadata_1_1_threading_attribute.html',1,'Windows::Foundation::Metadata']]],
+  ['threadpool',['ThreadPool',['../class_windows_1_1_system_1_1_threading_1_1_thread_pool.html',1,'Windows::System::Threading']]],
+  ['threadpooltimer',['ThreadPoolTimer',['../class_windows_1_1_system_1_1_threading_1_1_thread_pool_timer.html',1,'Windows::System::Threading']]],
+  ['timezone',['Timezone',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_timezone.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['timezoneinfo',['TimezoneInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_timezone_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['togglebutton',['ToggleButton',['../class_windows_1_1_u_i_1_1_xaml_1_1_controls_1_1_primitives_1_1_toggle_button.html',1,'Windows::UI::Xaml::Controls::Primitives']]],
+  ['tpmacpitablesinfo',['TpmAcpiTablesInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_tpm_acpi_tables_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['tpmazuretokeninfo',['TpmAzureTokenInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_tpm_azure_token_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['tpmlogicaldevicesettingsinfo',['TpmLogicalDeviceSettingsInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_tpm_logical_device_settings_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['tpmsettingsinfo',['TpmSettingsInfo',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_tpm_settings_info.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
+  ['tracingstatuschangedeventargs',['TracingStatusChangedEventArgs',['../class_windows_1_1_foundation_1_1_diagnostics_1_1_tracing_status_changed_event_args.html',1,'Windows::Foundation::Diagnostics']]]
 ];
