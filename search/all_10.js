@@ -2,6 +2,7 @@ var searchData=
 [
   ['properties',['Properties',['../namespace_sample_wdp_client_1_1_properties.html',1,'SampleWdpClient']]],
   ['samplewdpclient',['SampleWdpClient',['../namespace_sample_wdp_client.html',1,'']]],
+  ['samplewdpclient_5funiversalwindows_5fxamltypeinfo',['SampleWdpClient_UniversalWindows_XamlTypeInfo',['../namespace_sample_wdp_client_1_1_universal_windows_1_1_sample_wdp_client___universal_windows___xaml_type_info.html',1,'SampleWdpClient::UniversalWindows']]],
   ['sandbox',['Sandbox',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal_1_1_sandbox.html',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],
   ['sandboxoperation',['SandboxOperation',['../class_xbox_wdp_driver_1_1_sandbox_operation.html',1,'XboxWdpDriver']]],
   ['saveendpointresponsetofile',['SaveEndpointResponseToFile',['../class_microsoft_1_1_tools_1_1_windows_device_portal_1_1_device_portal.html#ac6df8a16b91e39278a3cf946b61c3839',1,'Microsoft::Tools::WindowsDevicePortal::DevicePortal']]],

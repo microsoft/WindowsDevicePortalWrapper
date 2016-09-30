@@ -10,6 +10,10 @@ del *.png
 del *.css
 del *.js
 rmdir /S /Q search
+rmdir /S /Q Samples\*\bin
+rmdir /S /Q Samples\*\obj
+rmdir /S /Q WindowsDevicePortalWrapper\*\bin
+rmdir /S /Q WindowsDevicePortalWrapper\*\obj
 
 pushd %1
 doxygen docconfig.txt
@@ -18,4 +22,4 @@ move %1\html\* .
 move %1\html\search search
 git add *
 git commit -m "Update code documentation via UpdateDocs.cmd script"
-git push
+REM git push
