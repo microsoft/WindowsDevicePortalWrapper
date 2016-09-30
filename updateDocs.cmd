@@ -22,4 +22,4 @@ move %1\html\* .
 move %1\html\search search
 git add *
 git commit -m "Update code documentation via UpdateDocs.cmd script"
-REM git push
+git push
