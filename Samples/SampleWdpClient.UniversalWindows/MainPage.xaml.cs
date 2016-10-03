@@ -113,7 +113,7 @@ namespace SampleWdpClient.UniversalWindows
                         // remainder of this session.
                         if (allowUntrusted)
                         {
-                            await portal.GetRootDeviceCertificate(true);
+                            this.certificate = await portal.GetRootDeviceCertificate(true);
                         }
                         await portal.Connect(manualCertificate: this.certificate);
                     }
