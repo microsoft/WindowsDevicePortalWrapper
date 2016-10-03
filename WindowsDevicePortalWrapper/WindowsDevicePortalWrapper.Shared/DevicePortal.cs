@@ -256,7 +256,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.UpdatingDeviceAddress,
                         connectionPhaseDescription);
-                    this.deviceConnection.UpdateConnection(await this.GetIpConfig(), requiresHttps);
+                    
+                    bool preservePort = true;
+                    // HoloLens and Mobile are the only devices that support USB.
+                    // They require the port to be changed when the connection is updated
+                    // to WiFi.
+                    if ((this.Platform == DevicePortalPlatforms.HoloLens) ||
+                        (this.Platform == DevicePortalPlatforms.Mobile))
+                    {
+                        preservePort = false;
+                    }
+
+                    this.deviceConnection.UpdateConnection(
+                        await this.GetIpConfig(), 
+                        requiresHttps,
+                        preservePort);
                 }
 
                 this.SendConnectionStatus(
