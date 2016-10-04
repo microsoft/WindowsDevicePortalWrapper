@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         public async Task<Stream> GetAppCrashDump(CrashDump crashdump)
         {
-            string queryString = CrashDumpFileApi + string.Format("packageFullname={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename);
+            string queryString = CrashDumpFileApi + string.Format("?packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename);
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 queryString);
@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task DeleteAppCrashDump(CrashDump crashdump)
         {
             await this.Delete(CrashDumpFileApi,
-                string.Format("packageFullname={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename));
+                string.Format("packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename));
         }
 
         public async Task<CrashDumpSettings> GetAppCrashDumpSettings(AppPackage app)
@@ -97,12 +97,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 await this.Post(
                     CrashDumpSettingsApi,
-                string.Format("packageFullname={0}", pfn));
+                string.Format("packageFullName={0}", pfn));
             } else
             {
                 await this.Delete(
                     CrashDumpSettingsApi,
-                string.Format("packageFullname={0}", pfn));
+                string.Format("packageFullName={0}", pfn));
             }
         }
 
@@ -124,20 +124,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
-
+        [DataContract]
         public class CrashDump
         {
             /// <summary>
-            /// Gets whether crash dumps are enabled for the app
+            /// Gets the timestamp of the crash as a string.
             /// </summary>
             [DataMember(Name = "FileDate")]
-            public DateTime FileDate
+            public string FileDateAsString
             {
                 get; private set;
             }
 
             /// <summary>
-            /// Gets whether crash dumps are enabled for the app
+            /// Gets the timestamp of the crash.
+            /// </summary>
+            public DateTime FileDate
+            {
+                get
+                {
+                    return DateTime.Parse(this.FileDateAsString);
+                }
+            }
+
+            /// <summary>
+            /// Gets the filename of the crash file. 
             /// </summary>
             [DataMember(Name = "FileName")]
             public string Filename
@@ -146,26 +157,33 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             /// <summary>
-            /// Gets whether crash dumps are enabled for the app
+            /// Gets the size of the crash dump, in bytes
             /// </summary>
             [DataMember(Name = "FileSize")]
-            public int FileSizeInBytes
+            public uint FileSizeInBytes
             {
                 get; private set;
             }
 
             /// <summary>
-            /// Gets whether crash dumps are enabled for the app
+            /// Gets the package full name of the app that crashed. 
             /// </summary>
             [DataMember(Name = "PackageFullName")]
-            public bool PackageFullName
+            public string PackageFullName
             {
                 get; private set;
             }
-}
+    }
 
+        /// <summary>
+        /// A list of crash dumps.  Internal usage only. 
+        /// </summary>
+        [DataContract]
         private class CrashDumpList
         {
+            /// <summary>
+            /// Gets a list of crash dumps on the device. 
+            /// </summary>
             [DataMember(Name = "CrashDumps")]
             public CrashDump[] CrashDumps
             {
