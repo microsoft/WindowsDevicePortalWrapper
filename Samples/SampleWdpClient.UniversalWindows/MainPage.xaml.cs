@@ -113,9 +113,9 @@ namespace SampleWdpClient.UniversalWindows
                         // remainder of this session.
                         if (allowUntrusted)
                         {
-                            this.certificate = await portal.GetRootDeviceCertificate(true);
+                            this.certificate = await portal.GetRootDeviceCertificateAsync(true);
                         }
-                        await portal.Connect(manualCertificate: this.certificate);
+                        await portal.ConnectAsync(manualCertificate: this.certificate);
                     }
                     catch (Exception exception)
                     {
@@ -195,7 +195,7 @@ namespace SampleWdpClient.UniversalWindows
 
                     try
                     {
-                        IpConfiguration ipconfig = await portal.GetIpConfig();
+                        IpConfiguration ipconfig = await portal.GetIpConfigAsync();
 
                         foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
                         {
@@ -251,7 +251,7 @@ namespace SampleWdpClient.UniversalWindows
 
                     try
                     {
-                        WifiInterfaces wifiInterfaces = await portal.GetWifiInterfaces();
+                        WifiInterfaces wifiInterfaces = await portal.GetWifiInterfacesAsync();
                         sb.AppendLine("WiFi Interfaces:");
                         foreach (WifiInterface wifiInterface in wifiInterfaces.Interfaces)
                         {
@@ -260,7 +260,7 @@ namespace SampleWdpClient.UniversalWindows
                             sb.Append("  GUID: ");
                             sb.AppendLine(wifiInterface.Guid.ToString());
 
-                            WifiNetworks wifiNetworks = await portal.GetWifiNetworks(wifiInterface.Guid);
+                            WifiNetworks wifiNetworks = await portal.GetWifiNetworksAsync(wifiInterface.Guid);
                             sb.AppendLine("  Networks:");
                             foreach (WifiNetworkInfo network in wifiNetworks.AvailableNetworks)
                             {
@@ -394,7 +394,7 @@ namespace SampleWdpClient.UniversalWindows
 
                     try
                     {
-                        await portal.Reboot();
+                        await portal.RebootAsync();
                     }
                     catch (Exception ex)
                     {
@@ -438,7 +438,7 @@ namespace SampleWdpClient.UniversalWindows
 
                     try
                     {
-                        await portal.Shutdown();
+                        await portal.ShutdownAsync();
                     }
                     catch (Exception ex)
                     {

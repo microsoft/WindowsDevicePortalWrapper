@@ -50,16 +50,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the collection of processes running on the device.
         /// </summary>
         /// <returns>RunningProcesses object containing the list of running processes.</returns>
-        public async Task<RunningProcesses> GetRunningProcesses()
+        public async Task<RunningProcesses> GetRunningProcessesAsync()
         {
-            return await this.Get<RunningProcesses>(RunningProcessApi);
+            return await this.GetAsync<RunningProcesses>(RunningProcessApi);
         }
 
         /// <summary>
         /// Starts listening for the running processes on the device with them being returned via the RunningProcessesMessageReceived event handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
-        public async Task StartListeningForRunningProcesses()
+        public async Task StartListeningForRunningProcessesAsync()
         {
             if (this.deviceProcessesWebSocket == null)
             {
@@ -79,37 +79,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.deviceProcessesWebSocket.StartListeningForMessages(RunningProcessApi);
+            await this.deviceProcessesWebSocket.StartListeningForMessagesAsync(RunningProcessApi);
         }
 
         /// <summary>
         /// Stop listening for the running processes on the device.
         /// </summary>
         /// <returns>Task for stop listening for processes and disconnecting from the websocket .</returns>
-        public async Task StopListeningForRunningProcesses()
+        public async Task StopListeningForRunningProcessesAsync()
         {
             if (this.deviceProcessesWebSocket == null || !this.deviceProcessesWebSocket.IsListeningForMessages)
             {
                 return;
             }
 
-            await this.deviceProcessesWebSocket.StopListeningForMessages();
+            await this.deviceProcessesWebSocket.StopListeningForMessagesAsync();
         }
 
         /// <summary>
         /// Gets system performance information for the device.
         /// </summary>
         /// <returns>SystemPerformanceInformation object containing information such as memory usage.</returns>
-        public async Task<SystemPerformanceInformation> GetSystemPerf()
+        public async Task<SystemPerformanceInformation> GetSystemPerfAsync()
         {
-            return await this.Get<SystemPerformanceInformation>(SystemPerfApi);
+            return await this.GetAsync<SystemPerformanceInformation>(SystemPerfApi);
         }
 
         /// <summary>
         /// Starts listening for the system performance information for the device with it being returned via the SystemPerfMessageReceived event handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
-        public async Task StartListeningForSystemPerf()
+        public async Task StartListeningForSystemPerfAsync()
         {
             if (this.systemPerfWebSocket == null)
             {
@@ -129,21 +129,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.systemPerfWebSocket.StartListeningForMessages(SystemPerfApi);
+            await this.systemPerfWebSocket.StartListeningForMessagesAsync(SystemPerfApi);
         }
 
         /// <summary>
         /// Stop listening for the system performance information for the device.
         /// </summary>
         /// <returns>Task for stop listening for system perf and disconnecting from the websocket .</returns>
-        public async Task StopListeningForSystemPerf()
+        public async Task StopListeningForSystemPerfAsync()
         {
             if (this.systemPerfWebSocket == null || !this.systemPerfWebSocket.IsListeningForMessages)
             {
                 return;
             }
 
-            await this.systemPerfWebSocket.StopListeningForMessages();
+            await this.systemPerfWebSocket.StopListeningForMessagesAsync();
         }
 
         /// <summary>

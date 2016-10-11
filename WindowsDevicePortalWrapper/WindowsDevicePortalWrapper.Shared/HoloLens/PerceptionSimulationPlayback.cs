@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name of the recording to delete (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task DeleteHolographicSimulationRecording(string name)
+        public async Task DeleteHolographicSimulationRecordingAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -110,7 +110,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 "recording={0}",
                 name);
 
-            await this.Delete(HolographicSimulationPlaybackFileApi, payload);
+            await this.DeleteAsync(HolographicSimulationPlaybackFileApi, payload);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name of the recording (ex: testsession.xef).</param>
         /// <returns>HolographicSimulationPlaybackStates enum value describing the state of the recording.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<HolographicSimulationPlaybackStates> GetHolographicSimulationPlaybackState(string name)
+        public async Task<HolographicSimulationPlaybackStates> GetHolographicSimulationPlaybackStateAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -137,7 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 HolographicSimulationPlaybackStateApi,
                 payload);
 
-            using (Stream dataStream = await this.Get(uri))
+            using (Stream dataStream = await this.GetAsync(uri))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))
@@ -169,7 +169,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name of the recording to load (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task LoadHolographicSimulationRecording(string name)
+        public async Task LoadHolographicSimulationRecordingAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -180,7 +180,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 "recording={0}",
                 name);
 
-            await this.Post(HolographicSimulationPlaybackSessionFileApi, payload);
+            await this.PostAsync(HolographicSimulationPlaybackSessionFileApi, payload);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name of the recording to unload (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task UnloadHolographicSimulationRecording(string name)
+        public async Task UnloadHolographicSimulationRecordingAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -200,7 +200,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 "recording={0}",
                 name);
 
-            await this.Delete(HolographicSimulationPlaybackSessionFileApi, payload);
+            await this.DeleteAsync(HolographicSimulationPlaybackSessionFileApi, payload);
         }
 
         #region Data contract

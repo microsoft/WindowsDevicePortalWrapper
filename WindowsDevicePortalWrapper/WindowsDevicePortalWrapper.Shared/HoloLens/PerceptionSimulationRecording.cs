@@ -37,14 +37,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>True if recording, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<bool> GetHolographicSimulationRecordingStatus()
+        public async Task<bool> GetHolographicSimulationRecordingStatusAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            HolographicSimulationRecordingStatus status = await this.Get<HolographicSimulationRecordingStatus>(HolographicSimulationRecordingStatusApi);
+            HolographicSimulationRecordingStatus status = await this.GetAsync<HolographicSimulationRecordingStatus>(HolographicSimulationRecordingStatusApi);
             return status.IsRecording;
         }
 
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="recordEnvironment">Should environment data be recorded? The default value is true.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task StartHolographicSimulationRecording(
+        public async Task StartHolographicSimulationRecordingAsync(
             string name,
             bool recordHead = true,
             bool recordHands = true,
@@ -77,7 +77,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 recordSpatialMapping ? 1 : 0,
                 recordEnvironment ? 1 : 0,
                 name);
-            await this.Post(StartHolographicSimulationRecordingApi, payload);
+            await this.PostAsync(StartHolographicSimulationRecordingApi, payload);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Byte array containing the recorded data.</returns>
         /// <exception cref="InvalidOperationException">No recording was in progress.</exception>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<byte[]> StopHolographicSimulationRecording()
+        public async Task<byte[]> StopHolographicSimulationRecordingAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             byte[] dataBytes = null;
 
-            using (Stream dataStream = await this.Get(uri))
+            using (Stream dataStream = await this.GetAsync(uri))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))

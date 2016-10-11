@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Get
+    /// Universal Windows Platform implementation of HTTP GetAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Get(Uri uri)
+        private async Task<Stream> GetAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 

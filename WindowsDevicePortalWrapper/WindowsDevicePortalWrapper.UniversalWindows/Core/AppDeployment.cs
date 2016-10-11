@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>The status</returns>
 #pragma warning disable 1998
-        public async Task<ApplicationInstallStatus> GetInstallStatus()
+        public async Task<ApplicationInstallStatus> GetInstallStatusAsync()
         {
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 

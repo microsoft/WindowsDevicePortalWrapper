@@ -24,14 +24,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the SMB Share info for the device
         /// </summary>
         /// <returns>The SMB path, username, and password.</returns>
-        public async Task<SmbInfo> GetSmbShareInfo()
+        public async Task<SmbInfo> GetSmbShareInfoAsync()
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            return await this.Get<SmbInfo>(GetSmbShareInfoApi);
+            return await this.GetAsync<SmbInfo>(GetSmbShareInfoApi);
         }
 
         #region Data contract

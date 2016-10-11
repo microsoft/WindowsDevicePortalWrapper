@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Get
+    /// .net 4.x implementation of HTTP GetAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> Get(
+        private async Task<Stream> GetAsync(
             Uri uri)
         {
             MemoryStream dataStream = null;

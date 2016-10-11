@@ -23,7 +23,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the status of a pending or most recent installation, if any. 
         /// </summary>
         /// <returns>The status</returns>
-        public async Task<ApplicationInstallStatus> GetInstallStatus()
+        public async Task<ApplicationInstallStatus> GetInstallStatusAsync()
         {
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 
