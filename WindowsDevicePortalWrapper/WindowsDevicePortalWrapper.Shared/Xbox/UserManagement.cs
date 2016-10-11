@@ -142,7 +142,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             /// Gets or sets if the user should be deleted
             /// </summary>
-            [DataMember(Name = "DeleteAsync", EmitDefaultValue = false)]
+            [DataMember(Name = "Delete", EmitDefaultValue = false)]
             public bool? Delete { get; set; }
 
             /// <summary>

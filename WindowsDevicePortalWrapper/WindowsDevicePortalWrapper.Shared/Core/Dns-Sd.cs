@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// DeleteAsync all tags from the device's DNS-SD broadcast. 
+        /// Delete all tags from the device's DNS-SD broadcast. 
         /// </summary>
         /// <returns>Task tracking deletion of all tags.</returns>
         public async Task DeleteAllTagsAsync()
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// DeleteAsync a specific tag from the device's DNS-SD broadcast. 
+        /// Delete a specific tag from the device's DNS-SD broadcast. 
         /// </summary>
         /// <param name="tagValue">The tag to delete from the device broadcast.</param>
         /// <returns>Task tracking deletion of the tag.</returns>
