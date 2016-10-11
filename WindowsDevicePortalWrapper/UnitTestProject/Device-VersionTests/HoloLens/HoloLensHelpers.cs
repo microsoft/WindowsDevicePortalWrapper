@@ -19,7 +19,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Validate the <see cref="SystemPerformanceInformation" /> returned from the HoloLens tests.
         /// </summary>
         /// <param name="systemPerfInfo">The <see cref="SystemPerformanceInformation" /> to validate.</param>
-        internal static void ValidateSystemPerf(SystemPerformanceInformation systemPerfInfo)
+        internal static void ValidateSystemPerfAsync(SystemPerformanceInformation systemPerfInfo)
         {
             // Check some known things about this response.
             Assert.AreEqual(275897, systemPerfInfo.AvailablePages);
@@ -66,7 +66,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 friendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
+            Task<string> getNameTask = TestHelpers.Portal.GetDeviceNameAsync();
             getNameTask.Wait();
 
             Assert.AreEqual(operatingSystemVersion, TestHelpers.Portal.OperatingSystemVersion);

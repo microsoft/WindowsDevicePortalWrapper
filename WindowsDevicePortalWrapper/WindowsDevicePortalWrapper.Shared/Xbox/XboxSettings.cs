@@ -26,14 +26,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the Xbox Settings info for all settings which can be controlled on the device.
         /// </summary>
         /// <returns>XboxSettingList object containing a List of XboxSetting objects representing the settings on the device.</returns>
-        public async Task<XboxSettingList> GetXboxSettings()
+        public async Task<XboxSettingList> GetXboxSettingsAsync()
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            return await this.Get<XboxSettingList>(XboxSettingsApi);
+            return await this.GetAsync<XboxSettingList>(XboxSettingsApi);
         }
 
         /// <summary>
@@ -41,14 +41,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="settingName">Name of the setting we want to retrieve.</param>
         /// <returns>XboxSetting object containing a information about the settings on the device.</returns>
-        public async Task<XboxSetting> GetXboxSetting(string settingName)
+        public async Task<XboxSetting> GetXboxSettingAsync(string settingName)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            return await this.Get<XboxSetting>(Path.Combine(XboxSettingsApi, settingName));
+            return await this.GetAsync<XboxSetting>(Path.Combine(XboxSettingsApi, settingName));
         }
 
         /// <summary>
@@ -56,14 +56,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="setting">Setting to be updated.</param>
         /// <returns>Task for tracking async completion.</returns>
-        public async Task<XboxSetting> UpdateXboxSetting(XboxSetting setting)
+        public async Task<XboxSetting> UpdateXboxSettingAsync(XboxSetting setting)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            return await this.Put<XboxSetting, XboxSetting>(Path.Combine(XboxSettingsApi, setting.Name), setting);
+            return await this.PutAsync<XboxSetting, XboxSetting>(Path.Combine(XboxSettingsApi, setting.Name), setting);
         }
 
         #region Data contract

@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, DevicePortalPlatforms.XboxOne, friendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
+            Task<string> getNameTask = TestHelpers.Portal.GetDeviceNameAsync();
             getNameTask.Wait();
 
             Assert.AreEqual(operatingSystemVersion, TestHelpers.Portal.OperatingSystemVersion);

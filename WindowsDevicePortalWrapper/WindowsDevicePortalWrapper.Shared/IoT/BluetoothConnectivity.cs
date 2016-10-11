@@ -86,12 +86,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.BluetoothDeviceListReceived += bluetoothReceivedHandler;
 
-            Task startListeningForBluetooth = this.StartListeningForBluetooth(AvailableBluetoothDevicesApi);
+            Task startListeningForBluetooth = this.StartListeningForBluetoothAsync(AvailableBluetoothDevicesApi);
             startListeningForBluetooth.Wait();
 
             BluetoothReceived.WaitOne();
 
-            Task stopListeningForBluetooth = this.StopListeningForBluetooth();
+            Task stopListeningForBluetooth = this.StopListeningForBluetoothAsync();
             stopListeningForBluetooth.Wait();
 
             this.BluetoothDeviceListReceived -= bluetoothReceivedHandler;
@@ -118,12 +118,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.PairedBluetoothDeviceListReceived += pairedBluetoothReceivedHandler;
 
-            Task startListeningForPairedBluetooth = this.StartListeningForPairedBluetooth(PairedBluetoothDevicesApi);
+            Task startListeningForPairedBluetooth = this.StartListeningForPairedBluetoothAsync(PairedBluetoothDevicesApi);
             startListeningForPairedBluetooth.Wait();
 
             PairedBluetoothReceived.WaitOne();
 
-            Task stopListeningForPairedBluetooth = this.StopListeningForPairedBluetooth();
+            Task stopListeningForPairedBluetooth = this.StopListeningForPairedBluetoothAsync();
             stopListeningForPairedBluetooth.Wait();
 
             this.PairedBluetoothDeviceListReceived -= pairedBluetoothReceivedHandler;
@@ -149,12 +149,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.PairBluetoothDeviceListReceived += pairBluetoothReceivedHandler;
 
-            Task startListeningForPairBluetooth = this.StartListeningForPairBluetooth(PairBluetoothDevicesApi, string.Format("deviceId={0}", Utilities.Hex64Encode(deviceId)));
+            Task startListeningForPairBluetooth = this.StartListeningForPairBluetoothAsync(PairBluetoothDevicesApi, string.Format("deviceId={0}", Utilities.Hex64Encode(deviceId)));
             startListeningForPairBluetooth.Wait();
 
             PairBluetoothReceived.WaitOne();
 
-            Task stopListeningForPairBluetooth = this.StopListeningForPairBluetooth();
+            Task stopListeningForPairBluetooth = this.StopListeningForPairBluetoothAsync();
             stopListeningForPairBluetooth.Wait();
 
             this.PairBluetoothDeviceListReceived -= pairBluetoothReceivedHandler;
@@ -165,7 +165,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Starts listening for bluetooth list of devices returned from the BluetoothDeviceListReceived handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
-        public async Task StartListeningForBluetooth(string bluetoothApi)
+        public async Task StartListeningForBluetoothAsync(string bluetoothApi)
         {
             if (this.BluetoothWebSocket == null)
             {
@@ -185,21 +185,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.BluetoothWebSocket.StartListeningForMessages(bluetoothApi);
+            await this.BluetoothWebSocket.StartListeningForMessagesAsync(bluetoothApi);
         }
 
         /// <summary>
         /// Stop listening for the list of bluetooth device.
         /// </summary>
         /// <returns>Task to stop listening for bluetooth devices and disconnecting from the websocket .</returns>
-        public async Task StopListeningForBluetooth()
+        public async Task StopListeningForBluetoothAsync()
         {
             if (this.BluetoothWebSocket == null || !this.BluetoothWebSocket.IsListeningForMessages)
             {
                 return;
             }
 
-            await this.BluetoothWebSocket.StopListeningForMessages();
+            await this.BluetoothWebSocket.StopListeningForMessagesAsync();
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Starts listening for paired bluetooth list of devices returned from the PairedBluetoothDeviceListReceived handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
-        public async Task StartListeningForPairedBluetooth(string bluetoothApi)
+        public async Task StartListeningForPairedBluetoothAsync(string bluetoothApi)
         {
             if (this.PairedBluetoothWebSocket == null)
             {
@@ -243,21 +243,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.PairedBluetoothWebSocket.StartListeningForMessages(bluetoothApi);
+            await this.PairedBluetoothWebSocket.StartListeningForMessagesAsync(bluetoothApi);
         }
 
         /// <summary>
         /// Stop listening for the list of paired bluetooth device.
         /// </summary>
         /// <returns>Task to stop listening for bluetooth devices and disconnecting from the websocket .</returns>
-        public async Task StopListeningForPairedBluetooth()
+        public async Task StopListeningForPairedBluetoothAsync()
         {
             if (this.PairedBluetoothWebSocket == null || !this.PairedBluetoothWebSocket.IsListeningForMessages)
             {
                 return;
             }
 
-            await this.PairedBluetoothWebSocket.StopListeningForMessages();
+            await this.PairedBluetoothWebSocket.StopListeningForMessagesAsync();
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Starts listening for the result to pair the bluetooth device returned from the PairBluetoothDeviceListReceived handler.
         /// </summary>
         /// <returns>Task for connecting to the websocket but not for listening to it.</returns>
-        public async Task StartListeningForPairBluetooth(string bluetoothApi, string payload)
+        public async Task StartListeningForPairBluetoothAsync(string bluetoothApi, string payload)
         {
             if (this.PairBluetoothWebSocket == null)
             {
@@ -301,21 +301,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.PairBluetoothWebSocket.StartListeningForMessages(bluetoothApi, payload);
+            await this.PairBluetoothWebSocket.StartListeningForMessagesAsync(bluetoothApi, payload);
         }
 
         /// <summary>
         /// Stop listening for the results for pairing bluetooth device.
         /// </summary>
         /// <returns>Task to stop listening for the bluetooth device and disconnecting from the websocket .</returns>
-        public async Task StopListeningForPairBluetooth()
+        public async Task StopListeningForPairBluetoothAsync()
         {
             if (this.PairBluetoothWebSocket == null || !this.PairBluetoothWebSocket.IsListeningForMessages)
             {
                 return;
             }
 
-            await this.PairBluetoothWebSocket.StopListeningForMessages();
+            await this.PairBluetoothWebSocket.StopListeningForMessagesAsync();
         }
 
         /// <summary>
@@ -340,9 +340,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="deviceId">Device Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<ErrorInformation> UnPairBluetoothDevice(string deviceId)
+        public async Task<ErrorInformation> UnPairBluetoothDeviceAsync(string deviceId)
         {
-            return await this.Post<ErrorInformation>(
+            return await this.PostAsync<ErrorInformation>(
                  UnpairBluetoothDevicesApi,
                 string.Format("deviceId={0}", Utilities.Hex64Encode(deviceId)));
         }

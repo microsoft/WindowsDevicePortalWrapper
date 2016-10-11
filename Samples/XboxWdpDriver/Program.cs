@@ -259,7 +259,7 @@ namespace XboxWdpDriver
                     }
                 }
 
-                Task connectTask = portal.Connect(updateConnection: false, manualCertificate: cert);
+                Task connectTask = portal.ConnectAsync(updateConnection: false, manualCertificate: cert);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
@@ -332,7 +332,7 @@ namespace XboxWdpDriver
                             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
                             Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
 
-                            Task<string> getNameTask = portal.GetDeviceName();
+                            Task<string> getNameTask = portal.GetDeviceNameAsync();
                             getNameTask.Wait();
                             Console.WriteLine("Device name: " + getNameTask.Result);
                             break;
@@ -349,7 +349,7 @@ namespace XboxWdpDriver
                             break;
 
                         case OperationType.RebootOperation:
-                            Task rebootTask = portal.Reboot();
+                            Task rebootTask = portal.RebootAsync();
                             rebootTask.Wait();
                             Console.WriteLine("Rebooting device.");
                             break;

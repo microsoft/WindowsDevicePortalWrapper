@@ -13,7 +13,7 @@ using Microsoft.Tools.WindowsDevicePortal.Tests;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// MOCK implementation of HTTP Get
+    /// MOCK implementation of HTTP GetAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> Get(
+        private async Task<Stream> GetAsync(
             Uri uri)
         {
             MemoryStream dataStream = null;

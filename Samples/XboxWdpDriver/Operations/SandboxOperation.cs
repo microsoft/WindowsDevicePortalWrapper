@@ -42,21 +42,21 @@ namespace XboxWdpDriver
 
             if (string.IsNullOrEmpty(desiredValue))
             {
-                Task<Sandbox> getSandboxTask = portal.GetXboxLiveSandbox();
+                Task<Sandbox> getSandboxTask = portal.GetXboxLiveSandboxAsync();
                 getSandboxTask.Wait();
 
                 Console.WriteLine(getSandboxTask.Result);
             }
             else
             {
-                Task<Sandbox> setSandboxTask = portal.SetXboxLiveSandbox(desiredValue);
+                Task<Sandbox> setSandboxTask = portal.SetXboxLiveSandboxAsync(desiredValue);
                 setSandboxTask.Wait();
 
                 Console.WriteLine("{0} -> {1}", setSandboxTask.Result, desiredValue);
 
                 if (parameters.HasFlag("reboot"))
                 {
-                    Task rebootTask = portal.Reboot();
+                    Task rebootTask = portal.RebootAsync();
                     rebootTask.Wait();
                     Console.WriteLine("Console rebooting...");
                 }

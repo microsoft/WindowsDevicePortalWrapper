@@ -30,9 +30,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the internet connection sharing(ICS) interfaces .
         /// </summary>
         /// <returns>String containing the internet connection sharing(ICS) interfaces.</returns>
-        public async Task<IscInterfacesInfo> GetIcsInterfacesInfo()
+        public async Task<IscInterfacesInfo> GetIcsInterfacesInfoAsync()
         {
-            return await this.Get<IscInterfacesInfo>(IcsInterfacesApi);
+            return await this.GetAsync<IscInterfacesInfo>(IcsInterfacesApi);
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="privateInterface">Private Interface.</param>
         /// <param name="publicInterface">Public Interface.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task IcSharingStart(string privateInterface, string publicInterface)
+        public async Task IcSharingStartAsync(string privateInterface, string publicInterface)
         {
-            await this.Post(
+            await this.PostAsync(
                 IcSharingApi, string.Format("PrivateInterface={0}&PublicInterface={1}", Utilities.Hex64Encode(privateInterface), Utilities.Hex64Encode(publicInterface)));
         }
 
@@ -53,9 +53,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="privateInterface">Private Interface.</param>
         /// <param name="publicInterface">Public Interface.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task IcSharingStop(string privateInterface, string publicInterface)
+        public async Task IcSharingStopAsync(string privateInterface, string publicInterface)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                 IcSharingApi, string.Format("PrivateInterface={0}&PublicInterface={1}", Utilities.Hex64Encode(privateInterface), Utilities.Hex64Encode(publicInterface)));
         }
 
