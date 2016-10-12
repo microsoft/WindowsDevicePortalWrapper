@@ -132,7 +132,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         /// <param name="runningProcesses">The <see cref="RunningProcesses" /> to validate.</param>
         private static void ValidateRunningProcessesAsync(RunningProcesses runningProcesses)
         {
-            List<DeviceProcessInfo> processes = new List<DeviceProcessInfo>(runningProcesses.Processes);
+            List<DeviceProcessInfo> processes = runningProcesses.Processes;
 
             // Check some known things about this response.
             Assert.AreEqual(2, processes.Count);

@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -359,7 +360,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Returns a list of available devices
             /// </summary>
             [DataMember(Name = "AvailableDevices")]
-            public BluetoothDeviceInfo[] AvailableDevices;
+            public List<BluetoothDeviceInfo> AvailableDevices { get; private set; }
         }
         public class BluetoothDeviceInfo 
         {
@@ -386,7 +387,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Returns a list of paired devices
             /// </summary>
             [DataMember(Name = "PairedDevices")]
-            public BluetoothDeviceInfo[] PairedDevices;
+            public List<BluetoothDeviceInfo> PairedDevices { get; private set; }
         }
 
         /// <summary>
@@ -399,7 +400,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Returns the pair results
             /// </summary>
             [DataMember(Name = "PairResult")]
-            public PairResult PairResult;
+            public PairResult PairResult { get; private set; }
         }
 
         public class PairResult

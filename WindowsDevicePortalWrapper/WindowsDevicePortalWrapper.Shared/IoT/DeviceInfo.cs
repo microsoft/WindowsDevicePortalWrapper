@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -245,7 +246,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of all timezones
             /// </summary>
             [DataMember(Name = "Timezones")]
-            public Timezone[] Timezones { get; private set; }
+            public List<Timezone> Timezones { get; private set; }
         }
 
         /// <summary>
@@ -345,7 +346,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of all the controller drivers information
             /// </summary>         
             [DataMember(Name = "ControllersDrivers")]
-            public string[] ControllersDrivers { get; private set; }
+            public List<string> ControllersDrivers { get; private set; }
 
             /// <summary>
             /// Gets the request for reboot
@@ -383,7 +384,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of resolution specifications
             /// </summary>
             [DataMember(Name = "Resolutions")]
-            public Resolution[] Resolutions { get; private set; }
+            public List<Resolution> Resolutions { get; private set; }
         }
 
         /// <summary>

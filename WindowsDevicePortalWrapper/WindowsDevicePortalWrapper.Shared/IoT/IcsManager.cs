@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -71,13 +72,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the internet connection sharing(ICS) private interfaces.
             /// </summary>
             [DataMember(Name = "PrivateInterfaces")]
-            public string[] PrivateInterfaces { get; private set; }
+            public List<string> PrivateInterfaces { get; private set; }
 
             /// <summary>
             ///  Gets the internet connection sharing(ICS) public interfaces.
             /// </summary>
             [DataMember(Name = "PublicInterfaces")]
-            public string[] PublicInterfaces { get; private set; }
+            public List<string> PublicInterfaces { get; private set; }
         }
         #endregion // Data contract
     }
