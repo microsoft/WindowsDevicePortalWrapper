@@ -223,7 +223,7 @@ namespace SampleDeviceCollection
             this.Ready = false;
             try
             {
-                IpConfiguration config = await this.Portal.GetIpConfig();
+                IpConfiguration config = await this.Portal.GetIpConfigAsync();
                 this.OutputIpConfiguration(config);
             }
             catch (Exception exn)
@@ -342,7 +342,7 @@ namespace SampleDeviceCollection
                 string newName = this.deviceNameEntry;
                 this.DeviceNameEntry = string.Empty;
                 this.OutputDiagnosticString("Attempting to rename device to {0}\n", newName);
-                await this.Portal.SetDeviceName(newName);
+                await this.Portal.SetDeviceNameAsync(newName);
             }
             catch (Exception exn)
             {
@@ -398,7 +398,7 @@ namespace SampleDeviceCollection
             this.Ready = false;
             try
             {
-                this.DeviceName = await this.Portal.GetDeviceName();
+                this.DeviceName = await this.Portal.GetDeviceNameAsync();
                 this.OutputDiagnosticString("Done refreshing device name\n");
             }
             catch (Exception exn)
@@ -459,7 +459,7 @@ namespace SampleDeviceCollection
             try
             {
                 this.OutputDiagnosticString("Attempting to reboot device.\n");
-                await this.Portal.Reboot();
+                await this.Portal.RebootAsync();
 
                 // Sometimes able to reestablish the connection prematurely before the console has a chance to shut down
                 // So adding a delay here before trying to reestablish the connection.
@@ -571,7 +571,7 @@ namespace SampleDeviceCollection
             {
                 do
                 {
-                    await this.Portal.Connect();
+                    await this.Portal.ConnectAsync();
 
                     if (this.Portal.ConnectionHttpStatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -654,7 +654,7 @@ namespace SampleDeviceCollection
             try
             {
                 this.Portal.SystemPerfMessageReceived += this.OnSystemPerfReceived;
-                await this.Portal.StartListeningForSystemPerf();
+                await this.Portal.StartListeningForSystemPerfAsync();
             }
             catch (Exception exn)
             {
@@ -710,7 +710,7 @@ namespace SampleDeviceCollection
             try
             {
                 this.Portal.SystemPerfMessageReceived -= this.OnSystemPerfReceived;
-                await this.Portal.StopListeningForSystemPerf();
+                await this.Portal.StopListeningForSystemPerfAsync();
             }
             catch (Exception exn)
             {
