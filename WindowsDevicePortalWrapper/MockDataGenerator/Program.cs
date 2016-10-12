@@ -103,7 +103,7 @@ namespace MockDataGenerator
             IDevicePortalConnection connection = new DefaultDevicePortalConnection(parameters.GetParameterValue(ParameterHelper.FullAddress), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
             DevicePortal portal = new DevicePortal(connection);
 
-            Task connectTask = portal.Connect(updateConnection: false);
+            Task connectTask = portal.ConnectAsync(updateConnection: false);
             connectTask.Wait();
 
             if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
@@ -170,7 +170,7 @@ namespace MockDataGenerator
                             dataStream.Position = 0;
                             string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
 
-                            Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod, dataStream, contentType);
+                            Task saveResponseTask = portal.SaveEndpointResponseToFileAsync(endpoint, directory, httpMethod, dataStream, contentType);
                             saveResponseTask.Wait();
                         }
                     }
@@ -178,13 +178,13 @@ namespace MockDataGenerator
                     {
                         Stream fileStream = new FileStream(requestBodyFile, FileMode.Open);
 
-                        Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod, fileStream, "application/json");
+                        Task saveResponseTask = portal.SaveEndpointResponseToFileAsync(endpoint, directory, httpMethod, fileStream, "application/json");
                         saveResponseTask.Wait();
                     }
                 }
                 else
                 {
-                    Task saveResponseTask = portal.SaveEndpointResponseToFile(endpoint, directory, httpMethod);
+                    Task saveResponseTask = portal.SaveEndpointResponseToFileAsync(endpoint, directory, httpMethod);
                     saveResponseTask.Wait();
                 }
             }
@@ -197,7 +197,7 @@ namespace MockDataGenerator
 
                     try
                     {
-                        Task saveResponseTask = portal.SaveEndpointResponseToFile(finalEndpoint, directory, httpMethod);
+                        Task saveResponseTask = portal.SaveEndpointResponseToFileAsync(finalEndpoint, directory, httpMethod);
                         saveResponseTask.Wait();
                     }
                     catch (Exception e)

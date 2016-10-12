@@ -65,13 +65,13 @@ namespace XboxWdpDriver
                         return;
                     }
 
-                    Task fiddlerEnableTask = portal.EnableFiddlerTracing(proxyAddress, proxyPort, parameters.GetParameterValue("certpath"));
+                    Task fiddlerEnableTask = portal.EnableFiddlerTracingAsync(proxyAddress, proxyPort, parameters.GetParameterValue("certpath"));
                     fiddlerEnableTask.Wait();
                     Console.WriteLine("Fiddler enabled.");
                 }
                 else if (string.Equals(state, "off", StringComparison.OrdinalIgnoreCase))
                 {
-                    Task fiddlerDisableTask = portal.DisableFiddlerTracing();
+                    Task fiddlerDisableTask = portal.DisableFiddlerTracingAsync();
                     fiddlerDisableTask.Wait();
                     Console.WriteLine("Fiddler disabled.");
                 }
@@ -85,7 +85,7 @@ namespace XboxWdpDriver
 
                 if (parameters.HasFlag("reboot"))
                 {
-                    Task rebootTask = portal.Reboot();
+                    Task rebootTask = portal.RebootAsync();
                     rebootTask.Wait();
                     Console.WriteLine("Console rebooting...");
                 }

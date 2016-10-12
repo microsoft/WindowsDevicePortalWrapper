@@ -41,19 +41,19 @@ namespace XboxWdpDriver
 
                 portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
 
-                Task startListeningForProcessesTask = portal.StartListeningForRunningProcesses();
+                Task startListeningForProcessesTask = portal.StartListeningForRunningProcessesAsync();
                 startListeningForProcessesTask.Wait();
 
                 runningProcessesReceived.WaitOne();
 
-                Task stopListeningForProcessesTask = portal.StopListeningForRunningProcesses();
+                Task stopListeningForProcessesTask = portal.StopListeningForRunningProcessesAsync();
                 stopListeningForProcessesTask.Wait();
 
                 portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
             }
             else
             {
-                Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcesses();
+                Task<DevicePortal.RunningProcesses> getRunningProcessesTask = portal.GetRunningProcessesAsync();
                 runningProcesses = getRunningProcessesTask.Result;
             }
 

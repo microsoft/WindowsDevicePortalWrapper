@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for getting installation status.
         /// </summary>
         /// <returns>The status</returns>
-        public async Task<ApplicationInstallStatus> GetInstallStatus()
+        public async Task<ApplicationInstallStatus> GetInstallStatusAsync()
         {
             ApplicationInstallStatus status = ApplicationInstallStatus.Completed;
 

@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
 #pragma warning disable 1998
-        private async Task StartListeningForMessagesInternal(
+        private async Task StartListeningForMessagesInternalAsync(
             Uri endpoint)
         {
             this.websocket = new MessageWebSocket();
@@ -130,7 +130,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
 #pragma warning disable 1998
-        private async Task StopListeningForMessagesInternal()
+        private async Task StopListeningForMessagesInternalAsync()
         {
             if (this.IsListeningForMessages)
             {

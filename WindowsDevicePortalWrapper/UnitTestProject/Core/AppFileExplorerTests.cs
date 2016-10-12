@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, response, HttpMethods.Get);
 
-            Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFolders();
+            Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFoldersAsync();
             getKnownFoldersTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getKnownFoldersTask.Status);
@@ -71,7 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, response, HttpMethods.Get);
 
-            Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContents("KnownFolderOne");
+            Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContentsAsync("KnownFolderOne");
             getFolderContentsTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getFolderContentsTask.Status);
@@ -119,7 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpMethods.Get);
 
-            Task<Stream> getFileTask = TestHelpers.Portal.GetFile("knownfolder", "FileToDownload.txt", "SubFolder\\SubFolder2");
+            Task<Stream> getFileTask = TestHelpers.Portal.GetFileAsync("knownfolder", "FileToDownload.txt", "SubFolder\\SubFolder2");
             getFileTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getFileTask.Status);
@@ -137,7 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpMethods.Post);
 
-            Task uploadFileTask = TestHelpers.Portal.UploadFile("knownfolder", "MockData\\Defaults\\api_os_devicefamily_Default.dat", "SubFolder\\SubFolder2");
+            Task uploadFileTask = TestHelpers.Portal.UploadFileAsync("knownfolder", "MockData\\Defaults\\api_os_devicefamily_Default.dat", "SubFolder\\SubFolder2");
             uploadFileTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, uploadFileTask.Status);
@@ -156,7 +156,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             try
             {
-                Task uploadFileTask = TestHelpers.Portal.UploadFile("knownfolder", "NonExistentFilePath\\NonExistentFile.txt", "SubFolder\\SubFolder2");
+                Task uploadFileTask = TestHelpers.Portal.UploadFileAsync("knownfolder", "NonExistentFilePath\\NonExistentFile.txt", "SubFolder\\SubFolder2");
                 uploadFileTask.Wait();
 
                 Assert.Fail("Should not have succeeded if uploading a file which doesn't exist.");
@@ -177,7 +177,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFileApi, response, HttpMethods.Delete);
 
-            Task deleteFileTask = TestHelpers.Portal.DeleteFile("knownfolder", "FileToDelete.txt", "SubFolder\\SubFolder2");
+            Task deleteFileTask = TestHelpers.Portal.DeleteFileAsync("knownfolder", "FileToDelete.txt", "SubFolder\\SubFolder2");
             deleteFileTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, deleteFileTask.Status);
@@ -193,7 +193,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RenameFileApi, response, HttpMethods.Post);
 
-            Task renameFileTask = TestHelpers.Portal.RenameFile("knownfolder", "FileToRename.txt", "NewFileName.txt", "SubFolder\\SubFolder2");
+            Task renameFileTask = TestHelpers.Portal.RenameFileAsync("knownfolder", "FileToRename.txt", "NewFileName.txt", "SubFolder\\SubFolder2");
             renameFileTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, renameFileTask.Status);

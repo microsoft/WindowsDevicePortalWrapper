@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Takes a current screenshot of the device.
         /// </summary>
         /// <returns>A stream of the screenshot in PNG form.</returns>
-        public async Task<Stream> TakeXboxScreenshot()
+        public async Task<Stream> TakeXboxScreenshotAsync()
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
@@ -35,7 +35,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.deviceConnection.Connection,
                 GetXboxScreenshotApi);
 
-            return await this.Get(uri);
+            return await this.GetAsync(uri);
         }
     }
 }

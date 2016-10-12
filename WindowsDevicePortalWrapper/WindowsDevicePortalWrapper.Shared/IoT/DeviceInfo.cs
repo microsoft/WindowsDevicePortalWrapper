@@ -70,54 +70,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the IoT OS Information.
         /// </summary>
         /// <returns>String containing the OS information.</returns>
-        public async Task<IoTOSInfo> GetIoTOSInfo()
+        public async Task<IoTOSInfo> GetIoTOSInfoAsync()
         {
-            return await this.Get<IoTOSInfo>(IoTOsInfoApi);
+            return await this.GetAsync<IoTOSInfo>(IoTOsInfoApi);
         }
 
         /// <summary>
         /// Gets the Timezone information.
         /// </summary>
         /// <returns>String containing the timezone information.</returns>
-        public async Task<TimezoneInfo> GetTimezoneInfo()
+        public async Task<TimezoneInfo> GetTimezoneInfoAsync()
         {
-            return await this.Get<TimezoneInfo>(TimezoneInfoApi);
+            return await this.GetAsync<TimezoneInfo>(TimezoneInfoApi);
         }
 
         /// <summary>
         /// Gets the datetime information.
         /// </summary>
         /// <returns>String containing the datetime information.</returns>
-        public async Task<DateTimeInfo> GetDateTimeInfo()
+        public async Task<DateTimeInfo> GetDateTimeInfoAsync()
         {
-            return await this.Get<DateTimeInfo>(DateTimeInfoApi);
+            return await this.GetAsync<DateTimeInfo>(DateTimeInfoApi);
         }
 
         /// <summary>
         /// Gets the controller driver information.
         /// </summary>
         /// <returns>String containing the controller driver information.</returns>
-        public async Task<ControllerDriverInfo> GetControllerDriverInfo()
+        public async Task<ControllerDriverInfo> GetControllerDriverInfoAsync()
         {
-            return await this.Get<ControllerDriverInfo>(ControllerDriverApi);
+            return await this.GetAsync<ControllerDriverInfo>(ControllerDriverApi);
         }
 
         /// <summary>
         /// Gets the dispaly orientation information.
         /// </summary>
         /// <returns>String containing the dispaly orientation information.</returns>
-        public async Task<DisplayOrientationInfo> GetDisplayOrientationInfo()
+        public async Task<DisplayOrientationInfo> GetDisplayOrientationInfoAsync()
         {
-            return await this.Get<DisplayOrientationInfo>(DisplayOrientationApi); 
+            return await this.GetAsync<DisplayOrientationInfo>(DisplayOrientationApi); 
         }
 
         /// <summary>
         /// Gets the dispaly resolution information.
         /// </summary>
         /// <returns>String containing the dispaly resolution information.</returns>
-        public async Task<DisplayResolutionInfo> GetDisplayResolutionInfo()
+        public async Task<DisplayResolutionInfo> GetDisplayResolutionInfoAsync()
         {
-            return await this.Get<DisplayResolutionInfo>(DisplayResolutionApi);
+            return await this.GetAsync<DisplayResolutionInfo>(DisplayResolutionApi);
         }
 
         /// <summary>
@@ -125,9 +125,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="name">Name to set for the device.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetIoTDeviceName(string name)
+        public async Task SetIoTDeviceNameAsync(string name)
         {
-            await this.Post(DeviceNameApi, string.Format("newdevicename={0}", Utilities.Hex64Encode(name)));
+            await this.PostAsync(DeviceNameApi, string.Format("newdevicename={0}", Utilities.Hex64Encode(name)));
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="oldPassword">Old password.</param>
         /// <param name="newPassword">New desired password.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<ErrorInformation> SetNewPassword(string oldPassword, string newPassword)
+        public async Task<ErrorInformation> SetNewPasswordAsync(string oldPassword, string newPassword)
         {
-            return await this.Post<ErrorInformation>(
+            return await this.PostAsync<ErrorInformation>(
                 ResetPasswordApi,
                 string.Format("oldpassword={0}&newpassword={1}", Utilities.Hex64Encode(oldPassword), Utilities.Hex64Encode(newPassword)));
         }
@@ -148,9 +148,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="newPin">New pin.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetNewRemoteDebuggingPin(string newPin)
+        public async Task SetNewRemoteDebuggingPinAsync(string newPin)
         {
-            await this.Post(
+            await this.PostAsync(
                  NewRemoteDebuggingPinApi,
                 string.Format("newpin={0}", Utilities.Hex64Encode(newPin)));
         }
@@ -160,9 +160,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="newDriver">Driver to set.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<ControllerDriverInfo> SetControllersDrivers(string newDriver)
+        public async Task<ControllerDriverInfo> SetControllersDriversAsync(string newDriver)
         {
-            return await this.Post<ControllerDriverInfo>(
+            return await this.PostAsync<ControllerDriverInfo>(
                  ControllerDriverApi,
                 string.Format("newdriver={0}", Utilities.Hex64Encode(newDriver)));
         }
@@ -172,9 +172,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="index">Timezone index.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<ErrorInformation> SetTimeZone(int index)
+        public async Task<ErrorInformation> SetTimeZoneAsync(int index)
         {
-            return await this.Post<ErrorInformation>(
+            return await this.PostAsync<ErrorInformation>(
                  SetTimeZoneApi,
                 string.Format("index={0}", index));
         }
@@ -184,9 +184,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="displayResolution">New display resolution.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetDisplayResolution(string displayResolution)
+        public async Task SetDisplayResolutionAsync(string displayResolution)
         {
-            await this.Post(
+            await this.PostAsync(
                  DisplayResolutionApi,
                 string.Format("newdisplayresolution={0}", Utilities.Hex64Encode(displayResolution)));
         }
@@ -196,9 +196,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="displayOrientation">Desired orientation.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetDisplayOrientation(string displayOrientation)
+        public async Task SetDisplayOrientationAsync(string displayOrientation)
         {
-            await this.Post(
+            await this.PostAsync(
                  DisplayOrientationApi,
                 string.Format("newdisplayorientation={0}", Utilities.Hex64Encode(displayOrientation)));
         }

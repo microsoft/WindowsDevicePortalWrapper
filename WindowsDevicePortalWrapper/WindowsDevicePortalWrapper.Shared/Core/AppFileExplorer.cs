@@ -41,9 +41,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets a list of Known Folders on the device. 
         /// </summary>
         /// <returns>List of known folders available on this device.</returns>
-        public async Task<KnownFolders> GetKnownFolders()
+        public async Task<KnownFolders> GetKnownFoldersAsync()
         {
-            return await this.Get<KnownFolders>(KnownFoldersApi);
+            return await this.GetAsync<KnownFolders>(KnownFoldersApi);
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Contents of the requested folder.</returns>
-        public async Task<FolderContents> GetFolderContents(
+        public async Task<FolderContents> GetFolderContentsAsync(
             string knownFolderId, 
             string subPath = null, 
             string packageFullName = null)
         {
             Dictionary<string, string> payload = this.BuildCommonFilePayload(knownFolderId, subPath, packageFullName);
 
-            return await this.Get<FolderContents>(GetFilesApi, Utilities.BuildQueryString(payload));
+            return await this.GetAsync<FolderContents>(GetFilesApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Stream to the downloaded file.</returns>
-        public async Task<Stream> GetFile(
+        public async Task<Stream> GetFileAsync(
             string knownFolderId,
             string filename,
             string subPath = null,
@@ -86,7 +86,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 GetFileApi,
                 Utilities.BuildQueryString(payload));
 
-            return await this.Get(uri);
+            return await this.GetAsync(uri);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the upload request.</returns>
-        public async Task UploadFile(
+        public async Task UploadFileAsync(
             string knownFolderId,
             string filepath,
             string subPath = null,
@@ -108,7 +108,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             List<string> files = new List<string>();
             files.Add(filepath);
 
-            await this.Post(GetFileApi, files, Utilities.BuildQueryString(payload));
+            await this.PostAsync(GetFileApi, files, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the delete request.</returns>
-        public async Task DeleteFile(
+        public async Task DeleteFileAsync(
             string knownFolderId,
             string filename,
             string subPath = null,
@@ -129,7 +129,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             payload.Add("filename", filename);
 
-            await this.Delete(GetFileApi, Utilities.BuildQueryString(payload));
+            await this.DeleteAsync(GetFileApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the rename request.</returns>
-        public async Task RenameFile(
+        public async Task RenameFileAsync(
             string knownFolderId,
             string filename,
             string newFilename,
@@ -153,7 +153,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             payload.Add("filename", filename);
             payload.Add("newfilename", newFilename);
 
-            await this.Post(RenameFileApi, Utilities.BuildQueryString(payload));
+            await this.PostAsync(RenameFileApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>

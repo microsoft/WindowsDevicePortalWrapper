@@ -31,14 +31,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="folderName">Relative folder path where the app can be found.</param>
         /// <returns>Task for tracking async completion.</returns>
-        public async Task RegisterApplication(string folderName)
+        public async Task RegisterApplicationAsync(string folderName)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            await this.Post(
+            await this.PostAsync(
                 RegisterPackageApi,
                 string.Format("folder={0}", Utilities.Hex64Encode(folderName)));
 
@@ -48,7 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
 
-                status = await this.GetInstallStatus();
+                status = await this.GetInstallStatusAsync();
             }
             while (status == ApplicationInstallStatus.InProgress);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="sourceFolder">The source folder to upload.</param>
         /// <param name="destinationFolder">The destination path to upload it to.</param>
         /// <returns>Task for tracking async completion.</returns>
-        public async Task UploadPackageFolder(string sourceFolder, string destinationFolder)
+        public async Task UploadPackageFolderAsync(string sourceFolder, string destinationFolder)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
@@ -69,7 +69,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             List<string> files = new List<string>();
             files.AddRange(Directory.GetFiles(sourceFolder));
 
-            await this.Post(
+            await this.PostAsync(
                 UploadPackageFolderApi,
                 files,
                 string.Format("destinationFolder={0}", Utilities.Hex64Encode(destinationFolder)));

@@ -158,11 +158,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Updates the device's connection Uri.
         /// </summary>
-        /// <param name="ipConfig">The device's IP configuration data.</param>
-        /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
+        /// <param name="ipConfig">Object that describes the current network configuration.</param>
+        /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
         public void UpdateConnection(
             IpConfiguration ipConfig,
-            bool requiresHttps = false)
+            bool requiresHttps,
+            bool preservePort)
         {
             Uri newConnection = null;
 
@@ -173,19 +175,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
-                        string port = "";
-                        string[] addressParts = this.Connection.Authority.Split(':');
-                        if (addressParts.Length == 2)
+                        string address = addressInfo.Address;
+                        if (preservePort)
                         {
-                            port = string.Format(":{0}", addressParts[1]);
+                            address = string.Format("{0}:{1}",
+                                address,
+                                this.Connection.Port);
                         }
 
                         newConnection = new Uri(
                             string.Format(
-                                "{0}://{1}{2}",
+                                "{0}://{1}", 
                                 requiresHttps ? "https" : "http",
-                                addressInfo.Address,
-                                port));
+                                address));
                         break;
                     }
                 }

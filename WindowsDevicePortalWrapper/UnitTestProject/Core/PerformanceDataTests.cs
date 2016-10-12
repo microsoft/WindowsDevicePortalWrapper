@@ -26,12 +26,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, HttpMethods.Get);
 
-            Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcesses();
+            Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcessesAsync();
             getRunningProcessesTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getRunningProcessesTask.Status);
 
-            ValidateRunningProcesses(getRunningProcessesTask.Result);
+            ValidateRunningProcessesAsync(getRunningProcessesTask.Result);
         }
 
         /// <summary>
@@ -57,19 +57,19 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
 
             TestHelpers.Portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
 
-            Task startListeningForProcessesTask = TestHelpers.Portal.StartListeningForRunningProcesses();
+            Task startListeningForProcessesTask = TestHelpers.Portal.StartListeningForRunningProcessesAsync();
             startListeningForProcessesTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, startListeningForProcessesTask.Status);
 
             runningProcessesReceived.WaitOne();
 
-            Task stopListeningForProcessesTask = TestHelpers.Portal.StopListeningForRunningProcesses();
+            Task stopListeningForProcessesTask = TestHelpers.Portal.StopListeningForRunningProcessesAsync();
             stopListeningForProcessesTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, stopListeningForProcessesTask.Status);
 
             TestHelpers.Portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
 
-            ValidateRunningProcesses(runningProcesses);
+            ValidateRunningProcessesAsync(runningProcesses);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, HttpMethods.Get);
 
-            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
+            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerfAsync();
             getSystemPerfTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSystemPerfTask.Status);
@@ -111,13 +111,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
 
             TestHelpers.Portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
 
-            Task startListeningForSystemPerfTask = TestHelpers.Portal.StartListeningForSystemPerf();
+            Task startListeningForSystemPerfTask = TestHelpers.Portal.StartListeningForSystemPerfAsync();
             startListeningForSystemPerfTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, startListeningForSystemPerfTask.Status);
 
             systemPerfReceived.WaitOne();
 
-            Task stopListeningForSystemPerf = TestHelpers.Portal.StopListeningForSystemPerf();
+            Task stopListeningForSystemPerf = TestHelpers.Portal.StopListeningForSystemPerfAsync();
             stopListeningForSystemPerf.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, stopListeningForSystemPerf.Status);
 
@@ -130,7 +130,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         /// Validate the <see cref="RunningProcesses" /> returned from the tests.
         /// </summary>
         /// <param name="runningProcesses">The <see cref="RunningProcesses" /> to validate.</param>
-        private static void ValidateRunningProcesses(RunningProcesses runningProcesses)
+        private static void ValidateRunningProcessesAsync(RunningProcesses runningProcesses)
         {
             List<DeviceProcessInfo> processes = new List<DeviceProcessInfo>(runningProcesses.Processes);
 

@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Put
+    /// Universal Windows Platform implementation of HTTP PutAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="body">The HTTP content comprising the body of the request.</param>
         /// <returns>Task tracking the PUT completion.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Put(
+        private async Task<Stream> PutAsync(
             Uri uri,
             IHttpContent body = null)
         {

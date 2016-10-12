@@ -66,11 +66,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Closes the connection to the websocket and stop listening for messages.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        internal async Task StopListeningForMessages()
+        internal async Task StopListeningForMessagesAsync()
         {
             if (this.IsListeningForMessages)
             {
-                await this.StopListeningForMessagesInternal();
+                await this.StopListeningForMessagesInternalAsync();
             }
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        internal async Task StartListeningForMessages(
+        internal async Task StartListeningForMessagesAsync(
             string apiPath,
             string payload = null)
         {
@@ -90,8 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     this.deviceConnection.WebSocketConnection,
                     apiPath,
                     payload);
-
-                await this.StartListeningForMessagesInternal(uri);
+                await this.StartListeningForMessagesInternalAsync(uri);
             }
         }
 

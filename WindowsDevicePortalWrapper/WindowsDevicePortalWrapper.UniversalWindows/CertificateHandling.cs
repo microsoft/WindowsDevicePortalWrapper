@@ -26,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="acceptUntrustedCerts">Whether or not we should accept untrusted certificates.</param>
         /// <returns>The device certificate.</returns>
 #pragma warning disable 1998
-        public async Task<Certificate> GetRootDeviceCertificate(bool acceptUntrustedCerts = false)
+        public async Task<Certificate> GetRootDeviceCertificateAsync(bool acceptUntrustedCerts = false)
         {
             Certificate certificate = null;
 

@@ -32,9 +32,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="command">Command.</param>
         /// /// <param name="runAsDefaultAccount">Run As Default Account.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task RunCommand(string command,string runAsDefaultAccount)
+        public async Task RunCommandAsync(string command, string runAsDefaultAccount)
         {
-            await this.Post(
+            await this.PostAsync(
                 RunCommandApi, string.Format("command={0}&runasdefaultaccount={1}", Utilities.Hex64Encode(command), Utilities.Hex64Encode(runAsDefaultAccount)));
         }
 
@@ -45,9 +45,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="runAsDefaultAccount">Run As Default Account.</param>
         /// <param name="timeout">Timeout.</param>
         /// <returns>String containing the output after the command is executed.</returns>
-        public async Task<RunCommandOutputInfo> RunCommandWithoutOutput(string commandWithoutOutput, string runAsDefaultAccount, string timeout)
+        public async Task<RunCommandOutputInfo> RunCommandWithoutOutputAsync(string commandWithoutOutput, string runAsDefaultAccount, string timeout)
         {
-            return await this.Post<RunCommandOutputInfo>(
+            return await this.PostAsync<RunCommandOutputInfo>(
                 RunCommandWithoutOutputApi, string.Format("command={0}&runasdefaultaccount={1}&timeout={2}", Utilities.Hex64Encode(commandWithoutOutput), Utilities.Hex64Encode(runAsDefaultAccount), Utilities.Hex64Encode(timeout)));
         }
 

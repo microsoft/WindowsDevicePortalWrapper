@@ -87,9 +87,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <summary>
         ///  The Mock will never update the connection.
         /// </summary>
-        /// <param name="ipConfig">IP info</param>
-        /// <param name="requiresHttps">https required</param>
-        public void UpdateConnection(IpConfiguration ipConfig, bool requiresHttps)
+        /// <param name="ipConfig">Object that describes the current network configuration.</param>
+        /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
+        public void UpdateConnection(
+            IpConfiguration ipConfig, 
+            bool requiresHttps,
+            bool preservePort)
         {
             throw new NotImplementedException();
         }
