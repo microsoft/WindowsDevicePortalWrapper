@@ -34,14 +34,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>Interpupilary distance, in millimeters.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<float> GetInterPupilaryDistance()
+        public async Task<float> GetInterPupilaryDistanceAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            InterPupilaryDistance ipd = await this.Get<InterPupilaryDistance>(HolographicIpdApi);
+            InterPupilaryDistance ipd = await this.GetAsync<InterPupilaryDistance>(HolographicIpdApi);
             return ipd.Ipd;
         }
 
@@ -51,14 +51,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="httpsRequired">Desired value for HTTPS communication</param>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task SetIsHttpsRequired(bool httpsRequired)
+        public async Task SetIsHttpsRequiredAsync(bool httpsRequired)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Post(
+            await this.PostAsync(
                 HolographicWebManagementHttpSettingsApi,
                 string.Format("required={0}", httpsRequired));
 
@@ -71,7 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ipd">Interpupilary distance, in millimeters.</param>
         /// <returns>Task for tracking the POST call</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task SetInterPupilaryDistance(float ipd)
+        public async Task SetInterPupilaryDistanceAsync(float ipd)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -80,7 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string payload = string.Format("ipd={0}", (int)(ipd * 1000.0f));
 
-            await this.Post(
+            await this.PostAsync(
                 HolographicIpdApi,
                 payload);
         }
@@ -90,14 +90,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<bool> GetIsHttpsRequired()
+        public async Task<bool> GetIsHttpsRequiredAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            WebManagementHttpSettings httpSettings = await this.Get<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
+            WebManagementHttpSettings httpSettings = await this.GetAsync<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
             return httpSettings.IsHttpsRequired;
         }
 

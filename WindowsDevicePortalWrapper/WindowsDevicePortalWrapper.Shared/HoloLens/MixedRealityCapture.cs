@@ -60,7 +60,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for getting a high resolution live Holographic Mixed Reality Capture stream.
         /// </summary>
-        public static readonly string MrcLiveStreamHighwResApi = "api/holographic/stream/live_high.mp4";
+        public static readonly string MrcLiveStreamHighResApi = "api/holographic/stream/live_high.mp4";
 
         /// <summary>
         /// API for getting a low resolution live Holographic Mixed Reality Capture stream.
@@ -81,28 +81,112 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Removes a Mixed Reality Capture file from the device's local storage.
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task DeleteMrcFile(string fileName)
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task DeleteMrcFileAsync(string fileName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Delete(
+            await this.DeleteAsync(
                 MrcFileApi,
                 string.Format("filename={0}", Utilities.Hex64Encode(fileName)));
         }
 
         /// <summary>
+        /// Retrieve the Uri for the high resolution Mixed Reality Capture live stream.
+        /// </summary>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
+        /// <param name="includeMicrophone">Specifies whether or not to include microphone data</param>
+        /// <param name="includeAudio">Specifies whether or not to include audio data</param>
+        /// <returns>Uri used to retreive the Mixed Reality Capture stream.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public Uri GetHighResolutionMrcLiveStreamUri(
+            bool includeHolograms = true,
+            bool includeColorCamera = true,
+            bool includeMicrophone = true,
+            bool includeAudio = true)
+        {
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeHolograms,
+                includeColorCamera,
+                includeMicrophone,
+                includeAudio).ToLower();
+
+            return Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                MrcLiveStreamHighResApi,
+                payload);
+        }
+
+        /// <summary>
+        /// Retrieve the Uri for the low resolution Mixed Reality Capture live stream.
+        /// </summary>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
+        /// <param name="includeMicrophone">Specifies whether or not to include microphone data</param>
+        /// <param name="includeAudio">Specifies whether or not to include audio data</param>
+        /// <returns>Uri used to retreive the Mixed Reality Capture stream.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public Uri GetLowResolutionMrcLiveStreamUri(
+            bool includeHolograms = true,
+            bool includeColorCamera = true,
+            bool includeMicrophone = true,
+            bool includeAudio = true)
+        {
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeHolograms,
+                includeColorCamera,
+                includeMicrophone,
+                includeAudio).ToLower();
+
+            return Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                MrcLiveStreamLowResApi,
+                payload);
+        }
+
+        /// <summary>
+        /// Retrieve the Uri for the medium resolution Mixed Reality Capture live stream.
+        /// </summary>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
+        /// <param name="includeMicrophone">Specifies whether or not to include microphone data</param>
+        /// <param name="includeAudio">Specifies whether or not to include audio data</param>
+        /// <returns>Uri used to retreive the Mixed Reality Capture stream.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public Uri GetMediumResolutionMrcLiveStreamUri(
+            bool includeHolograms = true,
+            bool includeColorCamera = true,
+            bool includeMicrophone = true,
+            bool includeAudio = true)
+        {
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeHolograms,
+                includeColorCamera,
+                includeMicrophone,
+                includeAudio).ToLower();
+
+            return Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                MrcLiveStreamMediumResApi,
+                payload);
+        }
+
+        /// <summary>
         /// Gets the capture file data
         /// </summary>
-        /// <param name="fileName">Name of the file to retrieve</param>
-        /// <param name="isThumbnailRequest">Whether or not we just want a thumbnail</param>
+        /// <param name="fileName">Name of the file to retrieve.</param>
+        /// <param name="isThumbnailRequest">Specifies whether or not we are requesting a thumbnail image.</param>
         /// <returns>Byte array containing the file data.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<byte[]> GetMrcFileData(
+        public async Task<byte[]> GetMrcFileDataAsync(
             string fileName,
             bool isThumbnailRequest = false)
         {
@@ -115,7 +199,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string apiPath = isThumbnailRequest ? MrcThumbnailApi : MrcFileApi;
 
-            using (MemoryStream data = await this.Get<MemoryStream>(
+            using (MemoryStream data = await this.GetAsync<MemoryStream>(
                 apiPath,
                 string.Format("filename={0}", Utilities.Hex64Encode(fileName))))
             {
@@ -131,20 +215,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>List of the capture files</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<MrcFileList> GetMrcFileList()
+        public async Task<MrcFileList> GetMrcFileListAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            MrcFileList mrcFileList = await this.Get<MrcFileList>(MrcFileListApi);
+            MrcFileList mrcFileList = await this.GetAsync<MrcFileList>(MrcFileListApi);
 
             foreach (MrcFileInformation mfi in mrcFileList.Files)
             {
                 try 
                 {
-                    mfi.Thumbnail = await this.GetMrcThumbnailData(mfi.FileName);
+                    mfi.Thumbnail = await this.GetMrcThumbnailDataAsync(mfi.FileName);
                 }
                 catch
                 {
@@ -155,18 +239,48 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Retrieve the Uri for the Mixed Reality Capture live stream using the default resolution.
+        /// </summary>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
+        /// <param name="includeMicrophone">Specifies whether or not to include microphone data</param>
+        /// <param name="includeAudio">Specifies whether or not to include audio data</param>
+        /// <returns>Uri used to retreive the Mixed Reality Capture stream.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public Uri GetMrcLiveStreamUri(
+            bool includeHolograms = true,
+            bool includeColorCamera = true,
+            bool includeMicrophone = true,
+            bool includeAudio = true)
+        {
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&loopback={3}",
+                includeHolograms,
+                includeColorCamera,
+                includeMicrophone,
+                includeAudio).ToLower();
+
+            return Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                MrcLiveStreamApi,
+                payload);
+        }
+
+        // TODO: GetMrcSettings()
+
+        /// <summary>
         /// Gets the status of the reality capture
         /// </summary>
         /// <returns>Status of the capture</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<MrcStatus> GetMrcStatus()
+        public async Task<MrcStatus> GetMrcStatusAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            return await this.Get<MrcStatus>(MrcStatusApi);
+            return await this.GetAsync<MrcStatus>(MrcStatusApi);
         }
 
         /// <summary>
@@ -175,22 +289,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="fileName">Name of the capture file</param>
         /// <returns>Byte array containing the thumbnail image data</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<byte[]> GetMrcThumbnailData(string fileName)
+        public async Task<byte[]> GetMrcThumbnailDataAsync(string fileName)
         {
             // GetMrcFileData checks for the appropriate platform. We do not need to duplicate the check here.
-            return await this.GetMrcFileData(fileName, true);
+            return await this.GetMrcFileDataAsync(fileName, true);
         }
+
+        // TODO: SetMrcSettings()
 
         /// <summary>
         /// Starts a Mixed Reality Capture recording.
         /// </summary>
-        /// <param name="includeHolograms">Whether to include holograms</param>
-        /// <param name="includeColorCamera">Whether to include the color camera</param>
-        /// <param name="includeMicrophone">Whether to include microphone data</param>
-        /// <param name="includeAudio">Whether to include audio data</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
+        /// <param name="includeMicrophone">Specifies whether or not to include microphone data</param>
+        /// <param name="includeAudio">Specifies whether or not to include audio data</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task StartMrcRecording(
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task StartMrcRecordingAsync(
             bool includeHolograms = true,
             bool includeColorCamera = true,
             bool includeMicrophone = true,
@@ -208,7 +324,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeMicrophone,
                 includeAudio).ToLower();
 
-            await this.Post(
+            await this.PostAsync(
                 MrcStartRecordingApi,
                 payload);
         }
@@ -216,26 +332,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Stops the Mixed Reality Capture recording
         /// </summary>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task StopMrcRecording()
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task StopMrcRecordingAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Post(MrcStopRecordingApi);
+            await this.PostAsync(MrcStopRecordingApi);
         }
 
         /// <summary>
         /// Take a Mixed Reality Capture photo
         /// </summary>
-        /// <param name="includeHolograms">Whether to include holograms</param>
-        /// <param name="includeColorCamera">Whether to include the color camera</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <param name="includeHolograms">Specifies whether or not to include holograms</param>
+        /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task TakeMrcPhoto(
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task TakeMrcPhotoAsync(
             bool includeHolograms = true,
             bool includeColorCamera = true)
         {
@@ -244,7 +360,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Post(
+            await this.PostAsync(
                 MrcPhotoApi,
                 string.Format("holo={0}&pv={1}", includeHolograms, includeColorCamera).ToLower());
         }

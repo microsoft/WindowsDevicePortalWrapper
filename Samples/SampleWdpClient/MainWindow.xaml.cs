@@ -115,7 +115,7 @@ namespace SampleWdpClient
                             }
                         };
                     
-                        await portal.Connect();
+                        await portal.ConnectAsync();
 
                         this.MarshalUpdateCommandOutput(sb.ToString());
                 });
@@ -190,7 +190,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        IpConfiguration ipconfig = await portal.GetIpConfig();
+                        IpConfiguration ipconfig = await portal.GetIpConfigAsync();
 
                         foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
                         {
@@ -247,7 +247,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        WifiInterfaces wifiInterfaces = await portal.GetWifiInterfaces();
+                        WifiInterfaces wifiInterfaces = await portal.GetWifiInterfacesAsync();
                         sb.AppendLine("WiFi Interfaces:");
                         foreach (WifiInterface wifiInterface in wifiInterfaces.Interfaces)
                         {
@@ -256,7 +256,7 @@ namespace SampleWdpClient
                             sb.Append("  GUID: ");
                             sb.AppendLine(wifiInterface.Guid.ToString());
 
-                            WifiNetworks wifiNetworks = await portal.GetWifiNetworks(wifiInterface.Guid);
+                            WifiNetworks wifiNetworks = await portal.GetWifiNetworksAsync(wifiInterface.Guid);
                             sb.AppendLine("  Networks:");
                             foreach (WifiNetworkInfo network in wifiNetworks.AvailableNetworks)
                             {
@@ -387,7 +387,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        await this.portal.Reboot();
+                        await this.portal.RebootAsync();
                     }
                     catch(Exception ex)
                     {
@@ -432,7 +432,7 @@ namespace SampleWdpClient
 
                     try
                     {
-                        await this.portal.Shutdown();
+                        await this.portal.ShutdownAsync();
                     }
                     catch(Exception ex)
                     {

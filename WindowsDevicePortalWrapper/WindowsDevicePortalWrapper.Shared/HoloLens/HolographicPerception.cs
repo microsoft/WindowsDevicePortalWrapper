@@ -61,14 +61,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>The simulation control mode.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<SimulationControlMode> GetPerceptionSimulationControlMode()
+        public async Task<SimulationControlMode> GetPerceptionSimulationControlModeAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            PerceptionSimulationControlMode controlMode = await this.Get<PerceptionSimulationControlMode>(HolographicSimulationModeApi);
+            PerceptionSimulationControlMode controlMode = await this.GetAsync<PerceptionSimulationControlMode>(HolographicSimulationModeApi);
             return controlMode.Mode;
         }
 
@@ -78,7 +78,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="mode">The simulation control mode.</param>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetPerceptionSimulationControlMode(SimulationControlMode mode)
+        public async Task SetPerceptionSimulationControlModeAsync(SimulationControlMode mode)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -88,7 +88,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = string.Format(
                 "mode={0}",
                 (int)mode);
-            await this.Post(HolographicSimulationModeApi, payload);
+            await this.PostAsync(HolographicSimulationModeApi, payload);
         }
 
         #region Data contract

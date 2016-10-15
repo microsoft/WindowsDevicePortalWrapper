@@ -104,7 +104,7 @@ namespace XboxWdpDriver
                 if (!string.IsNullOrEmpty(appxFile))
                 {
                     operation.mreAppInstall.Reset();
-                    Task installTask = portal.InstallApplication(null, appxFile, dependencies, certificate);
+                    Task installTask = portal.InstallApplicationAsync(null, appxFile, dependencies, certificate);
                     operation.mreAppInstall.WaitOne();
 
                     if (operation.installResults.Status == ApplicationInstallStatus.Completed)
@@ -122,7 +122,7 @@ namespace XboxWdpDriver
                     foreach (string dependency in dependencies)
                     {
                         operation.mreAppInstall.Reset();
-                        Task installTask = portal.InstallApplication(null, dependency, new List<string>());
+                        Task installTask = portal.InstallApplicationAsync(null, dependency, new List<string>());
                         operation.mreAppInstall.WaitOne();
 
                         if (operation.installResults.Status != ApplicationInstallStatus.Completed)
@@ -171,7 +171,7 @@ namespace XboxWdpDriver
                         {
                             if (e.HResult == ErrorLogonFailureHresult)
                             {
-                                Task<SmbInfo> smbTask = portal.GetSmbShareInfo();
+                                Task<SmbInfo> smbTask = portal.GetSmbShareInfoAsync();
                                 smbTask.Wait();
 
                                 // Set the username/password for accessing the share.
@@ -205,14 +205,14 @@ namespace XboxWdpDriver
                         return;
                     }
 
-                    Task registerTask = portal.RegisterApplication(destinationFolderName);
+                    Task registerTask = portal.RegisterApplicationAsync(destinationFolderName);
                     registerTask.Wait();
 
                     Console.WriteLine("Install complete.");
                 }
                 else if (!string.IsNullOrEmpty(registerPath))
                 {
-                    Task registerTask = portal.RegisterApplication(registerPath);
+                    Task registerTask = portal.RegisterApplicationAsync(registerPath);
                     registerTask.Wait();
 
                     Console.WriteLine("Registration complete.");
@@ -275,7 +275,7 @@ namespace XboxWdpDriver
         /// <param name="relativeDestination">The relative destination directory.</param>
         private void UploadDirectoryOverHttp(string folderPath, string relativeDestination)
         {
-            Task uploadTask = this.portal.UploadPackageFolder(folderPath, relativeDestination);
+            Task uploadTask = this.portal.UploadPackageFolderAsync(folderPath, relativeDestination);
             uploadTask.Wait();
 
             foreach (string subDir in Directory.GetDirectories(folderPath))

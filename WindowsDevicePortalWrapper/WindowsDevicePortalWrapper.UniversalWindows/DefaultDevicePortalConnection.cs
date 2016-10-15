@@ -56,10 +56,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 // Convert the scheme from http[s] to ws[s].
                 string scheme = this.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "wss" : "ws";
 
-                return new Uri(
-                    string.Format("{0}://{1}",
-                        scheme,
-                        this.Connection.Authority));
+                return new Uri(string.Format("{0}://{1}", scheme, this.Connection.Authority));
             }
         }
 
@@ -106,11 +103,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Updates the device's connection Uri.
         /// </summary>
-        /// <param name="ipConfig">The device's IP configuration data.</param>
-        /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
+        /// <param name="ipConfig">Object that describes the current network configuration.</param>
+        /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
         public void UpdateConnection(
             IpConfiguration ipConfig,
-            bool requiresHttps = false)
+            bool requiresHttps,
+            bool preservePort)
         {
             Uri newConnection = null;
 
@@ -121,11 +120,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
+                        string address = addressInfo.Address;
+                        if (preservePort)
+                        {
+                            address = string.Format(
+                                "{0}:{1}",
+                                address,
+                                this.Connection.Port);
+                        }
+
                         newConnection = new Uri(
                             string.Format(
                                 "{0}://{1}", 
                                 requiresHttps ? "https" : "http",
-                                this.Connection.Authority));
+                                address));
                         break;
                     }
                 }

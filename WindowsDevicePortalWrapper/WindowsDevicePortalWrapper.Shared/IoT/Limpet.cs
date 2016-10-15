@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -35,9 +36,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets Tpm Settings information.
         /// </summary>
         /// <returns>String containing theTpm Settings information.</returns>
-        public async Task<TpmSettingsInfo> GetTpmSettingsInfo()
+        public async Task<TpmSettingsInfo> GetTpmSettingsInfoAsync()
         {
-            return await this.Get<TpmSettingsInfo>(TpmSettingsApi);
+            return await this.GetAsync<TpmSettingsInfo>(TpmSettingsApi);
         }
 
         /// <summary>
@@ -45,27 +46,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="acpiTableIndex">ACPI Table Index.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetTpmAcpiTablesInfo(string acpiTableIndex)
+        public async Task SetTpmAcpiTablesInfoAsync(string acpiTableIndex)
         {
-            await this.Post(TpmAcpiTablesApi, string.Format("AcpiTableIndex={0}", Utilities.Hex64Encode(acpiTableIndex)));
+            await this.PostAsync(TpmAcpiTablesApi, string.Format("AcpiTableIndex={0}", Utilities.Hex64Encode(acpiTableIndex)));
         }
 
         /// <summary>
         /// Gets TPM ACPI Tables information.
         /// </summary>
         /// <returns>List of string containing the TPM ACPI Tables information.</returns>
-        public async Task<TpmAcpiTablesInfo> GetTpmAcpiTablesInfo()
+        public async Task<TpmAcpiTablesInfo> GetTpmAcpiTablesInfoAsync()
         {
-            return await this.Get<TpmAcpiTablesInfo>(TpmAcpiTablesApi);
+            return await this.GetAsync<TpmAcpiTablesInfo>(TpmAcpiTablesApi);
         }
 
         /// <summary>
         /// Gets TPM Logical Device Settings information.
         /// </summary>
         /// <returns>String containing the TPM Logical Device Settings information.</returns>
-        public async Task<TpmLogicalDeviceSettingsInfo> GetTpmLogicalDeviceSettingsInfo(int logicalDeviceId)
+        public async Task<TpmLogicalDeviceSettingsInfo> GetTpmLogicalDeviceSettingsInfoAsync(int logicalDeviceId)
         {
-            return await this.Get<TpmLogicalDeviceSettingsInfo>(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId));
+            return await this.GetAsync<TpmLogicalDeviceSettingsInfo>(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId));
         }
 
         /// <summary>
@@ -75,9 +76,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="azureUri">Azure Uri.</param>
         /// <param name="Azure Key">Azure Key.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetTpmLogicalDeviceSettingsInfo(int logicalDeviceId, string azureUri, string azureKey)
+        public async Task SetTpmLogicalDeviceSettingsInfoAsync(int logicalDeviceId, string azureUri, string azureKey)
         {
-            await this.Post(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId), string.Format("AzureUri={0}&AzureKey={1}", Utilities.Hex64Encode(azureUri), Utilities.Hex64Encode(azureKey)));
+            await this.PostAsync(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId), string.Format("AzureUri={0}&AzureKey={1}", Utilities.Hex64Encode(azureUri), Utilities.Hex64Encode(azureKey)));
         }
 
         /// <summary>
@@ -85,18 +86,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="logicalDeviceId">Logical Device Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task ResetTpmLogicalDeviceSettingsInfo(int logicalDeviceId)
+        public async Task ResetTpmLogicalDeviceSettingsInfoAsync(int logicalDeviceId)
         {
-            await this.Delete(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId));
+            await this.DeleteAsync(string.Format("{0}/{1}", TpmSettingsApi, logicalDeviceId));
         }
         
         /// <summary>
         /// Gets TPM Azure Token information.
         /// </summary>
         /// <returns>String containing the TPM Azure Token information.</returns>
-        public async Task<TpmAzureTokenInfo> GetTpmAzureTokenInfo(int logicalDeviceId, string validity)
+        public async Task<TpmAzureTokenInfo> GetTpmAzureTokenInfoAsync(int logicalDeviceId, string validity)
         {
-            return await this.Get<TpmAzureTokenInfo>(string.Format("{0}/{1}", TpmAzureTokenApi, logicalDeviceId), string.Format("validity={0}", Utilities.Hex64Encode(validity)));
+            return await this.GetAsync<TpmAzureTokenInfo>(string.Format("{0}/{1}", TpmAzureTokenApi, logicalDeviceId), string.Format("validity={0}", Utilities.Hex64Encode(validity)));
         }
 
         #region Data contract
@@ -160,7 +161,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets TPM ACPI Tables. 
             /// </summary>
             [DataMember(Name = "AcpiTables")]
-            public string[] AcpiTables { get; private set; }        
+            public List<string> AcpiTables { get; private set; }        
         }
 
         /// <summary>
