@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -119,7 +120,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets or sets the application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; private set; }
+            public List<AppPackage> AppPackages { get; private set; }
         }
 
         [DataContract]
@@ -148,7 +149,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of headless application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; private set; }
+            public List<AppPackage> AppPackages { get; private set; }
         }
        
         #endregion // Data contract

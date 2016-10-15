@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -160,7 +161,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets TPM ACPI Tables. 
             /// </summary>
             [DataMember(Name = "AcpiTables")]
-            public string[] AcpiTables { get; private set; }        
+            public List<string> AcpiTables { get; private set; }        
         }
 
         /// <summary>

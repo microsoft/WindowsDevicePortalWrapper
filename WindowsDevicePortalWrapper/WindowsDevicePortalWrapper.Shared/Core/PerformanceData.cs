@@ -412,7 +412,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets list of running processes.
             /// </summary>
             [DataMember(Name = "Processes")]
-            public DeviceProcessInfo[] Processes { get; private set; }
+            public List<DeviceProcessInfo> Processes { get; private set; }
 
             /// <summary>
             /// Checks to see if this process Id is in the list of processes
@@ -423,18 +423,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 bool found = false;
 
-                if (this.Processes != null)
+                foreach (DeviceProcessInfo pi in this.Processes)
                 {
-                    foreach (DeviceProcessInfo pi in this.Processes)
+                    if (pi.ProcessId == processId)
                     {
-                        if (pi.ProcessId == processId)
-                        {
-                            found = true;
-                            break;
-                        }
+                        found = true;
+                        break;
                     }
                 }
-
                 return found;
             }
 
@@ -448,21 +444,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 bool found = false;
 
-                if (this.Processes != null)
+                foreach (DeviceProcessInfo pi in this.Processes)
                 {
-                    foreach (DeviceProcessInfo pi in this.Processes)
+                    if (string.Compare(
+                            pi.PackageFullName,
+                            packageName,
+                            caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        if (string.Compare(
-                                pi.PackageFullName,
-                                packageName,
-                                caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            found = true;
-                            break;
-                        }
+                        found = true;
+                        break;
                     }
                 }
-
                 return found;
             }
         }

@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -589,7 +590,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HeadlessAppsListInfo appsList = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual(true, appsList.AppPackages[0].IsStartup);
+            Assert.AreEqual(true, appsList.AppPackages.First().IsStartup);
         }
 
         /// <summary>
@@ -771,7 +772,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             IscInterfacesInfo icsInterfaceInfo = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual("Broadcom 802.11n Wireless SDIO Adapter", icsInterfaceInfo.PrivateInterfaces[0]);
+            Assert.AreEqual("Broadcom 802.11n Wireless SDIO Adapter", icsInterfaceInfo.PrivateInterfaces.First());
         }
 
         /// <summary>
