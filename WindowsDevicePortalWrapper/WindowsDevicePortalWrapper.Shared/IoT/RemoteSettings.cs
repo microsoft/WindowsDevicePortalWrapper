@@ -35,18 +35,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the Remote Settings Status Information.
         /// </summary>
         /// <returns>String containing the Remote Settings Status information.</returns>
-        public async Task<RemoteSettingsStatusInfo> GetRemoteSettingsStatusInfo()
+        public async Task<RemoteSettingsStatusInfo> GetRemoteSettingsStatusInfoAsync()
         {
-            return await this.Get<RemoteSettingsStatusInfo>(RemoteSettingsStatusApi);
+            return await this.GetAsync<RemoteSettingsStatusInfo>(RemoteSettingsStatusApi);
         }
 
         /// <summary>
         /// Enables the remote settings.
         /// </summary>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<RemoteSettingsStatusInfo> RemoteSettingsEnable()
+        public async Task<RemoteSettingsStatusInfo> RemoteSettingsEnableAsync()
         {
-            return await this.Post<RemoteSettingsStatusInfo>(
+            return await this.PostAsync<RemoteSettingsStatusInfo>(
                 RemoteSettingsEnableApi);
         }
 
@@ -54,9 +54,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Disables the remote settings.
         /// </summary>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task<RemoteSettingsStatusInfo> RemoteSettingsDisable()
+        public async Task<RemoteSettingsStatusInfo> RemoteSettingsDisableAsync()
         {
-            return await this.Post<RemoteSettingsStatusInfo>(
+            return await this.PostAsync<RemoteSettingsStatusInfo>(
                 RemoteSettingsDisableApi);
         }
 

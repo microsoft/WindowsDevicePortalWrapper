@@ -186,7 +186,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
         [method: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "manualCertificate param doesn't really span multiple lines, it just has a different type for UWP and .NET implementations.")]
-        public async Task Connect(
+        public async Task ConnectAsync(
             string ssid = null,
             string ssidKey = null,
             bool updateConnection = true,
@@ -216,8 +216,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
-                this.deviceConnection.Family = await this.GetDeviceFamily();
-                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
+                this.deviceConnection.Family = await this.GetDeviceFamilyAsync();
+                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync();
 
                 // Default to using whatever was specified in the connection.
                 bool requiresHttps = this.IsUsingHttps();
@@ -231,7 +231,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.DeterminingConnectionRequirements,
                         connectionPhaseDescription);
-                    requiresHttps = await this.GetIsHttpsRequired();
+                    requiresHttps = await this.GetIsHttpsRequiredAsync();
                 }
 
                 // Connect the device to the specified network.
@@ -242,10 +242,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.ConnectingToTargetNetwork,
                         connectionPhaseDescription);
-                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfaces();
+                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfacesAsync();
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
-                    await this.ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
+                    await this.ConnectToWifiNetworkAsync(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
                 }
 
                 // Get the device's IP configuration and update the connection as appropriate.
@@ -256,7 +256,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.UpdatingDeviceAddress,
                         connectionPhaseDescription);
-                    this.deviceConnection.UpdateConnection(await this.GetIpConfig(), requiresHttps);
+                    
+                    bool preservePort = true;
+                    // HoloLens and Mobile are the only devices that support USB.
+                    // They require the port to be changed when the connection is updated
+                    // to WiFi.
+                    if ((this.Platform == DevicePortalPlatforms.HoloLens) ||
+                        (this.Platform == DevicePortalPlatforms.Mobile))
+                    {
+                        preservePort = false;
+                    }
+
+                    this.deviceConnection.UpdateConnection(
+                        await this.GetIpConfigAsync(), 
+                        requiresHttps,
+                        preservePort);
                 }
 
                 this.SendConnectionStatus(
@@ -304,7 +318,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestBody">An optional stream to use for the request body content.</param>
         /// <param name="requestBodyContentType">The content type of the request stream.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(
+        public async Task SaveEndpointResponseToFileAsync(
             string endpoint,
             string directory,
             HttpMethods httpMethod,
@@ -358,12 +372,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 websocket.WebSocketStreamReceived += streamReceivedHandler;
 
-                Task startListeningForStreamTask = websocket.StartListeningForMessages(endpoint);
+                Task startListeningForStreamTask = websocket.StartListeningForMessagesAsync(endpoint);
                 startListeningForStreamTask.Wait();
 
                 streamReceived.WaitOne();
 
-                Task stopListeningForStreamTask = websocket.StopListeningForMessages();
+                Task stopListeningForStreamTask = websocket.StopListeningForMessagesAsync();
                 stopListeningForStreamTask.Wait();
 
                 websocket.WebSocketStreamReceived -= streamReceivedHandler;
@@ -396,7 +410,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
                 }
 
-                using (Stream dataStream = await this.Put(uri, streamContent))
+                using (Stream dataStream = await this.PutAsync(uri, streamContent))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -407,7 +421,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Post == httpMethod)
             {
-                using (Stream dataStream = await this.Post(uri, requestBody, requestBodyContentType))
+                using (Stream dataStream = await this.PostAsync(uri, requestBody, requestBodyContentType))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -418,7 +432,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Delete == httpMethod)
             {
-                using (Stream dataStream = await this.Delete(uri))
+                using (Stream dataStream = await this.DeleteAsync(uri))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -429,7 +443,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Get == httpMethod)
             {
-                using (Stream dataStream = await this.Get(uri))
+                using (Stream dataStream = await this.GetAsync(uri))
                 {
                     using (var fileStream = File.Create(filepath))
                     {

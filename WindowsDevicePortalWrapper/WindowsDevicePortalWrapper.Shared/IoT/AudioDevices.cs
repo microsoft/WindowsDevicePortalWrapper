@@ -35,9 +35,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the Audio Device List Information.
         /// </summary>
         /// <returns>String containing the Audio Device List information.</returns>
-        public async Task<AudioDeviceListInfo> GetAudioDeviceListInfo()
+        public async Task<AudioDeviceListInfo> GetAudioDeviceListInfoAsync()
         {
-            return await this.Get<AudioDeviceListInfo>(AudioDeviceListApi);
+            return await this.GetAsync<AudioDeviceListInfo>(AudioDeviceListApi);
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="renderVolume">Render Volume.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetRenderVolume(string renderVolume)
+        public async Task SetRenderVolumeAsync(string renderVolume)
         {
-            await this.Post(
+            await this.PostAsync(
                  SetRenderVolumeApi,
                 string.Format("rendervolume={0}", Utilities.Hex64Encode(renderVolume)));
         }
@@ -57,9 +57,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="captureVolume">Capture Volume.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetCaptureVolume(string captureVolume)
+        public async Task SetCaptureVolumeAsync(string captureVolume)
         {
-            await this.Post(
+            await this.PostAsync(
                  SetCaptureVolumeApi,
                 string.Format("capturevolume={0}", Utilities.Hex64Encode(captureVolume)));
         }

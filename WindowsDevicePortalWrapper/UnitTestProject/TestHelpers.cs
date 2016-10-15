@@ -47,7 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
           
             TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
 
-            Task connectTask = TestHelpers.Portal.Connect(updateConnection: false);
+            Task connectTask = TestHelpers.Portal.ConnectAsync(updateConnection: false);
             connectTask.Wait();
 
             Assert.AreEqual(HttpStatusCode.OK, TestHelpers.Portal.ConnectionHttpStatusCode);

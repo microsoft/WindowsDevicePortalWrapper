@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="appid">Application ID</param>
         /// <param name="packageName">The name of the application package.</param>
         /// <returns>Process identifier for the application instance.</returns>
-        public async Task<int> LaunchApplication(
+        public async Task<int> LaunchApplicationAsync(
             string appid,
             string packageName)
         {
@@ -33,11 +33,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Utilities.Hex64Encode(appid), 
                 Utilities.Hex64Encode(packageName));
 
-            await this.Post(
+            await this.PostAsync(
                 TaskManagerApi, 
                 payload);
 
-            RunningProcesses runningApps = await this.GetRunningProcesses();
+            RunningProcesses runningApps = await this.GetRunningProcessesAsync();
 
             int processId = 0;
             foreach (DeviceProcessInfo process in runningApps.Processes)    
@@ -59,9 +59,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>
         /// Task for tracking termination completion
         /// </returns>
-        public async Task TerminateApplication(string packageName)
+        public async Task TerminateApplicationAsync(string packageName)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                 TaskManagerApi,
                 string.Format("package={0}", Utilities.Hex64Encode(packageName)));
         }

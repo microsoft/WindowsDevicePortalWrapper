@@ -54,9 +54,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Returns the current active power scheme.
         /// </summary>
         /// <returns>The power scheme identifier.</returns>
-        public async Task<Guid> GetActivePowerScheme()
+        public async Task<Guid> GetActivePowerSchemeAsync()
         {
-            ActivePowerScheme activeScheme = await this.Get<ActivePowerScheme>(ActivePowerSchemeApi);
+            ActivePowerScheme activeScheme = await this.GetAsync<ActivePowerScheme>(ActivePowerSchemeApi);
             return activeScheme.Id;
         }
 
@@ -64,18 +64,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Returns the current state of the device's battery.
         /// </summary>
         /// <returns>BatteryState object containing details such as the current battery level.</returns>
-        public async Task<BatteryState> GetBatteryState()
+        public async Task<BatteryState> GetBatteryStateAsync()
         {
-            return await this.Get<BatteryState>(BatteryStateApi);
+            return await this.GetAsync<BatteryState>(BatteryStateApi);
         }
 
         /// <summary>
         /// Gets the device's current power state.
         /// </summary>
         /// <returns>PowerState object containing details such as whether or not the device is in low power mode.</returns>
-        public async Task<PowerState> GetPowerState()
+        public async Task<PowerState> GetPowerStateAsync()
         {
-            return await this.Get<PowerState>(PowerStateApi);
+            return await this.GetAsync<PowerState>(PowerStateApi);
         }
 
         #region Data contract

@@ -66,7 +66,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
-        private async Task OpenConnection(
+        private async Task OpenConnectionAsync(
             Uri endpoint)
         {
             this.websocket.Options.UseDefaultCredentials = false;
@@ -86,7 +86,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Stops listening for messages and closes the connection to the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        private async Task StopListeningForMessagesInternal()
+        private async Task StopListeningForMessagesInternalAsync()
         {
             if (this.IsListeningForMessages)
             {
@@ -108,7 +108,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Listen for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        private async Task ListenForMessagesInternal()
+        private async Task ListenForMessagesInternalAsync()
         {
             this.receivingMessagesTask = Task.Run(async () =>
             {
@@ -187,7 +187,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        private async Task StartListeningForMessagesInternal(Uri endpoint)
+        private async Task StartListeningForMessagesInternalAsync(Uri endpoint)
         {
             if (this.IsListeningForMessages)
             {
@@ -198,7 +198,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             try
             {
-                await this.OpenConnection(endpoint);
+                await this.OpenConnectionAsync(endpoint);
             }
             catch
             {
@@ -206,7 +206,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             // Do not wait on actually listening for messages.
-            Task listenForMessagesInternal = this.ListenForMessagesInternal();
+            Task listenForMessagesInternal = this.ListenForMessagesInternalAsync();
         }
     }
 }

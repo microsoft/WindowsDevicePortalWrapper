@@ -30,18 +30,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Retrieves the Soft AP Settings Info.
         /// </summary>
         /// <returns>SoftAPSettingsInfo for this device.</returns>
-        public async Task<SoftAPSettingsInfo> GetSoftAPSettingsInfo()
+        public async Task<SoftAPSettingsInfo> GetSoftAPSettingsInfoAsync()
         {
-            return await this.Get<SoftAPSettingsInfo>(SoftAPSettingsApi);
+            return await this.GetAsync<SoftAPSettingsInfo>(SoftAPSettingsApi);
         }
 
         /// <summary>
         /// Retrieves the All Joyn Settings Info.
         /// </summary>
         /// <returns>AllJoynSettingsInfo for this device.</returns>
-        public async Task<AllJoynSettingsInfo> GetAllJoynSettingsInfo()
+        public async Task<AllJoynSettingsInfo> GetAllJoynSettingsInfoAsync()
         {
-            return await this.Get<AllJoynSettingsInfo>(AllJoynSettingsApi);
+            return await this.GetAsync<AllJoynSettingsInfo>(AllJoynSettingsApi);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="softApSsid">SoftAp Ssid.</param>
         /// /// <param name="SoftAp Password">SoftAp Password.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetSoftApSettings(string softApStatus, string softApSsid, string softApPassword)
+        public async Task SetSoftApSettingsAsync(string softApStatus, string softApSsid, string softApPassword)
         {
-            await this.Post(
+            await this.PostAsync(
                  SoftAPSettingsApi,
                 string.Format("SoftApEnabled={0}&SoftApSsid={1}&SoftApPassword={2}", Utilities.Hex64Encode(softApStatus), Utilities.Hex64Encode(softApSsid), Utilities.Hex64Encode(softApPassword)));
         }
@@ -66,9 +66,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name=" allJoynManufacturer"> AllJoyn Manufacturer.</param>
         /// <param name=" allJoynNumber"> AllJoyn Number.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task SetAllJoynSettings(string allJoynStatus, string allJoynDescription, string allJoynManufacturer, string allJoynModelNumber)
+        public async Task SetAllJoynSettingsAsync(string allJoynStatus, string allJoynDescription, string allJoynManufacturer, string allJoynModelNumber)
         {
-            await this.Post(
+            await this.PostAsync(
                  AllJoynSettingsApi,
                 string.Format("AllJoynOnboardingEnabled={0}&AllJoynOnboardingDefaultDescription={1}&AllJoynOnboardingDefaultManufacturer={2}&AllJoynOnboardingModelNumber={3}", Utilities.Hex64Encode(allJoynStatus), Utilities.Hex64Encode(allJoynDescription), Utilities.Hex64Encode(allJoynManufacturer), Utilities.Hex64Encode(allJoynModelNumber)));
         }

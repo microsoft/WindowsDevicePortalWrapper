@@ -24,9 +24,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Get a listing of installed devices
         /// </summary>
         /// <returns>List of installed devices</returns>
-        public async Task<List<Device>> GetDeviceList()
+        public async Task<List<Device>> GetDeviceListAsync()
         {
-            DeviceList deviceList = await this.Get<DeviceList>(InstalledDevicesApi);
+            DeviceList deviceList = await this.GetAsync<DeviceList>(InstalledDevicesApi);
             return deviceList.Devices;
         }
 
