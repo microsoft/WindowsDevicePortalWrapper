@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -22,11 +23,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string AvailableBugChecksApi = "api/debug/dump/kernel/dumplist";
 
         /// <summary>
-        /// API to retrieve list of the available crash dumps (for sideloaded applications).
-        /// </summary>
-        public static readonly string AvailableCrashDumpsApi = "api/debug/dump/usermode/dumps";
-
-        /// <summary>
         /// API to download a bugcheck minidump file.
         /// </summary>
         public static readonly string BugcheckFileApi = "api/debug/dump/kernel/dump";
@@ -35,16 +31,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API to control bugcheck minidump settings.
         /// </summary>
         public static readonly string BugcheckSettingsApi = "api/debug/dump/kernel/crashcontrol";
-
-        /// <summary>
-        /// API to download or delete a crash dump file (for a sideloaded application).
-        /// </summary>
-        public static readonly string CrashDumpFileApi = "api/debug/dump/usermode/crashdump";
-
-        /// <summary>
-        /// API to control the crash dump settings for a sideloaded application.
-        /// </summary>
-        public static readonly string CrashDumpSettingsApi = "api/debug/dump/usermode/crashcontrol";
 
         /// <summary>
         /// API to retrieve a live kernel dump.
@@ -56,140 +42,137 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public static readonly string LiveProcessDumpApi = "api/debug/dump/usermode/live";
 
-        public async Task<CrashDump[]> GetAppCrashDumps()
+        public async Task<List<Dumpfile>> GetDumpfileListAsync()
         {
-            CrashDumpList cdl = await this.Get<CrashDumpList>(AvailableCrashDumpsApi);
-            return cdl.CrashDumps;
+            DumpFileList dfl = await this.GetAsync<DumpFileList>(AvailableBugChecksApi);
+            return dfl.DumpFiles;
         }
 
-        public async Task<Stream> GetAppCrashDump(CrashDump crashdump)
+        public async Task<Stream> GetDumpFileAsync(Dumpfile crashdump)
         {
-            string queryString = CrashDumpFileApi + string.Format("?packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename);
+            string queryString = BugcheckFileApi + string.Format("?filename={0}", crashdump.Filename);
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 queryString);
 
-            return await this.Get(uri);
+            return await this.GetAsync(uri);
         }
 
-        public async Task DeleteAppCrashDump(CrashDump crashdump)
+        public async Task<Stream> GetLiveKernelDumpAsync()
         {
-            await this.Delete(CrashDumpFileApi,
-                string.Format("packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename));
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                LiveKernelDumpApi);
+
+            return await this.GetAsync(uri);
         }
 
-        public async Task<CrashDumpSettings> GetAppCrashDumpSettings(AppPackage app)
+        public async Task<Stream> GetLiveProcessDumpAsync(int pid)
         {
-            return await this.GetAppCrashDumpSettings(app.PackageFullName);
+            string queryString = LiveProcessDumpApi + string.Format("?pid={0}", pid);
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                queryString);
+
+            return await this.GetAsync(uri);
         }
 
-        public async Task<CrashDumpSettings> GetAppCrashDumpSettings(string packageFullname)
+        public async Task<DumpFileSettings> GetDumpFileSettingsAsync()
         {
-            return await this.Get<CrashDumpSettings>(
-                CrashDumpSettingsApi,
-                string.Format("packageFullname={0}", packageFullname));
+            return await this.GetAsync<DumpFileSettings>(BugcheckSettingsApi);
         }
 
-        public async Task SetAppCrashDumpSettings(AppPackage app, bool enable = true)
+        public async Task SetDumpFileSettingsAsync(DumpFileSettings dfs)
         {
-            string pfn = app.PackageFullName;
-            if (enable)
-            {
-                await this.Post(
-                    CrashDumpSettingsApi,
-                string.Format("packageFullName={0}", pfn));
-            } else
-            {
-                await this.Delete(
-                    CrashDumpSettingsApi,
-                string.Format("packageFullName={0}", pfn));
-            }
+            await this.PostAsync(
+                BugcheckSettingsApi,
+                string.Format(
+                    "autoreboot={0}&overwrite={1}&dumptype={2}&maxdumpcount={3}",
+                    dfs.AutoReboot?"1":"0", dfs.Overwrite ? "1" : "0", (int)dfs.DumpType, dfs.MaxDumpCount));
         }
-
-        #region Data contract
-
-        /// <summary>
-        /// Per-app crash dump settings.
-        /// </summary>
-        [DataContract]
-        public class CrashDumpSettings
-        {
-            /// <summary>
-            /// Gets whether crash dumps are enabled for the app
-            /// </summary>
-            [DataMember(Name = "CrashDumpEnabled")]
-            public bool CrashDumpEnabled
-            {
-                get; private set;
-            }
-        }
-
-        [DataContract]
-        public class CrashDump
-        {
-            /// <summary>
-            /// Gets the timestamp of the crash as a string.
-            /// </summary>
-            [DataMember(Name = "FileDate")]
-            public string FileDateAsString
-            {
-                get; private set;
-            }
-
-            /// <summary>
-            /// Gets the timestamp of the crash.
-            /// </summary>
-            public DateTime FileDate
-            {
-                get
-                {
-                    return DateTime.Parse(this.FileDateAsString);
-                }
-            }
-
-            /// <summary>
-            /// Gets the filename of the crash file. 
-            /// </summary>
-            [DataMember(Name = "FileName")]
-            public string Filename
-            {
-                get; private set;
-            }
-
-            /// <summary>
-            /// Gets the size of the crash dump, in bytes
-            /// </summary>
-            [DataMember(Name = "FileSize")]
-            public uint FileSizeInBytes
-            {
-                get; private set;
-            }
-
-            /// <summary>
-            /// Gets the package full name of the app that crashed. 
-            /// </summary>
-            [DataMember(Name = "PackageFullName")]
-            public string PackageFullName
-            {
-                get; private set;
-            }
     }
 
-        /// <summary>
-        /// A list of crash dumps.  Internal usage only. 
-        /// </summary>
-        [DataContract]
-        private class CrashDumpList
+    #region Data Contract
+    [DataContract]
+    public class DumpFileSettings
+    {
+        [DataMember(Name = "autoreboot")]
+        public bool AutoReboot { get; set; }
+
+        [DataMember(Name = "dumptype")]
+        public DumpTypes DumpType { get; set; }
+
+        [DataMember(Name = "maxdumpcount")]
+        public int MaxDumpCount { get; set; }
+
+        [DataMember(Name = "overwrite")]
+        public bool Overwrite { get; set; }
+
+        public enum DumpTypes
         {
-            /// <summary>
-            /// Gets a list of crash dumps on the device. 
-            /// </summary>
-            [DataMember(Name = "CrashDumps")]
-            public CrashDump[] CrashDumps
+            Disabled=0,
+            CompleteMemoryDump=1,
+            KernelDump=2,
+            Minidump=3
+        }
+    }
+
+    /// <summary>
+    /// Gets a list of kernel dumps on the device. 
+    /// </summary>
+    [DataContract]
+    public class DumpFileList
+    {
+        /// <summary>
+        /// Gets a list of kernel dumps on the device. 
+        /// </summary>
+        [DataMember(Name = "DumpFiles")]
+        public List<Dumpfile> DumpFiles { get; private set; }
+    }
+
+    /// <summary>
+    /// Represents a dumpfile stored on the device. 
+    /// </summary>
+    [DataContract]
+    public class Dumpfile
+    {
+        /// <summary>
+        /// Gets the timestamp of the crash as a string.
+        /// </summary>
+        [DataMember(Name = "FileDate")]
+        public string FileDateAsString
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the timestamp of the crash.
+        /// </summary>
+        public DateTime FileDate
+        {
+            get
             {
-                get; private set;
+                return DateTime.Parse(this.FileDateAsString);
             }
         }
-        #endregion Data contract
+
+        /// <summary>
+        /// Gets the filename of the crash file. 
+        /// </summary>
+        [DataMember(Name = "FileName")]
+        public string Filename
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the size of the crash dump, in bytes
+        /// </summary>
+        [DataMember(Name = "FileSize")]
+        public uint FileSizeInBytes
+        {
+            get; private set;
+        }
     }
+    #endregion Data Contract
 }
