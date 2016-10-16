@@ -1,5 +1,5 @@
 ﻿//----------------------------------------------------------------------------------------------
-// <copyright file="DumpCollection.cs" company="Microsoft Corporation">
+// <copyright file="AppCrashDumpCollection.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
 //----------------------------------------------------------------------------------------------
@@ -32,12 +32,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public static readonly string CrashDumpSettingsApi = "api/debug/dump/usermode/crashcontrol";
 
+        /// <summary>
+        /// Get a list of app crash dumps on the device. 
+        /// </summary>
+        /// <returns>List of AppCrashDump objects, which represent crashdumps on the device. </returns>
         public async Task<List<AppCrashDump>> GetAppCrashDumpListAsync()
         {
             AppCrashDumpList cdl = await this.GetAsync<AppCrashDumpList>(AvailableCrashDumpsApi);
             return cdl.CrashDumps;
         }
 
+        /// <summary>
+        /// Download a sideloaded app's crash dump.  
+        /// </summary>
+        /// <param name="crashdump"> The AppCrashDump to download</param>
+        /// <returns>Stream of the crash dump</returns>
         public async Task<Stream> GetAppCrashDumpAsync(AppCrashDump crashdump)
         {
             string queryString = CrashDumpFileApi + string.Format("?packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename);
@@ -48,17 +57,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.GetAsync(uri);
         }
 
+        /// <summary>
+        /// Delete an app crash dump stored on the device. 
+        /// </summary>
+        /// <param name="crashdump">The crashdump to be deleted</param>
+        /// <returns>Task tracking completion of the request.</returns>
         public async Task DeleteAppCrashDumpAsync(AppCrashDump crashdump)
         {
             await this.DeleteAsync(CrashDumpFileApi,
                 string.Format("packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename));
         }
 
+        /// <summary>
+        /// Get the crash settings for a sideloaded app. 
+        /// </summary>
+        /// <param name="app">The app to get settings for</param>
+        /// <returns>The crash settings for the app</returns>
         public async Task<AppCrashDumpSettings> GetAppCrashDumpSettingsAsync(AppPackage app)
         {
             return await this.GetAppCrashDumpSettingsAsync(app.PackageFullName);
         }
 
+        /// <summary>
+        /// Get the crash settings for a sideloaded app. 
+        /// </summary>
+        /// <param name="packageFullname">The app to get settings for</param>
+        /// <returns>The crash settings for the app</returns>
         public async Task<AppCrashDumpSettings> GetAppCrashDumpSettingsAsync(string packageFullname)
         {
             return await this.GetAsync<AppCrashDumpSettings>(
@@ -66,12 +90,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 string.Format("packageFullname={0}", packageFullname));
         }
 
+        /// <summary>
+        /// Set the crash settings for a sideloaded app. 
+        /// </summary>
+        /// <param name="app">The app to set crash settings for.</param>
+        /// <param name="enable">Whether to enable or disable crash collection for the app. </param>
+        /// <returns>Task tracking completion of the request.</returns>
         public async Task SetAppCrashDumpSettingsAsync(AppPackage app, bool enable = true)
         {
             string pfn = app.PackageFullName;
             await SetAppCrashDumpSettingsAsync(pfn, enable);
         }
 
+        /// <summary>
+        /// Set the crash settings for a sideloaded app. 
+        /// </summary>
+        /// <param name="packageFullname">The app to set crash settings for.</param>
+        /// <param name="enable">Whether to enable or disable crash collection for the app. </param>
+        /// <returns>Task tracking completion of the request.</returns>
         public async Task SetAppCrashDumpSettingsAsync(string packageFullName, bool enable = true)
         {
             if (enable)
@@ -88,8 +124,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
-
-
         #region Data contract
 
         /// <summary>
@@ -104,20 +138,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "CrashDumpEnabled")]
             public bool CrashDumpEnabled
             {
-                get; private set;
+                get;
+                private set;
             }
         }
 
+        /// <summary>
+        /// Represents a crash dump collected from a sideloaded app. 
+        /// </summary>
         [DataContract]
         public class AppCrashDump 
         {
+
             /// <summary>
             /// Gets the timestamp of the crash as a string.
             /// </summary>
             [DataMember(Name = "FileDate")]
             public string FileDateAsString
             {
-                get; private set;
+                get;
+                private set;
             }
 
             /// <summary>
@@ -137,7 +177,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "FileName")]
             public string Filename
             {
-                get; private set;
+                get;
+                private set;
             }
 
             /// <summary>
@@ -146,15 +187,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "FileSize")]
             public uint FileSizeInBytes
             {
-                get; private set;
+                get;
+                private set;
             }
+
             /// <summary>
             /// Gets the package full name of the app that crashed. 
             /// </summary>
             [DataMember(Name = "PackageFullName")]
             public string PackageFullName
             {
-                get; private set;
+                get;
+                private set;
             }
         }
 
@@ -170,7 +214,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "CrashDumps")]
             public List<AppCrashDump> CrashDumps
             {
-                get; private set;
+                get;
+                private set;
             }
         }
         #endregion Data contract

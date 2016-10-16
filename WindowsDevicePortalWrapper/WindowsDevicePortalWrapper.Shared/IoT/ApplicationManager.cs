@@ -117,7 +117,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string DefaultApp { get; private set; }
 
             /// <summary>
-            /// Gets or sets the application packages
+            /// Gets the application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
             public List<AppPackage> AppPackages { get; private set; }
