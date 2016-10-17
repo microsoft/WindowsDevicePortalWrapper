@@ -1,0 +1,232 @@
+﻿<UserControl x:Class="SampleDeviceCollection.DeviceCollectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SampleDeviceCollection"
+             mc:Ignorable="d" 
+             d:DesignHeight="228.52" d:DesignWidth="517">
+    <UserControl.Resources>
+        <Storyboard x:Key="TextSpinnerAnimationStoryboard">
+            <StringAnimationUsingKeyFrames Storyboard.TargetProperty="Text" RepeatBehavior="Forever">
+                <DiscreteStringKeyFrame Value="|" KeyTime="0:0:0.0" />
+                <DiscreteStringKeyFrame Value="/" KeyTime="0:0:0.3" />
+                <DiscreteStringKeyFrame Value="-" KeyTime="0:0:0.6" />
+                <DiscreteStringKeyFrame Value="&#92;" KeyTime="0:0:0.9" />
+                <DiscreteStringKeyFrame Value="&#92;" KeyTime="0:0:1.2" />
+            </StringAnimationUsingKeyFrames>
+        </Storyboard>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Item.Background" Color="#FFD0F5B1" />
+        <SolidColorBrush x:Key="Item.BorderBrush" Color="Gray" />
+        <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1F26A0DA"/>
+        <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#a826A0Da"/>
+        <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
+        <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
+        <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#3D26A0DA"/>
+        <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>
+        <Style x:Key="DeviceCollectionItemStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="{StaticResource Item.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Item.BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border
+                            x:Name="Bd"
+                            MouseDown="EatMouseClicks"
+                            Margin="2,1,2,1"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="Transparent"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.IsEnabled>
+                                    <Binding Path="Ready"  />
+                                </Grid.IsEnabled>
+                                <TextBlock Grid.Row="0" Grid.RowSpan="2" FontSize="30" FontWeight="Bold" Foreground="Gray" Panel.ZIndex="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Ready}" Value="False">
+                                                    <DataTrigger.EnterActions>
+                                                        <BeginStoryboard x:Name="spinnerStoryboard" Storyboard="{StaticResource TextSpinnerAnimationStoryboard}" />
+                                                    </DataTrigger.EnterActions>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Ready}" Value="True">
+                                                    <DataTrigger.EnterActions>
+                                                        <StopStoryboard BeginStoryboardName="spinnerStoryboard"/>
+                                                    </DataTrigger.EnterActions>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Border
+                                    x:Name="itemHeading" Grid.Row="0"
+                                    Margin="-5,-2,-5,-1"
+                                    BorderBrush="Gray"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}"
+                                    Padding="{TemplateBinding Padding}"
+                                    SnapsToDevicePixels="true">
+                                    <DockPanel>
+                                        <CheckBox Margin="0,0,4,0">
+                                            <CheckBox.IsChecked>
+                                                <Binding Path="IsSelected" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
+                                            </CheckBox.IsChecked>
+                                        </CheckBox>
+                                        <TextBlock Margin="0,0,4,0" Text="Device Name:" />
+                                        <TextBlock Text="{Binding DeviceName}"/>
+                                        <TextBlock Margin="50,0,4,0" Text="Cannonical Device Address:" />
+                                        <TextBlock Text="{Binding Address}"/>
+                                        <Button
+                                            DockPanel.Dock="Right"
+                                            Height="16" Width="16"
+                                            Padding="0,-3,0,0"
+                                            HorizontalAlignment="Right"
+                                            Content="x">
+                                            <Button.Command>
+                                                <Binding Path="DataContext.RemoveDeviceCommand" RelativeSource="{RelativeSource AncestorType=local:SelectionListBox}" />
+                                            </Button.Command>
+                                            <Button.CommandParameter>
+                                                <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ListBoxItem}"/>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                    </DockPanel>
+                                </Border>
+                                <ContentPresenter Grid.Row="1"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" TargetName="itemHeading" Value="{StaticResource Item.SelectedActive.Background}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="DevicePortalView">
+            <TabControl Height="80">
+                <TabItem Header="Manage">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="0,0,8,0" Text="Name:" />
+                            <TextBox Width="100" Margin="0,0,4,0" Text="{Binding DeviceNameEntry, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Padding="2,1,2,1" Command="{Binding RenameCommand}" Content="Rename" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="20" Margin="0,5,0,0">
+                            <Button Content="Reboot" Width="60" Command="{Binding RebootCommand}" />
+                            <Button Content="Refresh Connection" Width="140" Margin="2,0,0,0" Command="{Binding RefreshConnectionCommand}" />
+                            <TextBlock Text="Retry Attempts:" Width="86" Margin="15,0,-5,0" />
+                            <local:NumberEntryBox Value="{Binding ConnectionRetryAttempts, Mode=TwoWay}" />
+                            <Button Content="Dump IP Config" Width="100" Margin="4,0,0,0" Command="{Binding DumpIpConfigCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Info">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Device Name" />
+                                    <TextBlock Grid.Column="1" Text="{Binding DeviceName}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Device Address" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Address}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Device Family" />
+                                    <TextBlock Grid.Column="1" Text="{Binding DeviceFamily}" />
+                                </Grid>
+                            </StackPanel>
+                            <Rectangle Grid.Column="1" Width="2" Fill="Gray" Margin="10,3,10,2" />
+                            <StackPanel Grid.Column="2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Platform" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Platform}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Platform Name" />
+                                    <TextBlock Grid.Column="1" Text="{Binding PlatformName}" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Operating System Version" />
+                                    <TextBlock Grid.Column="1" Text="{Binding OperatingSystemVersion}" />
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="CPU">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="CPU Load:" />
+                        <TextBlock Margin="10,0,0,0" Width="50" Text="{Binding CPULoad}" />
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </DataTemplate>
+    </UserControl.Resources>
+    <local:SelectionListBox
+        SelectionMode="Multiple"
+        ScrollViewer.CanContentScroll="False"
+        ItemsSource="{Binding ConnectedDevices}"
+        ItemContainerStyle="{DynamicResource DeviceCollectionItemStyle}"
+        ItemTemplate="{DynamicResource DevicePortalView}"
+        SelectionList="{Binding SelectedDevices, Mode=TwoWay}" />
+</UserControl>
