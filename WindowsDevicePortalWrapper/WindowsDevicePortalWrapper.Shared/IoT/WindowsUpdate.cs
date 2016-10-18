@@ -30,18 +30,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets Status information.
         /// </summary>
         /// <returns>String containing the status information.</returns>
-        public async Task<StatusInfo> GetStatusInfo()
+        public async Task<StatusInfo> GetStatusInfoAsync()
         {
-            return await this.Get<StatusInfo>(StatusApi);
+            return await this.GetAsync<StatusInfo>(StatusApi);
         }
 
         /// <summary>
         /// Gets the update install time information.
         /// </summary>
         /// <returns>String containing the update install time information.</returns>
-        public async Task<UpdateInstallTimeInfo> GetUpdateInstallTime()
+        public async Task<UpdateInstallTimeInfo> GetUpdateInstallTimeAsync()
         {
-            return await this.Get<UpdateInstallTimeInfo>(InstallTimeApi);             
+            return await this.GetAsync<UpdateInstallTimeInfo>(InstallTimeApi);             
         }
 
         #region Data contract

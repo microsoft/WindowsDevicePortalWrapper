@@ -29,9 +29,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>
         /// Task tracking reboot completion.
         /// </returns>
-        public async Task Reboot()
+        public async Task RebootAsync()
         {
-            await this.Post(RebootApi);
+            await this.PostAsync(RebootApi);
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>
         /// Task tracking shutdown completion.
         /// </returns>
-        public async Task Shutdown()
+        public async Task ShutdownAsync()
         {
-            await this.Post(ShutdownApi);
+            await this.PostAsync(ShutdownApi);
         }
     }
 }

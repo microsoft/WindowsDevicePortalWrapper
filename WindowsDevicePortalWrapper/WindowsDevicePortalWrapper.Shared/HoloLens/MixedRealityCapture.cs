@@ -83,14 +83,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="fileName">The name of the file to be deleted.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task DeleteMrcFile(string fileName)
+        public async Task DeleteMrcFileAsync(string fileName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Delete(
+            await this.DeleteAsync(
                 MrcFileApi,
                 string.Format("filename={0}", Utilities.Hex64Encode(fileName)));
         }
@@ -186,7 +186,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="isThumbnailRequest">Specifies whether or not we are requesting a thumbnail image.</param>
         /// <returns>Byte array containing the file data.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<byte[]> GetMrcFileData(
+        public async Task<byte[]> GetMrcFileDataAsync(
             string fileName,
             bool isThumbnailRequest = false)
         {
@@ -199,7 +199,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string apiPath = isThumbnailRequest ? MrcThumbnailApi : MrcFileApi;
 
-            using (MemoryStream data = await this.Get<MemoryStream>(
+            using (MemoryStream data = await this.GetAsync<MemoryStream>(
                 apiPath,
                 string.Format("filename={0}", Utilities.Hex64Encode(fileName))))
             {
@@ -215,20 +215,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>List of the capture files</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<MrcFileList> GetMrcFileList()
+        public async Task<MrcFileList> GetMrcFileListAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            MrcFileList mrcFileList = await this.Get<MrcFileList>(MrcFileListApi);
+            MrcFileList mrcFileList = await this.GetAsync<MrcFileList>(MrcFileListApi);
 
             foreach (MrcFileInformation mfi in mrcFileList.Files)
             {
                 try 
                 {
-                    mfi.Thumbnail = await this.GetMrcThumbnailData(mfi.FileName);
+                    mfi.Thumbnail = await this.GetMrcThumbnailDataAsync(mfi.FileName);
                 }
                 catch
                 {
@@ -273,14 +273,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>Status of the capture</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<MrcStatus> GetMrcStatus()
+        public async Task<MrcStatus> GetMrcStatusAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            return await this.Get<MrcStatus>(MrcStatusApi);
+            return await this.GetAsync<MrcStatus>(MrcStatusApi);
         }
 
         /// <summary>
@@ -289,10 +289,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="fileName">Name of the capture file</param>
         /// <returns>Byte array containing the thumbnail image data</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<byte[]> GetMrcThumbnailData(string fileName)
+        public async Task<byte[]> GetMrcThumbnailDataAsync(string fileName)
         {
             // GetMrcFileData checks for the appropriate platform. We do not need to duplicate the check here.
-            return await this.GetMrcFileData(fileName, true);
+            return await this.GetMrcFileDataAsync(fileName, true);
         }
 
         // TODO: SetMrcSettings()
@@ -306,7 +306,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeAudio">Specifies whether or not to include audio data</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task StartMrcRecording(
+        public async Task StartMrcRecordingAsync(
             bool includeHolograms = true,
             bool includeColorCamera = true,
             bool includeMicrophone = true,
@@ -324,7 +324,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeMicrophone,
                 includeAudio).ToLower();
 
-            await this.Post(
+            await this.PostAsync(
                 MrcStartRecordingApi,
                 payload);
         }
@@ -334,14 +334,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task StopMrcRecording()
+        public async Task StopMrcRecordingAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Post(MrcStopRecordingApi);
+            await this.PostAsync(MrcStopRecordingApi);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="includeColorCamera">Specifies whether or not to include the color camera</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task TakeMrcPhoto(
+        public async Task TakeMrcPhotoAsync(
             bool includeHolograms = true,
             bool includeColorCamera = true)
         {
@@ -360,7 +360,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            await this.Post(
+            await this.PostAsync(
                 MrcPhotoApi,
                 string.Format("holo={0}&pv={1}", includeHolograms, includeColorCamera).ToLower());
         }

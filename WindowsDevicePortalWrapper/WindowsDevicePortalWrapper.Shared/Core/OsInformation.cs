@@ -91,9 +91,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the family name (ex: Windows.Holographic) of the device.
         /// </summary>
         /// <returns>String containing the device's family.</returns>
-        public async Task<string> GetDeviceFamily()
+        public async Task<string> GetDeviceFamilyAsync()
         {
-            DeviceOsFamily deviceFamily = await this.Get<DeviceOsFamily>(DeviceFamilyApi);
+            DeviceOsFamily deviceFamily = await this.GetAsync<DeviceOsFamily>(DeviceFamilyApi);
             return deviceFamily.Family;
         }
 
@@ -101,9 +101,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the name of the device.
         /// </summary>
         /// <returns>String containing the device's name.</returns>
-        public async Task<string> GetDeviceName()
+        public async Task<string> GetDeviceNameAsync()
         {
-            DeviceName deviceName = await this.Get<DeviceName>(MachineNameApi);
+            DeviceName deviceName = await this.GetAsync<DeviceName>(MachineNameApi);
             return deviceName.Name;
         }
 
@@ -111,9 +111,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets information about the device's operating system.
         /// </summary>
         /// <returns>OperatingSystemInformation object containing details of the installed operating system.</returns>
-        public async Task<OperatingSystemInformation> GetOperatingSystemInformation()
+        public async Task<OperatingSystemInformation> GetOperatingSystemInformationAsync()
         {
-            return await this.Get<OperatingSystemInformation>(OsInfoApi);
+            return await this.GetAsync<OperatingSystemInformation>(OsInfoApi);
         }
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name to assign to the device.</param>
         /// <remarks>The new name does not take effect until the device has been restarted.</remarks>
         /// <returns>Task tracking setting the device name completion.</returns>
-        public async Task SetDeviceName(string name)
+        public async Task SetDeviceNameAsync(string name)
         {
-            await this.Post(
+            await this.PostAsync(
                 MachineNameApi,
                 string.Format("name={0}", Utilities.Hex64Encode(name)));
         }

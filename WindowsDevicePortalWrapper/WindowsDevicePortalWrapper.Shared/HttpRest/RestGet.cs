@@ -70,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>An object of the specified type containing the data returned by the request.</returns>
-        private async Task<T> Get<T>(
+        private async Task<T> GetAsync<T>(
             string apiPath,
             string payload = null) where T : new()
         {
@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.Get(uri))
+            using (Stream dataStream = await this.GetAsync(uri))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))

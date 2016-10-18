@@ -65,7 +65,7 @@ namespace XboxWdpDriver
             {
                 if (operationType.Equals("list"))
                 {
-                    Task<AppPackages> packagesTask = portal.GetInstalledAppPackages();
+                    Task<AppPackages> packagesTask = portal.GetInstalledAppPackagesAsync();
 
                     packagesTask.Wait();
                     Console.WriteLine(packagesTask.Result);
@@ -101,21 +101,21 @@ namespace XboxWdpDriver
                             return;
                         }
 
-                        Task launchTask = portal.LaunchApplication(aumid, packageFullName);
+                        Task launchTask = portal.LaunchApplicationAsync(aumid, packageFullName);
                         launchTask.Wait();
 
                         Console.WriteLine("Application launched.");
                     }
                     else if (operationType.Equals("terminate"))
                     {
-                        Task terminateTask = portal.TerminateApplication(packageFullName);
+                        Task terminateTask = portal.TerminateApplicationAsync(packageFullName);
                         terminateTask.Wait();
 
                         Console.WriteLine("Application terminated.");
                     }
                     else if (operationType.Equals("uninstall"))
                     {
-                        Task uninstallTask = portal.UninstallApplication(packageFullName);
+                        Task uninstallTask = portal.UninstallApplicationAsync(packageFullName);
                         uninstallTask.Wait();
 
                         Console.WriteLine("Application uninstalled.");

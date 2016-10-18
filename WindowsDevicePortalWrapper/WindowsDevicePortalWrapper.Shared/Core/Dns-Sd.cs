@@ -30,9 +30,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets a list of DNS-SD tags being broadcast by this device. 
         /// </summary>
         /// <returns>Array of strings, each one an individual tag.</returns>
-        public async Task<List<string>> GetServiceTags()
+        public async Task<List<string>> GetServiceTagsAsync()
         {
-            ServiceTags tags = await this.Get<ServiceTags>(TagsApi);
+            ServiceTags tags = await this.GetAsync<ServiceTags>(TagsApi);
             return tags.Tags;
         }
 
@@ -41,9 +41,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="tagValue">The tag to assign to the device.</param>
         /// <returns>Task tracking adding the tag.</returns>
-        public async Task AddServiceTag(string tagValue)
+        public async Task AddServiceTagAsync(string tagValue)
         {
-            await this.Post(
+            await this.PostAsync(
                 TagApi,
                 string.Format("tagValue={0}", tagValue));
         }
@@ -52,9 +52,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Delete all tags from the device's DNS-SD broadcast. 
         /// </summary>
         /// <returns>Task tracking deletion of all tags.</returns>
-        public async Task DeleteAllTags()
+        public async Task DeleteAllTagsAsync()
         {
-            await this.Delete(TagsApi);
+            await this.DeleteAsync(TagsApi);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="tagValue">The tag to delete from the device broadcast.</param>
         /// <returns>Task tracking deletion of the tag.</returns>
-        public async Task DeleteTag(string tagValue)
+        public async Task DeleteTagAsync(string tagValue)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                 TagApi,
                 string.Format("tagValue={0}", tagValue));
         }

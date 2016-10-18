@@ -25,9 +25,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the IP configuration data of the device.
         /// </summary>
         /// <returns>object containing details of the device's network configuration.</returns>
-        public async Task<IpConfiguration> GetIpConfig()
+        public async Task<IpConfiguration> GetIpConfigAsync()
         {
-            return await this.Get<IpConfiguration>(IpConfigApi);
+            return await this.GetAsync<IpConfiguration>(IpConfigApi);
         }
 
         #region Data contract

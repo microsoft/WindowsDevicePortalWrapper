@@ -23,7 +23,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the current Xbox Live sandbox value for this device.
         /// </summary>
         /// <returns>The value of the current sandbox this device is in.</returns>
-        public async Task<Sandbox> GetXboxLiveSandbox()
+        public async Task<Sandbox> GetXboxLiveSandboxAsync()
         {
             /*
                 This method lives with the Xbox wrappers since it's Xbox Live and
@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 there is no check for Xbox platform type here.
             */
 
-            return await this.Get<Sandbox>(XboxLiveSandboxApi);
+            return await this.GetAsync<Sandbox>(XboxLiveSandboxApi);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="newSandbox">The new sandbox to move this device into.</param>
         /// <returns>Task tracking completion. A reboot will be required may be required before the sandbox change takes effect on some devices.</returns>
-        public async Task<Sandbox> SetXboxLiveSandbox(string newSandbox)
+        public async Task<Sandbox> SetXboxLiveSandboxAsync(string newSandbox)
         {
             /*
                 This method lives with the Xbox wrappers since it's Xbox Live and
@@ -50,7 +50,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Sandbox sandbox = new Sandbox();
             sandbox.Value = newSandbox;
 
-            return await this.Put<Sandbox, Sandbox>(XboxLiveSandboxApi, sandbox);
+            return await this.PutAsync<Sandbox, Sandbox>(XboxLiveSandboxApi, sandbox);
         }
 
         #region Data contract

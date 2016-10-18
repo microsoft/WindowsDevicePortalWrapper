@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ssid">SSID of the network.</param>
         /// <param name="networkKey">Network key.</param>
         /// <returns>Task tracking connection status.</returns>
-        public async Task ConnectToWifiNetwork(
+        public async Task ConnectToWifiNetworkAsync(
             Guid networkAdapter,
             string ssid,
             string networkKey)
@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Utilities.Hex64Encode(ssid),
                 Utilities.Hex64Encode(networkKey));
 
-            await this.Post(
+            await this.PostAsync(
                 WifiNetworkApi,
                 payload);
         }
@@ -58,9 +58,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets WiFi interfaces.
         /// </summary>
         /// <returns>List of WiFi interfaces.</returns>
-        public async Task<WifiInterfaces> GetWifiInterfaces()
+        public async Task<WifiInterfaces> GetWifiInterfacesAsync()
         {
-            return await this.Get<WifiInterfaces>(WifiInterfacesApi);
+            return await this.GetAsync<WifiInterfaces>(WifiInterfacesApi);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="interfaceGuid">Interface to get networks from.</param>
         /// <returns>List of available networks.</returns>
-        public async Task<WifiNetworks> GetWifiNetworks(Guid interfaceGuid)
+        public async Task<WifiNetworks> GetWifiNetworksAsync(Guid interfaceGuid)
         {
-            return await this.Get<WifiNetworks>(
+            return await this.GetAsync<WifiNetworks>(
                 WifiNetworksApi,
                 string.Format("interface={0}", interfaceGuid.ToString()));
         }
