@@ -23,7 +23,6 @@
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="apppackagebundle">
-            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
               <uap:FileType>.appxbundle</uap:FileType>
             </uap:SupportedFileTypes>
