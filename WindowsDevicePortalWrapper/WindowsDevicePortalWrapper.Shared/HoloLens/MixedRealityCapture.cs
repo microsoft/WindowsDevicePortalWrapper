@@ -199,12 +199,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string apiPath = isThumbnailRequest ? MrcThumbnailApi : MrcFileApi;
 
-            using (MemoryStream data = await this.GetAsync<MemoryStream>(
+            String payload = String.Format("filename={0}", Utilities.Hex64Encode(fileName));
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
                 apiPath,
-                string.Format("filename={0}", Utilities.Hex64Encode(fileName))))
+                payload);
+
+            using (Stream dataStream = await this.GetAsync(uri))
             {
-                dataBytes = new byte[data.Length];
-                data.Read(dataBytes, 0, dataBytes.Length);
+                dataBytes = new byte[dataStream.Length];
+                dataStream.Read(dataBytes, 0, dataBytes.Length);
             }
 
             return dataBytes;   
