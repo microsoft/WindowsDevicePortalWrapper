@@ -275,7 +275,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>MrcSettings object containing the current settings</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<MrcSettings> GetMrcSettings()
+        public async Task<MrcSettings> GetMrcSettingsAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -318,7 +318,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="settings"></param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task SetMrcSettings(MrcSettings settings)
+        public async Task SetMrcSettingsAsync(MrcSettings settings)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
