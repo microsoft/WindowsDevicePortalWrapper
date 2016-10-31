@@ -14,12 +14,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
-        public enum ProcessStatus
-        {
-            Running = 0,
-            Stopped
-        }
-
         /// <summary>
         /// API for getting or setting Interpupilary distance
         /// </summary>
@@ -34,6 +28,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for getting or setting HTTPS setting
         /// </summary>
         public static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
+
+        /// <summary>
+        /// Enumeration describing the status of a process
+        /// </summary>
+        public enum ProcessStatus
+        {
+            /// <summary>
+            /// The process is running
+            /// </summary>
+            Running = 0,
+            
+            /// <summary>
+            /// The process is stopped
+            /// </summary>
+            Stopped
+        }
 
         /// <summary>
         /// Gets the status of the Holographic Services on this HoloLens.
@@ -129,6 +139,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataContract]
         public class HolographicServices
         {
+            /// <summary>
+            /// Gets the status for the collection of holographic services
+            /// </summary>
             [DataMember(Name = "SoftwareStatus")]
             public HolographicSoftwareStatus Status { get; private set; }
         }
@@ -223,7 +236,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 get
                 {
-                    return (ExpectedRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
+                    return (this.ExpectedRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
                 }
             }
 
@@ -234,7 +247,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 get
                 {
-                    return (ObservedRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
+                    return (this.ObservedRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
                 }
             }
         }
