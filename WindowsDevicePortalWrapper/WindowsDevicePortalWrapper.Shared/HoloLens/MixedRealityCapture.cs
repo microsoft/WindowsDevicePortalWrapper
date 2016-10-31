@@ -199,7 +199,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string apiPath = isThumbnailRequest ? MrcThumbnailApi : MrcFileApi;
 
-            String payload = String.Format("filename={0}", Utilities.Hex64Encode(fileName));
+            string payload = string.Format("filename={0}", Utilities.Hex64Encode(fileName));
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath,
@@ -270,7 +270,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 payload);
         }
 
-        // TODO: GetMrcSettings()
+        /// <summary>
+        /// Gets the current Mixed Reality Capture settings
+        /// </summary>
+        /// <returns>MrcSettings object containing the current settings</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task<MrcSettings> GetMrcSettings()
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            return await this.GetAsync<MrcSettings>(MrcSettingsApi);
+        }
 
         /// <summary>
         /// Gets the status of the reality capture
@@ -299,7 +312,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return await this.GetMrcFileDataAsync(fileName, true);
         }
 
-        // TODO: SetMrcSettings()
+        /// <summary>
+        /// Sets the default Mixed Reality Capture settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns>Task tracking completion of the REST call.</returns>
+        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        public async Task SetMrcSettings(MrcSettings settings)
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            string payload = string.Format(
+                "holo={0}&pv={1}&mic={2}&appAudio={3}&vstabbuffer={4}",
+                settings.IncludeHolograms.ToString().ToLower(),
+                settings.IncludeColorCamera.ToString().ToLower(),
+                settings.IncludeMicrophone.ToString().ToLower(),
+                settings.IncludeAudio.ToString().ToLower(),
+                settings.VideoStabilizationBuffer);
+
+            await this.PostAsync(
+                MrcSettingsApi,
+                payload);
+        }
 
         /// <summary>
         /// Starts a Mixed Reality Capture recording.
@@ -451,6 +488,224 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "MrcProcess")]
             public string MrcProcess { get; private set; }  // TODO this should be an enum
+        }
+
+        /// <summary>
+        /// Object representation of a Mixed Reality Capture setting.
+        /// </summary>
+        [DataContract]
+        public class MrcSetting
+        {
+            /// <summary>
+            /// Gets or sets the name of the setting
+            /// </summary>
+            [DataMember(Name = "Setting")]
+            public string Setting { get; set; }
+
+            /// <summary>
+            /// Gets or sets the value of the setting
+            /// </summary>
+            [DataMember(Name = "Value")]
+            public object Value { get; set; }
+        }
+
+        /// <summary>
+        /// Object representing the collection of Mixed Reality Capture settings
+        /// </summary>
+        [DataContract]
+        public class MrcSettings
+        {
+            /// <summary>
+            /// Gets the collection of settings
+            /// </summary>
+            [DataMember(Name = "MrcSettings")]    
+            public List<MrcSetting> Settings { get; private set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not holograms are included.
+            /// </summary>
+            public bool IncludeHolograms
+            {
+                get
+                {
+                    object setting = this.GetSetting("EnableHolograms");
+
+                    if (setting == null)
+                    {
+                        return true;
+                    }
+
+                    return (bool)setting;
+                }
+                
+                set
+                {
+                    this.SetSetting(
+                        "EnableHolograms",
+                        value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not color camera data is included.
+            /// </summary>
+            public bool IncludeColorCamera
+            {
+                get
+                {
+                    object setting = this.GetSetting("EnableCamera");
+
+                    if (setting == null)
+                    {
+                        return true;
+                    }
+
+                    return (bool)setting;
+                }
+
+                set
+                {
+                    this.SetSetting(
+                        "EnableCamera",
+                        value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not microphone audio is included.
+            /// </summary>
+            public bool IncludeMicrophone
+            {
+                get
+                {
+                    object setting = this.GetSetting("EnableMicrophone");
+
+                    if (setting == null)
+                    {
+                        return true;
+                    }
+
+                    return (bool)setting;
+                }
+
+                set
+                {
+                    this.SetSetting(
+                        "EnableMicrophone",
+                        value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether or not audio is included.
+            /// </summary>
+            public bool IncludeAudio
+            {
+                get
+                {
+                    object setting = this.GetSetting("EnableSystemAudio");
+
+                    if (setting == null)
+                    {
+                        return true;
+                    }
+
+                    return (bool)setting;
+                }
+
+                set
+                {
+                    this.SetSetting(
+                        "EnableSystemAudio",
+                        value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets the size, in frames, of the video stabilization buffer.
+            /// </summary>
+            public int VideoStabilizationBuffer
+            {
+                get
+                {
+                    object setting = this.GetSetting("VideoStabilizationBuffer");
+
+                    if (setting == null)
+                    {
+                        return 0;
+                    }
+
+                    return (int)setting;
+                }
+
+                set
+                {
+                    if (value < 0)
+                    {
+                        throw new ArgumentException("The video stabilization buffer value must be >= 0");
+                    }
+                    
+                    this.SetSetting(
+                        "VideoStabilizationBuffer",
+                        value);
+                }
+            }
+
+            /// <summary>
+            /// Gets the value of a setting
+            /// </summary>
+            /// <param name="settingName">The name of the setting</param>
+            /// <returns>The value of the setting, or if not found, null.</returns>
+            private object GetSetting(string settingName)
+            {
+                object value = null;
+
+                foreach (MrcSetting setting in this.Settings)
+                {
+                    if (setting.Setting == settingName)
+                    {
+                        value = setting.Value;
+                        break;
+                    }
+                }
+
+                return value;
+            }
+
+            /// <summary>
+            /// Sets the value of a Mixed Reality Capture setting.
+            /// </summary>
+            /// <param name="settingName">The name of the setting</param>
+            /// <param name="value">The value of the setting</param>
+            private void SetSetting(
+                string settingName,
+                object value)
+            {
+                // If the setting exists, update the value, otherwise create a new one.
+                MrcSetting mrcSetting = null;
+
+                foreach (MrcSetting setting in this.Settings)
+                {
+                    if (setting.Setting == settingName)
+                    {
+                        mrcSetting = setting;
+                        break;
+                    }
+                }
+
+                if (mrcSetting != null)
+                {
+                    mrcSetting.Value = value;
+                }
+                else
+                {
+                    mrcSetting = new MrcSetting();
+                    mrcSetting.Setting = settingName;
+                    mrcSetting.Value = value;
+
+                    this.Settings.Add(mrcSetting);
+                }
+            }
         }
         #endregion Data contract
     }
