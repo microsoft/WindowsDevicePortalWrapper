@@ -478,16 +478,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Object representation of the recording process status
+        /// Object representation of the Mixed Reality Capture process status
         /// </summary>
         [DataContract]
         public class MrcProcessStatus
         {
             /// <summary>
-            /// Gets the process status
+            /// Gets the raw data for the Mixed Reality Capture process status
             /// </summary>
             [DataMember(Name = "MrcProcess")]
-            public string MrcProcess { get; private set; }  // TODO this should be an enum
+            public string MrcProcessRaw { get; private set; }
+
+            /// <summary>
+            /// Gets the status of the Mixed Reality Capture process
+            /// </summary>
+            public ProcessStatus MrcProcess
+            {
+                get
+                {
+                    return (this.MrcProcessRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
+                }
+            }
         }
 
         /// <summary>
