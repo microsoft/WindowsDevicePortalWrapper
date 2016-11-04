@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the status of the Holographic Services on this HoloLens.
         /// </summary>
         /// <returns>HolographicServices object describing the state of the Holographic services.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicServices> GetHolographicServiceState()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the interpupilary distance registered on the device.
         /// </summary>
         /// <returns>Interpupilary distance, in millimeters.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<float> GetInterPupilaryDistanceAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="httpsRequired">Desired value for HTTPS communication</param>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task SetIsHttpsRequiredAsync(bool httpsRequired)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -101,7 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="ipd">Interpupilary distance, in millimeters.</param>
         /// <returns>Task for tracking the POST call</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task SetInterPupilaryDistanceAsync(float ipd)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -120,7 +120,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the WiFi http security requirements for communication with the device.
         /// </summary>
         /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<bool> GetIsHttpsRequiredAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
