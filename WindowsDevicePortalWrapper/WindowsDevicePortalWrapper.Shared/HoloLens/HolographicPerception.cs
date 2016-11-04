@@ -76,9 +76,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Creates a simulation control stream.
         /// </summary>
         /// <param name="priority">The control stream priority.</param>
-        /// <returns>PerceptionSimulationControlStreamId containing the identifier of the created stream.</returns>
+        /// <returns>The identifier of the created stream.</returns>
         /// <remarks>This method is only supported on HoloLens.</remarks>
-        public async Task<PerceptionSimulationControlStreamId> CreatePerceptionSimulationControlStream(SimulationControlStreamPriority priority)
+        public async Task<string> CreatePerceptionSimulationControlStream(SimulationControlStreamPriority priority)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
@@ -89,9 +89,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 "priority={0}",
                 (int)priority);
 
-            return await this.GetAsync<PerceptionSimulationControlStreamId>(
-                HolographicSimulationStreamApi,
-                payload);
+            PerceptionSimulationControlStreamId controlStreamId =  await this.GetAsync<PerceptionSimulationControlStreamId>(
+                            HolographicSimulationStreamApi,
+                            payload);
+
+            return controlStreamId.StreamId;
         }
 
         /// <summary>
