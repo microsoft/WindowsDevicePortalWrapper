@@ -99,7 +99,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="name">The name of the recording to delete (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task DeleteHolographicSimulationRecordingAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -118,7 +118,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the collection of Holographic Perception Simulation files on this HoloLens.
         /// </summary>
         /// <returns>HolographicSimulationPlaybackFiles object representing the files on the HoloLens</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicSimulationPlaybackFiles> GetHolographicSimulationPlaybackFilesAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -133,7 +133,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the collection of loaded Holographic Perception Simulation files on this HoloLens.
         /// </summary>
         /// <returns>HolographicSimulationPlaybackFiles object representing the files loaded on the HoloLens</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicSimulationPlaybackFiles> GetHolographicSimulationPlaybackSessionFilesAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -149,7 +149,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">Name of the recording file, with extension.</param>
         /// <returns>HolographicSimulationDataTypes object representing they types of data in the file</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicSimulationDataTypes> GetHolographicSimulationPlaybackSessionDataTypesAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -171,7 +171,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="name">The name of the recording (ex: testsession.xef).</param>
         /// <returns>HolographicSimulationPlaybackStates enum value describing the state of the recording.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicSimulationPlaybackStates> GetHolographicSimulationPlaybackStateAsync(string name)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -221,7 +221,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">The name of the recording to load (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task LoadHolographicSimulationRecordingAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -241,7 +241,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">The name of the recording to pause</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task PauseHolographicSimulationRecordingAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -261,7 +261,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">The name of the recording to play</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task PlayHolographicSimulationRecordingAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -281,7 +281,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">The name of the recording to stop</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task StopHolographicSimulationRecordingAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -301,7 +301,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="recordingName">The name of the recording to unload (ex: testsession.xef).</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task UnloadHolographicSimulationRecordingAsync(string recordingName)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))

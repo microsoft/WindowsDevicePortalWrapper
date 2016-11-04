@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// API for controlling the Holographic Perception Simulation control stream.
         /// </summary>
-        public static readonly string HolographicSimulationStreamApi = "api/holographic/simulation/control/Stream";
+        public static readonly string HolographicSimulationStreamApi = "api/holographic/simulation/control/stream";
 
         /// <summary>
         /// Enumeration defining the control modes used by the Holographic Perception Simulation.
@@ -57,10 +57,70 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Enumeration defining the priority levels for the Holographic Perception Simulation control stream.
+        /// </summary>
+        public enum SimulationControlStreamPriority
+        {
+            /// <summary>
+            /// Low priority.
+            /// </summary>
+            Low = 0,
+
+            /// <summary>
+            /// Normal priority.
+            /// </summary>
+            Normal
+        }
+
+        /// <summary>
+        /// Creates a simulation control stream.
+        /// </summary>
+        /// <param name="priority">The control stream priority.</param>
+        /// <returns>PerceptionSimulationControlStreamId containing the identifier of the created stream.</returns>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
+        public async Task<PerceptionSimulationControlStreamId> CreatePerceptionSimulationControlStream(SimulationControlStreamPriority priority)
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            string payload = string.Format(
+                "priority={0}",
+                (int)priority);
+
+            return await this.GetAsync<PerceptionSimulationControlStreamId>(
+                HolographicSimulationStreamApi,
+                payload);
+        }
+
+        /// <summary>
+        /// Deletes a simulation control stream.
+        /// </summary>
+        /// <param name="streamId">The identifier of the stream to be deleted.</param>
+        /// <returns>Task tracking completion of the REST call.</returns>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
+        public async Task DeletePerceptionSimulationControlStream(string streamId)
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            string payload = string.Format(
+                "streamId={0}",
+                streamId);
+
+            await this.DeleteAsync(
+                HolographicSimulationStreamApi,
+                payload);
+        }
+
+        /// <summary>
         /// Gets the perception simulation control mode.
         /// </summary>
         /// <returns>The simulation control mode.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<SimulationControlMode> GetPerceptionSimulationControlModeAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -72,12 +132,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return controlMode.Mode;
         }
 
+        // TODO
+        //public async Task GetPerceptionSimulationControlStream()
+
         /// <summary>
         /// Sets the perception simulation control mode.
         /// </summary>
         /// <param name="mode">The simulation control mode.</param>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
         /// <returns>Task tracking completion of the REST call.</returns>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task SetPerceptionSimulationControlModeAsync(SimulationControlMode mode)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -105,5 +168,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public SimulationControlMode Mode { get; private set; }
         }
         #endregion // Data contract
+
+        /// <summary>
+        /// Object representation of the response recevied when creating a Perception Simulation control stream.
+        /// </summary>
+        [DataContract]
+        public class PerceptionSimulationControlStreamId
+        {
+            /// <summary>
+            /// Gets the stream identifier.
+            /// </summary>
+            [DataMember(Name = "streamId")]
+            public string StreamId { get; private set; }
+        }
     }
 }

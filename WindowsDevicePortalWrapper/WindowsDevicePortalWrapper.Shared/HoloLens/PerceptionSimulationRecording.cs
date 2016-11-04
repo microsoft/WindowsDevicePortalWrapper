@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the holographic simulation recording status.
         /// </summary>
         /// <returns>True if recording, false otherwise.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<bool> GetHolographicSimulationRecordingStatusAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
@@ -57,7 +57,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="recordSpatialMapping">Should Spatial Mapping data be recorded? The default value is true.</param>
         /// <param name="recordEnvironment">Should environment data be recorded? The default value is true.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task StartHolographicSimulationRecordingAsync(
             string name,
             bool recordHead = true,
@@ -85,7 +85,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <returns>Byte array containing the recorded data.</returns>
         /// <exception cref="InvalidOperationException">No recording was in progress.</exception>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<byte[]> StopHolographicSimulationRecordingAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
