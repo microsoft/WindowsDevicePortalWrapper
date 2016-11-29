@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            if (!(await VerifySimulationControlMode(SimulationControlMode.Simulation)))
+            if (!(await VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
             {
                 throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
@@ -104,7 +104,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            if (!(await VerifySimulationControlMode(SimulationControlMode.Simulation)))
+            if (!(await VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
             {
                 throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
@@ -158,7 +158,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="expectedMode">The simulation control mode that we expect the device to be in.</param>
         /// <returns>The simulation control mode.</returns>
-        private async Task<bool> VerifySimulationControlMode(SimulationControlMode expectedMode)
+        private async Task<bool> VerifySimulationControlModeAsync(SimulationControlMode expectedMode)
         {
             SimulationControlMode simMode = await this.GetPerceptionSimulationControlModeAsync();
             return (simMode == expectedMode);
