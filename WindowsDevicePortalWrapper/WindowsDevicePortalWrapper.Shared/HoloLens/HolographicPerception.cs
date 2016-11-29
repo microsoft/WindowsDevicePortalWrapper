@@ -43,17 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             /// Simulation mode.
             /// </summary>
-            Simulation,
-
-            /// <summary>
-            /// Remote mode.
-            /// </summary>
-            Remote,
-
-            /// <summary>
-            /// Legacy mode.
-            /// </summary>
-            Legacy
+            Simulation
         }
 
         /// <summary>
@@ -78,11 +68,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="priority">The control stream priority.</param>
         /// <returns>The identifier of the created stream.</returns>
         /// <remarks>This method is only supported on HoloLens.</remarks>
-        public async Task<string> CreatePerceptionSimulationControlStream(SimulationControlStreamPriority priority)
+        public async Task<string> CreatePerceptionSimulationControlStreamAsync(SimulationControlStreamPriority priority)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            if (!(await VerifySimulationControlMode(SimulationControlMode.Simulation)))
+            {
+                throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
 
             string payload = string.Format(
@@ -102,11 +97,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="streamId">The identifier of the stream to be deleted.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         /// <remarks>This method is only supported on HoloLens.</remarks>
-        public async Task DeletePerceptionSimulationControlStream(string streamId)
+        public async Task DeletePerceptionSimulationControlStreamAsync(string streamId)
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            if (!(await VerifySimulationControlMode(SimulationControlMode.Simulation)))
+            {
+                throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
 
             string payload = string.Format(
@@ -134,9 +134,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return controlMode.Mode;
         }
 
-        // TODO
-        //public async Task GetPerceptionSimulationControlStream()
-
         /// <summary>
         /// Sets the perception simulation control mode.
         /// </summary>
@@ -156,6 +153,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
             await this.PostAsync(HolographicSimulationModeApi, payload);
         }
 
+        /// <summary>
+        /// Compares the current simulation control mode with the expected mode.
+        /// </summary>
+        /// <param name="expectedMode">The simulation control mode that we expect the device to be in.</param>
+        /// <returns>The simulation control mode.</returns>
+        private async Task<bool> VerifySimulationControlMode(SimulationControlMode expectedMode)
+        {
+            SimulationControlMode simMode = await this.GetPerceptionSimulationControlModeAsync();
+            return (simMode == expectedMode);
+        }
+
         #region Data contract
         /// <summary>
         /// Object representation of Perception Simulation control mode.
@@ -169,7 +177,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "mode")]
             public SimulationControlMode Mode { get; private set; }
         }
-        #endregion // Data contract
 
         /// <summary>
         /// Object representation of the response recevied when creating a Perception Simulation control stream.
@@ -183,5 +190,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "streamId")]
             public string StreamId { get; private set; }
         }
+        #endregion // Data contract
     }
 }
