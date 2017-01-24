@@ -311,6 +311,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public long SizeInBytes { get; private set; }
 
             /// <summary>
+            /// Gets whether the current item is a folder
+            /// </summary>
+            public bool IsFolder { get { return this.Type == 0x10; } }
+
+            /// <summary>
             /// Overridden ToString method providing a user readable
             /// display of a file or folder. Tries to match the formatting
             /// of regular DIR commands.
@@ -321,7 +326,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 DateTime timestamp = DateTime.FromFileTime(this.DateCreated);
 
                 // Check if this is a folder.
-                if (!string.Equals(this.SubPath, this.CurrentDir))
+                if (this.IsFolder)
                 {
                     return string.Format("{0,-24:MM/dd/yyyy  HH:mm tt}{1,-14} {2}\n", timestamp, "<DIR>", this.Name);
                 }
