@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<BatteryState> getTask  = TestHelpers.Portal.GetBatteryState();
+            Task<BatteryState> getTask  = TestHelpers.Portal.GetBatteryStateAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -89,7 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<string> getTask  = TestHelpers.Portal.GetDeviceName();
+            Task<string> getTask  = TestHelpers.Portal.GetDeviceNameAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -110,7 +111,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfig();
+            Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfigAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -138,7 +139,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<ControllerDriverInfo> getTask = TestHelpers.Portal.GetControllerDriverInfo();
+            Task<ControllerDriverInfo> getTask = TestHelpers.Portal.GetControllerDriverInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -161,7 +162,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DateTimeInfo> getTask = TestHelpers.Portal.GetDateTimeInfo();
+            Task<DateTimeInfo> getTask = TestHelpers.Portal.GetDateTimeInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -183,7 +184,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TimezoneInfo> getTask = TestHelpers.Portal.GetTimezoneInfo();
+            Task<TimezoneInfo> getTask = TestHelpers.Portal.GetTimezoneInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -206,7 +207,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DisplayResolutionInfo> getTask = TestHelpers.Portal.GetDisplayResolutionInfo();
+            Task<DisplayResolutionInfo> getTask = TestHelpers.Portal.GetDisplayResolutionInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -228,7 +229,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DisplayOrientationInfo> getTask = TestHelpers.Portal.GetDisplayOrientationInfo();
+            Task<DisplayOrientationInfo> getTask = TestHelpers.Portal.GetDisplayOrientationInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -250,7 +251,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<IoTOSInfo> getTask = TestHelpers.Portal.GetIoTOSInfo();
+            Task<IoTOSInfo> getTask = TestHelpers.Portal.GetIoTOSInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -274,7 +275,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<StatusInfo> getTask = TestHelpers.Portal.GetStatusInfo();
+            Task<StatusInfo> getTask = TestHelpers.Portal.GetStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -298,7 +299,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<UpdateInstallTimeInfo> getTask = TestHelpers.Portal.GetUpdateInstallTime();
+            Task<UpdateInstallTimeInfo> getTask = TestHelpers.Portal.GetUpdateInstallTimeAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -321,7 +322,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfo();
+            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -344,7 +345,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<SoftAPSettingsInfo> getTask = TestHelpers.Portal.GetSoftAPSettingsInfo();
+            Task<SoftAPSettingsInfo> getTask = TestHelpers.Portal.GetSoftAPSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -367,7 +368,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AllJoynSettingsInfo> getTask = TestHelpers.Portal.GetAllJoynSettingsInfo();
+            Task<AllJoynSettingsInfo> getTask = TestHelpers.Portal.GetAllJoynSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -389,7 +390,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceNameApi, response, HttpMethods.Post);
 
-            Task setIoTDeviceName = TestHelpers.Portal.SetIoTDeviceName(deviceName);
+            Task setIoTDeviceName = TestHelpers.Portal.SetIoTDeviceNameAsync(deviceName);
             setIoTDeviceName.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDeviceName.Status);
@@ -409,7 +410,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
 
-            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettings(SoftApEnabled, SoftApSsid, SoftApPassword);
+            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettingsAsync(SoftApEnabled, SoftApSsid, SoftApPassword);
             setSoftApSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setSoftApSettings.Status);
@@ -429,7 +430,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AllJoynSettingsApi, response, HttpMethods.Post);
 
-            Task setAllJoynSettings = TestHelpers.Portal.SetAllJoynSettings(allJoynStatus, allJoynDescription, allJoynManufacturer, allJoynModelNumber);
+            Task setAllJoynSettings = TestHelpers.Portal.SetAllJoynSettingsAsync(allJoynStatus, allJoynDescription, allJoynManufacturer, allJoynModelNumber);
             setAllJoynSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setAllJoynSettings.Status);
@@ -451,7 +452,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ResetPasswordApi, response, HttpMethods.Post);
 
-            Task<ErrorInformation> setIoTNewPassword = TestHelpers.Portal.SetNewPassword(oldPassword, newPassword);
+            Task<ErrorInformation> setIoTNewPassword = TestHelpers.Portal.SetNewPasswordAsync(oldPassword, newPassword);
             setIoTNewPassword.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewPassword.Status);
@@ -470,7 +471,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.NewRemoteDebuggingPinApi, response, HttpMethods.Post);
 
-            Task setIoTNewRemoteDebuggingPin = TestHelpers.Portal.SetNewRemoteDebuggingPin(newPin);
+            Task setIoTNewRemoteDebuggingPin = TestHelpers.Portal.SetNewRemoteDebuggingPinAsync(newPin);
             setIoTNewRemoteDebuggingPin.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewRemoteDebuggingPin.Status);
@@ -490,7 +491,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ControllerDriverApi, response, HttpMethods.Post);
 
-            Task<ControllerDriverInfo> setIoTControllersDrivers = TestHelpers.Portal.SetControllersDrivers(newDriver);
+            Task<ControllerDriverInfo> setIoTControllersDrivers = TestHelpers.Portal.SetControllersDriversAsync(newDriver);
             setIoTControllersDrivers.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTControllersDrivers.Status);
@@ -508,7 +509,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetTimeZoneApi, response, HttpMethods.Post);
 
-            Task setIoTTimeZone = TestHelpers.Portal.SetTimeZone(index);
+            Task setIoTTimeZone = TestHelpers.Portal.SetTimeZoneAsync(index);
             setIoTTimeZone.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTTimeZone.Status);
@@ -525,7 +526,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayResolutionApi, response, HttpMethods.Post);
 
-            Task setDisplayResolution = TestHelpers.Portal.SetDisplayResolution(displayResolution);
+            Task setDisplayResolution = TestHelpers.Portal.SetDisplayResolutionAsync(displayResolution);
             setDisplayResolution.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setDisplayResolution.Status);
@@ -542,7 +543,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayOrientationApi, response, HttpMethods.Post);
 
-            Task setIoTDisplayOrientation = TestHelpers.Portal.SetDisplayOrientation(displayOrientation);
+            Task setIoTDisplayOrientation = TestHelpers.Portal.SetDisplayOrientationAsync(displayOrientation);
             setIoTDisplayOrientation.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDisplayOrientation.Status);
@@ -560,7 +561,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AppsListInfo> getTask = TestHelpers.Portal.GetAppsListInfo();
+            Task<AppsListInfo> getTask = TestHelpers.Portal.GetAppsListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -582,14 +583,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<HeadlessAppsListInfo> getTask = TestHelpers.Portal.GetHeadlessAppsListInfo();
+            Task<HeadlessAppsListInfo> getTask = TestHelpers.Portal.GetHeadlessAppsListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             HeadlessAppsListInfo appsList = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual(true, appsList.AppPackages[0].IsStartup);
+            Assert.AreEqual(true, appsList.AppPackages.First().IsStartup);
         }
 
         /// <summary>
@@ -603,7 +604,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AppsListApi, response, HttpMethods.Post);
 
-            Task setIoTStartupApp = TestHelpers.Portal.UpdateStartupApp(startupApp);
+            Task setIoTStartupApp = TestHelpers.Portal.UpdateStartupAppAsync(startupApp);
             setIoTStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTStartupApp.Status);
@@ -620,7 +621,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Post);
 
-            Task setIoTHeadlessStartupApp = TestHelpers.Portal.UpdateHeadlessStartupApp(startupApp);
+            Task setIoTHeadlessStartupApp = TestHelpers.Portal.UpdateHeadlessStartupAppAsync(startupApp);
             setIoTHeadlessStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTHeadlessStartupApp.Status);
@@ -637,7 +638,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Delete);
 
-            Task removeIoTHeadlessStartupApp = TestHelpers.Portal.RemoveHeadlessStartupApp(startupApp);
+            Task removeIoTHeadlessStartupApp = TestHelpers.Portal.RemoveHeadlessStartupAppAsync(startupApp);
             removeIoTHeadlessStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, removeIoTHeadlessStartupApp.Status);
@@ -654,7 +655,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ActivatePackageApi, response, HttpMethods.Post);
 
-            Task activatePackage = TestHelpers.Portal.ActivatePackage(appId);
+            Task activatePackage = TestHelpers.Portal.ActivatePackageAsync(appId);
             activatePackage.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, activatePackage.Status);
@@ -672,7 +673,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AudioDeviceListInfo> getTask = TestHelpers.Portal.GetAudioDeviceListInfo();
+            Task<AudioDeviceListInfo> getTask = TestHelpers.Portal.GetAudioDeviceListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -693,7 +694,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetRenderVolumeApi, response, HttpMethods.Post);
 
-            Task RenderVolume = TestHelpers.Portal.SetRenderVolume(renderVolume);
+            Task RenderVolume = TestHelpers.Portal.SetRenderVolumeAsync(renderVolume);
             RenderVolume.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, RenderVolume.Status);
@@ -710,7 +711,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetCaptureVolumeApi, response, HttpMethods.Post);
 
-            Task CaptureVolume = TestHelpers.Portal.SetCaptureVolume(captureVolume);
+            Task CaptureVolume = TestHelpers.Portal.SetCaptureVolumeAsync(captureVolume);
             CaptureVolume.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, CaptureVolume.Status);
@@ -728,7 +729,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Post);
 
-            Task IcsStart = TestHelpers.Portal.IcSharingStart(privateInterfaceIndex, publicInterfaceIndex);
+            Task IcsStart = TestHelpers.Portal.IcSharingStartAsync(privateInterfaceIndex, publicInterfaceIndex);
             IcsStart.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, IcsStart.Status);
@@ -746,7 +747,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Delete);
 
-            Task IcsStop = TestHelpers.Portal.IcSharingStop(privateInterfaceIndex, publicInterfaceIndex);
+            Task IcsStop = TestHelpers.Portal.IcSharingStopAsync(privateInterfaceIndex, publicInterfaceIndex);
             IcsStop.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, IcsStop.Status);
@@ -764,14 +765,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<IscInterfacesInfo> getTask = TestHelpers.Portal.GetIcsInterfacesInfo();
+            Task<IscInterfacesInfo> getTask = TestHelpers.Portal.GetIcsInterfacesInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
             IscInterfacesInfo icsInterfaceInfo = getTask.Result;
 
             // Check some known things about this response.
-            Assert.AreEqual("Broadcom 802.11n Wireless SDIO Adapter", icsInterfaceInfo.PrivateInterfaces[0]);
+            Assert.AreEqual("Broadcom 802.11n Wireless SDIO Adapter", icsInterfaceInfo.PrivateInterfaces.First());
         }
 
         /// <summary>
@@ -786,7 +787,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandApi, response, HttpMethods.Post);
 
-            Task runCommand = TestHelpers.Portal.RunCommand(command, runAsDefaultAccount);
+            Task runCommand = TestHelpers.Portal.RunCommandAsync(command, runAsDefaultAccount);
             runCommand.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, runCommand.Status);
@@ -807,7 +808,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandWithoutOutputApi, response, HttpMethods.Post);
 
-            Task<RunCommandOutputInfo> runCommandWithoutOutput = TestHelpers.Portal.RunCommandWithoutOutput(command, runAsDefaultAccount, timeout);
+            Task<RunCommandOutputInfo> runCommandWithoutOutput = TestHelpers.Portal.RunCommandWithoutOutputAsync(command, runAsDefaultAccount, timeout);
             runCommandWithoutOutput.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, runCommandWithoutOutput.Status);
@@ -825,7 +826,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfo();
+            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -848,7 +849,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
              TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsEnableApi, response, HttpMethods.Post);
 
-            Task<RemoteSettingsStatusInfo> remoteSettingsEnable = TestHelpers.Portal.RemoteSettingsEnable();
+            Task<RemoteSettingsStatusInfo> remoteSettingsEnable = TestHelpers.Portal.RemoteSettingsEnableAsync();
             remoteSettingsEnable.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsEnable.Status);
@@ -867,7 +868,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsDisableApi, response, HttpMethods.Post);
 
-            Task<RemoteSettingsStatusInfo> remoteSettingsDisable = TestHelpers.Portal.RemoteSettingsDisable();
+            Task<RemoteSettingsStatusInfo> remoteSettingsDisable = TestHelpers.Portal.RemoteSettingsDisableAsync();
             remoteSettingsDisable.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsDisable.Status);
@@ -885,7 +886,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmSettingsInfo> getTask = TestHelpers.Portal.GetTpmSettingsInfo();
+            Task<TpmSettingsInfo> getTask = TestHelpers.Portal.GetTpmSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -907,7 +908,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmAcpiTablesInfo> getTask = TestHelpers.Portal.GetTpmAcpiTablesInfo();
+            Task<TpmAcpiTablesInfo> getTask = TestHelpers.Portal.GetTpmAcpiTablesInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -931,7 +932,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmLogicalDeviceSettingsInfo> getTask = TestHelpers.Portal.GetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            Task<TpmLogicalDeviceSettingsInfo> getTask = TestHelpers.Portal.GetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -952,7 +953,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.TpmAcpiTablesApi, response, HttpMethods.Post);
 
-            Task tpmAcpiTables = TestHelpers.Portal.SetTpmAcpiTablesInfo(acpiTableIndex);
+            Task tpmAcpiTables = TestHelpers.Portal.SetTpmAcpiTablesInfoAsync(acpiTableIndex);
             tpmAcpiTables.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmAcpiTables.Status);
@@ -971,7 +972,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
 
-            Task tpmLogicalDeviceSettings = TestHelpers.Portal.SetTpmLogicalDeviceSettingsInfo(logicalDeviceId, azureUri, azureKey);
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.SetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId, azureUri, azureKey);
             tpmLogicalDeviceSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
@@ -988,7 +989,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
 
-            Task tpmLogicalDeviceSettings = TestHelpers.Portal.ResetTpmLogicalDeviceSettingsInfo(logicalDeviceId);
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.ResetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
             tpmLogicalDeviceSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
@@ -1009,7 +1010,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.GetTpmAzureTokenInfo(logicalDeviceId, validity);
+            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.GetTpmAzureTokenInfoAsync(logicalDeviceId, validity);
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);

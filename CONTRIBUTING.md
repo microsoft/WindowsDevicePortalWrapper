@@ -71,6 +71,17 @@ Address any review comments, force push to your topic branch, and post a comment
 
 If the pull request review goes well, a project maintainer will merge your changes. Thank you for helping improve the Windows Device Portal Wrapper!
 
+# NuGet release and versioning
+
+**For maintainers**
+
+When creating a new NuGet and GitHub release, the following steps should be taken:
+1. Bump the version number as appropriate in master (after 1.0, WDP Wrapper will correctly use semver)
+2. Merge from Master to Release, with a PR appropriately named ("v1.2.3 release")
+3. Squash and merge commits, leaving major feature entries and fixes in the description. 
+4. Compile release builds of the .NET and UWP libraries, sign them, and upload to NuGet 
+5. Cut a new release on GitHub using the same version number ("v1.2.3") and attach the signed libraries to the release. 
+6. Update code documentation. 
 
 # Updating code documentation
 

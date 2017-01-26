@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -40,18 +41,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets List of apps.
         /// </summary>
         /// <returns>Object containing the list of applications.</returns>
-        public async Task<AppsListInfo> GetAppsListInfo()
+        public async Task<AppsListInfo> GetAppsListInfoAsync()
         {
-            return await this.Get<AppsListInfo>(AppsListApi);
+            return await this.GetAsync<AppsListInfo>(AppsListApi);
         }
 
         /// <summary>
         /// Gets list of headless apps.
         /// </summary>
         /// <returns>Object containing the list of headless applications.</returns>
-        public async Task<HeadlessAppsListInfo> GetHeadlessAppsListInfo()
+        public async Task<HeadlessAppsListInfo> GetHeadlessAppsListInfoAsync()
         {
-            return await this.Get<HeadlessAppsListInfo>(HeadlessAppsListApi);
+            return await this.GetAsync<HeadlessAppsListInfo>(HeadlessAppsListApi);
         }
 
         /// <summary>
@@ -59,9 +60,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task UpdateStartupApp(string appId)
+        public async Task UpdateStartupAppAsync(string appId)
         {
-            await this.Post(
+            await this.PostAsync(
                  AppsListApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }
@@ -71,9 +72,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task UpdateHeadlessStartupApp(string appId)
+        public async Task UpdateHeadlessStartupAppAsync(string appId)
         {
-            await this.Post(
+            await this.PostAsync(
                  HeadlessStartupAppApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }
@@ -83,9 +84,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task RemoveHeadlessStartupApp(string appId)
+        public async Task RemoveHeadlessStartupAppAsync(string appId)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                  HeadlessStartupAppApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }
@@ -95,9 +96,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="appId">App Id.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
-        public async Task ActivatePackage(string appId)
+        public async Task ActivatePackageAsync(string appId)
         {
-            await this.Post(
+            await this.PostAsync(
                  ActivatePackageApi,
                 string.Format("appid={0}", Utilities.Hex64Encode(appId)));
         }
@@ -116,10 +117,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string DefaultApp { get; private set; }
 
             /// <summary>
-            /// Gets or sets the application packages
+            /// Gets the application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; private set; }
+            public List<AppPackage> AppPackages { get; private set; }
         }
 
         [DataContract]
@@ -148,7 +149,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the list of headless application packages
             /// </summary>
             [DataMember(Name = "AppPackages")]
-            public AppPackage[] AppPackages { get; private set; }
+            public List<AppPackage> AppPackages { get; private set; }
         }
        
         #endregion // Data contract

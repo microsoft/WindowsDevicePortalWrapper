@@ -6,7 +6,6 @@
 
 using System;
 using System.Net;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
@@ -38,6 +37,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             if (!string.IsNullOrEmpty(userName) &&
                 !string.IsNullOrEmpty(password))
+            {
+                // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+                this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XboxDevicePortalConnection"/> class, using a SecureString to secure the password.
+        /// </summary>
+        /// <param name="address">device identifier</param>
+        /// <param name="userName">WDP username</param>
+        /// <param name="password">WDP password</param>
+        public DefaultDevicePortalConnection(
+            string address,
+            string userName,
+            System.Security.SecureString password)
+        {
+            this.Connection = new Uri(address);
+
+
+            if (!string.IsNullOrEmpty(userName) &&
+                password != null &&
+                password.Length > 0)
             {
                 // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
                 this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
@@ -136,11 +158,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Updates the device's connection Uri.
         /// </summary>
-        /// <param name="ipConfig">The device's IP configuration data.</param>
-        /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
+        /// <param name="ipConfig">Object that describes the current network configuration.</param>
+        /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
         public void UpdateConnection(
             IpConfiguration ipConfig,
-            bool requiresHttps = false)
+            bool requiresHttps,
+            bool preservePort)
         {
             Uri newConnection = null;
 
@@ -151,11 +175,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
+                        string address = addressInfo.Address;
+                        if (preservePort)
+                        {
+                            address = string.Format("{0}:{1}",
+                                address,
+                                this.Connection.Port);
+                        }
+
                         newConnection = new Uri(
                             string.Format(
                                 "{0}://{1}", 
                                 requiresHttps ? "https" : "http",
-                                this.Connection.Authority));
+                                address));
                         break;
                     }
                 }

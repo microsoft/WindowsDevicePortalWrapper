@@ -13,7 +13,7 @@ using Microsoft.Tools.WindowsDevicePortal.Tests;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// MOCK implementation of HTTP Post
+    /// MOCK implementation of HTTP PostAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> Post(
+        private async Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)

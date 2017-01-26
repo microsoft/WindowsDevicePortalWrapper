@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Delete
+    /// Universal Windows Platform implementation of HTTP DeleteAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Delete(Uri uri)
+        private async Task<Stream> DeleteAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 

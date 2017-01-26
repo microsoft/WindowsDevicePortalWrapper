@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="proxyPort">The port the proxy is listening on.</param>
         /// <param name="certFilePath">An optional path to the cert file to use.</param>
         /// <returns>Task tracking completion. A reboot will be required before the tracing begins.</returns>
-        public async Task EnableFiddlerTracing(string proxyAddress, string proxyPort, string certFilePath = null)
+        public async Task EnableFiddlerTracingAsync(string proxyAddress, string proxyPort, string certFilePath = null)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
@@ -45,11 +45,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 queryStringList.Add("updateCert", "true");
 
-                await this.Post(FiddlerSetupApi, certFileList, Utilities.BuildQueryString(queryStringList));
+                await this.PostAsync(FiddlerSetupApi, certFileList, Utilities.BuildQueryString(queryStringList));
             }
             else
             {
-                await this.Post(FiddlerSetupApi, Utilities.BuildQueryString(queryStringList));
+                await this.PostAsync(FiddlerSetupApi, Utilities.BuildQueryString(queryStringList));
             }
         }
 
@@ -57,14 +57,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Disables Fiddler on the console.
         /// </summary>
         /// <returns>Task tracking completion. A reboot will be required before tracing stops.</returns>
-        public async Task DisableFiddlerTracing()
+        public async Task DisableFiddlerTracingAsync()
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            await this.Delete(FiddlerSetupApi);
+            await this.DeleteAsync(FiddlerSetupApi);
         }
     }
 }

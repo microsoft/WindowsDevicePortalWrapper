@@ -53,9 +53,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the collection of applications installed on the device.
         /// </summary>
         /// <returns>AppPackages object containing the list of installed application packages.</returns>
-        public async Task<AppPackages> GetInstalledAppPackages()
+        public async Task<AppPackages> GetInstalledAppPackagesAsync()
         {
-            return await this.Get<AppPackages>(InstalledPackagesApi);
+            return await this.GetAsync<AppPackages>(InstalledPackagesApi);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         /// <returns>Task for tracking completion of install initialization.</returns>
-        public async Task InstallApplication(
+        public async Task InstallApplicationAsync(
             string appName,
             string packageFileName, 
             List<string> dependencyFileNames,
@@ -100,12 +100,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         ApplicationInstallStatus.InProgress,
                         ApplicationInstallPhase.UninstallingPreviousVersion,
                         installPhaseDescription);
-                    AppPackages installedApps = await this.GetInstalledAppPackages();
+                    AppPackages installedApps = await this.GetInstalledAppPackagesAsync();
                     foreach (PackageInfo package in installedApps.Packages)
                     {
                         if (package.Name == appName)
                         {
-                            await this.UninstallApplication(package.FullName);
+                            await this.UninstallApplicationAsync(package.FullName);
                             break;
                         }
                     }
@@ -170,7 +170,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
 
                     // Make the HTTP request.
-                    await this.Post(uri, dataStream, contentType);
+                    await this.PostAsync(uri, dataStream, contentType);
                 }
 
                 // Poll the status until complete.
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
 
-                    status = await this.GetInstallStatus();
+                    status = await this.GetInstallStatusAsync();
                 }
                 while (status == ApplicationInstallStatus.InProgress);
 
@@ -221,9 +221,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="packageName">The name of the application package to uninstall.</param>
         /// <returns>Task tracking the uninstall operation.</returns>
-        public async Task UninstallApplication(string packageName)
+        public async Task UninstallApplicationAsync(string packageName)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                 PackageManagerApi,
                 //// NOTE: When uninstalling an app package, the package name is not Hex64 encoded.
                 string.Format("package={0}", packageName));

@@ -41,12 +41,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the PUT completion.</returns>
-        private async Task Put<K>(
+        private async Task PutAsync<K>(
             string apiPath,
             K bodyData,
             string payload = null) where K : class
         {
-            await this.Put<NullResponse, K>(apiPath, bodyData, payload);
+            await this.PutAsync<NullResponse, K>(apiPath, bodyData, payload);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the PUT completion, optional response body.</returns>
-        private async Task<T> Put<T, K>(
+        private async Task<T> PutAsync<T, K>(
             string apiPath,
             K bodyData = null,
             string payload = null) where T : new()
@@ -96,7 +96,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.Put(uri, streamContent))
+            using (Stream dataStream = await this.PutAsync(uri, streamContent))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))
