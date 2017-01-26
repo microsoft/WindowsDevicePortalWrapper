@@ -367,6 +367,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public PackageVersion Version { get; private set; }
 
             /// <summary>
+            /// Gets package origin
+            /// </summary>
+            [DataMember(Name = "PackageOrigin")]
+            public int PackageOrigin { get; private set; }
+
+            /// <summary>
             /// Get a string representation of the package
             /// </summary>
             /// <returns>String representation</returns>
