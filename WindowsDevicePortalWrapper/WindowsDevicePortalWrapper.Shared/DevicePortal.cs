@@ -189,7 +189,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task ConnectAsync(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true,
+            bool updateConnection = false,
 #if WINDOWS_UWP
             Certificate manualCertificate = null)
 #else
