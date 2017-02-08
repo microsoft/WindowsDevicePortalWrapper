@@ -40,8 +40,11 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.IpConfigApi),
             new Endpoint(HttpMethods.Get, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.Get, DevicePortal.RunningProcessApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.CustomEtwProvidersApi),
+            new Endpoint(HttpMethods.Get, DevicePortal.EtwProvidersApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.SystemPerfApi),
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RunningProcessApi),
+            new Endpoint(HttpMethods.WebSocket, DevicePortal.RealtimeEtwSessionApi),
 
             // HoloLens specific endpoints
             new Endpoint(HttpMethods.Get, DevicePortal.HolographicIpdApi),

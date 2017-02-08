@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
+    <Compile Include="Core\EtwTests.cs" />
     <Compile Include="Core\PerformanceDataTests.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLensHelpers.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLens_rs1_release.cs" />
@@ -85,7 +86,16 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MockData\Defaults\WebSocket_api_etw_session_realtime_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_etw_providers_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\Defaults\api_os_devicefamily_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_etw_customproviders_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\api_os_info_Default.dat">
