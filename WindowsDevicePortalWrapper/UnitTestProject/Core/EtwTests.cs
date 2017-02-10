@@ -4,6 +4,7 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -101,8 +102,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         /// <param name="etw">The <see cref="EtwProviders"/> to validate.</param>
         private static void ValidateEtwProviders(EtwProviders etw)
         {
-            EtwProviderInfo providerInfo = etw?.Providers?.FirstOrDefault();
-            Assert.IsNotNull(providerInfo);
+            Guid result;
+            Assert.IsTrue(etw.Providers.Count > 0);
+            Assert.IsTrue(etw.Providers.All(etwProvider => 
+                Guid.TryParse(etwProvider.GUID, out result) &&
+                !string.IsNullOrEmpty(etwProvider.Name)));
         }
     }
 }

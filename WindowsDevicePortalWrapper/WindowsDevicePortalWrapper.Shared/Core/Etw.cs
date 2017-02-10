@@ -143,6 +143,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// ETW Provider Info. Contains the Name and GUID.
         /// </summary>
+        [DataContract]
         public class EtwProviderInfo
         {
             /// <summary>
