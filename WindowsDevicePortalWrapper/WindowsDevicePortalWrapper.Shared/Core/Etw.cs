@@ -32,9 +32,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string EtwProvidersApi = "api/etw/providers";
 
         /// <summary>
-        /// Web socket to get ETW events.!
+        /// Web socket to get ETW events.
         /// </summary>
         private WebSocket<EtwEvents> realtimeEventsWebSocket;
+
+        /// <summary>
+        /// Determines if the event listener has been registered
+        /// </summary>
+        private bool isListeningForRealtimeEvents = false;
 
         /// <summary>
         /// The ETW event message received handler
@@ -60,30 +65,35 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Toggles the listening state of a specific provider on the realtime events WebSocket.
+        /// </summary>
+        /// <param name="etwProvider">The provider to update the listening state of.</param>
+        /// <param name="isEnabled">Determines whether the listening state should be enabled or disabled.</param>
+        /// <returns>Task for toggling the listening state of the specified provider.</returns>
+        public async Task ToggleEtwProviderAsync(EtwProviderInfo etwProvider, bool isEnabled = true)
+        {
+            string action = isEnabled ? "enable" : "disable";
+            string message = $"provider {etwProvider.GUID} {action}";
+
+            await this.InitializeRealtimeEventsWebSocket();
+            await this.realtimeEventsWebSocket.SendMessageAsync(message);
+        }
+
+        /// <summary>
         /// Starts listening for ETW events with it being returned via the RealtimeEventsMessageReceived event handler.
         /// </summary>
         /// <returns>Task for connecting to the WebSocket but not for listening to it.</returns>
         public async Task StartListeningForEtwEventsAsync()
         {
-            if (this.realtimeEventsWebSocket == null)
-            {
-#if WINDOWS_UWP
-                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection);
-#else
-                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection, this.ServerCertificateValidation);
-#endif
+            await this.InitializeRealtimeEventsWebSocket();
 
+            if (!this.isListeningForRealtimeEvents)
+            {
+                this.isListeningForRealtimeEvents = true;
                 this.realtimeEventsWebSocket.WebSocketMessageReceived += this.EtwEventsReceivedHandler;
             }
-            else
-            {
-                if (this.realtimeEventsWebSocket.IsListeningForMessages)
-                {
-                    return;
-                }
-            }
 
-            await this.realtimeEventsWebSocket.StartListeningForMessagesAsync(RealtimeEtwSessionApi);
+            await this.realtimeEventsWebSocket.ReceiveMessagesAsync();
         }
 
         /// <summary>
@@ -92,12 +102,31 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for stop listening for ETW events and disconnecting from the WebSocket.</returns>
         public async Task StopListeningForEtwEventsAsync()
         {
-            if (this.realtimeEventsWebSocket == null || !this.realtimeEventsWebSocket.IsListeningForMessages)
+            if (this.isListeningForRealtimeEvents)
             {
-                return;
+                this.isListeningForRealtimeEvents = false;
+                this.realtimeEventsWebSocket.WebSocketMessageReceived -= this.EtwEventsReceivedHandler;
             }
 
-            await this.realtimeEventsWebSocket.StopListeningForMessagesAsync();
+            await this.realtimeEventsWebSocket.CloseAsync();
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="WebSocket{EtwEvents}"/> if it hasn't already been initialized.
+        /// </summary>
+        /// <returns>Task for connecting the ETW realtime event WebSocket.</returns>
+        private async Task InitializeRealtimeEventsWebSocket()
+        {
+            if (this.realtimeEventsWebSocket == null)
+            {
+#if WINDOWS_UWP
+                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection);
+#else
+                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection, this.ServerCertificateValidation);
+#endif
+            }
+
+            await this.realtimeEventsWebSocket.ConnectAsync(RealtimeEtwSessionApi);
         }
 
         /// <summary>

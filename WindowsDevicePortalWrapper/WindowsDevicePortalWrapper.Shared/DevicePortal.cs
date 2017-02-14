@@ -372,12 +372,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 websocket.WebSocketStreamReceived += streamReceivedHandler;
 
-                Task startListeningForStreamTask = websocket.StartListeningForMessagesAsync(endpoint);
+                Task connect = websocket.ConnectAsync(endpoint);
+                connect.Wait();
+
+                Task startListeningForStreamTask = websocket.ReceiveMessagesAsync();
                 startListeningForStreamTask.Wait();
 
                 streamReceived.WaitOne();
 
-                Task stopListeningForStreamTask = websocket.StopListeningForMessagesAsync();
+                Task stopListeningForStreamTask = websocket.CloseAsync();
                 stopListeningForStreamTask.Wait();
 
                 websocket.WebSocketStreamReceived -= streamReceivedHandler;

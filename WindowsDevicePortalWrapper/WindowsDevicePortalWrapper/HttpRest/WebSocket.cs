@@ -11,6 +11,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// The <see cref="ClientWebSocket" /> that is being wrapped.
         /// </summary>
-        private ClientWebSocket websocket = new ClientWebSocket();
+        private ClientWebSocket websocket;
 
         /// <summary>
         /// <see cref="Task" /> for receiving messages.
@@ -62,13 +63,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Opens a connection to the specified websocket API and starts listening for messages.
+        /// Opens a connection to the specified websocket API.
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
-        private async Task OpenConnectionAsync(
+        private async Task ConnectInternalAsync(
             Uri endpoint)
         {
+            this.websocket = new ClientWebSocket();
             this.websocket.Options.UseDefaultCredentials = false;
             this.websocket.Options.Credentials = this.deviceConnection.Credentials;
             this.websocket.Options.SetRequestHeader("Origin", this.deviceConnection.Connection.AbsoluteUri);
@@ -80,36 +82,58 @@ namespace Microsoft.Tools.WindowsDevicePortal
             };
 
             await this.websocket.ConnectAsync(endpoint, CancellationToken.None);
+            this.IsConnected = true;
         }
 
         /// <summary>
-        /// Stops listening for messages and closes the connection to the websocket.
+        /// Closes the connection to the websocket.
+        /// </summary>
+        /// <returns>The task of closing the websocket connection.</returns>
+        private async Task CloseInternalAsync()
+        {
+            await Task.Run(() =>
+            {
+                this.websocket.Dispose();
+                this.websocket = null;
+                this.IsConnected = false;
+            });
+        }
+
+        /// <summary>
+        /// Stops listening for messages.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
         private async Task StopListeningForMessagesInternalAsync()
         {
+            await this.websocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+
+            // Wait for web socket to no longer be receiving messages.
             if (this.IsListeningForMessages)
             {
-                await this.websocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-
-                // Wait for web socket to no longer be receiving messages.
-                if (this.IsListeningForMessages)
-                {
-                    await this.receivingMessagesTask;
-                    this.receivingMessagesTask = null;
-                }
-
-                // Reset websocket as WDP will abort the connection once it receives the close message.
-                this.websocket = new ClientWebSocket();
+                await this.receivingMessagesTask;
+                this.receivingMessagesTask = null;
             }
         }
 
         /// <summary>
-        /// Listen for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
+        /// Starts listening for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        private async Task ListenForMessagesInternalAsync()
+        private async Task StartListeningForMessagesInternalAsync()
         {
+            await Task.Run(() =>
+            {
+                this.StartListeningForMessagesInternal();
+            });
+        }
+
+        /// <summary>
+        /// Starts listening for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
+        /// </summary>
+        private void StartListeningForMessagesInternal()
+        {
+            this.IsListeningForMessages = true;
+
             this.receivingMessagesTask = Task.Run(async () =>
             {
                 try
@@ -178,35 +202,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     this.IsListeningForMessages = false;
                 }
             });
-
-            await this.receivingMessagesTask;
         }
 
         /// <summary>
-        /// Starts listening for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
+        /// Sends a message to the server.
         /// </summary>
-        /// <param name="endpoint">The uri that the weboscket should connect to</param>
-        /// <returns>The task of listening for messages from the websocket.</returns>
-        private async Task StartListeningForMessagesInternalAsync(Uri endpoint)
+        /// <param name="message">The message to send.</param>
+        /// <returns>The task of sending a message to the websocket.</returns>
+        private async Task SendMessageInternalAsync(string message)
         {
-            if (this.IsListeningForMessages)
-            {
-                return;
-            }
+            byte[] bytes = Encoding.UTF8.GetBytes(message);
+            ArraySegment<byte> buffer = new ArraySegment<byte>(bytes);
 
-            this.IsListeningForMessages = true;
-
-            try
-            {
-                await this.OpenConnectionAsync(endpoint);
-            }
-            catch
-            {
-                this.IsListeningForMessages = false;
-            }
-
-            // Do not wait on actually listening for messages.
-            Task listenForMessagesInternal = this.ListenForMessagesInternalAsync();
+            await this.websocket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
         }
     }
 }

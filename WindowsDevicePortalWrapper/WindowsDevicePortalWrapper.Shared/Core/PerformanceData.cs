@@ -79,7 +79,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.deviceProcessesWebSocket.StartListeningForMessagesAsync(RunningProcessApi);
+            await this.deviceProcessesWebSocket.ConnectAsync(RunningProcessApi);
+            await this.deviceProcessesWebSocket.ReceiveMessagesAsync();
         }
 
         /// <summary>
@@ -88,12 +89,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for stop listening for processes and disconnecting from the websocket .</returns>
         public async Task StopListeningForRunningProcessesAsync()
         {
-            if (this.deviceProcessesWebSocket == null || !this.deviceProcessesWebSocket.IsListeningForMessages)
-            {
-                return;
-            }
-
-            await this.deviceProcessesWebSocket.StopListeningForMessagesAsync();
+            await this.deviceProcessesWebSocket.CloseAsync();
         }
 
         /// <summary>
@@ -129,7 +125,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-            await this.systemPerfWebSocket.StartListeningForMessagesAsync(SystemPerfApi);
+            await this.systemPerfWebSocket.ConnectAsync(SystemPerfApi);
+            await this.systemPerfWebSocket.ReceiveMessagesAsync();
         }
 
         /// <summary>
@@ -138,12 +135,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for stop listening for system perf and disconnecting from the websocket .</returns>
         public async Task StopListeningForSystemPerfAsync()
         {
-            if (this.systemPerfWebSocket == null || !this.systemPerfWebSocket.IsListeningForMessages)
-            {
-                return;
-            }
-
-            await this.systemPerfWebSocket.StopListeningForMessagesAsync();
+            await this.systemPerfWebSocket.CloseAsync();
         }
 
         /// <summary>
@@ -431,6 +423,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         break;
                     }
                 }
+
                 return found;
             }
 
@@ -455,6 +448,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         break;
                     }
                 }
+
                 return found;
             }
         }
