@@ -177,55 +177,55 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the event latency.
             /// </summary>
             [DataMember(Name = "EventLatency")]
-            public string EventLatency { get; private set; }
+            public int Latency { get; private set; }
 
             /// <summary>
             /// Gets the event payload.
             /// </summary>
             [DataMember(Name = "EventPayload")]
-            public string EventPayload { get; private set; }
+            public string Payload { get; private set; }
 
             /// <summary>
             /// Gets the event persistence.
             /// </summary>
             [DataMember(Name = "EventPersistence")]
-            public string EventPersistence { get; private set; }
+            public int Persistence { get; private set; }
 
             /// <summary>
             /// Gets the event identifer.
             /// </summary>
             [DataMember(Name = "ID")]
-            public string ID { get; private set; }
+            public ushort ID { get; private set; }
 
             /// <summary>
             /// Gets the event keyword.
             /// </summary>
             [DataMember(Name = "Keyword")]
-            public string Keywword { get; private set; }
+            public ulong Keyword { get; private set; }
 
             /// <summary>
             /// Gets the event level.
             /// </summary>
             [DataMember(Name = "Level")]
-            public string Level { get; private set; }
+            public uint Level { get; private set; }
 
             /// <summary>
             /// Gets the event provider name.
             /// </summary>
             [DataMember(Name = "ProviderName")]
-            public string ProviderName { get; private set; }
+            public string Provider { get; private set; }
 
             /// <summary>
             /// Gets the event task name.
             /// </summary>
             [DataMember(Name = "TaskName")]
-            public string TaskName { get; private set; }
+            public string Task { get; private set; }
 
             /// <summary>
             /// Gets the event timestamp.
             /// </summary>
             [DataMember(Name = "Timestamp")]
-            public string Timestamp { get; private set; }
+            public ulong Timestamp { get; private set; }
         }
 
         /// <summary>
