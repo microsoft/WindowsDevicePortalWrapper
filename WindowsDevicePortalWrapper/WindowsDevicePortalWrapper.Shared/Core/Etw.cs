@@ -154,6 +154,78 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataContract]
         public class EtwEvents
         {
+            /// <summary>
+            /// Gets the event.
+            /// </summary>
+            [DataMember(Name = "Events")]
+            public List<EtwEventInfo> Event { get; private set; }
+
+            /// <summary>
+            /// Gets the event frequency.
+            /// </summary>
+            [DataMember(Name = "Frequency")]
+            public long Frequency { get; private set; }
+        }
+
+        /// <summary>
+        /// ETW Event Info.
+        /// </summary>
+        [DataContract]
+        public class EtwEventInfo
+        {
+            /// <summary>
+            /// Gets the event latency.
+            /// </summary>
+            [DataMember(Name = "EventLatency")]
+            public string EventLatency { get; private set; }
+
+            /// <summary>
+            /// Gets the event payload.
+            /// </summary>
+            [DataMember(Name = "EventPayload")]
+            public string EventPayload { get; private set; }
+
+            /// <summary>
+            /// Gets the event persistence.
+            /// </summary>
+            [DataMember(Name = "EventPersistence")]
+            public string EventPersistence { get; private set; }
+
+            /// <summary>
+            /// Gets the event identifer.
+            /// </summary>
+            [DataMember(Name = "ID")]
+            public string ID { get; private set; }
+
+            /// <summary>
+            /// Gets the event keyword.
+            /// </summary>
+            [DataMember(Name = "Keyword")]
+            public string Keywword { get; private set; }
+
+            /// <summary>
+            /// Gets the event level.
+            /// </summary>
+            [DataMember(Name = "Level")]
+            public string Level { get; private set; }
+
+            /// <summary>
+            /// Gets the event provider name.
+            /// </summary>
+            [DataMember(Name = "ProviderName")]
+            public string ProviderName { get; private set; }
+
+            /// <summary>
+            /// Gets the event task name.
+            /// </summary>
+            [DataMember(Name = "TaskName")]
+            public string TaskName { get; private set; }
+
+            /// <summary>
+            /// Gets the event timestamp.
+            /// </summary>
+            [DataMember(Name = "Timestamp")]
+            public string Timestamp { get; private set; }
         }
 
         /// <summary>
