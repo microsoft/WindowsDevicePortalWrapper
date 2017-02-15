@@ -44,32 +44,32 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         public HttpContentHeaderCollection Headers => new HttpContentHeaderCollection();
 
-        public IAsyncOperationWithProgress<ulong, ulong> BufferAllAsync()
+        IAsyncOperationWithProgress<ulong, ulong> IHttpContent.BufferAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             items.Clear();
         }
 
-        public IAsyncOperationWithProgress<IBuffer, ulong> ReadAsBufferAsync()
+        IAsyncOperationWithProgress<IBuffer, ulong> IHttpContent.ReadAsBufferAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncOperationWithProgress<IInputStream, ulong> ReadAsInputStreamAsync()
+        IAsyncOperationWithProgress<IInputStream, ulong> IHttpContent.ReadAsInputStreamAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncOperationWithProgress<string, ulong> ReadAsStringAsync()
+        IAsyncOperationWithProgress<string, ulong> IHttpContent.ReadAsStringAsync()
         {
             throw new NotImplementedException();
         }
 
-        public bool TryComputeLength(out ulong length)
+        bool IHttpContent.TryComputeLength(out ulong length)
         {
             length = 0;
             var boundaryLength = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString)).Length;
@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return true;
         }
 
-        public IAsyncOperationWithProgress<ulong, ulong> WriteToStreamAsync(IOutputStream outputStream)
+        IAsyncOperationWithProgress<ulong, ulong> IHttpContent.WriteToStreamAsync(IOutputStream outputStream)
         {
             return System.Runtime.InteropServices.WindowsRuntime.AsyncInfo.Run<ulong, ulong>((token, progress) =>
             {
