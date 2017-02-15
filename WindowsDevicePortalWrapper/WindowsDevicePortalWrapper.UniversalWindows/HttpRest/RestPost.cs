@@ -30,21 +30,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
 #pragma warning disable 1998
-        private async Task<Stream> PostAsync(
+        private Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)
         {
             HttpStreamContent requestContent = null;
-            IBuffer dataBuffer = null;
-
+            
             if (requestStream != null)
             {
                 requestContent = new HttpStreamContent(requestStream.AsInputStream());
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAppendWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
-
+            return PostAsync(uri, requestContent);
+        }
+        private async Task<Stream> PostAsync(
+            Uri uri,
+            IHttpContent requestContent)
+        {
+            IBuffer dataBuffer = null;
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
 
