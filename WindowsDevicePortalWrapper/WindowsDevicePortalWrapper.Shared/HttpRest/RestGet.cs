@@ -83,7 +83,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.GetAsync(uri))
+            using (Stream dataStream = await this.GetAsync(uri).ConfigureAwait(false))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))

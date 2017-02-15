@@ -48,11 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Post);
 
-                Task<HttpResponseMessage> postTask = client.PostAsync(uri, requestContent);
-                await postTask.ConfigureAwait(false);
-                postTask.Wait();
-
-                using (HttpResponseMessage response = postTask.Result)
+                using (HttpResponseMessage response = await client.PostAsync(uri, requestContent).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
@@ -65,9 +61,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         {
                             responseDataStream = new MemoryStream();
 
-                            Task copyTask = responseContent.CopyToAsync(responseDataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await responseContent.CopyToAsync(responseDataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             responseDataStream.Position = 0;
