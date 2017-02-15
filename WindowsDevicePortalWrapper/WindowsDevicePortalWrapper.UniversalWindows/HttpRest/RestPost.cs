@@ -58,30 +58,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
             using (HttpClient client = new HttpClient(httpFilter))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Post);
-
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, requestContent);
-                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                while (!responseAwaiter.IsCompleted)
-                {
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.PostAsync(uri, requestContent))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
 
                     if (response.Content != null)
                     {
                         using (IHttpContent messageContent = response.Content)
                         {
-                            IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                            while (bufferOperation.Status != AsyncStatus.Completed)
-                            {
-                            }
-
-                            dataBuffer = bufferOperation.GetResults();
+                            dataBuffer = await messageContent.ReadAsBufferAsync();
                         }
                     }
                 }

@@ -116,22 +116,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 while (this.keepListeningForMessages)
                 {
                     await webSocketTask.ConfigureAwait(false);
-                    webSocketTask.Wait();
 
                     using (HttpResponseMessage response = webSocketTask.Result)
                     {
                         if (!response.IsSuccessStatusCode)
                         {
-                            throw new DevicePortalException(response);
+                            throw await DevicePortalException.CreateAsync(response);
                         }
 
                         using (HttpContent content = response.Content)
                         {
                             MemoryStream dataStream = new MemoryStream();
 
-                            Task copyTask = content.CopyToAsync(dataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             dataStream.Position = 0;
@@ -165,7 +162,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new DevicePortalException(response);
+                    throw await DevicePortalException.CreateAsync(response);
                 }
             }
         }

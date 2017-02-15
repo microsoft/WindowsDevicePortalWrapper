@@ -101,7 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     else
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
                 }
             }

@@ -296,6 +296,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     while (innermostException.InnerException != null)
                     {
                         innermostException = innermostException.InnerException;
+                        await Task.Yield();
                     }
 
                     this.ConnectionFailedDescription = innermostException.Message;
