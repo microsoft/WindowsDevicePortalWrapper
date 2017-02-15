@@ -53,12 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
 
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
-                while (responseOperation.Status != AsyncStatus.Completed)
-                { 
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.GetAsync(uri))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -72,12 +67,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 IBuffer dataBuffer = null;
                                 using (IHttpContent messageContent = response.Content)
                                 {
-                                    IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                                    while (bufferOperation.Status != AsyncStatus.Completed)
-                                    {
-                                    }
-
-                                    dataBuffer = bufferOperation.GetResults();
+                                    dataBuffer = await messageContent.ReadAsBufferAsync();
 
                                     if (dataBuffer != null)
                                     {
@@ -114,7 +104,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     else
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
                 }
             }

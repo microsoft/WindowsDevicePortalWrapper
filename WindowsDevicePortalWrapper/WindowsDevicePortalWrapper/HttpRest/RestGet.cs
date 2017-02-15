@@ -35,24 +35,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
 
-                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
-                await getTask.ConfigureAwait(false);
-                getTask.Wait();
-
-                using (HttpResponseMessage response = getTask.Result)
+                using (HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
 
                     using (HttpContent content = response.Content)
                     {
                         dataStream = new MemoryStream();
 
-                        Task copyTask = content.CopyToAsync(dataStream);
-                        await copyTask.ConfigureAwait(false);
-                        copyTask.Wait();
+                        await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                         // Ensure we return with the stream pointed at the origin.
                         dataStream.Position = 0;

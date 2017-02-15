@@ -72,7 +72,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the available bluetooth device information.
         /// </summary>
         /// <returns>List of Available bluetooth devices</returns>
-        public AvailableBluetoothDevicesInfo GetAvailableBluetoothDevicesInfo()
+        public async Task<AvailableBluetoothDevicesInfo> GetAvailableBluetoothDevicesInfoAsync()
         {
             AvailableBluetoothDevicesInfo bluetooth = null;
             ManualResetEvent bluetoothReceived = new ManualResetEvent(false);
@@ -87,13 +87,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.BluetoothDeviceListReceived += bluetoothReceivedHandler;
 
-            Task startListeningForBluetooth = this.StartListeningForBluetoothAsync(AvailableBluetoothDevicesApi);
-            startListeningForBluetooth.Wait();
+            await this.StartListeningForBluetoothAsync(AvailableBluetoothDevicesApi);
 
             bluetoothReceived.WaitOne();
 
-            Task stopListeningForBluetooth = this.StopListeningForBluetoothAsync();
-            stopListeningForBluetooth.Wait();
+            await this.StopListeningForBluetoothAsync();
 
             this.BluetoothDeviceListReceived -= bluetoothReceivedHandler;
             return bluetooth;
@@ -103,7 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the paired bluetooth device information.
         /// </summary>
         /// <returns>List of paired bluetooth devices</returns>
-        public PairedBluetoothDevicesInfo GetPairedBluetoothDevicesInfo()
+        public async Task<PairedBluetoothDevicesInfo> GetPairedBluetoothDevicesInfoAsync()
         {
             PairedBluetoothDevicesInfo bluetooth = null;
             ManualResetEvent pairedBluetoothReceived = new ManualResetEvent(false);
@@ -118,13 +116,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.PairedBluetoothDeviceListReceived += pairedBluetoothReceivedHandler;
 
-            Task startListeningForPairedBluetooth = this.StartListeningForPairedBluetoothAsync(PairedBluetoothDevicesApi);
-            startListeningForPairedBluetooth.Wait();
+            await this.StartListeningForPairedBluetoothAsync(PairedBluetoothDevicesApi);
 
             pairedBluetoothReceived.WaitOne();
 
-            Task stopListeningForPairedBluetooth = this.StopListeningForPairedBluetoothAsync();
-            stopListeningForPairedBluetooth.Wait();
+            await this.StopListeningForPairedBluetoothAsync();
 
             this.PairedBluetoothDeviceListReceived -= pairedBluetoothReceivedHandler;
             return bluetooth;
@@ -135,7 +131,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="deviceId">Device Id.</param>
         /// <returns>Results of pairing a bluetooth device</returns>
-        public PairBluetoothDevicesInfo GetPairBluetoothDevicesInfo(string deviceId)
+        public async Task<PairBluetoothDevicesInfo> GetPairBluetoothDevicesInfoAsync(string deviceId)
         {
             PairBluetoothDevicesInfo bluetooth = null;
             ManualResetEvent pairBluetoothReceived = new ManualResetEvent(false);
@@ -150,13 +146,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 };
             this.PairBluetoothDeviceListReceived += pairBluetoothReceivedHandler;
 
-            Task startListeningForPairBluetooth = this.StartListeningForPairBluetoothAsync(PairBluetoothDevicesApi, string.Format("deviceId={0}", Utilities.Hex64Encode(deviceId)));
-            startListeningForPairBluetooth.Wait();
+            await this.StartListeningForPairBluetoothAsync(PairBluetoothDevicesApi, string.Format("deviceId={0}", Utilities.Hex64Encode(deviceId)));
 
             pairBluetoothReceived.WaitOne();
 
-            Task stopListeningForPairBluetooth = this.StopListeningForPairBluetoothAsync();
-            stopListeningForPairBluetooth.Wait();
+            await this.StopListeningForPairBluetoothAsync();
 
             this.PairBluetoothDeviceListReceived -= pairBluetoothReceivedHandler;
             return bluetooth;
