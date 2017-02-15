@@ -72,16 +72,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="responseMessage">Http response message.</param>
         /// <param name="message">Optional exception message.</param>
         /// <param name="innerException">Optional inner exception.</param>
-        public DevicePortalException(
+        public static async Task<DevicePortalException> CreateAsync(
             HttpResponseMessage responseMessage,
             string message = "",
-            Exception innerException = null) : this(
-                                                    responseMessage.StatusCode,
+            Exception innerException = null)
+        {
+            DevicePortalException error = new DevicePortalException(responseMessage.StatusCode,
                                                     responseMessage.ReasonPhrase,
                                                     responseMessage.RequestMessage != null ? responseMessage.RequestMessage.RequestUri : null,
                                                     message,
-                                                    innerException)
-        {
+                                                    innerException);
             try
             {
                 if (responseMessage.Content != null)
@@ -92,9 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     dataStream = new MemoryStream();
 
-                    Task copyTask = content.CopyToAsync(dataStream);
-                    copyTask.ConfigureAwait(false);
-                    copyTask.Wait();
+                    await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                     // Ensure we point the stream at the origin.
                     dataStream.Position = 0;
@@ -103,12 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     IBuffer dataBuffer = null;
                     using (IHttpContent messageContent = responseMessage.Content)
                     {
-                        IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                        while (bufferOperation.Status != AsyncStatus.Completed)
-                        {
-                        }
-
-                        dataBuffer = bufferOperation.GetResults();
+                        dataBuffer = await messageContent.ReadAsBufferAsync();
 
                         if (dataBuffer != null)
                         {
@@ -123,19 +116,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                         HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
 
-                        this.HResult = errorResponse.ErrorCode;
-                        this.Reason = errorResponse.ErrorMessage;
+                        error.HResult = errorResponse.ErrorCode;
+                        error.Reason = errorResponse.ErrorMessage;
 
                         // If we didn't get the Hresult and reason from these properties, try the other ones.
-                        if (this.HResult == 0)
+                        if (error.HResult == 0)
                         {
-                            this.HResult = errorResponse.Code;
+                            error.HResult = errorResponse.Code;
                         }
 
-                        if (string.IsNullOrEmpty(this.Reason))
+                        if (string.IsNullOrEmpty(error.Reason))
                         {
-                            this.Reason = errorResponse.Reason;
+                            error.Reason = errorResponse.Reason;
                         }
+
+                        dataStream.Dispose();
                     }
                 }
             }
@@ -143,6 +138,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 // Do nothing if we fail to get additional error details from the response body.
             }
+            return error;
         }
 
         /// <summary>

@@ -35,15 +35,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Delete);
 
-                Task<HttpResponseMessage> deleteTask = client.DeleteAsync(uri);
-                await deleteTask.ConfigureAwait(false);
-                deleteTask.Wait();
-
-                using (HttpResponseMessage response = deleteTask.Result)
+                using (HttpResponseMessage response = await client.DeleteAsync(uri).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
 
                     if (response.Content != null)
@@ -52,9 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         {
                             dataStream = new MemoryStream();
 
-                            Task copyTask = content.CopyToAsync(dataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             dataStream.Position = 0;

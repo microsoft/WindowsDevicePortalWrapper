@@ -150,7 +150,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                             do
                             {
-                                result = await this.websocket.ReceiveAsync(buffer, CancellationToken.None);
+                                result = await this.websocket.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
 
                                 if (result.MessageType == WebSocketMessageType.Close)
                                 {

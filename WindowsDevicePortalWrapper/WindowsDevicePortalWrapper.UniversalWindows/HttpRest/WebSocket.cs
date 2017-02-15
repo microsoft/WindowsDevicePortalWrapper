@@ -113,7 +113,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="sender">The  <see cref="MessageWebSocket" /> that sent the message.</param>
         /// <param name="args">The message from the web socket.</param>
-        private void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+        private async void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
         {
             if (this.IsListeningForMessages)
             {
@@ -121,8 +121,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     Stream stream = new MemoryStream();
 
-                    Task copyTask = inputStream.AsStreamForRead().CopyToAsync(stream);
-                    copyTask.Wait();
+                    await inputStream.AsStreamForRead().CopyToAsync(stream);
 
                     // Ensure we return with the stream pointed at the origin.
                     stream.Position = 0;

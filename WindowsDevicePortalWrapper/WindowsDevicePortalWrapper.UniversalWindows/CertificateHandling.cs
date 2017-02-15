@@ -43,24 +43,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             using (HttpClient client = new HttpClient(requestSettings))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
-
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
-                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                while (!responseAwaiter.IsCompleted)
-                { 
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.GetAsync(uri))
                 {
                     using (IHttpContent messageContent = response.Content)
                     {
-                        IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                        TaskAwaiter<IBuffer> readBufferAwaiter = bufferOperation.GetAwaiter();
-                        while (!readBufferAwaiter.IsCompleted)
-                        { 
-                        }
-
-                        certificate = new Certificate(bufferOperation.GetResults());
+                        certificate = new Certificate(await messageContent.ReadAsBufferAsync());
                     }
                 }
             }
