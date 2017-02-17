@@ -153,7 +153,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     using (stream)
                     {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                        DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
+                        {
+                            UseSimpleDictionaryFormat = true
+                        };
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
+                        
+
                         T message = (T)serializer.ReadObject(stream);
 
                         this.WebSocketMessageReceived?.Invoke(
