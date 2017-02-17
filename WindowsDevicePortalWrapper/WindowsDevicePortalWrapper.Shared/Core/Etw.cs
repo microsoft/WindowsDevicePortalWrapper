@@ -73,7 +73,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for toggling the listening state of the specified provider.</returns>
         public async Task ToggleEtwProviderAsync(EtwProviderInfo etwProvider, bool isEnabled = true, int level = 5)
         {
-            await ToggleEtwProviderAsync(etwProvider.GUID, isEnabled, level);
+            await this.ToggleEtwProviderAsync(etwProvider.GUID, isEnabled, level);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string action = isEnabled ? "enable" : "disable";
             string message = $"provider {etwProvider} {action} {level}";
 
-            await this.InitializeRealtimeEventsWebSocket();
+            await this.InitializeRealtimeEventsWebSocketAsync();
             await this.realtimeEventsWebSocket.SendMessageAsync(message);
         }
 
@@ -98,7 +98,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for connecting to the WebSocket but not for listening to it.</returns>
         public async Task StartListeningForEtwEventsAsync()
         {
-            await this.InitializeRealtimeEventsWebSocket();
+            await this.InitializeRealtimeEventsWebSocketAsync();
 
             if (!this.isListeningForRealtimeEvents)
             {
@@ -128,7 +128,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Creates a new <see cref="WebSocket{EtwEvents}"/> if it hasn't already been initialized.
         /// </summary>
         /// <returns>Task for connecting the ETW realtime event WebSocket.</returns>
-        private async Task InitializeRealtimeEventsWebSocket()
+        private async Task InitializeRealtimeEventsWebSocketAsync()
         {
             if (this.realtimeEventsWebSocket == null)
             {
@@ -168,7 +168,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class EtwEvents
         {
             /// <summary>
-            /// A raw list of events.  Not for straight usage, as it's entirely unformatted. 
+            /// Gets or sets the raw list of events.  Not for straight usage, as it's entirely unformatted. 
             /// </summary>
             [DataMember(Name = "Events")]
             private List<Dictionary<string, string>> RawEvents { get; set; }
@@ -176,24 +176,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <summary>
             /// Saves the downconverted list of events 
             /// </summary>
-            private List<EtwEventInfo> StashedList; 
+            private List<EtwEventInfo> stashedList; 
 
             /// <summary>
-            /// List of ETW Events in the last second. 
+            /// Get the list of ETW Events that occured in the last second. 
             /// </summary>
             public List<EtwEventInfo> Events
             {
                 get
                 {
-                    if (StashedList != null) return StashedList;
+                    if (this.stashedList != null)
+                    {
+                        return this.stashedList;
+                    }
 
                     List<EtwEventInfo> events = new List<EtwEventInfo>();
                     foreach (Dictionary<string, string> dic in RawEvents )
                     {
                         events.Add(new EtwEventInfo(dic));
                     }
-                    StashedList = events;
-                    return StashedList;
+
+                    this.stashedList = events;
+                    return this.stashedList;
                 }
             }
 
@@ -213,9 +217,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public class EtwEventInfo : Dictionary<string, string>
         {
-         
+
             /// <summary>
-            /// Constructor used by the DataContract at access time. 
+            ///  Initializes a new instance of the <see cref="EtwEventInfo" /> class.  Used by the DataContract at access time. 
             /// </summary>
             /// <param name="dictionary">Base dictionary used to populate the object. </param>
             internal EtwEventInfo(IDictionary<string, string> dictionary) : base(dictionary)
@@ -276,7 +280,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     return ulong.Parse(this["Timestamp"]);
                 }
             }
-
         }
 
         /// <summary>
