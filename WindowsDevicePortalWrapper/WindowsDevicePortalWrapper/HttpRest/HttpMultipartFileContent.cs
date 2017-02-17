@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -24,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public HttpMultipartFileContent(string boundary)
         {
             boundaryString = boundary;
-            Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(string.Format("multipart/form-data; boundary={0}", boundaryString));
+            Headers.TryAddWithoutValidation("Content-Type", string.Format("multipart/form-data; boundary={0}", boundaryString));
         }
 
         public void Add(string filename)
@@ -44,10 +46,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             var data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
             foreach (var item in items)
             {
+                outStream.Write(data, 0, data.Length);
                 var headerdata = GetFileHeader(new FileInfo(item));
                 outStream.Write(headerdata, 0, headerdata.Length);
 
-                outStream.Write(data, 0, data.Length);
                 using (var file = File.OpenRead(item))
                 {
                     await file.CopyToAsync(outStream);
