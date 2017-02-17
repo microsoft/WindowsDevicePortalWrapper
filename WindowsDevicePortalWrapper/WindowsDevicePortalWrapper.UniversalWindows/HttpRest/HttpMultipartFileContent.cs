@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 items.AddRange(filenames);
         }
 
-        public HttpContentHeaderCollection Headers => new HttpContentHeaderCollection();
+        public HttpContentHeaderCollection Headers { get; } = new HttpContentHeaderCollection();
 
         IAsyncOperationWithProgress<ulong, ulong> IHttpContent.BufferAllAsync()
         {
@@ -75,7 +75,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             var boundaryLength = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString)).Length;
             foreach (var item in items)
             {
-                length += (ulong)(new FileInfo(item).Length + boundaryLength);
+                var headerdata = GetFileHeader(new FileInfo(item));
+                length += (ulong)(headerdata.Length + new FileInfo(item).Length + boundaryLength);
             }
             length += (ulong)(boundaryLength + 4);
             return true;
@@ -100,16 +101,30 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 bytesWritten += (ulong)data.Length;
                 using (var file = File.OpenRead(item))
                 {
+                    var headerdata = GetFileHeader(new FileInfo(item));
+                    outStream.Write(headerdata, 0, headerdata.Length);
+                    bytesWritten += (ulong)headerdata.Length;
+
                     await file.CopyToAsync(outStream);
                     bytesWritten += (ulong)file.Position;
-                    progress(bytesWritten);
                 }
+                await outStream.FlushAsync();
+                progress(bytesWritten);
             }
             // Close the installation request data.
             data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
             outStream.Write(data, 0, data.Length);
+            await outStream.FlushAsync();
             bytesWritten += (ulong)data.Length;
             return bytesWritten;
+        }
+        private static byte[] GetFileHeader(FileInfo info)
+        {
+            string contentType = "application/octet-stream";
+            if (info.Extension.ToLower() == "cer")
+                contentType = "application/x-x509-ca-cert";
+
+            return Encoding.ASCII.GetBytes(string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{0}\"\r\nContent-Type: {1}\r\n\r\n", info.Name, contentType));
         }
     }
 }

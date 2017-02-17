@@ -44,15 +44,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             var data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
             foreach (var item in items)
             {
+                var headerdata = GetFileHeader(new FileInfo(item));
+                outStream.Write(headerdata, 0, headerdata.Length);
+
                 outStream.Write(data, 0, data.Length);
                 using (var file = File.OpenRead(item))
                 {
                     await file.CopyToAsync(outStream);
                 }
+                await outStream.FlushAsync();
             }
             // Close the installation request data.
             data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
             outStream.Write(data, 0, data.Length);
+            await outStream.FlushAsync();
         }
 
         protected override bool TryComputeLength(out long length)
@@ -61,10 +66,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             var boundaryLength = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString)).Length;
             foreach (var item in items)
             {
-                length += (new FileInfo(item).Length + boundaryLength);
+                length += (GetFileHeader(new FileInfo(item)).Length + new FileInfo(item).Length + boundaryLength);
             }
             length += (boundaryLength + 4);
             return true;
         }
+        private static byte[] GetFileHeader(FileInfo info)
+        {
+            string contentType = "application/octet-stream";
+            if (info.Extension.ToLower() == "cer")
+                contentType = "application/x-x509-ca-cert";
+
+            return Encoding.ASCII.GetBytes(string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{0}\"\r\nContent-Type: {1}\r\n\r\n", info.Name, contentType));
+        }
+
     }
 }
