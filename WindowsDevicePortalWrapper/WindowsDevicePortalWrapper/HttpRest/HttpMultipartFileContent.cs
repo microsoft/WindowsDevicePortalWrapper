@@ -43,10 +43,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
         protected override async Task SerializeToStreamAsync(Stream outStream, TransportContext context)
         {
-            var data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
+            var boundary = Encoding.ASCII.GetBytes($"--{boundaryString}\r\n");
+            var newline = Encoding.ASCII.GetBytes("\r\n");
             foreach (var item in items)
             {
-                outStream.Write(data, 0, data.Length);
+                outStream.Write(boundary, 0, boundary.Length);
                 var headerdata = GetFileHeader(new FileInfo(item));
                 outStream.Write(headerdata, 0, headerdata.Length);
 
@@ -54,11 +55,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     await file.CopyToAsync(outStream);
                 }
+                outStream.Write(newline, 0, newline.Length);
                 await outStream.FlushAsync();
             }
             // Close the installation request data.
-            data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
-            outStream.Write(data, 0, data.Length);
+            boundary = Encoding.ASCII.GetBytes($"--{boundaryString}--\r\n");
+            outStream.Write(boundary, 0, boundary.Length);
             await outStream.FlushAsync();
         }
 
@@ -68,15 +70,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             var boundaryLength = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString)).Length;
             foreach (var item in items)
             {
-                length += (GetFileHeader(new FileInfo(item)).Length + new FileInfo(item).Length + boundaryLength);
+                var headerdata = GetFileHeader(new FileInfo(item));
+                length += boundaryLength + headerdata.Length + new FileInfo(item).Length + 2;
             }
-            length += (boundaryLength + 4);
+            length += (boundaryLength + 2);
             return true;
         }
         private static byte[] GetFileHeader(FileInfo info)
         {
             string contentType = "application/octet-stream";
-            if (info.Extension.ToLower() == "cer")
+            if (info.Extension.ToLower() == ".cer")
                 contentType = "application/x-x509-ca-cert";
 
             return Encoding.ASCII.GetBytes(string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{0}\"\r\nContent-Type: {1}\r\n\r\n", info.Name, contentType));
