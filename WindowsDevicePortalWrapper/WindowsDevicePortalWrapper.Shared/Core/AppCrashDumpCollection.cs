@@ -64,7 +64,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task tracking completion of the request.</returns>
         public async Task DeleteAppCrashDumpAsync(AppCrashDump crashdump)
         {
-            await this.DeleteAsync(CrashDumpFileApi,
+            await this.DeleteAsync(
+                CrashDumpFileApi,
                 string.Format("packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename));
         }
 
@@ -99,13 +100,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task SetAppCrashDumpSettingsAsync(AppPackage app, bool enable = true)
         {
             string pfn = app.PackageFullName;
-            await SetAppCrashDumpSettingsAsync(pfn, enable);
+            await this.SetAppCrashDumpSettingsAsync(pfn, enable);
         }
 
         /// <summary>
         /// Set the crash settings for a sideloaded app. 
         /// </summary>
-        /// <param name="packageFullname">The app to set crash settings for.</param>
+        /// <param name="packageFullName">The app to set crash settings for.</param>
         /// <param name="enable">Whether to enable or disable crash collection for the app. </param>
         /// <returns>Task tracking completion of the request.</returns>
         public async Task SetAppCrashDumpSettingsAsync(string packageFullName, bool enable = true)
@@ -133,7 +134,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AppCrashDumpSettings
         {
             /// <summary>
-            /// Gets whether crash dumps are enabled for the app
+            /// Gets a value indicating whether crash dumps are enabled for the app
             /// </summary>
             [DataMember(Name = "CrashDumpEnabled")]
             public bool CrashDumpEnabled
@@ -149,7 +150,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         [DataContract]
         public class AppCrashDump 
         {
-
             /// <summary>
             /// Gets the timestamp of the crash as a string.
             /// </summary>

@@ -69,13 +69,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="etwProvider">The provider to update the listening state of.</param>
         /// <param name="isEnabled">Determines whether the listening state should be enabled or disabled.</param>
+        /// /// <param name="level">Verbosity level - 1 for least, 5 for most verbose. </param>
         /// <returns>Task for toggling the listening state of the specified provider.</returns>
-        public async Task ToggleEtwProviderAsync(EtwProviderInfo etwProvider, bool isEnabled = true)
+        public async Task ToggleEtwProviderAsync(EtwProviderInfo etwProvider, bool isEnabled = true, int level = 5)
+        {
+            await this.ToggleEtwProviderAsync(etwProvider.GUID, isEnabled, level);
+        }
+
+        /// <summary>
+        /// Toggles the listening state of a specific provider on the realtime events WebSocket.
+        /// </summary>
+        /// <param name="etwProvider">The GUID of the provider to update the listening state of.</param>
+        /// <param name="isEnabled">Determines whether the listening state should be enabled or disabled.</param>
+        /// <param name="level">Verbosity level - 1 for least, 5 for most verbose. </param>
+        /// <returns>Task for toggling the listening state of the specified provider.</returns>
+        public async Task ToggleEtwProviderAsync(Guid etwProvider, bool isEnabled = true, int level = 5)
         {
             string action = isEnabled ? "enable" : "disable";
-            string message = $"provider {etwProvider.GUID} {action}";
+            string message = $"provider {etwProvider} {action} {level}";
 
-            await this.InitializeRealtimeEventsWebSocket();
+            await this.InitializeRealtimeEventsWebSocketAsync();
             await this.realtimeEventsWebSocket.SendMessageAsync(message);
         }
 
@@ -85,7 +98,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for connecting to the WebSocket but not for listening to it.</returns>
         public async Task StartListeningForEtwEventsAsync()
         {
-            await this.InitializeRealtimeEventsWebSocket();
+            await this.InitializeRealtimeEventsWebSocketAsync();
 
             if (!this.isListeningForRealtimeEvents)
             {
@@ -115,7 +128,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Creates a new <see cref="WebSocket{EtwEvents}"/> if it hasn't already been initialized.
         /// </summary>
         /// <returns>Task for connecting the ETW realtime event WebSocket.</returns>
-        private async Task InitializeRealtimeEventsWebSocket()
+        private async Task InitializeRealtimeEventsWebSocketAsync()
         {
             if (this.realtimeEventsWebSocket == null)
             {
@@ -155,77 +168,118 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class EtwEvents
         {
             /// <summary>
-            /// Gets the event.
+            /// Gets or sets the raw list of events.  Not for straight usage, as it's entirely unformatted. 
             /// </summary>
             [DataMember(Name = "Events")]
-            public List<EtwEventInfo> Event { get; private set; }
+            private List<Dictionary<string, string>> RawEvents { get; set; }
 
             /// <summary>
-            /// Gets the event frequency.
+            /// Saves the downconverted list of events 
+            /// </summary>
+            private List<EtwEventInfo> stashedList; 
+
+            /// <summary>
+            /// Get the list of ETW Events that occured in the last second. 
+            /// </summary>
+            public List<EtwEventInfo> Events
+            {
+                get
+                {
+                    if (this.stashedList != null)
+                    {
+                        return this.stashedList;
+                    }
+
+                    List<EtwEventInfo> events = new List<EtwEventInfo>();
+                    foreach (Dictionary<string, string> dic in RawEvents )
+                    {
+                        events.Add(new EtwEventInfo(dic));
+                    }
+
+                    this.stashedList = events;
+                    return this.stashedList;
+                }
+            }
+
+
+            /// <summary>
+            /// Gets the event frequency. 
+            /// This is always 10 million (10000000) in RS2 devices.  
             /// </summary>
             [DataMember(Name = "Frequency")]
             public long Frequency { get; private set; }
         }
 
         /// <summary>
-        /// ETW Event Info.
+        /// ETW Events Info. Allows strongly typed access to guaranteed fields 
+        /// like ID or Timestamp, and raw (as string) access to all other 
+        /// payload data, like Latency or PID. 
         /// </summary>
-        [DataContract]
-        public class EtwEventInfo
+        public class EtwEventInfo : Dictionary<string, string>
         {
-            /// <summary>
-            /// Gets the event latency.
-            /// </summary>
-            [DataMember(Name = "EventLatency")]
-            public int Latency { get; private set; }
 
             /// <summary>
-            /// Gets the event payload.
+            ///  Initializes a new instance of the <see cref="EtwEventInfo" /> class.  Used by the DataContract at access time. 
             /// </summary>
-            [DataMember(Name = "EventPayload")]
-            public string Payload { get; private set; }
-
-            /// <summary>
-            /// Gets the event persistence.
-            /// </summary>
-            [DataMember(Name = "EventPersistence")]
-            public int Persistence { get; private set; }
+            /// <param name="dictionary">Base dictionary used to populate the object. </param>
+            internal EtwEventInfo(IDictionary<string, string> dictionary) : base(dictionary)
+            {
+            }
 
             /// <summary>
             /// Gets the event identifer.
             /// </summary>
-            [DataMember(Name = "ID")]
-            public ushort ID { get; private set; }
+            public ushort ID
+            {
+                get
+                {
+                    return ushort.Parse(this["ID"]);
+                }
+            }
 
             /// <summary>
             /// Gets the event keyword.
             /// </summary>
-            [DataMember(Name = "Keyword")]
-            public ulong Keyword { get; private set; }
+            public ulong Keyword
+            {
+                get
+                {
+                    return ulong.Parse(this["Keyword"]);
+                }
+            }
 
             /// <summary>
             /// Gets the event level.
             /// </summary>
-            [DataMember(Name = "Level")]
-            public uint Level { get; private set; }
+            public uint Level
+            {
+                get
+                {
+                    return uint.Parse(this["Level"]);
+                }
+            }
 
             /// <summary>
             /// Gets the event provider name.
             /// </summary>
-            [DataMember(Name = "ProviderName")]
-            public string Provider { get; private set; }
+            public string Provider
+            {
+                get
+                {
+                    return this["ProviderName"];
+                }
+            }
 
             /// <summary>
-            /// Gets the event task name.
+            /// Gets the event timestamp. 
             /// </summary>
-            [DataMember(Name = "TaskName")]
-            public string Task { get; private set; }
-
-            /// <summary>
-            /// Gets the event timestamp.
-            /// </summary>
-            [DataMember(Name = "Timestamp")]
-            public ulong Timestamp { get; private set; }
+            public ulong Timestamp
+            {
+                get
+                {
+                    return ulong.Parse(this["Timestamp"]);
+                }
+            }
         }
 
         /// <summary>
@@ -251,7 +305,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets provider guid.
             /// </summary>
             [DataMember(Name = "GUID")]
-            public string GUID { get; private set; }
+            public Guid GUID { get; private set; }
 
             /// <summary>
             /// Gets provider name.
