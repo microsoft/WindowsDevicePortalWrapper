@@ -102,11 +102,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         /// <param name="etw">The <see cref="EtwProviders"/> to validate.</param>
         private static void ValidateEtwProviders(EtwProviders etw)
         {
-            Guid result;
             Assert.IsTrue(etw.Providers.Count > 0);
-            Assert.IsTrue(etw.Providers.All(etwProvider => 
-                Guid.TryParse(etwProvider.GUID, out result) &&
-                !string.IsNullOrEmpty(etwProvider.Name)));
+            Assert.IsTrue(etw.Providers.All(etwProvider => !string.IsNullOrEmpty(etwProvider.Name)));
         }
     }
 }
