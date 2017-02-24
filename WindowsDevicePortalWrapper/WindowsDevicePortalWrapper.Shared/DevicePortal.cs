@@ -189,7 +189,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task ConnectAsync(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true,
+            bool updateConnection = false,
 #if WINDOWS_UWP
             Certificate manualCertificate = null)
 #else
@@ -216,8 +216,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
-                this.deviceConnection.Family = await this.GetDeviceFamilyAsync();
-                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync();
+                this.deviceConnection.Family = await this.GetDeviceFamilyAsync().ConfigureAwait(false);
+                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync().ConfigureAwait(false);
 
                 // Default to using whatever was specified in the connection.
                 bool requiresHttps = this.IsUsingHttps();
@@ -231,7 +231,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.DeterminingConnectionRequirements,
                         connectionPhaseDescription);
-                    requiresHttps = await this.GetIsHttpsRequiredAsync();
+                    requiresHttps = await this.GetIsHttpsRequiredAsync().ConfigureAwait(false);
                 }
 
                 // Connect the device to the specified network.
@@ -242,10 +242,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.ConnectingToTargetNetwork,
                         connectionPhaseDescription);
-                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfacesAsync();
+                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfacesAsync().ConfigureAwait(false);
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
-                    await this.ConnectToWifiNetworkAsync(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
+                    await this.ConnectToWifiNetworkAsync(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey).ConfigureAwait(false);
                 }
 
                 // Get the device's IP configuration and update the connection as appropriate.
@@ -268,7 +268,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
 
                     this.deviceConnection.UpdateConnection(
-                        await this.GetIpConfigAsync(), 
+                        await this.GetIpConfigAsync().ConfigureAwait(false), 
                         requiresHttps,
                         preservePort);
                 }
@@ -296,6 +296,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     while (innermostException.InnerException != null)
                     {
                         innermostException = innermostException.InnerException;
+                        await Task.Yield();
                     }
 
                     this.ConnectionFailedDescription = innermostException.Message;
@@ -372,13 +373,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 websocket.WebSocketStreamReceived += streamReceivedHandler;
 
-                Task startListeningForStreamTask = websocket.StartListeningForMessagesAsync(endpoint);
-                startListeningForStreamTask.Wait();
+                await websocket.ConnectAsync(endpoint);
+
+                await websocket.ReceiveMessagesAsync();
 
                 streamReceived.WaitOne();
 
-                Task stopListeningForStreamTask = websocket.StopListeningForMessagesAsync();
-                stopListeningForStreamTask.Wait();
+                await websocket.CloseAsync();
 
                 websocket.WebSocketStreamReceived -= streamReceivedHandler;
 

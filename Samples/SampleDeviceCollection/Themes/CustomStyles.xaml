@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SampleDeviceCollection.Themes">
+
+    <!-- GridSplitter Control Styling -->
+    <Style TargetType="{x:Type Ellipse}" x:Key="splitterDot">
+        <Setter Property="Width" Value="3" />
+        <Setter Property="Height" Value="3" />
+        <Setter Property="Fill" Value="Black" />
+    </Style>
+
+    <Style TargetType="{x:Type Ellipse}" x:Key="horzSplitterDot" BasedOn="{StaticResource splitterDot}">
+        <Setter Property="Margin" Value="0,0,2,0" />
+    </Style>
+
+    <Style TargetType="{x:Type Ellipse}" x:Key="vertSplitterDot" BasedOn="{StaticResource splitterDot}">
+        <Setter Property="Margin" Value="0,0,0,2" />
+    </Style>
+
+    <Style TargetType="{x:Type GridSplitter}" x:Key="baseSplitterStyle">
+        <Setter Property="Background" Value="LightGray" />
+    </Style>
+
+    <Style TargetType="{x:Type GridSplitter}" x:Key="horzSplitterStyle" BasedOn="{StaticResource baseSplitterStyle}">
+        <Setter Property="Height" Value="7" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Ellipse Grid.Column="1" Style="{StaticResource horzSplitterDot}"/>
+                        <Ellipse Grid.Column="2" Style="{StaticResource horzSplitterDot}"/>
+                        <Ellipse Grid.Column="3" Style="{StaticResource horzSplitterDot}"/>
+                        <Ellipse Grid.Column="4" Style="{StaticResource horzSplitterDot}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type GridSplitter}" x:Key="vertSplitterStyle" BasedOn="{StaticResource baseSplitterStyle}">
+        <Setter Property="Width" Value="7" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Ellipse Grid.Row="1" Style="{StaticResource vertSplitterDot}" />
+                        <Ellipse Grid.Row="2" Style="{StaticResource vertSplitterDot}" />
+                        <Ellipse Grid.Row="3" Style="{StaticResource vertSplitterDot}" />
+                        <Ellipse Grid.Row="4" Style="{StaticResource vertSplitterDot}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -6,7 +6,6 @@
 
 using System;
 using System.Net;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
@@ -38,6 +37,29 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             if (!string.IsNullOrEmpty(userName) &&
                 !string.IsNullOrEmpty(password))
+            {
+                // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+                this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XboxDevicePortalConnection"/> class, using a SecureString to secure the password.
+        /// </summary>
+        /// <param name="address">device identifier</param>
+        /// <param name="userName">WDP username</param>
+        /// <param name="password">WDP password</param>
+        public DefaultDevicePortalConnection(
+            string address,
+            string userName,
+            System.Security.SecureString password)
+        {
+            this.Connection = new Uri(address);
+
+
+            if (!string.IsNullOrEmpty(userName) &&
+                password != null &&
+                password.Length > 0)
             {
                 // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
                 this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);

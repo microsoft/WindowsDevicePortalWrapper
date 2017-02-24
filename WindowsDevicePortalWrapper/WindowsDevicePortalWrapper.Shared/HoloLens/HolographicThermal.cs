@@ -50,7 +50,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the current thermal stage reading from the device.
         /// </summary>
         /// <returns>ThermalStages enum value.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<ThermalStages> GetThermalStageAsync()
         {
             if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
