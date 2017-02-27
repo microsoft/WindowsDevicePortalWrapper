@@ -112,6 +112,7 @@
     <Compile Include="CertificateHandling.cs" />
     <Compile Include="Core\AppDeployment.cs" />
     <Compile Include="DefaultDevicePortalConnection.cs" />
+    <Compile Include="HttpRest\HttpMultipartFileContent.cs" />
     <Compile Include="HttpRest\RestPost.cs" />
     <Compile Include="HttpRest\RestPut.cs" />
     <Compile Include="HttpRest\RestDelete.cs" />

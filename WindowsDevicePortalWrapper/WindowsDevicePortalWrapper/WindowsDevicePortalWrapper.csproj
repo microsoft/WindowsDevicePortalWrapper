@@ -47,6 +47,7 @@
     <Compile Include="Core\AppDeployment.cs" />
     <Compile Include="DefaultDevicePortalConnection.cs" />
     <Compile Include="Events\UnvalidatedCert.cs" />
+    <Compile Include="HttpRest\HttpMultipartFileContent.cs" />
     <Compile Include="HttpRest\RestPost.cs" />
     <Compile Include="HttpRest\RestPut.cs" />
     <Compile Include="HttpRest\RestDelete.cs" />

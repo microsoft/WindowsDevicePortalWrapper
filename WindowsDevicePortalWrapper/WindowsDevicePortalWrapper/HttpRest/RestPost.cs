@@ -24,20 +24,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> PostAsync(
+        private Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)
         {
             StreamContent requestContent = null;
-            MemoryStream responseDataStream = null;
-
+            
             if (requestStream != null)
             {
                 requestContent = new StreamContent(requestStream);
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
+            return PostAsync(uri, requestContent);
+        }
+
+        private async Task<Stream> PostAsync(
+            Uri uri,
+            HttpContent requestContent)
+        {
+            MemoryStream responseDataStream = null;
 
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;

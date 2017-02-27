@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 #if WINDOWS_UWP
 using Windows.Foundation;
 using Windows.Security.Credentials;
+using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Windows.Web.Http.Headers;
@@ -110,7 +111,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         }
                     }
                 }
-
+                
                 // Create the API endpoint and generate a unique boundary string.
                 Uri uri;
                 string boundaryString;
@@ -119,59 +120,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     out uri,
                     out boundaryString);
 
-                using (MemoryStream dataStream = new MemoryStream())
-                {
-                    byte[] data;
+                installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
+                this.SendAppInstallStatus(
+                    ApplicationInstallStatus.InProgress,
+                    ApplicationInstallPhase.CopyingFile,
+                    installPhaseDescription);
 
-                    // Copy the application package.
-                    installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
-                    this.SendAppInstallStatus(
-                        ApplicationInstallStatus.InProgress,
-                        ApplicationInstallPhase.CopyingFile,
-                        installPhaseDescription);
-                    data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
-                    dataStream.Write(data, 0, data.Length);
-                    CopyFileToRequestStream(packageFile, dataStream);
-
-                    // Copy dependency files, if any.
-                    foreach (string dependencyFile in dependencyFileNames)
-                    {
-                        FileInfo fi = new FileInfo(dependencyFile);
-                        installPhaseDescription = string.Format("Copying: {0}", fi.Name);
-                        this.SendAppInstallStatus(
-                            ApplicationInstallStatus.InProgress,
-                            ApplicationInstallPhase.CopyingFile,
-                            installPhaseDescription);
-                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                        dataStream.Write(data, 0, data.Length);
-                        CopyFileToRequestStream(fi, dataStream);
-                    }
-
-                    // Copy the certificate file, if provided.
-                    if (!string.IsNullOrEmpty(certificateFileName))
-                    {
-                        FileInfo fi = new FileInfo(certificateFileName);
-                        installPhaseDescription = string.Format("Copying: {0}", fi.Name);
-                        this.SendAppInstallStatus(
-                            ApplicationInstallStatus.InProgress,
-                            ApplicationInstallPhase.CopyingFile,
-                            installPhaseDescription);
-                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                        dataStream.Write(data, 0, data.Length);
-                        CopyFileToRequestStream(fi, dataStream);
-                    }
-
-                    // Close the installation request data.
-                    data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
-                    dataStream.Write(data, 0, data.Length);
-
-                    dataStream.Position = 0;
-
-                    string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
-
-                    // Make the HTTP request.
-                    await this.PostAsync(uri, dataStream, contentType);
-                }
+                var content = new HttpMultipartFileContent();
+                content.Add(packageFile.FullName);
+                content.AddRange(dependencyFileNames);
+                content.Add(certificateFileName);
+                await this.PostAsync(uri, content);
 
                 // Poll the status until complete.
                 ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
