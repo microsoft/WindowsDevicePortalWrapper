@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     using System.Threading.Tasks;
 
     /// <content>
-    /// Wrappers for DNS methods
+    /// Wrapper for collecting Windows Error Reports from the device. 
     /// </content>
     public partial class DevicePortal
     {
