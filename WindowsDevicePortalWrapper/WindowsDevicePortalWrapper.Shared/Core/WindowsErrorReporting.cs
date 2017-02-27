@@ -147,10 +147,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WerDeviceReports
         {
             /// <summary>
-            ///  Gets a list of all Windows Error Reporting (WER) reports on a device.
+            ///  Gets a list of all Windows Error Reporting (WER) reports on a 
+            ///  device.  The SYSTEM user account usually holds the bulk of the 
+            ///  error reports. 
             /// </summary>
             [DataMember(Name = "WerReports")]
             public List<WerUserReports> UserReports { get; private set; }
+
+            /// <summary>
+            /// Convenience accessor for the System error reports - this is 
+            /// where most error reports end up. 
+            /// </summary>
+            public WerUserReports SystemErrorReports {
+                get
+                {
+                    return UserReports.First(x => x.UserName == "SYSTEM");
+                }
+            }
         }
 
         /// <summary>
