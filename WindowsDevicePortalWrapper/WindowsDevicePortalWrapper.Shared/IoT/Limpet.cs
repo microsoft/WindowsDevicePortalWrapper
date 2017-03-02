@@ -74,7 +74,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="logicalDeviceId">Logical Device Id.</param>
         /// <param name="azureUri">Azure Uri.</param>
-        /// <param name="Azure Key">Azure Key.</param>
+        /// <param name="azureKey">Azure Key.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetTpmLogicalDeviceSettingsInfoAsync(int logicalDeviceId, string azureUri, string azureKey)
         {
