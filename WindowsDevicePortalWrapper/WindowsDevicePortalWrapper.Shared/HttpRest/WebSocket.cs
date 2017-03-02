@@ -54,6 +54,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public event WebSocketStreamReceivedEventInternalHandler<T> WebSocketStreamReceived;
 
         /// <summary>
+        /// Gets a value indicating whether the web socket is connected.
+        /// </summary>
+        public bool IsConnected
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the web socket is listening for messages.
         /// </summary>
         public bool IsListeningForMessages
@@ -63,34 +72,64 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Initialize a connection to the websocket.
+        /// </summary>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>The task of opening the websocket connection.</returns>
+        internal async Task ConnectAsync(string apiPath, string payload = null)
+        {
+            if (this.IsConnected)
+            {
+                return;
+            }
+
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.WebSocketConnection,
+                apiPath,
+                payload);
+            await this.ConnectInternalAsync(uri);
+        }
+
+        /// <summary>
         /// Closes the connection to the websocket and stop listening for messages.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        internal async Task StopListeningForMessagesAsync()
+        internal async Task CloseAsync()
         {
-            if (this.IsListeningForMessages)
+            if (this.IsConnected)
             {
-                await this.StopListeningForMessagesInternalAsync();
+                if (this.IsListeningForMessages)
+                {
+                    await this.StopListeningForMessagesInternalAsync();
+                }
+
+                await this.CloseInternalAsync();
             }
         }
 
         /// <summary>
         /// Starts listening for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
-        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
-        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        internal async Task StartListeningForMessagesAsync(
-            string apiPath,
-            string payload = null)
+        internal async Task ReceiveMessagesAsync()
         {
-            if (!this.IsListeningForMessages)
+            if (this.IsConnected && !this.IsListeningForMessages)
             {
-                Uri uri = Utilities.BuildEndpoint(
-                    this.deviceConnection.WebSocketConnection,
-                    apiPath,
-                    payload);
-                await this.StartListeningForMessagesInternalAsync(uri);
+                await this.StartListeningForMessagesInternalAsync();
+            }
+        }
+
+        /// <summary>
+        /// Sends a message to the server.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        /// <returns>The task of sending a message to the websocket.</returns>
+        internal async Task SendMessageAsync(string message)
+        {
+            if (this.IsConnected)
+            {
+                await this.SendMessageInternalAsync(message);
             }
         }
 
@@ -114,7 +153,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     using (stream)
                     {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                        DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
+                        {
+                            UseSimpleDictionaryFormat = true
+                        };
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
+                        
+
                         T message = (T)serializer.ReadObject(stream);
 
                         this.WebSocketMessageReceived?.Invoke(

@@ -39,12 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             using (HttpClient client = new HttpClient(handler))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
-
-                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
-                await getTask.ConfigureAwait(false);
-                getTask.Wait();
-
-                using (HttpResponseMessage response = getTask.Result)
+                using (HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -64,9 +59,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 {
                                     dataStream = new MemoryStream();
 
-                                    Task copyTask = content.CopyToAsync(dataStream);
-                                    await copyTask.ConfigureAwait(false);
-                                    copyTask.Wait();
+                                    await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                                     // Ensure we point the stream at the origin.
                                     dataStream.Position = 0;
@@ -101,7 +94,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     else
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
                 }
             }

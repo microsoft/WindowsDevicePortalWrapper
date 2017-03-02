@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
 
-                    status = await this.GetInstallStatusAsync();
+                    status = await this.GetInstallStatusAsync().ConfigureAwait(false);
                 }
                 while (status == ApplicationInstallStatus.InProgress);
 
@@ -366,6 +366,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "Version")]
             public PackageVersion Version { get; private set; }
 
+            /// <summary>
+            /// Gets package origin, a measure of how the app was installed. 
+            /// PackageOrigin_Unknown            = 0,
+            /// PackageOrigin_Unsigned           = 1,
+            /// PackageOrigin_Inbox              = 2,
+            /// PackageOrigin_Store              = 3,
+            /// PackageOrigin_DeveloperUnsigned  = 4,
+            /// PackageOrigin_DeveloperSigned    = 5,
+            /// PackageOrigin_LineOfBusiness     = 6
+            /// </summary>
+            [DataMember(Name = "PackageOrigin")]
+            public int PackageOrigin { get; private set; }
+
+            // <summary>
+            /// Helper method to determine if the app was sideloaded and therefore can be used with e.g. GetFolderContentsAsync
+            /// </summary>
+            /// <returns> True if the package is sideloaded. </returns>
+            public bool IsSideloaded()
+            {
+                return (this.PackageOrigin == 4 || this.PackageOrigin == 5);
+            }
+            
             /// <summary>
             /// Get a string representation of the package
             /// </summary>
