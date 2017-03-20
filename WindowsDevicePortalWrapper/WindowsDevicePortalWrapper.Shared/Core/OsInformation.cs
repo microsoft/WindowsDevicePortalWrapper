@@ -245,6 +245,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     catch
                     {
+                        switch (this.OsEdition)
+                        {
+                            case "Enterprise":
+                            case "Home":
+                            case "Professional":
+                                platform = DevicePortalPlatforms.Windows;
+                                break;
+
+                            case "Mobile":
+                                platform = DevicePortalPlatforms.Mobile;
+                                break;
+
+                            default:
+                                platform = DevicePortalPlatforms.Unknown;
+                                break;
+                        }
                     }
 
                     return platform;
