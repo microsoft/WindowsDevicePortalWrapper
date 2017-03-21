@@ -44,7 +44,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XboxDevicePortalConnection"/> class, using a SecureString to secure the password.
+        /// Initializes a new instance of the <see cref="DefaultDevicePortalConnection"/> class, using a SecureString to secure the password.
         /// </summary>
         /// <param name="address">device identifier</param>
         /// <param name="userName">WDP username</param>
