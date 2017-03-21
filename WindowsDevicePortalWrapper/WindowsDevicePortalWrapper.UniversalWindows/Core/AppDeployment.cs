@@ -116,9 +116,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Installs an application
         /// </summary>
         /// <param name="appName">Friendly name (ex: Hello World) of the application. If this parameter is not provided, the name of the package is assumed to be the app name.</param>
-        /// <param name="packageFile">Full name of the application package file.</param>
-        /// <param name="dependencyFiles">List containing the full names of any required dependency files.</param>
-        /// <param name="certificateFile">Full name of the optional certificate file.</param>
+        /// <param name="packageFile">The application package file.</param>
+        /// <param name="dependencyFiles">List containing the required dependency files.</param>
+        /// <param name="certificateFile">Optional certificate file.</param>
         /// <param name="stateCheckIntervalMs">How frequently we should check the installation state.</param>
         /// <param name="timeoutInMinutes">Operation timeout.</param>
         /// <param name="uninstallPreviousVersion">Indicate whether or not the previous app version should be uninstalled prior to installing.</param>
