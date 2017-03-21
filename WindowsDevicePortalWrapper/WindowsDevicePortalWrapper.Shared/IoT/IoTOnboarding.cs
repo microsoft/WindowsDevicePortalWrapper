@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="softApStatus">SoftAp Status.</param>
         /// <param name="softApSsid">SoftAp Ssid.</param>
-        /// /// <param name="SoftAp Password">SoftAp Password.</param>
+        /// /// <param name="softApPassword">SoftAp Password.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetSoftApSettingsAsync(string softApStatus, string softApSsid, string softApPassword)
         {
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="allJoynStatus">AllJoyn Status.</param>
         /// <param name="allJoynDescription">AllJoyn Description.</param>
         /// <param name=" allJoynManufacturer"> AllJoyn Manufacturer.</param>
-        /// <param name=" allJoynNumber"> AllJoyn Number.</param>
+        /// <param name=" allJoynModelNumber"> AllJoyn Number.</param>
         /// <returns>Task tracking completion of the REST call.</returns>
         public async Task SetAllJoynSettingsAsync(string allJoynStatus, string allJoynDescription, string allJoynManufacturer, string allJoynModelNumber)
         {
