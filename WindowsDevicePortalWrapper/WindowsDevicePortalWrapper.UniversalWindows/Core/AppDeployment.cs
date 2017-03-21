@@ -125,6 +125,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         /// <returns>Task for tracking completion of install initialization.</returns>
+
         public async Task InstallApplicationAsync(
             string appName,
             StorageFile packageFile, 
