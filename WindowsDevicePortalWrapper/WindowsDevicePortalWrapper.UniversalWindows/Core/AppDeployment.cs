@@ -11,12 +11,11 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Security.Credentials;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-using Windows.Web.Http.Headers;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortalException;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -112,5 +111,152 @@ namespace Microsoft.Tools.WindowsDevicePortal
             return status;
         }
 #pragma warning restore 1998
+
+        public async Task InstallApplicationAsync(
+            string appName,
+            StorageFile packageFile, 
+            List<StorageFile> dependencyFiles,
+            StorageFile certificateFile= null,
+            short stateCheckIntervalMs = 500,
+            short timeoutInMinutes = 15,
+            bool uninstallPreviousVersion = true)
+        {
+            string installPhaseDescription = string.Empty;
+
+            try
+            {
+                // If appName was not provided, use the package file name
+                if (string.IsNullOrWhiteSpace(appName))
+                {
+                    appName = packageFile.DisplayName;
+                }
+
+                // Uninstall the application's previous version, if one exists.
+                if (uninstallPreviousVersion)
+                {
+                    installPhaseDescription = string.Format("Uninstalling any previous version of {0}", appName);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.UninstallingPreviousVersion,
+                        installPhaseDescription);
+                    AppPackages installedApps = await this.GetInstalledAppPackagesAsync();
+                    foreach (PackageInfo package in installedApps.Packages)
+                    {
+                        if (package.Name == appName)
+                        {
+                            await this.UninstallApplicationAsync(package.FullName);
+                            break;
+                        }
+                    }
+                }
+
+                // Create the API endpoint and generate a unique boundary string.
+                Uri uri;
+                string boundaryString;
+                this.CreateAppInstallEndpointAndBoundaryString(
+                    packageFile.Name,
+                    out uri,
+                    out boundaryString);
+
+                using (MemoryStream dataStream = new MemoryStream())
+                {
+                    byte[] data;
+
+                    // Copy the application package.
+                    installPhaseDescription = string.Format("Copying: {0}", packageFile.Name);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.CopyingFile,
+                        installPhaseDescription);
+                    data = Encoding.ASCII.GetBytes(string.Format("--{0}\r\n", boundaryString));
+                    dataStream.Write(data, 0, data.Length);
+                    await CopyFileToRequestStream(
+                        packageFile,
+                        dataStream);
+
+                    // Copy dependency files, if any.
+                    foreach (StorageFile depFile in dependencyFiles)
+                    {
+                        installPhaseDescription = string.Format("Copying: {0}", depFile.Name);
+                        this.SendAppInstallStatus(
+                            ApplicationInstallStatus.InProgress,
+                            ApplicationInstallPhase.CopyingFile,
+                            installPhaseDescription);
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                        dataStream.Write(data, 0, data.Length);
+                        await CopyFileToRequestStream(
+                            depFile, 
+                            dataStream);
+                    }
+
+                    // Copy the certificate file, if provided.
+                    if (certificateFile != null)
+                    {
+                        installPhaseDescription = string.Format("Copying: {0}", certificateFile.Name);
+                        this.SendAppInstallStatus(
+                            ApplicationInstallStatus.InProgress,
+                            ApplicationInstallPhase.CopyingFile,
+                            installPhaseDescription);
+                        data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
+                        dataStream.Write(data, 0, data.Length);
+                        await CopyFileToRequestStream(
+                            certificateFile, 
+                            dataStream);
+                    }
+
+                    // Close the installation request data.
+                    data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
+                    dataStream.Write(data, 0, data.Length);
+
+                    dataStream.Position = 0;
+
+                    string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
+
+                    // Make the HTTP request.
+                    await this.PostAsync(uri, dataStream, contentType);
+                }
+
+                    // Poll the status until complete.
+                    ApplicationInstallStatus status = ApplicationInstallStatus.InProgress;
+                do
+                {
+                    installPhaseDescription = string.Format("Installing {0}", appName);
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.InProgress,
+                        ApplicationInstallPhase.Installing,
+                        installPhaseDescription);
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
+
+                    status = await this.GetInstallStatusAsync().ConfigureAwait(false);
+                }
+                while (status == ApplicationInstallStatus.InProgress);
+
+                installPhaseDescription = string.Format("{0} installed successfully", appName);
+                this.SendAppInstallStatus(
+                    ApplicationInstallStatus.Completed,
+                    ApplicationInstallPhase.Idle,
+                    installPhaseDescription);
+            }
+            catch (Exception e)
+            {
+                DevicePortalException dpe = e as DevicePortalException;
+
+                if (dpe != null)
+                {
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, dpe.Reason));
+                }
+                else
+                {
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
+                }
+            }
+        }
     }
 }
