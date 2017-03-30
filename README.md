@@ -28,7 +28,7 @@ For documentation on the WDP REST endpoints which the project wraps, see the fol
 
 ### HoloLens specific methods
 
-[HoloLens Device Portal API reference](https://developer.microsoft.com/en-us/windows/holographic/device_portal_api_reference)
+[HoloLens Device Portal API reference](https://developer.microsoft.com/en-us/windows/mixed-reality/device_portal_api_reference)
 
 ---
 
