@@ -20,14 +20,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
     internal partial class WebSocket<T>
     {
         /// <summary>
+        /// The websocket connection has closed after the request was fulfilled.
+        /// </summary>
+        private const ushort WebSocketCloseStatusNormalClosure = 1000;
+
+        /// <summary>
         /// The <see cref="MessageWebSocket" /> that is being wrapped.
         /// </summary>
         private MessageWebSocket websocket = null;
-
-        /// <summary>
-        /// The websocket connection has closed after the request was fulfilled.
-        /// </summary>
-        private UInt16 WebSocketCloseStatus_NormalClosure = 1000;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSocket{T}" /> class.
@@ -89,7 +89,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             await Task.Run(() =>
             {
-                this.websocket.Close(WebSocketCloseStatus_NormalClosure, "Closed due to user request.");
+                this.websocket.Close(WebSocketCloseStatusNormalClosure, "Closed due to user request.");
                 this.websocket.Dispose();
                 this.websocket = null;
                 this.IsConnected = false;
