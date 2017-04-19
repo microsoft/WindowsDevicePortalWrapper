@@ -63,6 +63,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets TPM Logical Device Settings information.
         /// </summary>
+        /// <param name="logicalDeviceId">The device id</param>
         /// <returns>String containing the TPM Logical Device Settings information.</returns>
         public async Task<TpmLogicalDeviceSettingsInfo> GetTpmLogicalDeviceSettingsInfoAsync(int logicalDeviceId)
         {
@@ -94,6 +95,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets TPM Azure Token information.
         /// </summary>
+        /// <param name="logicalDeviceId">The device id</param>
+        /// <param name="validity">Validity of the token</param>
         /// <returns>String containing the TPM Azure Token information.</returns>
         public async Task<TpmAzureTokenInfo> GetTpmAzureTokenInfoAsync(int logicalDeviceId, string validity)
         {

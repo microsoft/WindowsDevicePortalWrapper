@@ -379,13 +379,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             [DataMember(Name = "PackageOrigin")]
             public int PackageOrigin { get; private set; }
 
-            // <summary>
+            /// <summary>
             /// Helper method to determine if the app was sideloaded and therefore can be used with e.g. GetFolderContentsAsync
             /// </summary>
             /// <returns> True if the package is sideloaded. </returns>
             public bool IsSideloaded()
             {
-                return (this.PackageOrigin == 4 || this.PackageOrigin == 5);
+                return this.PackageOrigin == 4 || this.PackageOrigin == 5;
             }
             
             /// <summary>

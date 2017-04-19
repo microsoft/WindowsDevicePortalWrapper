@@ -75,7 +75,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            if (!(await VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
+            if (!(await this.VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
             {
                 throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
@@ -84,7 +84,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 "priority={0}",
                 (int)priority);
 
-            PerceptionSimulationControlStreamId controlStreamId =  await this.GetAsync<PerceptionSimulationControlStreamId>(
+            PerceptionSimulationControlStreamId controlStreamId = await this.GetAsync<PerceptionSimulationControlStreamId>(
                             HolographicSimulationStreamApi,
                             payload);
 
@@ -104,7 +104,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            if (!(await VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
+            if (!(await this.VerifySimulationControlModeAsync(SimulationControlMode.Simulation)))
             {
                 throw new InvalidOperationException("The simulation control mode on the target HoloLens must be 'Simulation'.");
             }
@@ -161,7 +161,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private async Task<bool> VerifySimulationControlModeAsync(SimulationControlMode expectedMode)
         {
             SimulationControlMode simMode = await this.GetPerceptionSimulationControlModeAsync();
-            return (simMode == expectedMode);
+            return simMode == expectedMode;
         }
 
         #region Data contract
