@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
 
-                    status = await this.GetInstallStatusAsync();
+                    status = await this.GetInstallStatusAsync().ConfigureAwait(false);
                 }
                 while (status == ApplicationInstallStatus.InProgress);
 

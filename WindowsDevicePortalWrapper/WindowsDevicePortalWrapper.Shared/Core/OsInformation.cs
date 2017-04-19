@@ -93,7 +93,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>String containing the device's family.</returns>
         public async Task<string> GetDeviceFamilyAsync()
         {
-            DeviceOsFamily deviceFamily = await this.GetAsync<DeviceOsFamily>(DeviceFamilyApi);
+            DeviceOsFamily deviceFamily = await this.GetAsync<DeviceOsFamily>(DeviceFamilyApi).ConfigureAwait(false);
             return deviceFamily.Family;
         }
 
@@ -111,9 +111,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets information about the device's operating system.
         /// </summary>
         /// <returns>OperatingSystemInformation object containing details of the installed operating system.</returns>
-        public async Task<OperatingSystemInformation> GetOperatingSystemInformationAsync()
+        public Task<OperatingSystemInformation> GetOperatingSystemInformationAsync()
         {
-            return await this.GetAsync<OperatingSystemInformation>(OsInfoApi);
+            return this.GetAsync<OperatingSystemInformation>(OsInfoApi);
         }
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name to assign to the device.</param>
         /// <remarks>The new name does not take effect until the device has been restarted.</remarks>
         /// <returns>Task tracking setting the device name completion.</returns>
-        public async Task SetDeviceNameAsync(string name)
+        public Task SetDeviceNameAsync(string name)
         {
-            await this.PostAsync(
+            return this.PostAsync(
                 MachineNameApi,
                 string.Format("name={0}", Utilities.Hex64Encode(name)));
         }
@@ -245,6 +245,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     catch
                     {
+                        switch (this.OsEdition)
+                        {
+                            case "Enterprise":
+                            case "Home":
+                            case "Professional":
+                                platform = DevicePortalPlatforms.Windows;
+                                break;
+
+                            case "Mobile":
+                                platform = DevicePortalPlatforms.Mobile;
+                                break;
+
+                            default:
+                                platform = DevicePortalPlatforms.Unknown;
+                                break;
+                        }
                     }
 
                     return platform;

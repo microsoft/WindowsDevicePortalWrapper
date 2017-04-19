@@ -37,6 +37,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> serverCertificateValidationHandler;
 
         /// <summary>
+        /// The connection to the websocket.
+        /// </summary>
+        private Task<HttpResponseMessage> webSocketTask;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WebSocket{T}" /> class.
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
@@ -51,58 +56,79 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Initialize a connection to the websocket.
+        /// </summary>
+        /// <param name="endpoint">The uri that the weboscket should connect to.</param>
+        /// <returns>The task of opening a connection to the websocket.</returns>
+        private async Task ConnectInternalAsync(Uri endpoint)
+        {
+            await Task.Run(() =>
+            {
+                webSocketTask = TestHelpers.MockHttpResponder.WebSocketAsync(endpoint);
+                this.IsConnected = true;
+            });
+        }
+
+        /// <summary>
+        /// Closes the connection to the websocket.
+        /// </summary>
+        /// <returns>The task of closing the websocket connection.</returns>
+        private async Task CloseInternalAsync()
+        {
+            await Task.Run(() =>
+            {
+                webSocketTask.Dispose();
+                webSocketTask = null;
+                this.IsConnected = false;
+            });
+        }
+
+        /// <summary>
         /// Stops listneing for messages from the websocket and closes the connection to the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
 #pragma warning disable 1998
         private async Task StopListeningForMessagesInternalAsync()
         {
+            this.keepListeningForMessages = false;
+
+            // Wait for web socket to no longer be receiving messages.
             if (this.IsListeningForMessages)
             {
-                this.keepListeningForMessages = false;
-
-                // Wait for web socket to no longer be receiving messages.
-                if (this.IsListeningForMessages)
-                {
-                    this.stoppedReceivingMessages.WaitOne();
-                    this.stoppedReceivingMessages.Reset();
-                }
+                this.stoppedReceivingMessages.WaitOne();
+                this.stoppedReceivingMessages.Reset();
             }
         }
 #pragma warning restore 1998
 
         /// <summary>
-        /// Connects to the websocket and starts listening for messages from the websocket.
+        /// Starts listening for messages from the websocket.
         /// Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
-        /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        private async Task StartListeningForMessagesInternalAsync(Uri endpoint)
+        private async Task StartListeningForMessagesInternalAsync()
         {
+            this.IsListeningForMessages = true;
             this.keepListeningForMessages = true;
 
             try
             {
                 while (this.keepListeningForMessages)
                 {
-                    Task<HttpResponseMessage> webSocketTask = TestHelpers.MockHttpResponder.WebSocketAsync(endpoint);
                     await webSocketTask.ConfigureAwait(false);
-                    webSocketTask.Wait();
 
                     using (HttpResponseMessage response = webSocketTask.Result)
                     {
                         if (!response.IsSuccessStatusCode)
                         {
-                            throw new DevicePortalException(response);
+                            throw await DevicePortalException.CreateAsync(response);
                         }
 
                         using (HttpContent content = response.Content)
                         {
                             MemoryStream dataStream = new MemoryStream();
 
-                            Task copyTask = content.CopyToAsync(dataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             dataStream.Position = 0;
@@ -119,6 +145,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.stoppedReceivingMessages.Set();
                 this.IsListeningForMessages = false;
+            }
+        }
+
+        /// <summary>
+        /// Sends a message to the server.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        /// <returns>The task of sending the message to the websocket</returns>
+        private async Task SendMessageInternalAsync(string message)
+        {
+            await webSocketTask.ConfigureAwait(false);
+            webSocketTask.Wait();
+
+            using (HttpResponseMessage response = webSocketTask.Result)
+            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw await DevicePortalException.CreateAsync(response);
+                }
             }
         }
     }

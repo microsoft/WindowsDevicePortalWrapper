@@ -47,7 +47,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
 
                     if (response.Content != null)
