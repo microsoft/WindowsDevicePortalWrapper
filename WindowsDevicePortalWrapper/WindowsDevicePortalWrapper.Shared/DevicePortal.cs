@@ -258,6 +258,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         connectionPhaseDescription);
                     
                     bool preservePort = true;
+
                     // HoloLens and Mobile are the only devices that support USB.
                     // They require the port to be changed when the connection is updated
                     // to WiFi.

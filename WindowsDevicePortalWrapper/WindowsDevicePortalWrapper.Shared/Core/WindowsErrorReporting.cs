@@ -156,13 +156,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public List<WerUserReports> UserReports { get; private set; }
 
             /// <summary>
-            /// Convenience accessor for the System error reports - this is 
+            /// Gets system error reports - Convenience accessor for the System error reports - this is 
             /// where most error reports end up. 
             /// </summary>
-            public WerUserReports SystemErrorReports {
+            public WerUserReports SystemErrorReports
+            {
                 get
                 {
-                    return UserReports.First(x => x.UserName == "SYSTEM");
+                    return this.UserReports.First(x => x.UserName == "SYSTEM");
                 }
             }
         }

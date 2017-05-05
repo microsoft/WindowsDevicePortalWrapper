@@ -4,11 +4,11 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
@@ -307,7 +307,6 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             // Check some known things about this response.
             Assert.AreEqual(0, installTime.RebootScheduled);
-             
         }
 
         /// <summary>
@@ -396,21 +395,20 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDeviceName.Status);
         }
 
-
         /// <summary>
         /// Simple test to set SoftAp Settings
         /// </summary>
         [TestMethod]
         public void SetSoftApSettingsTest_IoT()
         {
-            string SoftApEnabled = "true";
-            string SoftApSsid = "SoftAPSsid";
-            string SoftApPassword = "p@ssw0rd";
+            string softApEnabled = "true";
+            string softApSsid = "SoftAPSsid";
+            string softApPassword = "p@ssw0rd";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
 
-            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettingsAsync(SoftApEnabled, SoftApSsid, SoftApPassword);
+            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettingsAsync(softApEnabled, softApSsid, softApPassword);
             setSoftApSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setSoftApSettings.Status);
@@ -495,7 +493,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             setIoTControllersDrivers.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTControllersDrivers.Status);
-            Assert.AreEqual(requestReboot, setIoTControllersDrivers.Result.RequestReboot );
+            Assert.AreEqual(requestReboot, setIoTControllersDrivers.Result.RequestReboot);
         }
 
         /// <summary>
@@ -694,10 +692,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetRenderVolumeApi, response, HttpMethods.Post);
 
-            Task RenderVolume = TestHelpers.Portal.SetRenderVolumeAsync(renderVolume);
-            RenderVolume.Wait();
+            Task renderVolumeTask = TestHelpers.Portal.SetRenderVolumeAsync(renderVolume);
+            renderVolumeTask.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, RenderVolume.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, renderVolumeTask.Status);
         }
 
         /// <summary>
@@ -711,10 +709,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetCaptureVolumeApi, response, HttpMethods.Post);
 
-            Task CaptureVolume = TestHelpers.Portal.SetCaptureVolumeAsync(captureVolume);
-            CaptureVolume.Wait();
+            Task captureVolumeTask = TestHelpers.Portal.SetCaptureVolumeAsync(captureVolume);
+            captureVolumeTask.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, CaptureVolume.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, captureVolumeTask.Status);
         }
 
         /// <summary>
@@ -729,10 +727,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Post);
 
-            Task IcsStart = TestHelpers.Portal.IcSharingStartAsync(privateInterfaceIndex, publicInterfaceIndex);
-            IcsStart.Wait();
+            Task icsStart = TestHelpers.Portal.IcSharingStartAsync(privateInterfaceIndex, publicInterfaceIndex);
+            icsStart.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, IcsStart.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, icsStart.Status);
         }
 
         /// <summary>
@@ -747,10 +745,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Delete);
 
-            Task IcsStop = TestHelpers.Portal.IcSharingStopAsync(privateInterfaceIndex, publicInterfaceIndex);
-            IcsStop.Wait();
+            Task icsStop = TestHelpers.Portal.IcSharingStopAsync(privateInterfaceIndex, publicInterfaceIndex);
+            icsStop.Wait();
 
-            Assert.AreEqual(TaskStatus.RanToCompletion, IcsStop.Status);
+            Assert.AreEqual(TaskStatus.RanToCompletion, icsStop.Status);
         }
 
         /// <summary>
@@ -966,8 +964,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void SetTpmLogicalDeviceSettingsTest_IoT()
         {
             int logicalDeviceId = 1;
-            string azureUri = "";
-            string azureKey = "";
+            string azureUri = string.Empty;
+            string azureKey = string.Empty;
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
@@ -1005,7 +1003,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string validity = "18000";
 
             TestHelpers.MockHttpResponder.AddMockResponse(
-               string.Format("{0}/{1}", TpmAzureTokenApi, logicalDeviceId),
+               string.Format("{0}/{1}", DevicePortal.TpmAzureTokenApi, logicalDeviceId),
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);

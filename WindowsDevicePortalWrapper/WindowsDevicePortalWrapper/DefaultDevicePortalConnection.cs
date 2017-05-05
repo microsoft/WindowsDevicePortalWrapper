@@ -56,7 +56,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             this.Connection = new Uri(address);
 
-
             if (!string.IsNullOrEmpty(userName) &&
                 password != null &&
                 password.Length > 0)
@@ -91,7 +90,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 string scheme = this.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "wss" : "ws";
 
                 return new Uri(
-                    string.Format("{0}://{1}",
+                    string.Format(
+                        "{0}://{1}",
                         scheme,
                         this.Connection.Authority));
             }
@@ -178,7 +178,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         string address = addressInfo.Address;
                         if (preservePort)
                         {
-                            address = string.Format("{0}:{1}",
+                            address = string.Format(
+                                "{0}:{1}",
                                 address,
                                 this.Connection.Port);
                         }

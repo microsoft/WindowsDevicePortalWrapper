@@ -69,15 +69,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
+        /// <param name="statusCode">Http status code.</param>
+        /// <param name="reason">Reason for exception.</param>
+        /// <param name="requestUri">Request URI which threw the exception.</param>
+        /// <param name="message">Optional message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
+        public DevicePortalException(
+            HttpStatusCode statusCode,
+            string reason,
+            Uri requestUri = null,
+            string message = "",
+            Exception innerException = null) : base(
+                                                    message,
+                                                    innerException)
+        {
+            this.StatusCode = statusCode;
+            this.Reason = reason;
+            this.RequestUri = requestUri;
+        }
+
+        /// <summary>
+        /// Gets the HTTP Status code.
+        /// </summary>
+        public HttpStatusCode StatusCode { get; private set; }
+        
+        /// <summary>
+        /// Gets a reason for the exception.
+        /// </summary>
+        public string Reason { get; private set; }
+
+        /// <summary>
+        /// Gets the request URI that threw the exception.
+        /// </summary>
+        public Uri RequestUri { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
+        /// </summary>
         /// <param name="responseMessage">Http response message.</param>
         /// <param name="message">Optional exception message.</param>
         /// <param name="innerException">Optional inner exception.</param>
+        /// <returns>async task</returns>
         public static async Task<DevicePortalException> CreateAsync(
             HttpResponseMessage responseMessage,
             string message = "",
             Exception innerException = null)
         {
-            DevicePortalException error = new DevicePortalException(responseMessage.StatusCode,
+            DevicePortalException error = new DevicePortalException(
+                                                    responseMessage.StatusCode,
                                                     responseMessage.ReasonPhrase,
                                                     responseMessage.RequestMessage != null ? responseMessage.RequestMessage.RequestUri : null,
                                                     message,
@@ -88,15 +127,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     Stream dataStream = null;
 #if !WINDOWS_UWP
-                using (HttpContent content = responseMessage.Content)
-                {
-                    dataStream = new MemoryStream();
+                    using (HttpContent content = responseMessage.Content)
+                    {
+                        dataStream = new MemoryStream();
 
-                    await content.CopyToAsync(dataStream).ConfigureAwait(false);
+                        await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
-                    // Ensure we point the stream at the origin.
-                    dataStream.Position = 0;
-                }
+                        // Ensure we point the stream at the origin.
+                        dataStream.Position = 0;
+                    }
 #else // WINDOWS_UWP
                     IBuffer dataBuffer = null;
                     using (IHttpContent messageContent = responseMessage.Content)
@@ -138,45 +177,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 // Do nothing if we fail to get additional error details from the response body.
             }
+
             return error;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
-        /// </summary>
-        /// <param name="statusCode">Http status code.</param>
-        /// <param name="reason">Reason for exception.</param>
-        /// <param name="requestUri">Request URI which threw the exception.</param>
-        /// <param name="message">Optional message.</param>
-        /// <param name="innerException">Optional inner exception.</param>
-        public DevicePortalException(
-            HttpStatusCode statusCode,
-            string reason,
-            Uri requestUri = null,
-            string message = "",
-            Exception innerException = null) : base(
-                                                    message,
-                                                    innerException)
-        {
-            this.StatusCode = statusCode;
-            this.Reason = reason;
-            this.RequestUri = requestUri;
-        }
-
-        /// <summary>
-        /// Gets the HTTP Status code.
-        /// </summary>
-        public HttpStatusCode StatusCode { get; private set; }
-        
-        /// <summary>
-        /// Gets a reason for the exception.
-        /// </summary>
-        public string Reason { get; private set; }
-
-        /// <summary>
-        /// Gets the request URI that threw the exception.
-        /// </summary>
-        public Uri RequestUri { get; private set; }
 
 #if !WINDOWS_UWP
         /// <summary>

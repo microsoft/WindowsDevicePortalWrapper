@@ -24,6 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="file">The file to be copied.</param>
         /// <param name="stream">The stream to which the file will be copied.</param>
+        /// <returns>The async task.</returns>
         private static async Task CopyFileToRequestStream(
             StorageFile file,
             Stream stream)

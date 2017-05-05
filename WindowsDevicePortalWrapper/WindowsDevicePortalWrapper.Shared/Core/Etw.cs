@@ -168,18 +168,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class EtwEvents
         {
             /// <summary>
-            /// Gets or sets the raw list of events.  Not for straight usage, as it's entirely unformatted. 
-            /// </summary>
-            [DataMember(Name = "Events")]
-            private List<Dictionary<string, string>> RawEvents { get; set; }
-
-            /// <summary>
             /// Saves the downconverted list of events 
             /// </summary>
-            private List<EtwEventInfo> stashedList; 
+            private List<EtwEventInfo> stashedList;
 
             /// <summary>
-            /// Get the list of ETW Events that occured in the last second. 
+            /// Gets the list of ETW Events that occured in the last second. 
             /// </summary>
             public List<EtwEventInfo> Events
             {
@@ -191,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
 
                     List<EtwEventInfo> events = new List<EtwEventInfo>();
-                    foreach (Dictionary<string, string> dic in RawEvents )
+                    foreach (Dictionary<string, string> dic in this.RawEvents)
                     {
                         events.Add(new EtwEventInfo(dic));
                     }
@@ -201,13 +195,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
             }
 
-
             /// <summary>
             /// Gets the event frequency. 
             /// This is always 10 million (10000000) in RS2 devices.  
             /// </summary>
             [DataMember(Name = "Frequency")]
             public long Frequency { get; private set; }
+
+            /// <summary>
+            /// Gets or sets the raw list of events.  Not for straight usage, as it's entirely unformatted. 
+            /// </summary>
+            [DataMember(Name = "Events")]
+            private List<Dictionary<string, string>> RawEvents { get; set; }
         }
 
         /// <summary>
@@ -217,7 +216,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public class EtwEventInfo : Dictionary<string, string>
         {
-
             /// <summary>
             ///  Initializes a new instance of the <see cref="EtwEventInfo" /> class.  Used by the DataContract at access time. 
             /// </summary>
