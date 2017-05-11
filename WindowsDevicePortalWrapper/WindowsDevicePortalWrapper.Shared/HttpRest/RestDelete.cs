@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the HTTP completion.</returns>
-        private async Task DeleteAsync(
+        public async Task DeleteAsync(
             string apiPath,
             string payload = null)
         {
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the HTTP completion.</returns>
-        private async Task<T> DeleteAsync<T>(
+        public async Task<T> DeleteAsync<T>(
             string apiPath,
             string payload = null) where T : new()
         {
