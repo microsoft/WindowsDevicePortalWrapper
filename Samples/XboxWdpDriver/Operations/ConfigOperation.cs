@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -32,7 +32,7 @@ namespace XboxWdpDriver
         /// </summary>
         /// <param name="portal">DevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(XboxDevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {

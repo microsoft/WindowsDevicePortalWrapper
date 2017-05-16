@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -36,9 +36,9 @@ namespace XboxWdpDriver
         /// <summary>
         /// Main entry point for handling a user operation
         /// </summary>
-        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="portal">XboxDevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(XboxDevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {
@@ -156,9 +156,9 @@ namespace XboxWdpDriver
         /// <summary>
         ///  Helper to make the REST call and handle exceptions.
         /// </summary>
-        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="portal">XboxDevicePortal reference for communicating with the device.</param>
         /// <param name="userList">UserList object for updating the remote device.</param>
-        private static void UpdateXboxLiveUsers(DevicePortal portal, UserList userList)
+        private static void UpdateXboxLiveUsers(XboxDevicePortal portal, UserList userList)
         {
             try
             {

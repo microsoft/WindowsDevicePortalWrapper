@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace MockDataGenerator
 {
@@ -55,8 +56,8 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.ThermalStageApi),
 
             // Xbox One specific endpoints
-            new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveUserApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.XboxSettingsApi),
+            new Endpoint(HttpMethods.Get, XboxDevicePortal.XboxLiveUserApi),
+            new Endpoint(HttpMethods.Get, XboxDevicePortal.XboxSettingsApi),
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
 
             // IoT specific endpoints

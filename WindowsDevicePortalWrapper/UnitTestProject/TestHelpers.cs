@@ -44,8 +44,16 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                     operatingSystemVersion, 
                     HttpMethods.Get);
             }
-          
-            TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
+
+            switch (platform)
+            {
+                case DevicePortalPlatforms.XboxOne:
+                    TestHelpers.Portal = new XboxDevicePortal(new MockDevicePortalConnection());
+                    break;
+                default:
+                    TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
+                    break;
+            }
 
             Task connectTask = TestHelpers.Portal.ConnectAsync(updateConnection: false);
             connectTask.Wait();

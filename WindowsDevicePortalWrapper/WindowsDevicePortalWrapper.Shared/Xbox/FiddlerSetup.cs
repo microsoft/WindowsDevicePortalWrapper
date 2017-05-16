@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Fiddler setup Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal : DevicePortal
     {
         /// <summary>
         /// Endpoint for enabling and disabling a Fiddler proxy.
