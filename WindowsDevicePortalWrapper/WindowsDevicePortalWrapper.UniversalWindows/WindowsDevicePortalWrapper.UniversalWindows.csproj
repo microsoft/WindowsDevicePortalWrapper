@@ -110,7 +110,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>false</DelaySign>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>DevicePortalWrapper.snk</AssemblyOriginatorKeyFile>

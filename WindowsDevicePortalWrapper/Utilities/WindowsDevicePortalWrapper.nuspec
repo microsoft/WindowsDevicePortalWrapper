@@ -19,12 +19,12 @@ See the GitHub repo at https://github.com/microsoft/windowsdeviceportalwrapper</
         <tags>WDP Windows 10 Device Portal</tags>
     </metadata>
 	<files>
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.dll" target="lib\net452" />
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.pdb" target="lib\net452" />
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.xml" target="lib\net452" />
-		
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.dll" target="lib\uap10.0" />
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
-		<file src="C:\BA\99\s\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.xml" target="lib\uap10.0" />
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.dll" target="lib\net452" />
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.pdb" target="lib\net452" />
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper\bin\Release\WindowsDevicePortalWrapper.xml" target="lib\net452" />
+		           
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.dll" target="lib\uap10.0" />
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
+		<file src="$(BUILD.SOURCEDIRECTORY)\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.UniversalWindows\bin\Release\WindowsDevicePortalWrapper.UniversalWindows.xml" target="lib\uap10.0" />
     </files>
 </package>

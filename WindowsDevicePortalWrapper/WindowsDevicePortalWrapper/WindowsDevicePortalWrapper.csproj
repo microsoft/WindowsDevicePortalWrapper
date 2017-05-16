@@ -40,7 +40,7 @@
     <AssemblyOriginatorKeyFile>DevicePortalWrapper.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>false</DelaySign>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
