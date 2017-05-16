@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>WindowsDevicePortalWrapper</id>
+        <version>0.9.4</version>
+        <title>Windows Device Portal Wrapper</title>
+        <authors>Windows Device Portal</authors>
+        <owners>Microsoft; Windows Device Portal</owners>
+        <licenseUrl>https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/License.txt</licenseUrl>
+        <projectUrl>https://github.com/microsoft/windowsdeviceportalwrapper</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>The Device Portal Wrapper is a library that allows a client application to connect to a Device Portal instance on a Windows 10 device and call the REST APIs presented.  This allows an application to e.g. install apps, reboot the device, or get performance metrics.  
+
+See the GitHub repo at https://github.com/microsoft/windowsdeviceportalwrapper</description>
+        <summary>Remote control of Windows 10 device for developers and device labs.</summary>
+        <releaseNotes>v0.9.4: Fixes for battery life, installation of appx using StorageFiles from UWP, and improving desktop system name recognition.</releaseNotes>
+        <copyright>Microsoft Corp</copyright>
+        <language />
+        <tags>WDP Windows 10 Device Portal</tags>
+    </metadata>
+	<files>
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.dll" target="lib\net452" />
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.pdb" target="lib\net452" />
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.xml" target="lib\net452" />
+		
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.UniversalWindows.dll" target="lib\uap10.0" />
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
+		<file src="c:\BA\99\b\signed\WindowsDevicePortalWrapper.UniversalWindows.xml" target="lib\uap10.0" />
+    </files>
+</package>
