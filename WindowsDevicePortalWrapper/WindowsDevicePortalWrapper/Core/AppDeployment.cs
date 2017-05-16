@@ -28,12 +28,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 InstallStateApi);
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
+            handler.Credentials = this.DeviceConnection.Credentials;
             handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))

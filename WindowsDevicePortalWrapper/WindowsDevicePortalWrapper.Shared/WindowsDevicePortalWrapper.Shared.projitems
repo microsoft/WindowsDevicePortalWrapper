@@ -30,9 +30,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\ConnectionStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\WebSocketMessageReceivedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\DevicePortalException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenericDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicOs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicPerception.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicThermal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HoloLensDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\MixedRealityCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationPlayback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationRecording.cs" />
@@ -46,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\WebSocket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\BluetoothConnectivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\IotDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\Limpet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\ApplicationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\AudioDevices.cs" />

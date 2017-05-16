@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.HoloLensDevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -136,12 +137,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetIpd_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.HolographicIpdApi, 
+                HoloLensDevicePortal.HolographicIpdApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<float> getTask  = TestHelpers.Portal.GetInterPupilaryDistanceAsync();
+            Task<float> getTask  = (TestHelpers.Portal as HoloLensDevicePortal).GetInterPupilaryDistanceAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -157,12 +158,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetMrcFileList_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.MrcFileListApi, 
+                HoloLensDevicePortal.MrcFileListApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<MrcFileList> getTask  = TestHelpers.Portal.GetMrcFileListAsync();
+            Task<MrcFileList> getTask  = (TestHelpers.Portal as HoloLensDevicePortal).GetMrcFileListAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -182,12 +183,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetMrcStatus_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.MrcStatusApi, 
+                HoloLensDevicePortal.MrcStatusApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<MrcStatus> getTask  = TestHelpers.Portal.GetMrcStatusAsync();
+            Task<MrcStatus> getTask  = (TestHelpers.Portal as HoloLensDevicePortal).GetMrcStatusAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -204,7 +205,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetPowerState_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.PowerStateApi, 
+                HoloLensDevicePortal.PowerStateApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
@@ -227,7 +228,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetSystemPerf_HoloLens_1607()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.SystemPerfApi, 
+                HoloLensDevicePortal.SystemPerfApi, 
                 this.PlatformType, 
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);

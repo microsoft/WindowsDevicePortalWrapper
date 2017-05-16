@@ -64,9 +64,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.deviceProcessesWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.deviceConnection);
+                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.DeviceConnection);
 #else
-                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.deviceConnection, this.ServerCertificateValidation);
+                this.deviceProcessesWebSocket = new WebSocket<RunningProcesses>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
 
                 this.deviceProcessesWebSocket.WebSocketMessageReceived += this.RunningProcessesReceivedHandler;
@@ -110,9 +110,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.systemPerfWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection);
+                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.DeviceConnection);
 #else
-                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.deviceConnection, this.ServerCertificateValidation);
+                this.systemPerfWebSocket = new WebSocket<SystemPerformanceInformation>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
 
                 this.systemPerfWebSocket.WebSocketMessageReceived += this.SystemPerfReceivedHandler;

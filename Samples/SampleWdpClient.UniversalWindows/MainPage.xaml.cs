@@ -71,7 +71,7 @@ namespace SampleWdpClient.UniversalWindows
 
             bool allowUntrusted = this.allowUntrustedCheckbox.IsChecked.Value;
 
-            portal = new DevicePortal(
+            portal = new GenericDevicePortal(
                 new DefaultDevicePortalConnection(
                     this.address.Text,
                     this.username.Text,

@@ -21,14 +21,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> GetAsync(
+        protected async Task<Stream> GetAsync(
             Uri uri)
         {
             MemoryStream dataStream = null;
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
+            handler.Credentials = this.DeviceConnection.Credentials;
             handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))

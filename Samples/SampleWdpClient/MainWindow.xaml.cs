@@ -77,7 +77,7 @@ namespace SampleWdpClient
 
             this.ClearOutput();
 
-            portal = new DevicePortal(
+            portal = new GenericDevicePortal(
                 new DefaultDevicePortalConnection(
                     this.address.Text,
                     this.username.Text,

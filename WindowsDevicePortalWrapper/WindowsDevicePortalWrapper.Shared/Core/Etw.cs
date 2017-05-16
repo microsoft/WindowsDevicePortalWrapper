@@ -133,9 +133,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.realtimeEventsWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection);
+                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.DeviceConnection);
 #else
-                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.deviceConnection, this.ServerCertificateValidation);
+                this.realtimeEventsWebSocket = new WebSocket<EtwEvents>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
             }
 

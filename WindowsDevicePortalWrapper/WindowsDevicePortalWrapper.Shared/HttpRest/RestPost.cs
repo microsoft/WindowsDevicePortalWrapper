@@ -90,7 +90,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             T data = default(T);
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 apiPath, 
                 payload);
 

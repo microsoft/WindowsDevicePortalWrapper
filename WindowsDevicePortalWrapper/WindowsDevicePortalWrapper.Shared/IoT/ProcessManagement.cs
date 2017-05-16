@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for IoT Process Management.
     /// </content>
-    public partial class DevicePortal
+    public partial class IotDevicePortal : DevicePortal
     {
         /// <summary>
         /// IOT Run Command API.

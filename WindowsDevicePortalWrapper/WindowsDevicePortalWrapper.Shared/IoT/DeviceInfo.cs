@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Device Information.
     /// </content>
-    public partial class DevicePortal
+    public partial class IotDevicePortal : DevicePortal
     {
         /// <summary>
         /// IOT device information API.

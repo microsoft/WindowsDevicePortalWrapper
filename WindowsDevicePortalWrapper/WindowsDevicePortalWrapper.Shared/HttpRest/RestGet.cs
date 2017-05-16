@@ -44,7 +44,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             T data = default(T);
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 apiPath,
                 payload);
 
@@ -76,7 +76,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = null)
         {
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 apiPath,
                 payload);
 

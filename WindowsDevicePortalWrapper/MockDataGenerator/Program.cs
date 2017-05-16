@@ -48,12 +48,12 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.WebSocket, DevicePortal.RealtimeEtwSessionApi),
 
             // HoloLens specific endpoints
-            new Endpoint(HttpMethods.Get, DevicePortal.HolographicIpdApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.HolographicServicesApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.HolographicWebManagementHttpSettingsApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.MrcFileListApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.MrcStatusApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.ThermalStageApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.HolographicIpdApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.HolographicServicesApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.HolographicWebManagementHttpSettingsApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.MrcFileListApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.MrcStatusApi),
+            new Endpoint(HttpMethods.Get, HoloLensDevicePortal.ThermalStageApi),
 
             // Xbox One specific endpoints
             new Endpoint(HttpMethods.Get, XboxDevicePortal.XboxLiveUserApi),
@@ -61,12 +61,12 @@ namespace MockDataGenerator
             new Endpoint(HttpMethods.Get, DevicePortal.XboxLiveSandboxApi),
 
             // IoT specific endpoints
-            new Endpoint(HttpMethods.Get, DevicePortal.IoTOsInfoApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.TimezoneInfoApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.DateTimeInfoApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.DisplayOrientationApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.DeviceNameApi),
-            new Endpoint(HttpMethods.Get, DevicePortal.DisplayResolutionApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.IoTOsInfoApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.TimezoneInfoApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.DateTimeInfoApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.DisplayOrientationApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.DeviceNameApi),
+            new Endpoint(HttpMethods.Get, IotDevicePortal.DisplayResolutionApi),
         };
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace MockDataGenerator
             }
 
             IDevicePortalConnection connection = new DefaultDevicePortalConnection(parameters.GetParameterValue(ParameterHelper.FullAddress), parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
-            DevicePortal portal = new DevicePortal(connection);
+            DevicePortal portal = new GenericDevicePortal(connection);
 
             Task connectTask = portal.ConnectAsync(updateConnection: false);
             connectTask.Wait();

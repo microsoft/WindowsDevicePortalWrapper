@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 #endif // !WINDOWS_UWP
+using System.Runtime.Serialization;
 #if WINDOWS_UWP
 using System.Runtime.InteropServices.WindowsRuntime;
 #endif // WINDOWS_UWP
@@ -33,7 +34,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// all of the WDP endpoints covered by the wrapper project. Different endpoints have their
     /// implementation separated out into individual files.
     /// </summary>
-    public partial class DevicePortal
+    public abstract partial class DevicePortal
     {
         /// <summary>
         /// Issuer for the device certificate.
@@ -56,18 +57,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly uint TargetOSVersionSection = 3;
 
         /// <summary>
-        /// Device connection object.
-        /// </summary>
-        private IDevicePortalConnection deviceConnection;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortal" /> class.
         /// </summary>
         /// <param name="connection">Implementation of a connection object.</param>
         public DevicePortal(IDevicePortalConnection connection)
         {
-            this.deviceConnection = connection;
+            this.DeviceConnection = connection;
         }
+
+        /// <summary>
+        /// API for getting or setting HTTPS setting. This is HoloLens specific but needs to be called
+        /// from Generic DevicePortal instances too if the platform type is HoloLens.
+        /// </summary>
+        public static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
 
         /// <summary>
         /// Handler for reporting connection status.
@@ -110,7 +112,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         public string Address 
         {
-            get { return this.deviceConnection.Connection.Authority; }
+            get { return this.DeviceConnection.Connection.Authority; }
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             get
             {
-                return (this.deviceConnection.Family != null) ? this.deviceConnection.Family : string.Empty;
+                return (this.DeviceConnection.Family != null) ? this.DeviceConnection.Family : string.Empty;
             }
         }
 
@@ -149,7 +151,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             get
             {
-                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.OsVersionString : string.Empty;
+                return (this.DeviceConnection.OsInfo != null) ? this.DeviceConnection.OsInfo.OsVersionString : string.Empty;
             }
         }
 
@@ -160,7 +162,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             get
             {
-                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.Platform : DevicePortalPlatforms.Unknown;
+                return (this.DeviceConnection.OsInfo != null) ? this.DeviceConnection.OsInfo.Platform : DevicePortalPlatforms.Unknown;
             }
         }
 
@@ -171,9 +173,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             get
             {
-                return (this.deviceConnection.OsInfo != null) ? this.deviceConnection.OsInfo.PlatformName : "Unknown";
+                return (this.DeviceConnection.OsInfo != null) ? this.DeviceConnection.OsInfo.PlatformName : "Unknown";
             }
         }
+
+        /// <summary>
+        /// Gets the Device connection object.
+        /// </summary>
+        protected IDevicePortalConnection DeviceConnection { get; private set; }
 
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
@@ -216,14 +223,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
-                this.deviceConnection.Family = await this.GetDeviceFamilyAsync().ConfigureAwait(false);
-                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync().ConfigureAwait(false);
+                this.DeviceConnection.Family = await this.GetDeviceFamilyAsync().ConfigureAwait(false);
+                this.DeviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync().ConfigureAwait(false);
 
                 // Default to using whatever was specified in the connection.
                 bool requiresHttps = this.IsUsingHttps();
 
                 // HoloLens is the only device that supports the GetIsHttpsRequired method.
-                if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
+                if (this.DeviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
                 {
                     // Check to see if HTTPS is required to communicate with this device.
                     connectionPhaseDescription = "Checking secure connection requirements";
@@ -268,7 +275,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         preservePort = false;
                     }
 
-                    this.deviceConnection.UpdateConnection(
+                    this.DeviceConnection.UpdateConnection(
                         await this.GetIpConfigAsync().ConfigureAwait(false), 
                         requiresHttps,
                         preservePort);
@@ -327,7 +334,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Stream requestBody = null,
             string requestBodyContentType = null)
         {
-            Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
+            Uri uri = new Uri(this.DeviceConnection.Connection, endpoint);
 
             // Convert the OS version, such as 14385.1002.amd64fre.rs1_xbox_rel_1608.160709-1700, into a friendly OS version, such as rs1_xbox_rel_1608
             string friendlyOSVersion = this.OperatingSystemVersion;
@@ -354,9 +361,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (HttpMethods.WebSocket == httpMethod)
             {
 #if WINDOWS_UWP
-                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, true);
+                WebSocket<object> websocket = new WebSocket<object>(this.DeviceConnection, true);
 #else
-                WebSocket<object> websocket = new WebSocket<object>(this.deviceConnection, this.ServerCertificateValidation, true);
+                WebSocket<object> websocket = new WebSocket<object>(this.DeviceConnection, this.ServerCertificateValidation, true);
 #endif // WINDOWS_UWP
 
                 ManualResetEvent streamReceived = new ManualResetEvent(false);
@@ -461,6 +468,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
+        /// Gets the WiFi http security requirements for communication with the device.
+        /// </summary>
+        /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
+        /// <remarks>This method is only supported on HoloLens.</remarks>
+        public async Task<bool> GetIsHttpsRequiredAsync()
+        {
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            {
+                throw new NotSupportedException("This method is only supported on HoloLens.");
+            }
+
+            WebManagementHttpSettings httpSettings = await this.GetAsync<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
+            return httpSettings.IsHttpsRequired;
+        }
+
+        /// <summary>
         /// Sends the connection status back to the caller
         /// </summary>
         /// <param name="status">Status of the connect attempt.</param>
@@ -480,7 +503,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Whether we are using HTTPS</returns>
         private bool IsUsingHttps()
         {
-            return this.deviceConnection.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase);
+            return this.DeviceConnection.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase);
         }
+
+        #region Data contract
+        /// <summary>
+        /// Object representation for HTTP settings
+        /// </summary>
+        [DataContract]
+        public class WebManagementHttpSettings
+        {
+            /// <summary>
+            /// Gets a value indicating whether HTTPS is required
+            /// </summary>
+            [DataMember(Name = "httpsRequired")]
+            public bool IsHttpsRequired { get; private set; }
+        }
+        #endregion
     }
 }

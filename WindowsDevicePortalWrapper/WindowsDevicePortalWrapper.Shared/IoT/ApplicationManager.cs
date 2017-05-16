@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Application Management.
     /// </content>
-    public partial class DevicePortal
+    public partial class IotDevicePortal : DevicePortal
     {
         /// <summary>
         /// IoT device application list API.
@@ -121,25 +121,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// </summary>
             [DataMember(Name = "AppPackages")]
             public List<AppPackage> AppPackages { get; private set; }
-        }
-
-        /// <summary>
-        /// Application package.
-        /// </summary>
-        [DataContract]
-        public class AppPackage
-        {
-            /// <summary>
-            /// Gets a value indicating whether the app is the startup app
-            /// </summary>
-            [DataMember(Name = "IsStartup")]
-            public bool IsStartup { get; private set; }
-
-            /// <summary>
-            /// Gets the complate package name
-            /// </summary>
-            [DataMember(Name = "PackageFullName")]
-            public string PackageFullName { get; private set; }
         }
 
         /// <summary>

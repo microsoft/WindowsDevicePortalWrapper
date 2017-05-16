@@ -35,17 +35,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
             ApplicationInstallStatus status = ApplicationInstallStatus.None;
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 InstallStateApi);
 
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
 
-            if (this.deviceConnection.Credentials != null)
+            if (this.DeviceConnection.Credentials != null)
             {
                 httpFilter.ServerCredential = new PasswordCredential();
-                httpFilter.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
-                httpFilter.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+                httpFilter.ServerCredential.UserName = this.DeviceConnection.Credentials.UserName;
+                httpFilter.ServerCredential.Password = this.DeviceConnection.Credentials.Password;
             }
 
             using (HttpClient client = new HttpClient(httpFilter))

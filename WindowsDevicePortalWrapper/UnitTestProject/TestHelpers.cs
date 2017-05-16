@@ -50,8 +50,17 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 case DevicePortalPlatforms.XboxOne:
                     TestHelpers.Portal = new XboxDevicePortal(new MockDevicePortalConnection());
                     break;
+                case DevicePortalPlatforms.IoTDragonboard410c:
+                case DevicePortalPlatforms.IoTMinnowboardMax:
+                case DevicePortalPlatforms.IoTRaspberryPi2:
+                case DevicePortalPlatforms.IoTRaspberryPi3:
+                    TestHelpers.Portal = new IotDevicePortal(new MockDevicePortalConnection());
+                    break;
+                case DevicePortalPlatforms.HoloLens:
+                    TestHelpers.Portal = new HoloLensDevicePortal(new MockDevicePortalConnection());
+                    break;
                 default:
-                    TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
+                    TestHelpers.Portal = new GenericDevicePortal(new MockDevicePortalConnection());
                     break;
             }
 

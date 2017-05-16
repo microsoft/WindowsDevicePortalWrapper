@@ -17,6 +17,23 @@ namespace Microsoft.Tools.WindowsDevicePortal
     public partial class DevicePortal
     {
         /// <summary>
+        /// Validate the server certificate
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="cert">The server's certificate</param>
+        /// <param name="chain">The cert chain</param>
+        /// <param name="policyErrors">Policy Errors</param>
+        /// <returns>whether the cert passes validation</returns>
+        public bool ServerCertificateValidation(
+            object sender,
+            X509Certificate cert,
+            X509Chain chain,
+            SslPolicyErrors policyErrors)
+        {
+            return false;
+        }
+
+        /// <summary>
         /// Sets the manual certificate.
         /// </summary>
         /// <param name="cert">Manual certificate</param>
@@ -36,22 +53,5 @@ namespace Microsoft.Tools.WindowsDevicePortal
             throw new NotSupportedException();
         }
 #pragma warning restore 1998
-
-        /// <summary>
-        /// Validate the server certificate
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="cert">The server's certificate</param>
-        /// <param name="chain">The cert chain</param>
-        /// <param name="policyErrors">Policy Errors</param>
-        /// <returns>whether the cert passes validation</returns>
-        private bool ServerCertificateValidation(
-            object sender,
-            X509Certificate cert,
-            X509Chain chain,
-            SslPolicyErrors policyErrors)
-        {
-            return false;
-        }
     }
 }
