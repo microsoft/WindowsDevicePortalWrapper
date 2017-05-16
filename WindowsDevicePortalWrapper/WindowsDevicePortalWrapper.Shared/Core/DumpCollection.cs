@@ -111,129 +111,132 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task tracking completion of the request</returns>
         public async Task SetDumpFileSettingsAsync(DumpFileSettings dfs)
         {
-            await this.PostAsync(
-                BugcheckSettingsApi,
-                string.Format(
+            string queryParams = string.Format(
                     "autoreboot={0}&overwrite={1}&dumptype={2}&maxdumpcount={3}",
-                    dfs.AutoReboot ? "1" : "0", dfs.Overwrite ? "1" : "0", (int)dfs.DumpType, dfs.MaxDumpCount));
+                    dfs.AutoReboot ? "1" : "0",
+                    dfs.Overwrite ? "1" : "0",
+                    (int)dfs.DumpType,
+                    dfs.MaxDumpCount);
+
+            await this.PostAsync(BugcheckSettingsApi, queryParams);
         }
-    }
 
-    #region Data Contract
-
-    /// <summary>
-    /// DumpFileSettings object.  Used to get and set how and when a dump is saved on the device. 
-    /// </summary>
-    [DataContract]
-    public class DumpFileSettings
-    {
-        /// <summary>
-        /// Gets or sets whether the device should restart after a crash dump is taken.
-        /// </summary>
-        [DataMember(Name = "autoreboot")]
-        public bool AutoReboot { get; set; }
+        #region Data Contract
 
         /// <summary>
-        /// Gets or sets the type of dump to be saved when a bugcheck occurs.  
+        /// DumpFileSettings object.  Used to get and set how and when a dump is saved on the device. 
         /// </summary>
-        [DataMember(Name = "dumptype")]
-        public DumpTypes DumpType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the max number of dumps to be saved on the device. 
-        /// </summary>
-        [DataMember(Name = "maxdumpcount")]
-        public int MaxDumpCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether new dumps should overwrite older dumps. 
-        /// </summary>
-        [DataMember(Name = "overwrite")]
-        public bool Overwrite { get; set; }
-
-        /// <summary>
-        /// The 3 types of dumps  that can be saved on the device (or not saved at all). 
-        /// </summary>
-        public enum DumpTypes
+        [DataContract]
+        public class DumpFileSettings
         {
             /// <summary>
-            /// Don't collect device crash dumps
+            /// The 3 types of dumps  that can be saved on the device (or not saved at all). 
             /// </summary>
-            Disabled = 0,
-            
-            /// <summary>
-            /// Collect all in use memory
-            /// </summary>
-            CompleteMemoryDump = 1,
+            public enum DumpTypes
+            {
+                /// <summary>
+                /// Don't collect device crash dumps
+                /// </summary>
+                Disabled = 0,
+
+                /// <summary>
+                /// Collect all in use memory
+                /// </summary>
+                CompleteMemoryDump = 1,
+
+                /// <summary>
+                /// Don't include usermode memory in the dump
+                /// </summary>
+                KernelDump = 2,
+
+                /// <summary>
+                /// Limited kernel dump
+                /// </summary>
+                Minidump = 3
+            }
 
             /// <summary>
-            /// Don't include usermode memory in the dump
+            /// Gets or sets a value indicating whether the device should restart after a crash dump is taken.
             /// </summary>
-            KernelDump = 2,
-            
+            [DataMember(Name = "autoreboot")]
+            public bool AutoReboot { get; set; }
+
             /// <summary>
-            /// Limited kernel dump
+            /// Gets or sets the type of dump to be saved when a bugcheck occurs.  
             /// </summary>
-            Minidump = 3
+            [DataMember(Name = "dumptype")]
+            public DumpTypes DumpType { get; set; }
+
+            /// <summary>
+            /// Gets or sets the max number of dumps to be saved on the device. 
+            /// </summary>
+            [DataMember(Name = "maxdumpcount")]
+            public int MaxDumpCount { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether new dumps should overwrite older dumps. 
+            /// </summary>
+            [DataMember(Name = "overwrite")]
+            public bool Overwrite { get; set; }
         }
-    }
 
-    /// <summary>
-    /// Gets a list of kernel dumps on the device. 
-    /// </summary>
-    [DataContract]
-    public class DumpFileList
-    {
         /// <summary>
         /// Gets a list of kernel dumps on the device. 
         /// </summary>
-        [DataMember(Name = "DumpFiles")]
-        public List<Dumpfile> DumpFiles { get; private set; }
-    }
-
-    /// <summary>
-    /// Represents a dumpfile stored on the device. 
-    /// </summary>
-    [DataContract]
-    public class Dumpfile
-    {
-        /// <summary>
-        /// Gets the timestamp of the crash as a string.
-        /// </summary>
-        [DataMember(Name = "FileDate")]
-        public string FileDateAsString
+        [DataContract]
+        public class DumpFileList
         {
-            get; private set;
+            /// <summary>
+            /// Gets a list of kernel dumps on the device. 
+            /// </summary>
+            [DataMember(Name = "DumpFiles")]
+            public List<Dumpfile> DumpFiles { get; private set; }
         }
 
         /// <summary>
-        /// Gets the timestamp of the crash.
+        /// Represents a dumpfile stored on the device. 
         /// </summary>
-        public DateTime FileDate
+        [DataContract]
+        public class Dumpfile
         {
-            get
+            /// <summary>
+            /// Gets the timestamp of the crash as a string.
+            /// </summary>
+            [DataMember(Name = "FileDate")]
+            public string FileDateAsString
             {
-                return DateTime.Parse(this.FileDateAsString);
+                get; private set;
+            }
+
+            /// <summary>
+            /// Gets the timestamp of the crash.
+            /// </summary>
+            public DateTime FileDate
+            {
+                get
+                {
+                    return DateTime.Parse(this.FileDateAsString);
+                }
+            }
+
+            /// <summary>
+            /// Gets the filename of the crash file. 
+            /// </summary>
+            [DataMember(Name = "FileName")]
+            public string Filename
+            {
+                get; private set;
+            }
+
+            /// <summary>
+            /// Gets the size of the crash dump, in bytes
+            /// </summary>
+            [DataMember(Name = "FileSize")]
+            public uint FileSizeInBytes
+            {
+                get; private set;
             }
         }
-
-        /// <summary>
-        /// Gets the filename of the crash file. 
-        /// </summary>
-        [DataMember(Name = "FileName")]
-        public string Filename
-        {
-            get; private set;
-        }
-
-        /// <summary>
-        /// Gets the size of the crash dump, in bytes
-        /// </summary>
-        [DataMember(Name = "FileSize")]
-        public uint FileSizeInBytes
-        {
-            get; private set;
-        }
+        #endregion Data Contract
     }
-    #endregion Data Contract
 }

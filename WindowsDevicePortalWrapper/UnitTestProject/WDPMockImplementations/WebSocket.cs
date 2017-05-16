@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             await Task.Run(() =>
             {
-                webSocketTask = TestHelpers.MockHttpResponder.WebSocketAsync(endpoint);
+                this.webSocketTask = TestHelpers.MockHttpResponder.WebSocketAsync(endpoint);
                 this.IsConnected = true;
             });
         }
@@ -77,8 +77,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             await Task.Run(() =>
             {
-                webSocketTask.Dispose();
-                webSocketTask = null;
+                this.webSocketTask.Dispose();
+                this.webSocketTask = null;
                 this.IsConnected = false;
             });
         }
@@ -115,9 +115,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 while (this.keepListeningForMessages)
                 {
-                    await webSocketTask.ConfigureAwait(false);
+                    await this.webSocketTask.ConfigureAwait(false);
 
-                    using (HttpResponseMessage response = webSocketTask.Result)
+                    using (HttpResponseMessage response = this.webSocketTask.Result)
                     {
                         if (!response.IsSuccessStatusCode)
                         {
@@ -155,10 +155,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The task of sending the message to the websocket</returns>
         private async Task SendMessageInternalAsync(string message)
         {
-            await webSocketTask.ConfigureAwait(false);
-            webSocketTask.Wait();
+            await this.webSocketTask.ConfigureAwait(false);
+            this.webSocketTask.Wait();
 
-            using (HttpResponseMessage response = webSocketTask.Result)
+            using (HttpResponseMessage response = this.webSocketTask.Result)
             {
                 if (!response.IsSuccessStatusCode)
                 {

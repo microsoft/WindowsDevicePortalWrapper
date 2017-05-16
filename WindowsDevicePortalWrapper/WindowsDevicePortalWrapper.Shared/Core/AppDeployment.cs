@@ -385,7 +385,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// <returns> True if the package is sideloaded. </returns>
             public bool IsSideloaded()
             {
-                return (this.PackageOrigin == 4 || this.PackageOrigin == 5);
+                return this.PackageOrigin == 4 || this.PackageOrigin == 5;
             }
             
             /// <summary>

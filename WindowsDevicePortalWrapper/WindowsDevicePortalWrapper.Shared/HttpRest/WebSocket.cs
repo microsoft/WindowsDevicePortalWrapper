@@ -158,7 +158,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             UseSimpleDictionaryFormat = true
                         };
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
-                        
 
                         T message = (T)serializer.ReadObject(stream);
 

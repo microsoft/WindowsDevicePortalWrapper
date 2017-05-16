@@ -311,10 +311,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public long SizeInBytes { get; private set; }
 
             /// <summary>
-            /// Gets whether the current item is a folder by checking for FILE_ATTRIBUTE_DIRECTORY
+            /// Gets a value indicating whether the current item is a folder by checking for FILE_ATTRIBUTE_DIRECTORY
             /// See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
             /// </summary>
-            public bool IsFolder { get { return (this.Type & 0x10) == 0x10; } }
+            public bool IsFolder
+            {
+                get
+                {
+                    return (this.Type & 0x10) == 0x10;
+                }
+            }
 
             /// <summary>
             /// Overridden ToString method providing a user readable

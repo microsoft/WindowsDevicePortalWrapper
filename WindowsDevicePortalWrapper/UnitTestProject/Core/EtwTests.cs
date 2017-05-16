@@ -52,6 +52,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             ValidateEtwProviders(getEtwProvidersTask.Result);
         }
 
+        /// <summary>
+        /// Basic test of Get methof for getting ETW events.
+        /// </summary>
         [TestMethod]
         public void GetEtwEventsTest()
         {
@@ -61,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             EtwEvents etwEvents = null;
 
             WindowsDevicePortal.WebSocketMessageReceivedEventHandler<EtwEvents> etwEventsReceivedHandler =
-                delegate (DevicePortal sender, WebSocketMessageReceivedEventArgs<EtwEvents> args)
+                delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<EtwEvents> args)
                 {
                     if (args.Message != null)
                     {

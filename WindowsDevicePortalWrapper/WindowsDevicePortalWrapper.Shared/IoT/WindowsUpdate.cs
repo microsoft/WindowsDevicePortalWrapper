@@ -107,13 +107,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string RebootScheduledTimeAsString { get; private set; }
 
             /// <summary>
-            /// Gets the time when a reboot is scheduled in DateTime format. 
+            /// Gets the time when a reboot is scheduled in DateTime format.
             /// </summary>
             public DateTime RebootScheduledTime
             {
                 get
                 {
-                    return DateTime.Parse(RebootScheduledTimeAsString);                  
+                    return DateTime.Parse(this.RebootScheduledTimeAsString);
                 }
             }
         }

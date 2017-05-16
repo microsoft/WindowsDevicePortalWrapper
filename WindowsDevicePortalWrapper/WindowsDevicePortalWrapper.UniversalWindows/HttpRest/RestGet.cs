@@ -52,6 +52,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         throw await DevicePortalException.CreateAsync(response);
                     }
 
+                    this.RetrieveCsrfToken(response);
+
                     using (IHttpContent messageContent = response.Content)
                     {
                         dataBuffer = await messageContent.ReadAsBufferAsync();

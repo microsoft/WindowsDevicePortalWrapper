@@ -129,7 +129,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string appName,
             StorageFile packageFile, 
             List<StorageFile> dependencyFiles,
-            StorageFile certificateFile= null,
+            StorageFile certificateFile = null,
             short stateCheckIntervalMs = 500,
             short timeoutInMinutes = 15,
             bool uninstallPreviousVersion = true)

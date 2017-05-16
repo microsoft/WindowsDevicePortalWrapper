@@ -338,8 +338,11 @@ namespace XboxWdpDriver
                             break;
 
                         case OperationType.InstallOperation:
-                            // Ensure we have an IP since SMB might need it for path generation.
-                            parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+                            if (!parameters.HasParameter(ParameterHelper.IpOrHostname))
+                            {
+                                // Ensure we have an IP since SMB might need it for path generation.
+                                parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+                            }
 
                             InstallOperation.HandleOperation(portal, parameters);
                             break;

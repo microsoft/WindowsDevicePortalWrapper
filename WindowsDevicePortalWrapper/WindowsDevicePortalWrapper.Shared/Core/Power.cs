@@ -155,7 +155,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 get 
                 { 
                     // Desktop PCs typically do not have a battery, return 100%
-                    if (this.MaximumCapacity == 0) { return 100f; }
+                    if (this.MaximumCapacity == 0)
+                    {
+                        return 100f;
+                    }
 
                     return 100.0f * ((float)this.RemainingCapacity / this.MaximumCapacity);
                 }
