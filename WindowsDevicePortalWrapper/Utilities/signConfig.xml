@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SignConfigXML>
+
+  <job platform="" configuration="Release" dest="" jobname="WDPW Sign" approvers="hirsin;aaronsteb">
+    <file src="__RELBINPATH__\bin\release\WindowsDevicePortalWrapper.dll" signType="Both" dest="__RELBINPATH__\bin\release\signed\WindowsDevicePortalWrapper.dll" />
+    <file src="__RELBINPATH__\bin\release\WindowsDevicePortalWrapper.UniversalWindows.dll" signType="Both" dest="__RELBINPATH__\bin\release\signed\WindowsDevicePortalWrapper.UniversalWindows.dll" />
+  </job>
+
+</SignConfigXML>
