@@ -20,11 +20,11 @@ See the GitHub repo at https://github.com/microsoft/windowsdeviceportalwrapper</
     </metadata>
 	<files>
 		<file src="WindowsDevicePortalWrapper.dll" target="lib\net452" />
-		<file src="WindowsDevicePortalWrapper.pdb" target="lib\net452" />
-		<file src="WindowsDevicePortalWrapper.xml" target="lib\net452" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.pdb" target="lib\net452" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.xml" target="lib\net452" />
 		           
 		<file src="WindowsDevicePortalWrapper.UniversalWindows.dll" target="lib\uap10.0" />
-		<file src="WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
-		<file src="WindowsDevicePortalWrapper.UniversalWindows.xml" target="lib\uap10.0" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.XML" target="lib\uap10.0" />
     </files>
 </package>
