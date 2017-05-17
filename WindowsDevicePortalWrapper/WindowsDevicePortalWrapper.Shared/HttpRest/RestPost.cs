@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="files">List of files that we want to include in the post request.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task PostAsync(
+        public async Task PostAsync(
             string apiPath,
             List<string> files,
             string payload = null)
@@ -65,7 +65,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task PostAsync(
+        public async Task PostAsync(
             string apiPath,
             string payload = null)
         {
@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task<T> PostAsync<T>(
+        public async Task<T> PostAsync<T>(
             string apiPath,
             string payload = null,
             Stream requestStream = null,

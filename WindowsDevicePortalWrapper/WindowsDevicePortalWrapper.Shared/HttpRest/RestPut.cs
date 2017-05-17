@@ -41,7 +41,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the PUT completion.</returns>
-        private async Task PutAsync<K>(
+        public async Task PutAsync<K>(
             string apiPath,
             K bodyData,
             string payload = null) where K : class
@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="bodyData">The data to be used for the HTTP request body.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the PUT completion, optional response body.</returns>
-        private async Task<T> PutAsync<T, K>(
+        public async Task<T> PutAsync<T, K>(
             string apiPath,
             K bodyData = null,
             string payload = null) where T : new()
