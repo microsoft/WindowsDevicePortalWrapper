@@ -2,8 +2,8 @@
 <SignConfigXML>
 
   <job platform="" configuration="Release" dest="" jobname="WDPW Sign" approvers="vigarg;gstolt;dougp">
-    <file src="__INPATHROOT__\WindowsDevicePortalWrapper.dll" signType="Both" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.dll" />
-    <file src="__INPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows.dll" signType="Both" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows.dll" />
+    <file src="__INPATHROOT__\WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.dll" signType="Authenticode" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.dll" />
+    <file src="__INPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.dll" signType="Authenticode" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows.dll" />
   </job>
 
 </SignConfigXML>
