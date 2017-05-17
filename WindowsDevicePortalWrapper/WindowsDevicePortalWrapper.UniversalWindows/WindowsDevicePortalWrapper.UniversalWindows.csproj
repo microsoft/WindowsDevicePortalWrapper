@@ -113,11 +113,11 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>DevicePortalWrapper.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>DevicePortalWrapperUniversal.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="DevicePortalWrapper.snk" />
+    <None Include="DevicePortalWrapperUniversal.snk" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
