@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsDevicePortalWrapper", "WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj", "{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}"
 EndProject
@@ -24,6 +24,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxWdpDriver", "..\Samples\XboxWdpDriver\XboxWdpDriver.csproj", "{1F3CA46B-1E52-418E-A293-23F3FA3BD213}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWdpClient", "..\Samples\SampleWdpClient\SampleWdpClient.csproj", "{7E0481EB-514A-4292-AD1D-3A3EAF38D359}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{0A85BE2B-52BE-4ACD-A332-991B3B81ED49}"
+	ProjectSection(SolutionItems) = preProject
+		Utilities\signConfig.xml = Utilities\signConfig.xml
+		Utilities\WindowsDevicePortalWrapper.nuspec = Utilities\WindowsDevicePortalWrapper.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
