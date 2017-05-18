@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
 #pragma warning disable 1998
-        public async Task<Stream> PostAsync(
+        private async Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)

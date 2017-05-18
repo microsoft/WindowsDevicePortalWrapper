@@ -1,10 +1,6 @@
 ﻿namespace Microsoft.Tools.WindowsDevicePortal
 {
-    public partial class XboxDevicePortal : DevicePortal
+    public partial class XboxDevicePortal : DevicePortalNamespace
     {
-        public XboxDevicePortal(IDevicePortalConnection connection) : base(connection)
-        {
-            
-        }
     }
 }

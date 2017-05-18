@@ -53,7 +53,7 @@ namespace XboxWdpDriver
             }
             else
             {
-                Task<Stream> screenshotTask = portal.Xbox.TakeXboxScreenshotAsync();
+                Task<Stream> screenshotTask = portal.TakeXboxScreenshotAsync();
                 screenshotTask.Wait();
 
                 using (var fileStream = new FileStream(filepath, FileMode.Create))

@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Audio Devices.
     /// </content>
-    public partial class IoTDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// List Audio Devices API.

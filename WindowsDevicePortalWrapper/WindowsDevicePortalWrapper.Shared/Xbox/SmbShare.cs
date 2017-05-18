@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// SMBShare Wrappers
     /// </content>
-    public partial class XboxDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// Endpoint for SMB share info

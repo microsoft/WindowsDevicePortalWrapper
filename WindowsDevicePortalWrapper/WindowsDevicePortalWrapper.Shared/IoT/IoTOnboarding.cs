@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Wrappers for IoT Onboarding methods.
     /// </summary>
-    public partial class IoTDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// IOT SoftAP Settings API.
