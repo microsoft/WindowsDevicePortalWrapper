@@ -32,7 +32,7 @@ namespace XboxWdpDriver
             "        Installs the given AppX package, along with any given dependencies.\n" +
             "  /folder:<path to loose folder> [/depend:<path to dependency1>;<path to dependency2> /cer:<path to certificate> /transfer:<SMB or HTTP, SMB is the default> /destfoldername:<folder name, defaults to the same as the loose folder>]\n" +
             "        Installs the appx from a loose folder, along with any given dependencies.\n" +
-            "  /register:<subpath on DevelopmentFiles\\LooseFolder to app to register>\n" +
+            "  /register:<subpath on DevelopmentFiles\\LooseApps to app to register>\n" +
             "        Registers a loose folder that is already present on the device.\n";
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace XboxWdpDriver
                 if (!string.IsNullOrEmpty(appxFile))
                 {
                     operation.mreAppInstall.Reset();
-                    Task installTask = portal.InstallApplication(null, appxFile, dependencies, certificate);
+                    Task installTask = portal.InstallApplicationAsync(null, appxFile, dependencies, certificate);
                     operation.mreAppInstall.WaitOne();
 
                     if (operation.installResults.Status == ApplicationInstallStatus.Completed)
@@ -122,8 +122,14 @@ namespace XboxWdpDriver
                     foreach (string dependency in dependencies)
                     {
                         operation.mreAppInstall.Reset();
-                        Task installTask = portal.InstallApplication(null, dependency, new List<string>());
+                        Task installTask = portal.InstallApplicationAsync(null, dependency, new List<string>());
                         operation.mreAppInstall.WaitOne();
+
+                        if (operation.installResults.Status != ApplicationInstallStatus.Completed)
+                        {
+                            Console.WriteLine("Deploy failed during dependency installation. {0}", operation.installResults.Message);
+                            return;
+                        }
                     }
 
                     if (!Directory.Exists(folderPath))
@@ -165,7 +171,7 @@ namespace XboxWdpDriver
                         {
                             if (e.HResult == ErrorLogonFailureHresult)
                             {
-                                Task<SmbInfo> smbTask = portal.GetSmbShareInfo();
+                                Task<SmbInfo> smbTask = portal.GetSmbShareInfoAsync();
                                 smbTask.Wait();
 
                                 // Set the username/password for accessing the share.
@@ -199,14 +205,14 @@ namespace XboxWdpDriver
                         return;
                     }
 
-                    Task registerTask = portal.RegisterApplication(destinationFolderName);
+                    Task registerTask = portal.RegisterApplicationAsync(destinationFolderName);
                     registerTask.Wait();
 
                     Console.WriteLine("Install complete.");
                 }
                 else if (!string.IsNullOrEmpty(registerPath))
                 {
-                    Task registerTask = portal.RegisterApplication(registerPath);
+                    Task registerTask = portal.RegisterApplicationAsync(registerPath);
                     registerTask.Wait();
 
                     Console.WriteLine("Registration complete.");
@@ -269,7 +275,7 @@ namespace XboxWdpDriver
         /// <param name="relativeDestination">The relative destination directory.</param>
         private void UploadDirectoryOverHttp(string folderPath, string relativeDestination)
         {
-            Task uploadTask = this.portal.UploadPackageFolder(folderPath, relativeDestination);
+            Task uploadTask = this.portal.UploadPackageFolderAsync(folderPath, relativeDestination);
             uploadTask.Wait();
 
             foreach (string subDir in Directory.GetDirectories(folderPath))

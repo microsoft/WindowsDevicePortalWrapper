@@ -6,12 +6,15 @@
 
 #if !WINDOWS_UWP
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Threading.Tasks;
 #else
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 #endif // !WINDOWS_UWP
@@ -54,8 +57,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="client">The HTTP client on which to have the header set.</param>
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
-        public void ApplyCSRFHeader(
-            HttpClient client, 
+        private void ApplyCSRFHeader(
+            HttpClient client,
             HttpMethods method)
         {
             string headerName = "X-" + CsrfTokenName;
@@ -81,12 +84,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="client">The HTTP client on which to have the headers set.</param>
         /// <param name="method">The HTTP method (ex: POST) that will be called on the client.</param>
-        public void ApplyHttpHeaders(
+        private void ApplyHttpHeaders(
             HttpClient client,
             HttpMethods method)
         {
-            this.ApplyCSRFHeader(client, method);
             this.ApplyUserAgentHeader(client);
+            this.ApplyCSRFHeader(client, method);
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// as coming from the WDPW Open Source project.
         /// </summary>
         /// <param name="client">The HTTP client on which to have the header set.</param>
-        public void ApplyUserAgentHeader(HttpClient client)
+        private void ApplyUserAgentHeader(HttpClient client)
         {
             string userAgentValue = UserAgentValue;
 
@@ -117,7 +120,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Retrieves the CSRF token from the HTTP response and stores it.
         /// </summary>
         /// <param name="response">The HTTP response from which to retrieve the header.</param>
-        public void RetrieveCsrfToken(HttpResponseMessage response)
+        private void RetrieveCsrfToken(HttpResponseMessage response)
         {
             // If the response sets a CSRF token, store that for future requests.
 #if WINDOWS_UWP

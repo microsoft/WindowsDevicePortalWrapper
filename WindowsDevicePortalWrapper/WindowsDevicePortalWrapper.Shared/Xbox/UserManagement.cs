@@ -25,14 +25,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the Xbox Live user info for all users present on the device
         /// </summary>
         /// <returns>UserList object containing a List of UserInfo objects representing the users on the device.</returns>
-        public async Task<UserList> GetXboxLiveUsers()
+        public async Task<UserList> GetXboxLiveUsersAsync()
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            return await this.Get<UserList>(XboxLiveUserApi);
+            return await this.GetAsync<UserList>(XboxLiveUserApi);
         }
 
         /// <summary>
@@ -40,14 +40,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="users">List of users to be updated.</param>
         /// <returns>Task for tracking async completion.</returns>
-        public async Task UpdateXboxLiveUsers(UserList users)
+        public async Task UpdateXboxLiveUsersAsync(UserList users)
         {
             if (this.Platform != DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            await this.Put(XboxLiveUserApi, users);
+            await this.PutAsync(XboxLiveUserApi, users);
         }
 
         #region Data contract
@@ -67,10 +67,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             /// <summary>
-            ///  Gets or sets the Users list
+            ///  Gets the Users list
             /// </summary>
             [DataMember(Name = "Users")]
-            public List<UserInfo> Users { get; set; }
+            public List<UserInfo> Users { get; private set; }
 
             /// <summary>
             /// Returns a string representation of a user list
@@ -128,10 +128,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public bool? AutoSignIn { get; set; }
 
             /// <summary>
-            /// Gets or sets the gamer tag
+            /// Gets the gamer tag
             /// </summary>
             [DataMember(Name = "Gamertag", EmitDefaultValue = false)]
-            public string Gamertag { get; set; }
+            public string Gamertag { get; private set; }
 
             /// <summary>
             /// Gets or sets the user as signed in
@@ -152,10 +152,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public bool? SponsoredUser { get; set; }
 
             /// <summary>
-            /// Gets or sets the Xbox User Id.
+            /// Gets the Xbox User Id.
             /// </summary>
             [DataMember(Name = "XboxUserId", EmitDefaultValue = false)]
-            public string XboxUserId { get; set; }
+            public string XboxUserId { get; private set; }
 
             /// <summary>
             /// Returns a string representation of a user

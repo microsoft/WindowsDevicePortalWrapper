@@ -4,11 +4,10 @@
 // </copyright>
 //----------------------------------------------------------------------------------------------
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -63,7 +62,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<BatteryState> getTask  = TestHelpers.Portal.GetBatteryState();
+            Task<BatteryState> getTask  = TestHelpers.Portal.GetBatteryStateAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -89,7 +88,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<string> getTask  = TestHelpers.Portal.GetDeviceName();
+            Task<string> getTask  = TestHelpers.Portal.GetDeviceNameAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -110,8 +109,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfig();
-            getTask.Wait();;
+            Task<IpConfiguration> getTask  = TestHelpers.Portal.GetIpConfigAsync();
+            getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
 
@@ -142,7 +141,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<float> getTask  = TestHelpers.Portal.GetInterPupilaryDistance();
+            Task<float> getTask  = TestHelpers.Portal.GetInterPupilaryDistanceAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -163,7 +162,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<MrcFileList> getTask  = TestHelpers.Portal.GetMrcFileList();
+            Task<MrcFileList> getTask  = TestHelpers.Portal.GetMrcFileListAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -188,14 +187,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<MrcStatus> getTask  = TestHelpers.Portal.GetMrcStatus();
+            Task<MrcStatus> getTask  = TestHelpers.Portal.GetMrcStatusAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
 
             // Check some known things about this response.
-            ProcessStatus processStatus = getTask.Result.Status;
-            Assert.AreEqual("Running", processStatus.MrcProcess);
+            MrcProcessStatus processStatus = getTask.Result.Status;
+            Assert.AreEqual(ProcessStatus.Running, processStatus.MrcProcess);
         }
 
         /// <summary>
@@ -210,7 +209,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<PowerState> getTask  = TestHelpers.Portal.GetPowerState();
+            Task<PowerState> getTask  = TestHelpers.Portal.GetPowerStateAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -233,12 +232,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion, 
                 HttpMethods.Get);
 
-            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
+            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerfAsync();
             getSystemPerfTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSystemPerfTask.Status);
 
-            HoloLensHelpers.ValidateSystemPerf(getSystemPerfTask.Result);
+            HoloLensHelpers.ValidateSystemPerfAsync(getSystemPerfTask.Result);
         }
 
         /// <summary>

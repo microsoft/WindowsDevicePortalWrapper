@@ -50,15 +50,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the current thermal stage reading from the device.
         /// </summary>
         /// <returns>ThermalStages enum value.</returns>
-        /// <remarks>This method is only supported on HoloLens devices.</remarks>
-        public async Task<ThermalStages> GetThermalStage()
+        /// <remarks>This method is only supported on HoloLens.</remarks>
+        public async Task<ThermalStages> GetThermalStageAsync()
         {
-            if (this.Platform != DevicePortalPlatforms.HoloLens)
+            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }
 
-            ThermalStage thermalStage = await this.Get<ThermalStage>(ThermalStageApi);
+            ThermalStage thermalStage = await this.GetAsync<ThermalStage>(ThermalStageApi);
             return thermalStage.Stage;
         }
 
@@ -71,10 +71,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class ThermalStage
         {
             /// <summary>
-            /// Gets or sets the raw stage value
+            /// Gets the raw stage value
             /// </summary>
             [DataMember(Name = "CurrentStage")]
-            public int StageRaw { get; set; }
+            public int StageRaw { get; private set; }
 
             /// <summary>
             /// Gets the enumeration value of the thermal stage

@@ -38,40 +38,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string KnownFoldersApi = "api/filesystem/apps/knownfolders";
 
         /// <summary>
-        /// Calls the API to retrieve the list of known folders.
+        /// Gets a list of Known Folders on the device. 
         /// </summary>
         /// <returns>List of known folders available on this device.</returns>
-        public async Task<KnownFolders> GetKnownFolders()
+        public async Task<KnownFolders> GetKnownFoldersAsync()
         {
-            return await this.Get<KnownFolders>(KnownFoldersApi);
+            return await this.GetAsync<KnownFolders>(KnownFoldersApi);
         }
 
         /// <summary>
-        /// Calls the API to retrieve the contents of a given folder.
+        /// Gets a list of files in a Known Folder (e.g. LocalAppData).
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Contents of the requested folder.</returns>
-        public async Task<FolderContents> GetFolderContents(
+        public async Task<FolderContents> GetFolderContentsAsync(
             string knownFolderId, 
             string subPath = null, 
             string packageFullName = null)
         {
             Dictionary<string, string> payload = this.BuildCommonFilePayload(knownFolderId, subPath, packageFullName);
 
-            return await this.Get<FolderContents>(GetFilesApi, Utilities.BuildQueryString(payload));
+            return await this.GetAsync<FolderContents>(GetFilesApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
-        /// Calls the API to download a file.
+        /// Gets a file from LocalAppData or another Known Folder on the device. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are downloading.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Stream to the downloaded file.</returns>
-        public async Task<Stream> GetFile(
+        public async Task<Stream> GetFileAsync(
             string knownFolderId,
             string filename,
             string subPath = null,
@@ -86,18 +86,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 GetFileApi,
                 Utilities.BuildQueryString(payload));
 
-            return await this.Get(uri);
+            return await this.GetAsync(uri);
         }
 
         /// <summary>
-        /// Calls the API to upload a file.
+        /// Uploads a file to a Known Folder (e.g. LocalAppData)
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filepath">The path to the file we are uploading.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the upload request.</returns>
-        public async Task UploadFile(
+        public async Task UploadFileAsync(
             string knownFolderId,
             string filepath,
             string subPath = null,
@@ -108,18 +108,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
             List<string> files = new List<string>();
             files.Add(filepath);
 
-            await this.Post(GetFileApi, files, Utilities.BuildQueryString(payload));
+            await this.PostAsync(GetFileApi, files, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
-        /// Calls the API to delete a file.
+        /// Deletes a file from a Known Folder. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are deleting.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the delete request.</returns>
-        public async Task DeleteFile(
+        public async Task DeleteFileAsync(
             string knownFolderId,
             string filename,
             string subPath = null,
@@ -129,11 +129,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             payload.Add("filename", filename);
 
-            await this.Delete(GetFileApi, Utilities.BuildQueryString(payload));
+            await this.DeleteAsync(GetFileApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
-        /// Calls the API to rename a file.
+        /// Renames a file in a Known Folder. 
         /// </summary>
         /// <param name="knownFolderId">The known folder id for the root of the path.</param>
         /// <param name="filename">The name of the file we are renaming.</param>
@@ -141,7 +141,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
         /// <returns>Task tracking completion of the rename request.</returns>
-        public async Task RenameFile(
+        public async Task RenameFileAsync(
             string knownFolderId,
             string filename,
             string newFilename,
@@ -153,7 +153,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             payload.Add("filename", filename);
             payload.Add("newfilename", newFilename);
 
-            await this.Post(RenameFileApi, Utilities.BuildQueryString(payload));
+            await this.PostAsync(RenameFileApi, Utilities.BuildQueryString(payload));
         }
 
         /// <summary>
@@ -200,10 +200,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class KnownFolders
         {
             /// <summary>
-            /// Gets or sets the list of known folders.
+            /// Gets the list of known folders.
             /// </summary>
             [DataMember(Name = "KnownFolders")]
-            public List<string> Folders { get; set; }
+            public List<string> Folders { get; private set; }
 
             /// <summary>
             /// Overridden ToString method providing a user readable
@@ -234,10 +234,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class FolderContents
         {
             /// <summary>
-            /// Gets or sets the list of folders and files in this folder.
+            /// Gets the list of folders and files in this folder.
             /// </summary>
             [DataMember(Name = "Items")]
-            public List<FileOrFolderInformation> Contents { get; set; }
+            public List<FileOrFolderInformation> Contents { get; private set; }
 
             /// <summary>
             /// Overridden ToString method providing a user readable
@@ -269,46 +269,58 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class FileOrFolderInformation
         {
             /// <summary>
-            /// Gets or sets the current directory.
+            /// Gets the current directory.
             /// </summary>
             [DataMember(Name = "CurrentDir")]
-            public string CurrentDir { get; set; }
+            public string CurrentDir { get; private set; }
 
             /// <summary>
-            /// Gets or sets the current directory.
+            /// Gets the current directory.
             /// </summary>
             [DataMember(Name = "DateCreated")]
-            public long DateCreated { get; set; }
+            public long DateCreated { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Id.
+            /// Gets the Id.
             /// </summary>
             [DataMember(Name = "Id")]
-            public string Id { get; set; }
+            public string Id { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Name.
+            /// Gets the Name.
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the SubPath (equivalent to CurrentDir for files).
+            /// Gets the SubPath (equivalent to CurrentDir for files).
             /// </summary>
             [DataMember(Name = "SubPath")]
-            public string SubPath { get; set; }
+            public string SubPath { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Type.
+            /// Gets the Type.
             /// </summary>
             [DataMember(Name = "Type")]
-            public int Type { get; set; }
+            public int Type { get; private set; }
 
             /// <summary>
-            /// Gets or sets the size of the file (0 for folders).
+            /// Gets the size of the file (0 for folders).
             /// </summary>
             [DataMember(Name = "FileSize")]
-            public long SizeInBytes { get; set; }
+            public long SizeInBytes { get; private set; }
+
+            /// <summary>
+            /// Gets a value indicating whether the current item is a folder by checking for FILE_ATTRIBUTE_DIRECTORY
+            /// See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
+            /// </summary>
+            public bool IsFolder
+            {
+                get
+                {
+                    return (this.Type & 0x10) == 0x10;
+                }
+            }
 
             /// <summary>
             /// Overridden ToString method providing a user readable
@@ -321,7 +333,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 DateTime timestamp = DateTime.FromFileTime(this.DateCreated);
 
                 // Check if this is a folder.
-                if (!string.Equals(this.SubPath, this.CurrentDir))
+                if (this.IsFolder)
                 {
                     return string.Format("{0,-24:MM/dd/yyyy  HH:mm tt}{1,-14} {2}\n", timestamp, "<DIR>", this.Name);
                 }

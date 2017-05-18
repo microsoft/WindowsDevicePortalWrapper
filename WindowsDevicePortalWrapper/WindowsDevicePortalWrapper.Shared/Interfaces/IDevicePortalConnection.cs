@@ -6,6 +6,10 @@
 
 using System;
 using System.Net;
+#if !WINDOWS_UWP
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+#endif
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -36,33 +40,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         string Family { get; set; }
 
         /// <summary>
-        /// Gets the friendly name of the device (ex: LivingRoomPC).
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets or sets information describing the operating system installed on the device.
         /// </summary>
         OperatingSystemInformation OsInfo { get; set; }
 
-#if !WINDOWS_UWP
-        /// <summary>
-        /// Get the raw data of the device's root certificate.
-        /// </summary>
-        /// <returns>Byte array containing the certificate data.</returns>
-        byte[] GetDeviceCertificateData();
-#endif
-
-        /// <summary>
-        /// Validates and sets the device certificate.
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        /// <remarks>How this data is used and/or stored is implementation specific.</remarks>
-#if WINDOWS_UWP
-        void SetDeviceCertificate(Windows.Security.Cryptography.Certificates.Certificate certificate);
-#else
-        void SetDeviceCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2 certificate);
-#endif
         /// <summary>
         /// Updates the http security requirements for device communication.
         /// </summary>
@@ -74,8 +55,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="ipConfig">Object that describes the current network configuration.</param>
         /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
         void UpdateConnection(
             IpConfiguration ipConfig,
-            bool requiresHttps);
+            bool requiresHttps,
+            bool preservePort);
     }
 }

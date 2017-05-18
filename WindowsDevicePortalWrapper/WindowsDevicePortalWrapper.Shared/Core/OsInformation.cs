@@ -80,15 +80,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Windows IoT on Raspberry Pi 3
             /// </summary>
             IoTRaspberryPi3,
+
+            /// <summary>
+            /// A virtual machine. This may or may not be an emulator.
+            /// </summary>
+            VirtualMachine
         }
 
         /// <summary>
         /// Gets the family name (ex: Windows.Holographic) of the device.
         /// </summary>
         /// <returns>String containing the device's family.</returns>
-        public async Task<string> GetDeviceFamily()
+        public async Task<string> GetDeviceFamilyAsync()
         {
-            DeviceOsFamily deviceFamily = await this.Get<DeviceOsFamily>(DeviceFamilyApi);
+            DeviceOsFamily deviceFamily = await this.GetAsync<DeviceOsFamily>(DeviceFamilyApi).ConfigureAwait(false);
             return deviceFamily.Family;
         }
 
@@ -96,9 +101,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the name of the device.
         /// </summary>
         /// <returns>String containing the device's name.</returns>
-        public async Task<string> GetDeviceName()
+        public async Task<string> GetDeviceNameAsync()
         {
-            DeviceName deviceName = await this.Get<DeviceName>(MachineNameApi);
+            DeviceName deviceName = await this.GetAsync<DeviceName>(MachineNameApi);
             return deviceName.Name;
         }
 
@@ -106,9 +111,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets information about the device's operating system.
         /// </summary>
         /// <returns>OperatingSystemInformation object containing details of the installed operating system.</returns>
-        public async Task<OperatingSystemInformation> GetOperatingSystemInformation()
+        public Task<OperatingSystemInformation> GetOperatingSystemInformationAsync()
         {
-            return await this.Get<OperatingSystemInformation>(OsInfoApi);
+            return this.GetAsync<OperatingSystemInformation>(OsInfoApi);
         }
 
         /// <summary>
@@ -117,9 +122,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="name">The name to assign to the device.</param>
         /// <remarks>The new name does not take effect until the device has been restarted.</remarks>
         /// <returns>Task tracking setting the device name completion.</returns>
-        public async Task SetDeviceName(string name)
+        public Task SetDeviceNameAsync(string name)
         {
-            await this.Post(
+            return this.PostAsync(
                 MachineNameApi,
                 string.Format("name={0}", Utilities.Hex64Encode(name)));
         }
@@ -133,10 +138,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DeviceName
         {
             /// <summary>
-            /// Gets or sets the name.
+            /// Gets the name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
         }
 
         /// <summary>
@@ -146,10 +151,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class DeviceOsFamily
         {
             /// <summary>
-            /// Gets or sets the device family name.
+            /// Gets the device family name.
             /// </summary>
             [DataMember(Name = "DeviceType")]
-            public string Family { get; set; }
+            public string Family { get; private set; }
         }
 
         /// <summary>
@@ -159,40 +164,40 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class OperatingSystemInformation
         {
             /// <summary>
-            ///  Gets or sets the OS name.
+            ///  Gets the OS name.
             /// </summary>
             [DataMember(Name = "ComputerName")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets the language
+            /// Gets the language
             /// </summary>
             [DataMember(Name = "Language")]
-            public string Language { get; set; }
+            public string Language { get; private set; }
 
             /// <summary>
-            /// Gets or sets the edition
+            /// Gets the edition
             /// </summary>
             [DataMember(Name = "OsEdition")]
-            public string OsEdition { get; set; }
+            public string OsEdition { get; private set; }
 
             /// <summary>
-            /// Gets or sets the edition Id
+            /// Gets the edition Id
             /// </summary>
             [DataMember(Name = "OsEditionId")]
-            public uint OsEditionId { get; set; }
+            public uint OsEditionId { get; private set; }
 
             /// <summary>
-            /// Gets or sets the OS version
+            /// Gets the OS version
             /// </summary>
             [DataMember(Name = "OsVersion")]
-            public string OsVersionString { get; set; }
+            public string OsVersionString { get; private set; }
 
             /// <summary>
-            /// Gets or sets the raw platform type
+            /// Gets the raw platform type
             /// </summary>
             [DataMember(Name = "Platform")]
-            public string PlatformName { get; set; }
+            public string PlatformName { get; private set; }
 
             /// <summary>
             /// Gets the platform
@@ -205,18 +210,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     try
                     {
+                        // MinnowBoard Max model no. can change based on firmware
+                        if (this.PlatformName.Contains("Minnowboard Max"))
+                        {
+                            return DevicePortalPlatforms.IoTMinnowboardMax;
+                        }
+
                         switch (this.PlatformName)
                         {
                             case "Xbox One":
                                 platform = DevicePortalPlatforms.XboxOne;
                                 break;
 
-                            case "Dragonboard 401c":
+                            case "SBC":
                                 platform = DevicePortalPlatforms.IoTDragonboard410c;
-                                break;
-
-                            case "Minnowboard Max":
-                                platform = DevicePortalPlatforms.IoTMinnowboardMax;
                                 break;
 
                             case "Raspberry Pi 2":
@@ -227,6 +234,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                                 platform = DevicePortalPlatforms.IoTRaspberryPi3;
                                 break;
 
+                            case "Virtual Machine":
+                                platform = DevicePortalPlatforms.VirtualMachine;
+                                break;
+
                             default:
                                 platform = (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);
                                 break;
@@ -234,6 +245,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
                     catch
                     {
+                        switch (this.OsEdition)
+                        {
+                            case "Enterprise":
+                            case "Home":
+                            case "Professional":
+                                platform = DevicePortalPlatforms.Windows;
+                                break;
+
+                            case "Mobile":
+                                platform = DevicePortalPlatforms.Mobile;
+                                break;
+
+                            default:
+                                platform = DevicePortalPlatforms.Unknown;
+                                break;
+                        }
                     }
 
                     return platform;

@@ -25,9 +25,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the IP configuration data of the device.
         /// </summary>
         /// <returns>object containing details of the device's network configuration.</returns>
-        public async Task<IpConfiguration> GetIpConfig()
+        public async Task<IpConfiguration> GetIpConfigAsync()
         {
-            return await this.Get<IpConfiguration>(IpConfigApi);
+            return await this.GetAsync<IpConfiguration>(IpConfigApi);
         }
 
         #region Data contract
@@ -39,22 +39,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class Dhcp
         {
             /// <summary>
-            ///  Gets or sets the time at which the lease will expire, in ticks.
+            ///  Gets the time at which the lease will expire, in ticks.
             /// </summary>
             [DataMember(Name = "LeaseExpires")]
-            public long LeaseExpiresRaw { get; set; }
+            public long LeaseExpiresRaw { get; private set; }
 
             /// <summary>
-            /// Gets or sets the time at which the lease was obtained, in ticks.
+            /// Gets the time at which the lease was obtained, in ticks.
             /// </summary>
             [DataMember(Name = "LeaseObtained")]
-            public long LeaseObtainedRaw { get; set; }
+            public long LeaseObtainedRaw { get; private set; }
 
             /// <summary>
-            /// Gets or sets the name.
+            /// Gets the name.
             /// </summary>
             [DataMember(Name = "Address")]
-            public IpAddressInfo Address { get; set; }
+            public IpAddressInfo Address { get; private set; }
 
             /// <summary>
             /// Gets the lease expiration time.
@@ -80,16 +80,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class IpAddressInfo
         {
             /// <summary>
-            /// Gets or sets the address
+            /// Gets the address
             /// </summary>
             [DataMember(Name = "IpAddress")]
-            public string Address { get; set; }
+            public string Address { get; private set; }
 
             /// <summary>
-            /// Gets or sets the subnet mask
+            /// Gets the subnet mask
             /// </summary>
             [DataMember(Name = "Mask")]
-            public string SubnetMask { get; set; }
+            public string SubnetMask { get; private set; }
         }
 
         /// <summary>
@@ -99,10 +99,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class IpConfiguration
         {
             /// <summary>
-            /// Gets or sets the list of networking adapters
+            /// Gets the list of networking adapters
             /// </summary>
             [DataMember(Name = "Adapters")]
-            public List<NetworkAdapterInfo> Adapters { get; set; }
+            public List<NetworkAdapterInfo> Adapters { get; private set; }
         }
 
         /// <summary>
@@ -112,54 +112,54 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class NetworkAdapterInfo
         {
             /// <summary>
-            /// Gets or sets the description
+            /// Gets the description
             /// </summary>
             [DataMember(Name = "Description")]
-            public string Description { get; set; }
+            public string Description { get; private set; }
 
             /// <summary>
-            /// Gets or sets the hardware address
+            /// Gets the hardware address
             /// </summary>
             [DataMember(Name = "HardwareAddress")]
-            public string MacAddress { get; set; }
+            public string MacAddress { get; private set; }
 
             /// <summary>
-            /// Gets or sets the index
+            /// Gets the index
             /// </summary>
             [DataMember(Name = "Index")]
-            public int Index { get; set; }
+            public int Index { get; private set; }
 
             /// <summary>
-            /// Gets or sets the name
+            /// Gets the name
             /// </summary>
             [DataMember(Name = "Name")]
-            public Guid Id { get; set; }
+            public Guid Id { get; private set; }
 
             /// <summary>
-            /// Gets or sets the type
+            /// Gets the type
             /// </summary>
             [DataMember(Name = "Type")]
-            public string AdapterType { get; set; }
+            public string AdapterType { get; private set; }
 
             /// <summary>
-            /// Gets or sets DHCP info
+            /// Gets DHCP info
             /// </summary>
             [DataMember(Name = "DHCP")]
-            public Dhcp Dhcp { get; set; }
+            public Dhcp Dhcp { get; private set; }
 
             // TODO - WINS
 
             /// <summary>
-            /// Gets or sets Gateway info
+            /// Gets Gateway info
             /// </summary>
             [DataMember(Name = "Gateways")]
-            public List<IpAddressInfo> Gateways { get; set; }
+            public List<IpAddressInfo> Gateways { get; private set; }
 
             /// <summary>
-            /// Gets or sets the list of IP addresses
+            /// Gets the list of IP addresses
             /// </summary>
             [DataMember(Name = "IpAddresses")]
-            public List<IpAddressInfo> IpAddresses { get; set; }
+            public List<IpAddressInfo> IpAddresses { get; private set; }
         }
         #endregion // Data contract
     }

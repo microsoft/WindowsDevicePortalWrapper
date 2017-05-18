@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Put
+    /// Universal Windows Platform implementation of HTTP PutAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="body">The HTTP content comprising the body of the request.</param>
         /// <returns>Task tracking the PUT completion.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Put(
+        private async Task<Stream> PutAsync(
             Uri uri,
             IHttpContent body = null)
         {
@@ -50,29 +50,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.ApplyHttpHeaders(client, HttpMethods.Put);
 
                 // Send the request
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PutAsync(uri, null);
-                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                while (!responseAwaiter.IsCompleted)
-                { 
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.PutAsync(uri, null))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {
                         using (IHttpContent messageContent = response.Content)
                         {
-                            IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                            while (bufferOperation.Status != AsyncStatus.Completed)
-                            {
-                            }
-
-                            dataBuffer = bufferOperation.GetResults();
+                            dataBuffer = await messageContent.ReadAsBufferAsync();
                         }
                     }
                 }

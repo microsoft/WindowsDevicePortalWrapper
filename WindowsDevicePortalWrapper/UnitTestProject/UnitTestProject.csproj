@@ -62,9 +62,12 @@
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
+    <Compile Include="Core\WindowsErrorReportingTests.cs" />
+    <Compile Include="Core\EtwTests.cs" />
     <Compile Include="Core\PerformanceDataTests.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLensHelpers.cs" />
     <Compile Include="Device-VersionTests\HoloLens\HoloLens_rs1_release.cs" />
+    <Compile Include="Device-VersionTests\IoT\IoT_rs1_release.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxHelpers.cs" />
     <Compile Include="Device-VersionTests\XboxOne\XboxOne_rs1_xbox_rel_1608.cs" />
     <Compile Include="MockHttpResponder.cs" />
@@ -84,7 +87,22 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MockData\Defaults\api_wer_report_files_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_wer_reports_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\WebSocket_api_etw_session_realtime_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_etw_providers_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\Defaults\api_os_devicefamily_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Defaults\api_etw_customproviders_Default.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\api_os_info_Default.dat">
@@ -115,6 +133,39 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\Defaults\WebSocket_api_resourcemanager_systemperf_Default.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_networking_ipconfig_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_os_devicefamily_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_os_info_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_os_machinename_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_power_battery_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_power_state_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_resourcemanager_processes_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\api_resourcemanager_systemperf_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\ext_xboxlive_sandbox_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\WebSocket_api_resourcemanager_processes_Desktop_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\Desktop\rs1_release\WebSocket_api_resourcemanager_systemperf_Desktop_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\HoloLens\rs1_release\api_holographic_mrc_files_HoloLens_rs1_release.dat">
@@ -165,6 +216,153 @@
     <None Include="MockData\HoloLens\rs1_release\WebSocket_api_resourcemanager_systemperf_HoloLens_rs1_release.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_appx_default_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_appx_listHeadlessApps_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_audio_listdevices_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_controllersdriver_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_datetime_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_displayorientation_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_displayresolution_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_information_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_device_timezones_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_ics_interfaces_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_alljoynsettings_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_iotonboarding_softapsettings_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_remote_status_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_acpitables_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_azuretoken_0_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_settings_1_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_tpm_settings_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_windowsupdate_installtime_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_iot_windowsupdate_status_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_networking_ipconfig_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_devicefamily_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_info_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_os_machinename_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_battery_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_power_state_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_processes_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTDragonboard410c_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTMinnowboardMax_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\IoT\rs1_release\WebSocket_api_resourcemanager_systemperf_IoTRaspberryPi3_rs1_release.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MockData\XboxOne\rs1_xbox_rel_1608\api_filesystem_apps_files_XboxOne_rs1_xbox_rel_1608.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -202,7 +400,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="MockData\ReadMe.txt" />
     <Content Include="MockData\XboxOne\rs1_xbox_rel_1608\xbox_screenshot.png">

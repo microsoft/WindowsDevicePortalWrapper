@@ -5,10 +5,10 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Threading;
 
 namespace XboxWdpDriver
 {
@@ -30,7 +30,7 @@ namespace XboxWdpDriver
                 ManualResetEvent systemPerfReceived = new ManualResetEvent(false);
 
                 WebSocketMessageReceivedEventHandler<SystemPerformanceInformation> systemPerfReceivedHandler =
-                    delegate (DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
+                    delegate(DevicePortal sender, WebSocketMessageReceivedEventArgs<SystemPerformanceInformation> sysPerfInfoArgs)
                     {
                         if (sysPerfInfoArgs.Message != null)
                         {
@@ -41,19 +41,19 @@ namespace XboxWdpDriver
 
                 portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
 
-                Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerf();
+                Task startListeningForSystemPerfTask = portal.StartListeningForSystemPerfAsync();
                 startListeningForSystemPerfTask.Wait();
 
                 systemPerfReceived.WaitOne();
 
-                Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcesses();
+                Task stopListeningForSystemPerfTask = portal.StopListeningForRunningProcessesAsync();
                 stopListeningForSystemPerfTask.Wait();
 
                 portal.SystemPerfMessageReceived -= systemPerfReceivedHandler;
             }
             else
             {
-                Task<SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerf();
+                Task<SystemPerformanceInformation> getRunningProcessesTask = portal.GetSystemPerfAsync();
                 systemPerformanceInformation = getRunningProcessesTask.Result;
             }
 

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWdpClient.UniversalWi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxWdpDriver", "..\Samples\XboxWdpDriver\XboxWdpDriver.csproj", "{1F3CA46B-1E52-418E-A293-23F3FA3BD213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWdpClient", "..\Samples\SampleWdpClient\SampleWdpClient.csproj", "{7E0481EB-514A-4292-AD1D-3A3EAF38D359}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{4fc7c762-adbe-4a0a-882d-10771cd8bd55}*SharedItemsImports = 4
@@ -145,6 +147,22 @@ Global
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Release|x64.Build.0 = Release|Any CPU
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Release|x86.ActiveCfg = Release|Any CPU
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Release|x86.Build.0 = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|ARM.Build.0 = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|x64.Build.0 = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|ARM.ActiveCfg = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|ARM.Build.0 = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|x64.ActiveCfg = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|x64.Build.0 = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,5 +172,6 @@ Global
 		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD} = {84BC236A-C79C-47E2-A5A3-F6FF03BE64F3}
 		{E605CD33-1B19-4091-9BD2-289D3CA4729E} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
+		{7E0481EB-514A-4292-AD1D-3A3EAF38D359} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
 	EndGlobalSection
 EndGlobal

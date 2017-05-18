@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Delete
+    /// Universal Windows Platform implementation of HTTP DeleteAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Delete(Uri uri)
+        private async Task<Stream> DeleteAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 
@@ -45,30 +45,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             using (HttpClient client = new HttpClient(httpFilter))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Delete);
-
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.DeleteAsync(uri);
-                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                while (!responseAwaiter.IsCompleted)
-                { 
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.DeleteAsync(uri))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {
                         using (IHttpContent messageContent = response.Content)
                         {
-                            IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                            while (bufferOperation.Status != AsyncStatus.Completed)
-                            {
-                            }
-
-                            dataBuffer = bufferOperation.GetResults();
+                            dataBuffer = await messageContent.ReadAsBufferAsync();
                         }
                     }
                 }

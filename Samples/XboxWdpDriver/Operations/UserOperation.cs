@@ -60,7 +60,7 @@ namespace XboxWdpDriver
 
             if (operationType.Equals("list"))
             {
-                Task<UserList> getUsers = portal.GetXboxLiveUsers();
+                Task<UserList> getUsers = portal.GetXboxLiveUsersAsync();
 
                 getUsers.Wait();
                 Console.WriteLine(getUsers.Result);
@@ -162,7 +162,7 @@ namespace XboxWdpDriver
         {
             try
             {
-                Task updateUsers = portal.UpdateXboxLiveUsers(userList);
+                Task updateUsers = portal.UpdateXboxLiveUsersAsync(userList);
                 updateUsers.Wait();
             }
             catch (AggregateException e)

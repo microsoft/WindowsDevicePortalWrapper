@@ -23,85 +23,47 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Gets the root certificate from the device.
         /// </summary>
+        /// <param name="acceptUntrustedCerts">Whether or not we should accept untrusted certificates.</param>
         /// <returns>The device certificate.</returns>
 #pragma warning disable 1998
-        private async Task<Certificate> GetDeviceCertificate()
+        public async Task<Certificate> GetRootDeviceCertificateAsync(bool acceptUntrustedCerts = false)
         {
             Certificate certificate = null;
-            bool useHttps = true;
 
-            // try https then http
-            while (true)
+            Uri uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
+                
+            HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
+            requestSettings.AllowUI = false;
+
+            if (acceptUntrustedCerts)
             {
-                Uri uri = null;
+                requestSettings.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+            }
 
-                if (useHttps)
+            using (HttpClient client = new HttpClient(requestSettings))
+            {
+                this.ApplyHttpHeaders(client, HttpMethods.Get);
+                using (HttpResponseMessage response = await client.GetAsync(uri))
                 {
-                    uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
-                }
-                else
-                {
-                    Uri baseUri = new Uri(string.Format("http://{0}", this.deviceConnection.Connection.Authority));
-                    uri = Utilities.BuildEndpoint(baseUri, RootCertificateEndpoint);
-                }
-
-                try
-                {
-                    HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
-                    requestSettings.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-                    requestSettings.AllowUI = false;
-
-                    using (HttpClient client = new HttpClient(requestSettings))
+                    using (IHttpContent messageContent = response.Content)
                     {
-                        this.ApplyHttpHeaders(client, HttpMethods.Get);
-
-                        IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.GetAsync(uri);
-                        TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                        while (!responseAwaiter.IsCompleted)
-                        { 
-                        }
-
-                        using (HttpResponseMessage response = responseOperation.GetResults())
-                        {
-                            this.RetrieveCsrfToken(response);
-
-                            using (IHttpContent messageContent = response.Content)
-                            {
-                                IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                                TaskAwaiter<IBuffer> readBufferAwaiter = bufferOperation.GetAwaiter();
-                                while (!readBufferAwaiter.IsCompleted)
-                                { 
-                                }
-
-                                certificate = new Certificate(bufferOperation.GetResults());
-                                if (!certificate.Issuer.Contains(DevicePortalCertificateIssuer))
-                                {
-                                    certificate = null;
-                                    throw new DevicePortalException(
-                                        (HttpStatusCode)0,
-                                        "Invalid certificate issuer",
-                                        uri,
-                                        "Failed to get the device certificate");
-                                }
-                            }
-                        }
-                    }
-
-                    return certificate;
-                }
-                catch (Exception e)
-                {
-                    if (useHttps)
-                    {
-                        useHttps = false;
-                    }
-                    else
-                    {
-                        throw e;
+                        certificate = new Certificate(await messageContent.ReadAsBufferAsync());
                     }
                 }
             }
+
+            return certificate;
         }
 #pragma warning restore 1998
+
+        /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(Certificate cert)
+        {
+            CertificateStore store = CertificateStores.TrustedRootCertificationAuthorities;
+            store.Add(cert);
+        }
     }
 }

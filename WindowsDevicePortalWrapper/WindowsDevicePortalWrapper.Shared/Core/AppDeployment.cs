@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string PackageManagerApi = "api/app/packagemanager/package";
 
         /// <summary>
-        /// Gets or sets install status handler.
+        /// App Install Status handler.
         /// </summary>
         public event ApplicationInstallStatusEventHandler AppInstallStatus;
 
@@ -53,9 +53,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the collection of applications installed on the device.
         /// </summary>
         /// <returns>AppPackages object containing the list of installed application packages.</returns>
-        public async Task<AppPackages> GetInstalledAppPackages()
+        public async Task<AppPackages> GetInstalledAppPackagesAsync()
         {
-            return await this.Get<AppPackages>(InstalledPackagesApi);
+            return await this.GetAsync<AppPackages>(InstalledPackagesApi);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>InstallApplication sends ApplicationInstallStatus events to indicate the current progress in the installation process.
         /// Some applications may opt to not register for the AppInstallStatus event and await on InstallApplication.</remarks>
         /// <returns>Task for tracking completion of install initialization.</returns>
-        public async Task InstallApplication(
+        public async Task InstallApplicationAsync(
             string appName,
             string packageFileName, 
             List<string> dependencyFileNames,
@@ -100,12 +100,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         ApplicationInstallStatus.InProgress,
                         ApplicationInstallPhase.UninstallingPreviousVersion,
                         installPhaseDescription);
-                    AppPackages installedApps = await this.GetInstalledAppPackages();
+                    AppPackages installedApps = await this.GetInstalledAppPackagesAsync();
                     foreach (PackageInfo package in installedApps.Packages)
                     {
                         if (package.Name == appName)
                         {
-                            await this.UninstallApplication(package.FullName);
+                            await this.UninstallApplicationAsync(package.FullName);
                             break;
                         }
                     }
@@ -170,7 +170,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
 
                     // Make the HTTP request.
-                    await this.Post(uri, dataStream, contentType);
+                    await this.PostAsync(uri, dataStream, contentType);
                 }
 
                 // Poll the status until complete.
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
 
-                    status = await this.GetInstallStatus();
+                    status = await this.GetInstallStatusAsync().ConfigureAwait(false);
                 }
                 while (status == ApplicationInstallStatus.InProgress);
 
@@ -199,18 +199,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 DevicePortalException dpe = e as DevicePortalException;
 
-                HttpStatusCode status = (HttpStatusCode)0;
-                Uri request = null;
                 if (dpe != null)
                 {
-                    status = dpe.StatusCode;
-                    request = dpe.RequestUri;
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, dpe.Reason));
                 }
-
-                this.SendAppInstallStatus(
-                    ApplicationInstallStatus.Failed,
-                    ApplicationInstallPhase.Idle,
-                    string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
+                else
+                {
+                    this.SendAppInstallStatus(
+                        ApplicationInstallStatus.Failed,
+                        ApplicationInstallPhase.Idle,
+                        string.Format("Failed to install {0}: {1}", appName, installPhaseDescription));
+                }
             }
         }
 
@@ -219,9 +221,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="packageName">The name of the application package to uninstall.</param>
         /// <returns>Task tracking the uninstall operation.</returns>
-        public async Task UninstallApplication(string packageName)
+        public async Task UninstallApplicationAsync(string packageName)
         {
-            await this.Delete(
+            await this.DeleteAsync(
                 PackageManagerApi,
                 //// NOTE: When uninstalling an app package, the package name is not Hex64 encoded.
                 string.Format("package={0}", packageName));
@@ -270,10 +272,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class AppPackages
         {
             /// <summary>
-            /// Gets or sets a list of the packages
+            /// Gets a list of the packages
             /// </summary>
             [DataMember(Name = "InstalledPackages")]
-            public List<PackageInfo> Packages { get; set; }
+            public List<PackageInfo> Packages { get; private set; }
+
+            /// <summary>
+            /// Presents a user readable representation of a list of AppPackages
+            /// </summary>
+            /// <returns>User readable list of AppPackages.</returns>
+            public override string ToString()
+            {
+                string output = "Packages:\n";
+                foreach (PackageInfo package in this.Packages)
+                {
+                    output += package;
+                }
+
+                return output;
+            }
         }
 
         /// <summary>
@@ -283,28 +300,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class InstallState
         {
             /// <summary>
-            /// Gets or sets install state code
+            /// Gets install state code
             /// </summary>
             [DataMember(Name = "Code")]
-            public int Code { get; set; }
+            public int Code { get; private set; }
 
             /// <summary>
-            /// Gets or sets message text
+            /// Gets message text
             /// </summary>
             [DataMember(Name = "CodeText")]
-            public string CodeText { get; set; }
+            public string CodeText { get; private set; }
 
             /// <summary>
-            /// Gets or sets reason for state
+            /// Gets reason for state
             /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether this was successful
+            /// Gets a value indicating whether this was successful
             /// </summary>
             [DataMember(Name = "Success")]
-            public bool WasSuccessful { get; set; }
+            public bool WasSuccessful { get; private set; }
         }
 
         /// <summary>
@@ -314,48 +331,70 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class PackageInfo
         {
             /// <summary>
-            /// Gets or sets package name
+            /// Gets package name
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets package family name
+            /// Gets package family name
             /// </summary>
             [DataMember(Name = "PackageFamilyName")]
-            public string FamilyName { get; set; }
+            public string FamilyName { get; private set; }
 
             /// <summary>
-            /// Gets or sets package full name
+            /// Gets package full name
             /// </summary>
             [DataMember(Name = "PackageFullName")]
-            public string FullName { get; set; }
+            public string FullName { get; private set; }
 
             /// <summary>
-            /// Gets or sets package relative Id
+            /// Gets package relative Id
             /// </summary>
             [DataMember(Name = "PackageRelativeId")]
-            public string AppId { get; set; }
+            public string AppId { get; private set; }
 
             /// <summary>
-            /// Gets or sets package publisher
+            /// Gets package publisher
             /// </summary>
             [DataMember(Name = "Publisher")]
-            public string Publisher { get; set; }
+            public string Publisher { get; private set; }
 
             /// <summary>
-            /// Gets or sets package version
+            /// Gets package version
             /// </summary>
             [DataMember(Name = "Version")]
-            public PackageVersion Version { get; set; }
+            public PackageVersion Version { get; private set; }
 
+            /// <summary>
+            /// Gets package origin, a measure of how the app was installed. 
+            /// PackageOrigin_Unknown            = 0,
+            /// PackageOrigin_Unsigned           = 1,
+            /// PackageOrigin_Inbox              = 2,
+            /// PackageOrigin_Store              = 3,
+            /// PackageOrigin_DeveloperUnsigned  = 4,
+            /// PackageOrigin_DeveloperSigned    = 5,
+            /// PackageOrigin_LineOfBusiness     = 6
+            /// </summary>
+            [DataMember(Name = "PackageOrigin")]
+            public int PackageOrigin { get; private set; }
+
+            /// <summary>
+            /// Helper method to determine if the app was sideloaded and therefore can be used with e.g. GetFolderContentsAsync
+            /// </summary>
+            /// <returns> True if the package is sideloaded. </returns>
+            public bool IsSideloaded()
+            {
+                return this.PackageOrigin == 4 || this.PackageOrigin == 5;
+            }
+            
             /// <summary>
             /// Get a string representation of the package
             /// </summary>
             /// <returns>String representation</returns>
             public override string ToString()
             {
-                return string.Format("{0} ({1})", this.Name, this.Version);
+                return string.Format("\t{0}\n\t\t{1}\n", this.FullName, this.AppId);
             }
         }
 
@@ -366,28 +405,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class PackageVersion
         {
             /// <summary>
-            ///  Gets or sets version build
+            ///  Gets version build
             /// </summary>
             [DataMember(Name = "Build")]
-            public int Build { get; set; }
+            public int Build { get; private set; }
 
             /// <summary>
-            /// Gets or sets package Major number
+            /// Gets package Major number
             /// </summary>
             [DataMember(Name = "Major")]
-            public int Major { get; set; }
+            public int Major { get; private set; }
 
             /// <summary>
-            /// Gets or sets package minor number
+            /// Gets package minor number
             /// </summary>
             [DataMember(Name = "Minor")]
-            public int Minor { get; set; }
+            public int Minor { get; private set; }
 
             /// <summary>
-            /// Gets or sets package revision
+            /// Gets package revision
             /// </summary>
             [DataMember(Name = "Revision")]
-            public int Revision { get; set; }
+            public int Revision { get; private set; }
 
             /// <summary>
             /// Gets package version

@@ -21,50 +21,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for getting installation status.
         /// </summary>
         /// <returns>The status</returns>
-        public async Task<ApplicationInstallStatus> GetInstallStatus()
+        public async Task<ApplicationInstallStatus> GetInstallStatusAsync()
         {
-            ApplicationInstallStatus status = ApplicationInstallStatus.None;
+            ApplicationInstallStatus status = ApplicationInstallStatus.Completed;
 
-            Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
-                InstallStateApi);
-
-            WebRequestHandler handler = new WebRequestHandler();
-            handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-            using (HttpClient client = new HttpClient(handler))
-            {
-                this.ApplyHttpHeaders(client, HttpMethods.Get);
-
-                Task<HttpResponseMessage> getTask = TestHelpers.MockHttpResponder.GetAsync(uri);
-                await getTask.ConfigureAwait(false);
-                getTask.Wait();
-
-                using (HttpResponseMessage response = getTask.Result)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            // Status code: 200
-                            status = ApplicationInstallStatus.Completed;
-                        }
-                        else if (response.StatusCode == HttpStatusCode.NoContent)
-                        {
-                            // Status code: 204
-                            status = ApplicationInstallStatus.InProgress;
-                        }
-                    }
-                    else
-                    {
-                        status = ApplicationInstallStatus.Failed; 
-                    }
-                }
-            }
-
-            return status;
+            return await Task.FromResult(status);
         }
     }
 }

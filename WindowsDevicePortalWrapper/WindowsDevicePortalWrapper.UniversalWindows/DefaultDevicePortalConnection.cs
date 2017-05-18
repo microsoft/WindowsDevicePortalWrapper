@@ -6,10 +6,6 @@
 
 using System;
 using System.Net;
-using System.Text.RegularExpressions;
-using Windows.Foundation;
-using Windows.Security.Cryptography.Certificates;
-using Windows.Storage.Streams;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -32,7 +28,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string password)
         {
             this.Connection = new Uri(address);
-            this.Credentials = new NetworkCredential(userName, password);
+            // append auto- to the credentials to bypass CSRF token requirement on non-Get requests.
+            this.Credentials = new NetworkCredential(string.Format("auto-{0}", userName), password);
         }
 
         /// <summary>
@@ -56,16 +53,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     return null;
                 }
 
-                string absoluteUri = this.Connection.AbsoluteUri;
+                // Convert the scheme from http[s] to ws[s].
+                string scheme = this.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) ? "wss" : "ws";
 
-                if (absoluteUri.StartsWith("https", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new Uri(Regex.Replace(absoluteUri, "https", "wss", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
-                }
-                else
-                {
-                    return new Uri(Regex.Replace(absoluteUri, "http", "ws", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
-                }
+                return new Uri(string.Format("{0}://{1}", scheme, this.Connection.Authority));
             }
         }
 
@@ -88,39 +79,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets the device name.
-        /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the operating system information.
         /// </summary>
         public OperatingSystemInformation OsInfo
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Sets the device's root certificate in the certificate store. 
-        /// </summary>
-        /// <param name="certificate">The device's root certificate.</param>
-        public void SetDeviceCertificate(Certificate certificate)
-        {
-            // Verify that the certificate is one we recognize.
-            if (!certificate.Issuer.Contains(DevicePortalCertificateIssuer))
-            {
-                certificate = null;
-                throw new DevicePortalException(
-                    (Windows.Web.Http.HttpStatusCode)0,
-                    "Invalid certificate issuer",
-                    null,
-                    "Failed to set the device certificate");
-            }
         }
 
         /// <summary>
@@ -139,11 +103,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Updates the device's connection Uri.
         /// </summary>
-        /// <param name="ipConfig">The device's IP configuration data.</param>
-        /// <param name="requiresHttps">Indicates whether or not to always require a secure connection.</param>
+        /// <param name="ipConfig">Object that describes the current network configuration.</param>
+        /// <param name="requiresHttps">True if an https connection is required, false otherwise.</param>
+        /// <param name="preservePort">True if the previous connection's port is to continue to be used, false otherwise.</param>
         public void UpdateConnection(
             IpConfiguration ipConfig,
-            bool requiresHttps = false)
+            bool requiresHttps,
+            bool preservePort)
         {
             Uri newConnection = null;
 
@@ -154,11 +120,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     // We take the first, non-169.x.x.x address we find that is not 0.0.0.0.
                     if ((addressInfo.Address != "0.0.0.0") && !addressInfo.Address.StartsWith("169."))
                     {
+                        string address = addressInfo.Address;
+                        if (preservePort)
+                        {
+                            address = string.Format(
+                                "{0}:{1}",
+                                address,
+                                this.Connection.Port);
+                        }
+
                         newConnection = new Uri(
                             string.Format(
                                 "{0}://{1}", 
                                 requiresHttps ? "https" : "http",
-                                this.Connection.Authority));
+                                address));
                         break;
                     }
                 }

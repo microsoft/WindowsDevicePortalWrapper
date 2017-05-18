@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Get
+    /// .net 4.x implementation of HTTP GetAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -20,39 +20,26 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http get request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
-        /// /// <param name="validateCertificate">Whether the certificate should be validated.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> Get(
-            Uri uri, 
-            bool validateCertificate = true)
+        private async Task<Stream> GetAsync(
+            Uri uri)
         {
             MemoryStream dataStream = null;
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
             handler.Credentials = this.deviceConnection.Credentials;
-            if (validateCertificate)
-            {
-                handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-            }
-            else
-            {
-                handler.ServerCertificateValidationCallback = this.ServerCertificateNonValidation;
-            }
+            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
 
-                Task<HttpResponseMessage> getTask = client.GetAsync(uri);
-                await getTask.ConfigureAwait(false);
-                getTask.Wait();
-
-                using (HttpResponseMessage response = getTask.Result)
+                using (HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
 
                     this.RetrieveCsrfToken(response);
@@ -61,9 +48,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         dataStream = new MemoryStream();
 
-                        Task copyTask = content.CopyToAsync(dataStream);
-                        await copyTask.ConfigureAwait(false);
-                        copyTask.Wait();
+                        await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                         // Ensure we return with the stream pointed at the origin.
                         dataStream.Position = 0;

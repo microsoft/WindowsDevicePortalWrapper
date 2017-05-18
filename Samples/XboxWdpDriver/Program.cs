@@ -7,10 +7,11 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -23,6 +24,7 @@ namespace XboxWdpDriver
         /// String listing the available operations.
         /// </summary>
         private static readonly string AvailableOperationsText = "Supported operations are the following:\n" +
+                                "   app\n" +
                                 "   config\n" +
                                 "   connect\n" +
                                 "   fiddler\n" +
@@ -61,6 +63,12 @@ namespace XboxWdpDriver
             /// No operation (just connects to the console).
             /// </summary>
             None,
+
+            /// <summary>
+            /// Perform an App operation (List, Suspend, Resume, Launch, Terminate,
+            /// Uninstall)
+            /// </summary>
+            AppOperation,
 
             /// <summary>
             /// Get or set Xbox Settings.
@@ -125,6 +133,12 @@ namespace XboxWdpDriver
         }
 
         /// <summary>
+        /// Gets the thumbprint that we use to manually accept server certificates even
+        /// if they failed initial validation.
+        /// </summary>
+        public string AcceptedThumbprint { get; private set; }
+
+        /// <summary>
         /// Main entry point
         /// </summary>
         /// <param name="args">command line args</param>
@@ -176,36 +190,76 @@ namespace XboxWdpDriver
                     }
                 }
 
-                IDevicePortalConnection connection = null;
+                string finalConnectionAddress = string.Format("https://{0}:11443", targetConsole);
+                string userName = parameters.GetParameterValue(ParameterHelper.WdpUser);
+                string password = parameters.GetParameterValue(ParameterHelper.WdpPassword);
 
-                try
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
                 {
-                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
+                    try
                     {
-                        connection = new DevicePortalConnection(targetConsole);
+                        // No creds were provided on the command line.
+                        CredManager.RetrieveStoredCreds(targetConsole, ref userName, ref password);
                     }
-                    else
+                    catch (TypeLoadException)
                     {
-                        connection = new DevicePortalConnection(targetConsole, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
-                    }
-                }
-                catch (TypeLoadException)
-                {
-                    // Windows 7 doesn't support credential storage so we'll get a TypeLoadException
-                    if (!parameters.HasParameter(ParameterHelper.WdpUser) || !parameters.HasParameter(ParameterHelper.WdpPassword))
-                    {
+                        // Windows 7 doesn't support credential storage so we'll get a TypeLoadException
                         throw new Exception("Credential storage is not supported on your PC. It requires Windows 8+ to run. Please provide the user and password parameters.");
                     }
-                    else
+                }
+                else
+                {
+                    try
                     {
-                        string connectionUri = string.Format("https://{0}:11443", targetConsole);
-                        connection = new DefaultDevicePortalConnection(connectionUri, parameters.GetParameterValue(ParameterHelper.WdpUser), parameters.GetParameterValue(ParameterHelper.WdpPassword));
+                        // Creds were provided on the command line.
+                        CredManager.UpdateStoredCreds(targetConsole, userName, password);
+                    }
+                    catch (TypeLoadException)
+                    {
+                        // Do nothing. We can't store these on Win7
                     }
                 }
+
+                X509Certificate2 cert = null;
+
+                IDevicePortalConnection connection = new DefaultDevicePortalConnection(finalConnectionAddress, userName, password);
 
                 DevicePortal portal = new DevicePortal(connection);
 
-                Task connectTask = portal.Connect(updateConnection: false);
+                if (parameters.HasParameter(ParameterHelper.Cert))
+                {
+                    string certFile = parameters.GetParameterValue(ParameterHelper.Cert);
+
+                    try
+                    {
+                        cert = new X509Certificate2(certFile);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(string.Format("Failed to read manual cert file {0}, {1}", certFile, e.Message), e);
+                    }
+                }
+
+                // Add additional handling for untrusted certs.
+                portal.UnvalidatedCert += app.DoCertValidation;
+
+                // If a thumbprint is provided, use it for this connection. Otherwise check the registry.
+                if (parameters.HasParameter("thumbprint"))
+                {
+                    app.AcceptedThumbprint = parameters.GetParameterValue("thumbprint");
+                }
+                else
+                {
+                    object regValue;
+                    regValue = Microsoft.Win32.Registry.GetValue(DefaultConsoleRegkey, targetConsole, null);
+
+                    if (regValue is string)
+                    {
+                        app.AcceptedThumbprint = regValue as string;
+                    }
+                }
+
+                Task connectTask = portal.ConnectAsync(updateConnection: false, manualCertificate: cert);
                 connectTask.Wait();
 
                 if (portal.ConnectionHttpStatusCode != HttpStatusCode.OK)
@@ -221,13 +275,13 @@ namespace XboxWdpDriver
                             Console.WriteLine("The WDP connection was rejected due to bad credentials.\n\nPlease check the /user:<username> and /pwd:<pwd> parameters.");
                         }
                     }
-                    else if (portal.ConnectionHttpStatusCode != 0)
+                    else if (!string.IsNullOrEmpty(portal.ConnectionFailedDescription))
                     {
-                        Console.WriteLine(string.Format("Failed to connect to WDP with HTTP Status code: {0}", portal.ConnectionHttpStatusCode));
+                        Console.WriteLine(string.Format("Failed to connect to WDP (HTTP {0}) : {1}", (int)portal.ConnectionHttpStatusCode, portal.ConnectionFailedDescription));
                     }
                     else
                     {
-                        Console.WriteLine("Failed to connect to WDP for unknown reason.\n\nEnsure your address is the system IP or hostname ({0}) and the machine has WDP configured.", targetConsole);
+                        Console.WriteLine("Failed to connect to WDP for unknown reason.");
                     }
                 }
                 else
@@ -235,8 +289,12 @@ namespace XboxWdpDriver
                     // If the operation is more than a couple lines, it should
                     // live in its own file. These are arranged alphabetically
                     // for ease of use.
-                    switch(operation)
+                    switch (operation)
                     {
+                        case OperationType.AppOperation:
+                            AppOperation.HandleOperation(portal, parameters);
+                            break;
+
                         case OperationType.ConfigOperation:
                             ConfigOperation.HandleOperation(portal, parameters);
                             break;
@@ -252,6 +310,14 @@ namespace XboxWdpDriver
                             {
                                 Console.WriteLine("Connected to Default console: {0}", targetConsole);
                             }
+
+                            if (parameters.HasParameter("thumbprint"))
+                            {
+                                string thumbprint = parameters.GetParameterValue("thumbprint");
+                                Microsoft.Win32.Registry.SetValue(DefaultConsoleRegkey, targetConsole, thumbprint);
+                                Console.WriteLine("Thumbprint {0} saved for console with address {1}.", thumbprint, targetConsole);
+                            }
+
                             break;
 
                         case OperationType.FiddlerOperation:
@@ -266,14 +332,17 @@ namespace XboxWdpDriver
                             Console.WriteLine("OS version: " + portal.OperatingSystemVersion);
                             Console.WriteLine("Platform: " + portal.PlatformName + " (" + portal.Platform.ToString() + ")");
 
-                            Task<string> getNameTask = portal.GetDeviceName();
+                            Task<string> getNameTask = portal.GetDeviceNameAsync();
                             getNameTask.Wait();
                             Console.WriteLine("Device name: " + getNameTask.Result);
                             break;
 
                         case OperationType.InstallOperation:
-                            // Ensure we have an IP since SMB might need it for path generation.
-                            parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+                            if (!parameters.HasParameter(ParameterHelper.IpOrHostname))
+                            {
+                                // Ensure we have an IP since SMB might need it for path generation.
+                                parameters.AddParameter(ParameterHelper.IpOrHostname, targetConsole);
+                            }
 
                             InstallOperation.HandleOperation(portal, parameters);
                             break;
@@ -283,7 +352,7 @@ namespace XboxWdpDriver
                             break;
 
                         case OperationType.RebootOperation:
-                            Task rebootTask = portal.Reboot();
+                            Task rebootTask = portal.RebootAsync();
                             rebootTask.Wait();
                             Console.WriteLine("Rebooting device.");
                             break;
@@ -313,6 +382,19 @@ namespace XboxWdpDriver
                     }
                 }
             }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is DevicePortalException)
+                {
+                    DevicePortalException innerException = e.InnerException as DevicePortalException;
+
+                    Console.WriteLine(string.Format("Exception encountered: {0}, hr = 0x{1:X} : {2}", innerException.StatusCode, innerException.HResult, innerException.Reason));
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Unexpected exception encountered: {0}", e.Message));
+                }
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -335,7 +417,11 @@ namespace XboxWdpDriver
         /// <returns>enum representation of the operation type.</returns>
         private static OperationType OperationStringToEnum(string operation)
         {
-            if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
+            if (operation.Equals("app", StringComparison.OrdinalIgnoreCase))
+            {
+                return OperationType.AppOperation;
+            }
+            else if (operation.Equals("config", StringComparison.OrdinalIgnoreCase))
             {
                 return OperationType.ConfigOperation;
             }
@@ -385,6 +471,38 @@ namespace XboxWdpDriver
             }
 
             throw new Exception("Unknown Operation Type. " + AvailableOperationsText);
+        }
+
+        /// <summary>
+        /// Validate the server certificate
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="certificate">The server's certificate</param>
+        /// <param name="chain">The cert chain</param>
+        /// <param name="sslPolicyErrors">Policy Errors</param>
+        /// <returns>whether the cert passes validation</returns>
+        private bool DoCertValidation(DevicePortal sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            X509Certificate2 cert = new X509Certificate2(certificate);
+
+            if (!string.IsNullOrEmpty(this.AcceptedThumbprint))
+            {
+                if (cert.Thumbprint.Equals(this.AcceptedThumbprint, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            Console.WriteLine("The certificate provided by the device failed validation.");
+            Console.WriteLine("Issuer:\t\t{0}", cert.Issuer);
+            Console.WriteLine("Thumbprint:\t{0}", cert.Thumbprint);
+            Console.WriteLine();
+
+            Console.WriteLine("If you trust this endpoint, you can manually specify this certificate should be accepted by adding the following to any call:\n\t/thumbprint:{0}", cert.Thumbprint);
+            Console.WriteLine("Or you can permanently add this as a trusted certificate for this device by calling the following:\n\tXboxWdpDriver.exe /op:connect /thumbprint:{0}", cert.Thumbprint);
+            Console.WriteLine();
+
+            return false;
         }
     }
 }

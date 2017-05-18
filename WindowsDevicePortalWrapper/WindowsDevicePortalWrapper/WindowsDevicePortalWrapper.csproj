@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  <DocumentationFile>bin\Release\WindowsDevicePortalWrapper.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,6 +49,7 @@
     <Compile Include="CertificateHandling.cs" />
     <Compile Include="Core\AppDeployment.cs" />
     <Compile Include="DefaultDevicePortalConnection.cs" />
+    <Compile Include="Events\UnvalidatedCert.cs" />
     <Compile Include="HttpRest\RestPost.cs" />
     <Compile Include="HttpRest\RestPut.cs" />
     <Compile Include="HttpRest\RestDelete.cs" />

@@ -5,15 +5,25 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 #if !WINDOWS_UWP
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 #endif // !WINDOWS_UWP
-using System.Text.RegularExpressions;
+#if WINDOWS_UWP
+using System.Runtime.InteropServices.WindowsRuntime;
+#endif // WINDOWS_UWP
+#if !WINDOWS_UWP
+using System.Security.Cryptography.X509Certificates;
+#endif // !WINDOWS_UWP
 using System.Threading;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
+using Windows.Security.Cryptography.Certificates;
 using Windows.Web.Http;
+using Windows.Web.Http.Headers;
 #endif // WINDOWS_UWP
 
 namespace Microsoft.Tools.WindowsDevicePortal
@@ -33,7 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Endpoint used to access the certificate.
         /// </summary>
-        private static readonly string RootCertificateEndpoint = "config/rootcertificate";
+        public static readonly string RootCertificateEndpoint = "config/rootcertificate";
 
         /// <summary>
         /// Expected number of OS version sections once the OS version is split by period characters
@@ -60,7 +70,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets or sets handler for reporting connection status.
+        /// Handler for reporting connection status.
         /// </summary>
         public event DeviceConnectionStatusEventHandler ConnectionStatus;
 
@@ -107,6 +117,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets the status code for establishing our connection.
         /// </summary>
         public HttpStatusCode ConnectionHttpStatusCode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a description of why the connection failed.
+        /// </summary>
+        public string ConnectionFailedDescription
         {
             get;
             private set;
@@ -165,13 +184,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="ssid">Optional network SSID.</param>
         /// <param name="ssidKey">Optional network key.</param>
         /// <param name="updateConnection">Indicates whether we should update this connection's IP address after connecting.</param>
+        /// <param name="manualCertificate">A manually provided X509 Certificate for trust validation against this device.</param>
         /// <remarks>Connect sends ConnectionStatus events to indicate the current progress in the connection process.
         /// Some applications may opt to not register for the ConnectionStatus event and await on Connect.</remarks>
         /// <returns>Task for tracking the connect.</returns>
-        public async Task Connect(
+        [method: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "manualCertificate param doesn't really span multiple lines, it just has a different type for UWP and .NET implementations.")]
+        public async Task ConnectAsync(
             string ssid = null,
             string ssidKey = null,
-            bool updateConnection = true)
+            bool updateConnection = false,
+#if WINDOWS_UWP
+            Certificate manualCertificate = null)
+#else
+            X509Certificate2 manualCertificate = null)
+#endif
         {
 #if WINDOWS_UWP
             this.ConnectionHttpStatusCode = HttpStatusCode.Ok;
@@ -180,42 +206,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
             string connectionPhaseDescription = string.Empty;
 
+            if (manualCertificate != null)
+            {
+                this.SetManualCertificate(manualCertificate);
+            }
+
             try 
             {
-                // Get the device certificate
-                bool certificateAcquired = false;
-                try
-                {
-                    connectionPhaseDescription = "Acquiring device certificate";
-                    this.SendConnectionStatus(
-                        DeviceConnectionStatus.Connecting,
-                        DeviceConnectionPhase.AcquiringCertificate,
-                        connectionPhaseDescription);                  
-
-                    this.deviceConnection.SetDeviceCertificate(await this.GetDeviceCertificate());
-
-                    certificateAcquired = true;
-                }
-                catch
-                {
-                    // This device does not support the root certificate endpoint.
-                    this.SendConnectionStatus(
-                        DeviceConnectionStatus.Connecting,
-                        DeviceConnectionPhase.AcquiringCertificate,
-                        "No device certificate available");
-                }
-
                 // Get the device family and operating system information.
                 connectionPhaseDescription = "Requesting operating system information";
                 this.SendConnectionStatus(
                     DeviceConnectionStatus.Connecting,
                     DeviceConnectionPhase.RequestingOperatingSystemInformation,
                     connectionPhaseDescription);
-                this.deviceConnection.Family = await this.GetDeviceFamily();
-                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformation();
+                this.deviceConnection.Family = await this.GetDeviceFamilyAsync().ConfigureAwait(false);
+                this.deviceConnection.OsInfo = await this.GetOperatingSystemInformationAsync().ConfigureAwait(false);
 
-                // Default to using HTTPS if we were successful in acquiring the device's root certificate.
-                bool requiresHttps = certificateAcquired;
+                // Default to using whatever was specified in the connection.
+                bool requiresHttps = this.IsUsingHttps();
 
                 // HoloLens is the only device that supports the GetIsHttpsRequired method.
                 if (this.deviceConnection.OsInfo.Platform == DevicePortalPlatforms.HoloLens)
@@ -226,7 +234,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.DeterminingConnectionRequirements,
                         connectionPhaseDescription);
-                    requiresHttps = await this.GetIsHttpsRequired();
+                    requiresHttps = await this.GetIsHttpsRequiredAsync().ConfigureAwait(false);
                 }
 
                 // Connect the device to the specified network.
@@ -237,10 +245,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.ConnectingToTargetNetwork,
                         connectionPhaseDescription);
-                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfaces();
+                    WifiInterfaces wifiInterfaces = await this.GetWifiInterfacesAsync().ConfigureAwait(false);
 
                     // TODO - consider what to do if there is more than one wifi interface on a device
-                    await this.ConnectToWifiNetwork(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey);
+                    await this.ConnectToWifiNetworkAsync(wifiInterfaces.Interfaces[0].Guid, ssid, ssidKey).ConfigureAwait(false);
                 }
 
                 // Get the device's IP configuration and update the connection as appropriate.
@@ -251,7 +259,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.UpdatingDeviceAddress,
                         connectionPhaseDescription);
-                    this.deviceConnection.UpdateConnection(await this.GetIpConfig(), requiresHttps);
+                    
+                    bool preservePort = true;
+
+                    // HoloLens and Mobile are the only devices that support USB.
+                    // They require the port to be changed when the connection is updated
+                    // to WiFi.
+                    if ((this.Platform == DevicePortalPlatforms.HoloLens) ||
+                        (this.Platform == DevicePortalPlatforms.Mobile))
+                    {
+                        preservePort = false;
+                    }
+
+                    this.deviceConnection.UpdateConnection(
+                        await this.GetIpConfigAsync().ConfigureAwait(false), 
+                        requiresHttps,
+                        preservePort);
                 }
 
                 this.SendConnectionStatus(
@@ -266,16 +289,27 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 if (dpe != null)
                 {
                     this.ConnectionHttpStatusCode = dpe.StatusCode;
+                    this.ConnectionFailedDescription = dpe.Message;
                 }
                 else
                 {
                     this.ConnectionHttpStatusCode = HttpStatusCode.Conflict;
+
+                    // Get to the innermost exception for our return message.
+                    Exception innermostException = e;
+                    while (innermostException.InnerException != null)
+                    {
+                        innermostException = innermostException.InnerException;
+                        await Task.Yield();
+                    }
+
+                    this.ConnectionFailedDescription = innermostException.Message;
                 }
 
                 this.SendConnectionStatus(
                     DeviceConnectionStatus.Failed,
                     DeviceConnectionPhase.Idle,
-                    string.Format("Device connection failed: {0}", connectionPhaseDescription));
+                    string.Format("Device connection failed: {0}, {1}", connectionPhaseDescription, this.ConnectionFailedDescription));
             }
         }
 
@@ -286,8 +320,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="endpoint">API endpoint we are calling.</param>
         /// <param name="directory">Directory to store our file.</param>
         /// <param name="httpMethod">The http method to be performed.</param>
+        /// <param name="requestBody">An optional stream to use for the request body content.</param>
+        /// <param name="requestBodyContentType">The content type of the request stream.</param>
         /// <returns>Task waiting for HTTP call to return and file copy to complete.</returns>
-        public async Task SaveEndpointResponseToFile(string endpoint, string directory, HttpMethods httpMethod)
+        public async Task SaveEndpointResponseToFileAsync(
+            string endpoint,
+            string directory,
+            HttpMethods httpMethod,
+            Stream requestBody = null,
+            string requestBodyContentType = null)
         {
             Uri uri = new Uri(this.deviceConnection.Connection, endpoint);
 
@@ -336,13 +377,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 websocket.WebSocketStreamReceived += streamReceivedHandler;
 
-                Task startListeningForStreamTask = websocket.StartListeningForMessages(endpoint);
-                startListeningForStreamTask.Wait();
+                await websocket.ConnectAsync(endpoint);
+
+                await websocket.ReceiveMessagesAsync();
 
                 streamReceived.WaitOne();
 
-                Task stopListeningForStreamTask = websocket.StopListeningForMessages();
-                stopListeningForStreamTask.Wait();
+                await websocket.CloseAsync();
 
                 websocket.WebSocketStreamReceived -= streamReceivedHandler;
 
@@ -357,7 +398,24 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Put == httpMethod)
             {
-                using (Stream dataStream = await this.Put(uri))
+#if WINDOWS_UWP
+                HttpStreamContent streamContent = null;
+#else
+                StreamContent streamContent = null;
+#endif // WINDOWS_UWP
+
+                if (requestBody != null)
+                {
+#if WINDOWS_UWP
+                streamContent = new HttpStreamContent(requestBody.AsInputStream());
+                streamContent.Headers.ContentType = new HttpMediaTypeHeaderValue(requestBodyContentType);
+#else
+                    streamContent = new StreamContent(requestBody);
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue(requestBodyContentType);
+#endif // WINDOWS_UWP
+                }
+
+                using (Stream dataStream = await this.PutAsync(uri, streamContent))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -368,7 +426,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Post == httpMethod)
             {
-                using (Stream dataStream = await this.Post(uri))
+                using (Stream dataStream = await this.PostAsync(uri, requestBody, requestBodyContentType))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -379,7 +437,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Delete == httpMethod)
             {
-                using (Stream dataStream = await this.Delete(uri))
+                using (Stream dataStream = await this.DeleteAsync(uri))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -390,7 +448,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
             else if (HttpMethods.Get == httpMethod)
             {
-                using (Stream dataStream = await this.Get(uri))
+                using (Stream dataStream = await this.GetAsync(uri))
                 {
                     using (var fileStream = File.Create(filepath))
                     {
@@ -417,6 +475,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string message = "")
         {
             this.ConnectionStatus?.Invoke(this, new DeviceConnectionStatusEventArgs(status, phase, message));
+        }
+
+        /// <summary>
+        /// Helper method to determine if our connection is using HTTPS
+        /// </summary>
+        /// <returns>Whether we are using HTTPS</returns>
+        private bool IsUsingHttps()
+        {
+            return this.deviceConnection.Connection.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

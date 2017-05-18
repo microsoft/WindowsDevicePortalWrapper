@@ -25,7 +25,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.MachineNameApi, HttpMethods.Get);
 
-            Task<string> getNameTask = TestHelpers.Portal.GetDeviceName();
+            Task<string> getNameTask = TestHelpers.Portal.GetDeviceNameAsync();
             getNameTask.Wait();
 
             Assert.IsNotNull(TestHelpers.Portal.OperatingSystemVersion);

@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="files">List of files that we want to include in the post request.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task Post(
+        public async Task PostAsync(
             string apiPath,
             List<string> files,
             string payload = null)
@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 dataStream.Position = 0;
                 string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
 
-                await this.Post<NullResponse>(apiPath, payload, dataStream, contentType);
+                await this.PostAsync<NullResponse>(apiPath, payload, dataStream, contentType);
             }
         }
 
@@ -65,11 +65,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
         /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task Post(
+        public async Task PostAsync(
             string apiPath,
             string payload = null)
         {
-            await this.Post<NullResponse>(apiPath, payload);
+            await this.PostAsync<NullResponse>(apiPath, payload);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the POST completion.</returns>
-        private async Task<T> Post<T>(
+        public async Task<T> PostAsync<T>(
             string apiPath,
             string payload = null,
             Stream requestStream = null,
@@ -96,7 +96,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
 
-            using (Stream dataStream = await this.Post(uri, requestStream, requestStreamContentType))
+            using (Stream dataStream = await this.PostAsync(uri, requestStream, requestStreamContentType))
             {
                 if ((dataStream != null) &&
                     (dataStream.Length != 0))

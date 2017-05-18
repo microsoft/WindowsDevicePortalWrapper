@@ -6,13 +6,14 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Post
+    /// .net 4.x implementation of HTTP PostAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -23,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> Post(
+        private async Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)
@@ -47,16 +48,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Post);
 
-                Task<HttpResponseMessage> postTask = client.PostAsync(uri, requestContent);
-                await postTask.ConfigureAwait(false);
-                postTask.Wait();
-
-                using (HttpResponseMessage response = postTask.Result)
+                using (HttpResponseMessage response = await client.PostAsync(uri, requestContent).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {
@@ -64,9 +63,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         {
                             responseDataStream = new MemoryStream();
 
-                            Task copyTask = responseContent.CopyToAsync(responseDataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await responseContent.CopyToAsync(responseDataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             responseDataStream.Position = 0;

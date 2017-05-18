@@ -65,7 +65,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsers();
+            Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsersAsync();
             getUserTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getUserTask.Status);
@@ -102,7 +102,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
+            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettingsAsync();
             getSettingsTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSettingsTask.Status);
@@ -137,7 +137,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.KnownFoldersApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFolders();
+            Task<KnownFolders> getKnownFoldersTask = TestHelpers.Portal.GetKnownFoldersAsync();
             getKnownFoldersTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getKnownFoldersTask.Status);
@@ -159,7 +159,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetFilesApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContents("DevelopmentFiles");
+            Task<FolderContents> getFolderContentsTask = TestHelpers.Portal.GetFolderContentsAsync("DevelopmentFiles");
             getFolderContentsTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getFolderContentsTask.Status);
@@ -262,12 +262,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunningProcessApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcesses();
+            Task<RunningProcesses> getRunningProcessesTask = TestHelpers.Portal.GetRunningProcessesAsync();
             getRunningProcessesTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getRunningProcessesTask.Status);
 
-            ValidateRunningProcesses(getRunningProcessesTask.Result);
+            ValidateRunningProcessesAsync(getRunningProcessesTask.Result);
         }
 
         /// <summary>
@@ -294,19 +294,19 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.Portal.RunningProcessesMessageReceived += runningProcessesReceivedHandler;
 
-            Task startListeningForProcessesTask = TestHelpers.Portal.StartListeningForRunningProcesses();
+            Task startListeningForProcessesTask = TestHelpers.Portal.StartListeningForRunningProcessesAsync();
             startListeningForProcessesTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, startListeningForProcessesTask.Status);
 
             runningProcessesReceived.WaitOne();
 
-            Task stopListeningForProcessesTask = TestHelpers.Portal.StopListeningForRunningProcesses();
+            Task stopListeningForProcessesTask = TestHelpers.Portal.StopListeningForRunningProcessesAsync();
             stopListeningForProcessesTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, stopListeningForProcessesTask.Status);
 
             TestHelpers.Portal.RunningProcessesMessageReceived -= runningProcessesReceivedHandler;
 
-            ValidateRunningProcesses(runningProcesses);
+            ValidateRunningProcessesAsync(runningProcesses);
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SystemPerfApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerf();
+            Task<SystemPerformanceInformation> getSystemPerfTask = TestHelpers.Portal.GetSystemPerfAsync();
             getSystemPerfTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSystemPerfTask.Status);
@@ -351,13 +351,13 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.Portal.SystemPerfMessageReceived += systemPerfReceivedHandler;
 
-            Task startListeningForSystemPerfTask = TestHelpers.Portal.StartListeningForSystemPerf();
+            Task startListeningForSystemPerfTask = TestHelpers.Portal.StartListeningForSystemPerfAsync();
             startListeningForSystemPerfTask.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, startListeningForSystemPerfTask.Status);
 
             systemPerfReceived.WaitOne();
 
-            Task stopListeningForSystemPerf = TestHelpers.Portal.StopListeningForSystemPerf();
+            Task stopListeningForSystemPerf = TestHelpers.Portal.StopListeningForSystemPerfAsync();
             stopListeningForSystemPerf.Wait();
             Assert.AreEqual(TaskStatus.RanToCompletion, stopListeningForSystemPerf.Status);
 
@@ -373,8 +373,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void XboxAppRegisterTest()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.InstallStateApi, HttpMethods.Post);
 
-            Task registerTask = TestHelpers.Portal.RegisterApplication("SomeLooseFolder");
+            Task registerTask = TestHelpers.Portal.RegisterApplicationAsync("SomeLooseFolder");
             registerTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, registerTask.Status);
@@ -388,7 +389,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.UploadPackageFolderApi, HttpMethods.Post);
 
-            Task uploadTask = TestHelpers.Portal.UploadPackageFolder("MockData\\XboxOne", "DestinationLooseFolder");
+            Task uploadTask = TestHelpers.Portal.UploadPackageFolderAsync("MockData\\XboxOne", "DestinationLooseFolder");
             uploadTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, uploadTask.Status);
@@ -404,7 +405,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveUserApi, HttpMethods.Get);
 
-            Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsers();
+            Task<UserList> getUserTask = TestHelpers.Portal.GetXboxLiveUsersAsync();
             getUserTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getUserTask.Status);
@@ -446,7 +447,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             user.SignedIn = true;
             users.Add(user);
 
-            Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsers(users);
+            Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsersAsync(users);
             updateUsersTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, updateUsersTask.Status);
@@ -476,7 +477,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             try
             {
-                Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsers(users);
+                Task updateUsersTask = TestHelpers.Portal.UpdateXboxLiveUsersAsync(users);
                 updateUsersTask.Wait();
 
                 Assert.Fail("Expected an exception due to mock responder returning failure HRESULT.");
@@ -504,7 +505,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxSettingsApi, HttpMethods.Get);
 
-            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettings();
+            Task<XboxSettingList> getSettingsTask = TestHelpers.Portal.GetXboxSettingsAsync();
             getSettingsTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSettingsTask.Status);
@@ -540,7 +541,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string settingName = "TVResolution";
             TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, settingName), HttpMethods.Get);
 
-            Task<XboxSetting> getSettingTask = TestHelpers.Portal.GetXboxSetting(settingName);
+            Task<XboxSetting> getSettingTask = TestHelpers.Portal.GetXboxSettingAsync(settingName);
             getSettingTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSettingTask.Status);
@@ -568,7 +569,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(Path.Combine(DevicePortal.XboxSettingsApi, setting.Name), HttpMethods.Put);
 
-            Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSetting(setting);
+            Task<XboxSetting> updateSettingsTask = TestHelpers.Portal.UpdateXboxSettingAsync(setting);
             updateSettingsTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, updateSettingsTask.Status);
@@ -594,7 +595,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.GetXboxScreenshotApi, response, HttpMethods.Get);
 
-            Task<Stream> screenshotTask = TestHelpers.Portal.TakeXboxScreenshot();
+            Task<Stream> screenshotTask = TestHelpers.Portal.TakeXboxScreenshotAsync();
             screenshotTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, screenshotTask.Status);
@@ -609,7 +610,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, response, HttpMethods.Post);
 
-            Task fiddlerEnableTask = TestHelpers.Portal.EnableFiddlerTracing("localhost", "8888");
+            Task fiddlerEnableTask = TestHelpers.Portal.EnableFiddlerTracingAsync("localhost", "8888");
             fiddlerEnableTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerEnableTask.Status);
@@ -617,7 +618,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             response = new HttpResponseMessage(HttpStatusCode.OK);
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.FiddlerSetupApi, response, HttpMethods.Delete);
 
-            Task fiddlerDisableTask = TestHelpers.Portal.DisableFiddlerTracing();
+            Task fiddlerDisableTask = TestHelpers.Portal.DisableFiddlerTracingAsync();
             fiddlerDisableTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, fiddlerDisableTask.Status);
@@ -633,7 +634,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveSandboxApi, this.PlatformType, this.FriendlyOperatingSystemVersion, HttpMethods.Get);
 
-            Task<Sandbox> getSandboxTask = TestHelpers.Portal.GetXboxLiveSandbox();
+            Task<Sandbox> getSandboxTask = TestHelpers.Portal.GetXboxLiveSandboxAsync();
             getSandboxTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getSandboxTask.Status);
@@ -654,7 +655,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
 
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.XboxLiveSandboxApi, response, HttpMethods.Put);
 
-            Task<Sandbox> setSandboxTask = TestHelpers.Portal.SetXboxLiveSandbox(sandboxValue);
+            Task<Sandbox> setSandboxTask = TestHelpers.Portal.SetXboxLiveSandboxAsync(sandboxValue);
             setSandboxTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setSandboxTask.Status);
@@ -666,9 +667,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Validate the <see cref="RunningProcesses" /> returned from the tests.
         /// </summary>
         /// <param name="runningProcesses">The <see cref="RunningProcesses" /> to validate.</param>
-        private static void ValidateRunningProcesses(RunningProcesses runningProcesses)
+        private static void ValidateRunningProcessesAsync(RunningProcesses runningProcesses)
         {
-            List<DeviceProcessInfo> processes = new List<DeviceProcessInfo>(runningProcesses.Processes);
+            List<DeviceProcessInfo> processes = runningProcesses.Processes;
 
             // Check some known things about this response.
             Assert.AreEqual(75, processes.Count);

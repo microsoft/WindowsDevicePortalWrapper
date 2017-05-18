@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Security.Cryptography.Certificates;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using System.Runtime.CompilerServices;
-using Windows.UI.Core;
 
 namespace SampleWdpClient.UniversalWindows
 {
@@ -28,6 +23,8 @@ namespace SampleWdpClient.UniversalWindows
         /// The device portal to which we are connecting.
         /// </summary>
         private DevicePortal portal;
+
+        private Certificate certificate;
 
         /// <summary>
         /// The main page constructor.
@@ -55,7 +52,7 @@ namespace SampleWdpClient.UniversalWindows
         {
             bool clearOutput = this.clearOutput.IsChecked.HasValue ? this.clearOutput.IsChecked.Value : false;
             if (clearOutput)
-            { 
+            {
                 this.commandOutput.Text = string.Empty;
             }
         }
@@ -65,12 +62,14 @@ namespace SampleWdpClient.UniversalWindows
         /// </summary>
         /// <param name="sender">The caller of this method.</param>
         /// <param name="e">The arguments associated with this event.</param>
-        private void ConnectToDevice_Click(object sender, RoutedEventArgs e)
+        private async void ConnectToDevice_Click(object sender, RoutedEventArgs e)
         {
             this.EnableConnectionControls(false);
             this.EnableDeviceControls(false);
 
             this.ClearOutput();
+
+            bool allowUntrusted = this.allowUntrustedCheckbox.IsChecked.Value;
 
             portal = new DevicePortal(
                 new DefaultDevicePortalConnection(
@@ -79,44 +78,51 @@ namespace SampleWdpClient.UniversalWindows
                     this.password.Password));
 
             StringBuilder sb = new StringBuilder();
-            Task connectTask = new Task( 
-                async () => 
+
+            sb.Append(this.commandOutput.Text);
+            sb.AppendLine("Connecting...");
+            this.commandOutput.Text = sb.ToString();
+            portal.ConnectionStatus += (portal, connectArgs) =>
+            {
+                if (connectArgs.Status == DeviceConnectionStatus.Connected)
                 {
-                    sb.Append(this.MarshalGetCommandOutput());
-                    sb.AppendLine("Connecting...");
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-
-                    try
-                    {
-                        await portal.Connect();
-
-                        sb.Append("Connected to: ");
-                        sb.AppendLine(portal.Address);
-                        sb.Append("OS version: ");
-                        sb.AppendLine(portal.OperatingSystemVersion);
-                        sb.Append("Device family: ");
-                        sb.AppendLine(portal.DeviceFamily);
-                        sb.Append("Platform: ");
-                        sb.AppendLine(String.Format("{0} ({1})",
-                            portal.PlatformName,
-                            portal.Platform.ToString()));
-                    }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to connect to the device.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                    }
-                });
-
-            Task continuationTask = connectTask.ContinueWith(
-                (t) =>
+                    sb.Append("Connected to: ");
+                    sb.AppendLine(portal.Address);
+                    sb.Append("OS version: ");
+                    sb.AppendLine(portal.OperatingSystemVersion);
+                    sb.Append("Device family: ");
+                    sb.AppendLine(portal.DeviceFamily);
+                    sb.Append("Platform: ");
+                    sb.AppendLine(String.Format("{0} ({1})",
+                        portal.PlatformName,
+                        portal.Platform.ToString()));
+                }
+                else if (connectArgs.Status == DeviceConnectionStatus.Failed)
                 {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-                    this.MarshalEnableDeviceControls(true);
-                    this.MarshalEnableConnectionControls(true);
-                });
+                    sb.AppendLine("Failed to connect to the device.");
+                    sb.AppendLine(connectArgs.Message);
+                }
+            };
 
-            connectTask.Start();
+            try
+            {
+                // If the user wants to allow untrusted connections, make a call to GetRootDeviceCertificate
+                // with acceptUntrustedCerts set to true. This will enable untrusted connections for the
+                // remainder of this session.
+                if (allowUntrusted)
+                {
+                    this.certificate = await portal.GetRootDeviceCertificateAsync(true);
+                }
+                await portal.ConnectAsync(manualCertificate: this.certificate);
+            }
+            catch (Exception exception)
+            {
+                sb.AppendLine(exception.Message);
+            }
+
+            this.commandOutput.Text = sb.ToString();
+            EnableDeviceControls(true);
+            EnableConnectionControls(true);
         }
 
         /// <summary>
@@ -163,56 +169,45 @@ namespace SampleWdpClient.UniversalWindows
         /// </summary>
         /// <param name="sender">The caller of this method.</param>
         /// <param name="e">The arguments associated with this event.</param>
-        private void GetIPConfig_Click(object sender, RoutedEventArgs e)
+        private async void GetIPConfig_Click(object sender, RoutedEventArgs e)
         {
             this.ClearOutput();
             this.EnableConnectionControls(false);
             this.EnableDeviceControls(false);
 
             StringBuilder sb = new StringBuilder();
-            Task getTask = new Task( 
-                async () =>
+            sb.Append(commandOutput.Text);
+            sb.AppendLine("Getting IP configuration...");
+            commandOutput.Text = sb.ToString();
+
+            try
+            {
+                IpConfiguration ipconfig = await portal.GetIpConfigAsync();
+
+                foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
                 {
-                    sb.Append(this.MarshalGetCommandOutput());
-                    sb.AppendLine("Getting IP configuration...");
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-
-                    try
+                    sb.Append(" ");
+                    sb.AppendLine(adapterInfo.Description);
+                    sb.Append("  MAC address :");
+                    sb.AppendLine(adapterInfo.MacAddress);
+                    foreach (IpAddressInfo address in adapterInfo.IpAddresses)
                     {
-                        IpConfiguration ipconfig = await portal.GetIpConfig();
-
-                        foreach (NetworkAdapterInfo adapterInfo in ipconfig.Adapters)
-                        {
-                            sb.Append(" ");
-                            sb.AppendLine(adapterInfo.Description);
-                            sb.Append("  MAC address :");
-                            sb.AppendLine(adapterInfo.MacAddress);
-                            foreach (IpAddressInfo address in adapterInfo.IpAddresses)
-                            {
-                                sb.Append("  IP address :");
-                                sb.AppendLine(address.Address);
-                            }
-                            sb.Append("  DHCP address :");
-                            sb.AppendLine(adapterInfo.Dhcp.Address.Address);
-                        }
+                        sb.Append("  IP address :");
+                        sb.AppendLine(address.Address);
                     }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to get IP config info.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                    }
+                    sb.Append("  DHCP address :");
+                    sb.AppendLine(adapterInfo.Dhcp.Address.Address);
+                }
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to get IP config info.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
 
-                });
-
-            Task continuationTask = getTask.ContinueWith(
-                (t) =>
-                {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-                    this.MarshalEnableDeviceControls(true);
-                    this.MarshalEnableConnectionControls(true);
-                });
-
-            getTask.Start();
+            commandOutput.Text = sb.ToString();
+            EnableDeviceControls(true);
+            EnableConnectionControls(true);
         }
 
         /// <summary>
@@ -220,130 +215,57 @@ namespace SampleWdpClient.UniversalWindows
         /// </summary>
         /// <param name="sender">The caller of this method.</param>
         /// <param name="e">The arguments associated with this event.</param>
-        private void GetWifiInfo_Click(object sender, RoutedEventArgs e)
+        private async void GetWifiInfo_Click(object sender, RoutedEventArgs e)
         {
             this.ClearOutput();
             this.EnableConnectionControls(false);
             this.EnableDeviceControls(false);
 
             StringBuilder sb = new StringBuilder();
-            Task getTask = new Task(
-                async () =>
-                {
-                    sb.Append(this.MarshalGetCommandOutput());
-                    sb.AppendLine("Getting WiFi interfaces and networks...");
-                    this.MarshalUpdateCommandOutput(sb.ToString());
 
-                    try
+            sb.Append(commandOutput.Text);
+            sb.AppendLine("Getting WiFi interfaces and networks...");
+            commandOutput.Text = sb.ToString();
+
+            try
+            {
+                WifiInterfaces wifiInterfaces = await portal.GetWifiInterfacesAsync();
+                sb.AppendLine("WiFi Interfaces:");
+                foreach (WifiInterface wifiInterface in wifiInterfaces.Interfaces)
+                {
+                    sb.Append(" ");
+                    sb.AppendLine(wifiInterface.Description);
+                    sb.Append("  GUID: ");
+                    sb.AppendLine(wifiInterface.Guid.ToString());
+
+                    WifiNetworks wifiNetworks = await portal.GetWifiNetworksAsync(wifiInterface.Guid);
+                    sb.AppendLine("  Networks:");
+                    foreach (WifiNetworkInfo network in wifiNetworks.AvailableNetworks)
                     {
-                        WifiInterfaces wifiInterfaces = await portal.GetWifiInterfaces();
-                        sb.AppendLine("WiFi Interfaces:");
-                        foreach (WifiInterface wifiInterface in wifiInterfaces.Interfaces)
-                        {
-                            sb.Append(" ");
-                            sb.AppendLine(wifiInterface.Description);
-                            sb.Append("  GUID: ");
-                            sb.AppendLine(wifiInterface.Guid.ToString());
-
-                            WifiNetworks wifiNetworks = await portal.GetWifiNetworks(wifiInterface.Guid);
-                            sb.AppendLine("  Networks:");
-                            foreach (WifiNetworkInfo network in wifiNetworks.AvailableNetworks)
-                            {
-                                sb.Append("   SSID: ");
-                                sb.AppendLine(network.Ssid);
-                                sb.Append("   Profile name: ");
-                                sb.AppendLine(network.ProfileName);
-                                sb.Append("   is connected: ");
-                                sb.AppendLine(network.IsConnected.ToString());
-                                sb.Append("   Channel: ");
-                                sb.AppendLine(network.Channel.ToString());
-                                sb.Append("   Authentication algorithm: ");
-                                sb.AppendLine(network.AuthenticationAlgorithm);
-                                sb.Append("   Signal quality: ");
-                                sb.AppendLine(network.SignalQuality.ToString());
-                            }
-                        };
+                        sb.Append("   SSID: ");
+                        sb.AppendLine(network.Ssid);
+                        sb.Append("   Profile name: ");
+                        sb.AppendLine(network.ProfileName);
+                        sb.Append("   is connected: ");
+                        sb.AppendLine(network.IsConnected.ToString());
+                        sb.Append("   Channel: ");
+                        sb.AppendLine(network.Channel.ToString());
+                        sb.Append("   Authentication algorithm: ");
+                        sb.AppendLine(network.AuthenticationAlgorithm);
+                        sb.Append("   Signal quality: ");
+                        sb.AppendLine(network.SignalQuality.ToString());
                     }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to get WiFi info.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                    }
-                });
+                };
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to get WiFi info.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+            }
 
-            Task continuationTask = getTask.ContinueWith(
-                (t) =>
-                {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-                    this.MarshalEnableDeviceControls(true);
-                    this.MarshalEnableConnectionControls(true);
-                });
-
-            getTask.Start();
-        }
-
-        /// <summary>
-        /// Executes the EnabledConnectionControls method on the UI thread.
-        /// </summary>
-        /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableConnectionControls(bool enable)
-        {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    this.EnableConnectionControls(enable);
-                }).AsTask();
-            t.Wait();
-        }
-
-        /// <summary>
-        /// Executes the EnabledDeviceControls method on the UI thread.
-        /// </summary>
-        /// <param name="enable">True to enable the controls, false to disable them.</param>
-        private void  MarshalEnableDeviceControls(bool enable)
-        {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    this.EnableDeviceControls(enable);
-                }).AsTask();
-            t.Wait();
-        }
-
-        /// <summary>
-        /// Executes the fetching of the text displayed in the command output UI element on the UI thread.
-        /// </summary>
-        /// <returns>The contents of the command output UI element.</returns>
-        private string MarshalGetCommandOutput()
-        {
-            string output = string.Empty;
-
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    output = this.commandOutput.Text;
-                }).AsTask();
-            t.Wait();
-
-            return output;
-        }
-
-        /// <summary>
-        /// Executes the update of the text displayed in the command output UI element ont he UI thread.
-        /// </summary>
-        /// <param name="output">The text to display in the command output UI element.</param>
-        private void MarshalUpdateCommandOutput(string output)
-        {
-            Task t = this.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    this.commandOutput.Text = output;
-                }).AsTask();
-            t.Wait();
+            commandOutput.Text = sb.ToString();
+            EnableDeviceControls(true);
+            EnableConnectionControls(true);
         }
 
         /// <summary>
@@ -361,7 +283,7 @@ namespace SampleWdpClient.UniversalWindows
         /// </summary>
         /// <param name="sender">The caller of this method.</param>
         /// <param name="e">The arguments associated with this event.</param>
-        private void RebootDevice_Click(object sender, RoutedEventArgs e)
+        private async void RebootDevice_Click(object sender, RoutedEventArgs e)
         {
             bool reenableDeviceControls = false;
 
@@ -370,34 +292,25 @@ namespace SampleWdpClient.UniversalWindows
             this.EnableDeviceControls(false);
 
             StringBuilder sb = new StringBuilder();
-            Task rebootTask = new Task(
-                async () =>
-                {
-                    sb.Append(this.MarshalGetCommandOutput());
-                    sb.AppendLine("Rebooting the device");
-                    this.MarshalUpdateCommandOutput(sb.ToString());
 
-                    try
-                    {
-                        await portal.Reboot();
-                    }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to reboot the device.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                        reenableDeviceControls = true;
-                    }
-                });
+            sb.Append(commandOutput.Text);
+            sb.AppendLine("Rebooting the device");
+            commandOutput.Text = sb.ToString();
 
-            Task continuationTask = rebootTask.ContinueWith(
-                (t) =>
-                {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-                    this.MarshalEnableDeviceControls(reenableDeviceControls);
-                    this.MarshalEnableConnectionControls(true);
-                });
+            try
+            {
+                await portal.RebootAsync();
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to reboot the device.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+                reenableDeviceControls = true;
+            }
 
-            rebootTask.Start();
+            commandOutput.Text = sb.ToString();
+            EnableDeviceControls(reenableDeviceControls);
+            EnableConnectionControls(true);
         }
 
         /// <summary>
@@ -405,7 +318,7 @@ namespace SampleWdpClient.UniversalWindows
         /// </summary>
         /// <param name="sender">The caller of this method.</param>
         /// <param name="e">The arguments associated with this event.</param>
-        private void ShutdownDevice_Click(object sender, RoutedEventArgs e)
+        private async void ShutdownDevice_Click(object sender, RoutedEventArgs e)
         {
             bool reenableDeviceControls = false;
 
@@ -414,34 +327,23 @@ namespace SampleWdpClient.UniversalWindows
             this.EnableDeviceControls(false);
 
             StringBuilder sb = new StringBuilder();
-            Task shutdownTask = new Task(
-                async () =>
-                {
-                    sb.Append(this.MarshalGetCommandOutput());
-                    sb.AppendLine("Shutting down the device");
-                    this.MarshalUpdateCommandOutput(sb.ToString());
+            sb.Append(commandOutput.Text);
+            sb.AppendLine("Shutting down the device");
+            commandOutput.Text = sb.ToString();
+            try
+            {
+                await portal.ShutdownAsync();
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine("Failed to shut down the device.");
+                sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
+                reenableDeviceControls = true;
+            }
 
-                    try
-                    {
-                        await portal.Shutdown();
-                    }
-                    catch(Exception ex)
-                    {
-                        sb.AppendLine("Failed to shut down the device.");
-                        sb.AppendLine(ex.GetType().ToString() + " - " + ex.Message);
-                        reenableDeviceControls = true;
-                    }
-                });
-
-            Task continuationTask = shutdownTask.ContinueWith(
-                (t) =>
-                {
-                    this.MarshalUpdateCommandOutput(sb.ToString());
-                    this.MarshalEnableDeviceControls(reenableDeviceControls);
-                    this.MarshalEnableConnectionControls(true);
-                });
-
-            shutdownTask.Start();
+            commandOutput.Text = sb.ToString();
+            EnableDeviceControls(reenableDeviceControls);
+            EnableConnectionControls(true);
         }
 
         /// <summary>
@@ -452,6 +354,46 @@ namespace SampleWdpClient.UniversalWindows
         private void Username_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnableConnectButton();
+        }
+
+        /// <summary>
+        /// Loads a cert file for cert validation.
+        /// </summary>
+        /// <param name="sender">The caller of this method.</param>
+        /// <param name="e">The arguments associated with this event.</param>
+        private async void LoadCertificate_Click(object sender, RoutedEventArgs e)
+        {
+            await LoadCertificate();
+        }
+
+        /// <summary>
+        /// Loads a certificates asynchronously (runs on the UI thread).
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadCertificate()
+        {
+            try
+            {
+                FileOpenPicker filePicker = new FileOpenPicker();
+                filePicker.SuggestedStartLocation = PickerLocationId.Downloads;
+                filePicker.FileTypeFilter.Add(".cer");
+
+                StorageFile file = await filePicker.PickSingleFileAsync();
+
+                if (file != null)
+                {
+                    IBuffer cerBlob = await FileIO.ReadBufferAsync(file);
+
+                    if (cerBlob != null)
+                    {
+                        certificate = new Certificate(cerBlob);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                this.commandOutput.Text = "Failed to get cert file: " + exception.Message;
+            }
         }
     }
 }

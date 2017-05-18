@@ -13,7 +13,7 @@ using Microsoft.Tools.WindowsDevicePortal.Tests;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// MOCK implementation of HTTP Get
+    /// MOCK implementation of HTTP GetAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -21,25 +21,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Submits the http get request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
-        /// /// <param name="validateCertificate">Whether the certificate should be validated.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> Get(
-            Uri uri, 
-            bool validateCertificate = true)
+        private async Task<Stream> GetAsync(
+            Uri uri)
         {
             MemoryStream dataStream = null;
 
             WebRequestHandler handler = new WebRequestHandler();
             handler.UseDefaultCredentials = false;
             handler.Credentials = this.deviceConnection.Credentials;
-            if (validateCertificate)
-            {
-                handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-            }
-            else
-            {
-                handler.ServerCertificateValidationCallback = this.ServerCertificateNonValidation;
-            }
+            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(handler))
             {
@@ -53,10 +44,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
-
-                    this.RetrieveCsrfToken(response);
 
                     using (HttpContent content = response.Content)
                     {

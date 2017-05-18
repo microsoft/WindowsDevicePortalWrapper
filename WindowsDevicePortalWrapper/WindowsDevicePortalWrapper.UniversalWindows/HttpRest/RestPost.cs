@@ -18,7 +18,7 @@ using Windows.Web.Http.Filters;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// Universal Windows Platform implementation of HTTP Post
+    /// Universal Windows Platform implementation of HTTP PostAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
 #pragma warning disable 1998
-        private async Task<Stream> Post(
+        private async Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)
@@ -58,30 +58,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
             using (HttpClient client = new HttpClient(httpFilter))
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Post);
-
-                IAsyncOperationWithProgress<HttpResponseMessage, HttpProgress> responseOperation = client.PostAsync(uri, requestContent);
-                TaskAwaiter<HttpResponseMessage> responseAwaiter = responseOperation.GetAwaiter();
-                while (!responseAwaiter.IsCompleted)
-                {
-                }
-
-                using (HttpResponseMessage response = responseOperation.GetResults())
+                using (HttpResponseMessage response = await client.PostAsync(uri, requestContent))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {
                         using (IHttpContent messageContent = response.Content)
                         {
-                            IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                            while (bufferOperation.Status != AsyncStatus.Completed)
-                            {
-                            }
-
-                            dataBuffer = bufferOperation.GetResults();
+                            dataBuffer = await messageContent.ReadAsBufferAsync();
                         }
                     }
                 }

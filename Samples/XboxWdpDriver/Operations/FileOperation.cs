@@ -67,7 +67,7 @@ namespace XboxWdpDriver
             {
                 if (operationType.Equals("knownfolders"))
                 {
-                    Task<KnownFolders> getKnownFoldersTask = portal.GetKnownFolders();
+                    Task<KnownFolders> getKnownFoldersTask = portal.GetKnownFoldersAsync();
 
                     getKnownFoldersTask.Wait();
                     Console.WriteLine(getKnownFoldersTask.Result);
@@ -84,7 +84,7 @@ namespace XboxWdpDriver
 
                     if (operationType.Equals("dir"))
                     {
-                        Task<FolderContents> getDirectoryContents = portal.GetFolderContents(knownFolderId, subPath, packageFullName);
+                        Task<FolderContents> getDirectoryContents = portal.GetFolderContentsAsync(knownFolderId, subPath, packageFullName);
 
                         getDirectoryContents.Wait();
                         Console.WriteLine(getDirectoryContents.Result);
@@ -101,7 +101,7 @@ namespace XboxWdpDriver
                             return;
                         }
 
-                        Task uploadFileTask = portal.UploadFile(knownFolderId, filepath, subPath, packageFullName);
+                        Task uploadFileTask = portal.UploadFileAsync(knownFolderId, filepath, subPath, packageFullName);
 
                         uploadFileTask.Wait();
                         Console.WriteLine(string.Format("{0} uploaded.", filepath));
@@ -132,7 +132,7 @@ namespace XboxWdpDriver
 
                             destination += "/" + filename;
 
-                            Task<Stream> getFile = portal.GetFile(knownFolderId, filename, subPath, packageFullName);
+                            Task<Stream> getFile = portal.GetFileAsync(knownFolderId, filename, subPath, packageFullName);
 
                             getFile.Wait();
 
@@ -155,14 +155,14 @@ namespace XboxWdpDriver
                                 return;
                             }
 
-                            Task renameFileTask = portal.RenameFile(knownFolderId, filename, newfilename, subPath, packageFullName);
+                            Task renameFileTask = portal.RenameFileAsync(knownFolderId, filename, newfilename, subPath, packageFullName);
 
                             renameFileTask.Wait();
                             Console.WriteLine(string.Format("Renamed {0} to {1}.", filename, newfilename));
                         }
                         else if (operationType.Equals("delete"))
                         {
-                            Task deleteFileTask = portal.DeleteFile(knownFolderId, filename, subPath, packageFullName);
+                            Task deleteFileTask = portal.DeleteFileAsync(knownFolderId, filename, subPath, packageFullName);
 
                             deleteFileTask.Wait();
                             Console.WriteLine(string.Format("Deleted {0}.", filename));
@@ -176,7 +176,7 @@ namespace XboxWdpDriver
                 {
                     DevicePortalException exception = e.InnerException as DevicePortalException;
 
-                    Console.WriteLine(string.Format("HTTP Status: {0}, Hresult: 0x{1:X8}. {2}", exception.StatusCode, exception.HResult, exception.Message));
+                    Console.WriteLine(string.Format("HTTP Status: {0}, Hresult: 0x{1:X8}. {2}", exception.StatusCode, exception.HResult, exception.Reason));
                 }
             }
         }

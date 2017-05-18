@@ -32,13 +32,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public static readonly string WifiNetworksApi = "api/wifi/networks";
 
         /// <summary>
-        /// Connect to a WiFi network.
+        /// Connect to a WiFi network using a given network adapter and SSID. 
         /// </summary>
         /// <param name="networkAdapter">Network adaptor GUID.</param>
         /// <param name="ssid">SSID of the network.</param>
         /// <param name="networkKey">Network key.</param>
         /// <returns>Task tracking connection status.</returns>
-        public async Task ConnectToWifiNetwork(
+        public async Task ConnectToWifiNetworkAsync(
             Guid networkAdapter,
             string ssid,
             string networkKey)
@@ -49,7 +49,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 Utilities.Hex64Encode(ssid),
                 Utilities.Hex64Encode(networkKey));
 
-            await this.Post(
+            await this.PostAsync(
                 WifiNetworkApi,
                 payload);
         }
@@ -58,19 +58,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets WiFi interfaces.
         /// </summary>
         /// <returns>List of WiFi interfaces.</returns>
-        public async Task<WifiInterfaces> GetWifiInterfaces()
+        public async Task<WifiInterfaces> GetWifiInterfacesAsync()
         {
-            return await this.Get<WifiInterfaces>(WifiInterfacesApi);
+            return await this.GetAsync<WifiInterfaces>(WifiInterfacesApi);
         }
 
         /// <summary>
-        /// Gets WiFi networks.
+        /// Gets WiFi networks as seen from a WiFi interface.
         /// </summary>
         /// <param name="interfaceGuid">Interface to get networks from.</param>
         /// <returns>List of available networks.</returns>
-        public async Task<WifiNetworks> GetWifiNetworks(Guid interfaceGuid)
+        public async Task<WifiNetworks> GetWifiNetworksAsync(Guid interfaceGuid)
         {
-            return await this.Get<WifiNetworks>(
+            return await this.GetAsync<WifiNetworks>(
                 WifiNetworksApi,
                 string.Format("interface={0}", interfaceGuid.ToString()));
         }
@@ -84,28 +84,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WifiInterface
         {
             /// <summary>
-            /// Gets or sets description.
+            /// Gets description.
             /// </summary>
             [DataMember(Name = "Description")]
-            public string Description { get; set; }
+            public string Description { get; private set; }
 
             /// <summary>
-            /// Gets or sets GUID.
+            /// Gets GUID.
             /// </summary>
             [DataMember(Name = "GUID")]
-            public Guid Guid { get; set; }
+            public Guid Guid { get; private set; }
 
             /// <summary>
-            /// Gets or sets index.
+            /// Gets index.
             /// </summary>
             [DataMember(Name = "Index")]
-            public int Index { get; set; }
+            public int Index { get; private set; }
 
             /// <summary>
-            /// Gets or sets profiles list.
+            /// Gets profiles list.
             /// </summary>
             [DataMember(Name = "ProfilesList")]
-            public List<WifiNetworkProfile> Profiles { get; set; }
+            public List<WifiNetworkProfile> Profiles { get; private set; }
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WifiInterfaces
         {
             /// <summary>
-            /// Gets or sets the list of interfaces.
+            /// Gets the list of interfaces.
             /// </summary>
             [DataMember(Name = "Interfaces")]
-            public List<WifiInterface> Interfaces { get; set; }
+            public List<WifiInterface> Interfaces { get; private set; }
         }
 
         /// <summary>
@@ -128,10 +128,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WifiNetworks
         {
             /// <summary>
-            /// Gets or sets the list of available networks.
+            /// Gets the list of available networks.
             /// </summary>
             [DataMember(Name = "AvailableNetworks")]
-            public List<WifiNetworkInfo> AvailableNetworks { get; set; }
+            public List<WifiNetworkInfo> AvailableNetworks { get; private set; }
         }
 
         /// <summary>
@@ -141,82 +141,82 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WifiNetworkInfo
         {
             /// <summary>
-            /// Gets or sets a value indicating whether the device is already connected to this network.
+            /// Gets a value indicating whether the device is already connected to this network.
             /// </summary>
             [DataMember(Name = "AlreadyConnected")]
-            public bool IsConnected { get; set; }
+            public bool IsConnected { get; private set; }
 
             /// <summary>
-            /// Gets or sets the authentication algorithm.
+            /// Gets the authentication algorithm.
             /// </summary>
             [DataMember(Name = "AuthenticationAlgorithm")]
-            public string AuthenticationAlgorithm { get; set; }
+            public string AuthenticationAlgorithm { get; private set; }
 
             /// <summary>
-            /// Gets or sets the channel.
+            /// Gets the channel.
             /// </summary>
             [DataMember(Name = "Channel")]
-            public int Channel { get; set; }
+            public int Channel { get; private set; }
 
             /// <summary>
-            /// Gets or sets the cipher algorithm.
+            /// Gets the cipher algorithm.
             /// </summary>
             [DataMember(Name = "CipherAlgorithm")]
-            public string CipherAlgorithm { get; set; }
+            public string CipherAlgorithm { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether this network is connectable
+            /// Gets a value indicating whether this network is connectable
             /// </summary>
             [DataMember(Name = "Connectable")]
-            public bool IsConnectable { get; set; }
+            public bool IsConnectable { get; private set; }
 
             /// <summary>
-            /// Gets or sets the infrastructure type.
+            /// Gets the infrastructure type - ad hoc or standard. 
             /// </summary>
             [DataMember(Name = "InfrastructureType")]
-            public string InfrastructureType { get; set; }
+            public string InfrastructureType { get; private set; }
             
             /// <summary>
-            /// Gets or sets a value indicating whether a profile is available.
+            /// Gets a value indicating whether a profile is available.
             /// </summary>
             [DataMember(Name = "ProfileAvailable")]
-            public bool IsProfileAvailable { get; set; }
+            public bool IsProfileAvailable { get; private set; }
 
             /// <summary>
-            /// Gets or sets the profile name.
+            /// Gets the profile name.
             /// </summary>
             [DataMember(Name = "ProfileName")]
-            public string ProfileName { get; set; }
+            public string ProfileName { get; private set; }
 
             /// <summary>
-            /// Gets or sets the SSID.
+            /// Gets the SSID.
             /// </summary>
             [DataMember(Name = "SSID")]
-            public string Ssid { get; set; }
+            public string Ssid { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether security is enabled.
+            /// Gets a value indicating whether security is enabled.
             /// </summary>
             [DataMember(Name = "SecurityEnabled")]
-            public bool IsSecurityEnabled { get; set; }
+            public bool IsSecurityEnabled { get; private set; }
 
             /// <summary>
-            /// Gets or sets the signal quality.
+            /// Gets the signal quality.
             /// </summary>
             [DataMember(Name = "SignalQuality")]
-            public int SignalQuality { get; set; }
+            public int SignalQuality { get; private set; }
 
             /// <summary>
-            /// Gets or sets the BSSID.
+            /// Gets the BSSID.
             /// </summary>
             [DataMember(Name = "BSSID")]
-            public List<int> Bssid { get; set; }
+            public List<int> Bssid { get; private set; }
 
             /// <summary>
-            /// Gets or sets physical types.
+            /// Gets physical types.
             /// </summary>
             [DataMember(Name = "PhysicalTypes")]
-            public List<string> NetworkTypes { get; set; }
+            public List<string> NetworkTypes { get; private set; }
         }
 
         /// <summary>
@@ -226,22 +226,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public class WifiNetworkProfile
         {
             /// <summary>
-            /// Gets or sets a value indicating whether this is a group policy profile.
+            /// Gets a value indicating whether this is a group policy profile.
             /// </summary>
             [DataMember(Name = "GroupPolicyProfile")]
-            public bool IsGroupPolicyProfile { get; set; }
+            public bool IsGroupPolicyProfile { get; private set; }
 
             /// <summary>
-            /// Gets or sets the name.
+            /// Gets the name.
             /// </summary>
             [DataMember(Name = "Name")]
-            public string Name { get; set; }
+            public string Name { get; private set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether this is a per user profile.
+            /// Gets a value indicating whether this is a per user profile.
             /// </summary>
             [DataMember(Name = "PerUserProfile")]
-            public bool IsPerUserProfile { get; set; }
+            public bool IsPerUserProfile { get; private set; }
         }
         #endregion // Data contract
     }

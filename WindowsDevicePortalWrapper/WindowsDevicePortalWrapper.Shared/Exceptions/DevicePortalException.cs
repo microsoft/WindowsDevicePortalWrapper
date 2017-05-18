@@ -34,84 +34,46 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
-        /// <param name="responseMessage">Http response message</param>
-        /// <param name="message">Optional exception message</param>
-        /// <param name="innerException">Optional inner exception</param>
+        /// <param name="statusCode">The Http status code.</param>
+        /// <param name="errorResponse">Http parsed error response message.</param>
+        /// <param name="requestUri">Request URI which threw the exception.</param>
+        /// <param name="message">Optional exception message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
         public DevicePortalException(
-            HttpResponseMessage responseMessage,
+            HttpStatusCode statusCode,
+            HttpErrorResponse errorResponse,
+            Uri requestUri = null,
             string message = "",
             Exception innerException = null) : this(
-                                                    responseMessage.StatusCode,
-                                                    responseMessage.ReasonPhrase,
-                                                    responseMessage.RequestMessage != null ? responseMessage.RequestMessage.RequestUri : null,
+                                                    statusCode,
+                                                    errorResponse.Reason,
+                                                    requestUri,
                                                     message,
                                                     innerException)
         {
-            try
+            this.HResult = errorResponse.ErrorCode;
+            this.Reason = errorResponse.ErrorMessage;
+
+            // If we didn't get the Hresult and reason from these properties, try the other ones.
+            if (this.HResult == 0)
             {
-                if (responseMessage.Content != null)
-                {
-                    Stream dataStream = null;
-#if !WINDOWS_UWP
-                using (HttpContent content = responseMessage.Content)
-                {
-                    dataStream = new MemoryStream();
-
-                    Task copyTask = content.CopyToAsync(dataStream);
-                    copyTask.ConfigureAwait(false);
-                    copyTask.Wait();
-
-                    // Ensure we point the stream at the origin.
-                    dataStream.Position = 0;
-                }
-#else // WINDOWS_UWP
-                    IBuffer dataBuffer = null;
-                    using (IHttpContent messageContent = responseMessage.Content)
-                    {
-                        IAsyncOperationWithProgress<IBuffer, ulong> bufferOperation = messageContent.ReadAsBufferAsync();
-                        while (bufferOperation.Status != AsyncStatus.Completed)
-                        {
-                        }
-
-                        dataBuffer = bufferOperation.GetResults();
-
-                        if (dataBuffer != null)
-                        {
-                            dataStream = dataBuffer.AsStream();
-                        }
-                    }
-#endif  // WINDOWS_UWP
-
-                    if (dataStream != null)
-                    {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
-
-                        HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
-
-                        this.HResult = errorResponse.ErrorCode;
-                        this.Reason = errorResponse.ErrorMessage;
-
-                        if (string.IsNullOrEmpty(this.Reason))
-                        {
-                            this.Reason = errorResponse.Reason;
-                        }
-                    }
-                }
+                this.HResult = errorResponse.Code;
             }
-            catch (Exception)
+
+            if (string.IsNullOrEmpty(this.Reason))
             {
-                // Do nothing if we fail to get additional error details from the response body.
+                this.Reason = errorResponse.Reason;
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
-        /// <param name="statusCode">Http status code</param>
-        /// <param name="reason">Reason for exception</param>
-        /// <param name="requestUri">Request URI which threw the exception</param>
-        /// <param name="message">Optional message</param>
-        /// <param name="innerException">Optional inner exception</param>
+        /// <param name="statusCode">Http status code.</param>
+        /// <param name="reason">Reason for exception.</param>
+        /// <param name="requestUri">Request URI which threw the exception.</param>
+        /// <param name="message">Optional message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
         public DevicePortalException(
             HttpStatusCode statusCode,
             string reason,
@@ -127,19 +89,97 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets the HTTP Status code
+        /// Gets the HTTP Status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
         
         /// <summary>
-        /// Gets a reason for the exception
+        /// Gets a reason for the exception.
         /// </summary>
         public string Reason { get; private set; }
 
         /// <summary>
-        /// Gets the request URI that threw the exception
+        /// Gets the request URI that threw the exception.
         /// </summary>
         public Uri RequestUri { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
+        /// </summary>
+        /// <param name="responseMessage">Http response message.</param>
+        /// <param name="message">Optional exception message.</param>
+        /// <param name="innerException">Optional inner exception.</param>
+        /// <returns>async task</returns>
+        public static async Task<DevicePortalException> CreateAsync(
+            HttpResponseMessage responseMessage,
+            string message = "",
+            Exception innerException = null)
+        {
+            DevicePortalException error = new DevicePortalException(
+                                                    responseMessage.StatusCode,
+                                                    responseMessage.ReasonPhrase,
+                                                    responseMessage.RequestMessage != null ? responseMessage.RequestMessage.RequestUri : null,
+                                                    message,
+                                                    innerException);
+            try
+            {
+                if (responseMessage.Content != null)
+                {
+                    Stream dataStream = null;
+#if !WINDOWS_UWP
+                    using (HttpContent content = responseMessage.Content)
+                    {
+                        dataStream = new MemoryStream();
+
+                        await content.CopyToAsync(dataStream).ConfigureAwait(false);
+
+                        // Ensure we point the stream at the origin.
+                        dataStream.Position = 0;
+                    }
+#else // WINDOWS_UWP
+                    IBuffer dataBuffer = null;
+                    using (IHttpContent messageContent = responseMessage.Content)
+                    {
+                        dataBuffer = await messageContent.ReadAsBufferAsync();
+
+                        if (dataBuffer != null)
+                        {
+                            dataStream = dataBuffer.AsStream();
+                        }
+                    }
+#endif  // WINDOWS_UWP
+
+                    if (dataStream != null)
+                    {
+                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
+
+                        HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
+
+                        error.HResult = errorResponse.ErrorCode;
+                        error.Reason = errorResponse.ErrorMessage;
+
+                        // If we didn't get the Hresult and reason from these properties, try the other ones.
+                        if (error.HResult == 0)
+                        {
+                            error.HResult = errorResponse.Code;
+                        }
+
+                        if (string.IsNullOrEmpty(error.Reason))
+                        {
+                            error.Reason = errorResponse.Reason;
+                        }
+
+                        dataStream.Dispose();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing if we fail to get additional error details from the response body.
+            }
+
+            return error;
+        }
 
 #if !WINDOWS_UWP
         /// <summary>
@@ -161,25 +201,37 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// an HTTP response.
         /// </summary>
         [DataContract]
-        private class HttpErrorResponse
+        public class HttpErrorResponse
         {
             /// <summary>
-            /// Gets or sets the ErrorCode
+            /// Gets the ErrorCode
             /// </summary>
             [DataMember(Name = "ErrorCode")]
-            public int ErrorCode { get; set; }
+            public int ErrorCode { get; private set; }
 
             /// <summary>
-            /// Gets or sets the ErrorMessage
+            /// Gets the Code (used by some endpoints instead of ErrorCode).
+            /// </summary>
+            [DataMember(Name = "Code")]
+            public int Code { get; private set; }
+
+            /// <summary>
+            /// Gets the ErrorMessage
             /// </summary>
             [DataMember(Name = "ErrorMessage")]
-            public string ErrorMessage { get; set; }
+            public string ErrorMessage { get; private set; }
 
             /// <summary>
-            /// Gets or sets the Reason
+            /// Gets the Reason (used by some endpoints instead of ErrorMessage).
             /// </summary>
             [DataMember(Name = "Reason")]
-            public string Reason { get; set; }
+            public string Reason { get; private set; }
+
+            /// <summary>
+            /// Gets a value indicating whether the operation succeeded. For an error this should generally be false if present.
+            /// </summary>
+            [DataMember(Name = "Success")]
+            public bool Success { get; private set; }
         }
 
         #endregion

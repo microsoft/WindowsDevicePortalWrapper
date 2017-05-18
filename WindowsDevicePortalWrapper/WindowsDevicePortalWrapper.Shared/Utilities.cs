@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
@@ -30,26 +31,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string relativePart = !string.IsNullOrWhiteSpace(payload) ?
                                     string.Format("{0}?{1}", path, payload) : path;
             return new Uri(baseUri, relativePart);
-        }
-
-        /// <summary>
-        /// Modifies an endpoint to match the way we store it in a file.
-        /// This involves replacing a number of characters with underscores.
-        /// </summary>
-        /// <param name="endpoint">The endpoint that is being modified.</param>
-        public static void ModifyEndpointForFilename(ref string endpoint)
-        {
-            char[] invalidChars = Path.GetInvalidFileNameChars();
-
-            foreach (char character in invalidChars)
-            {
-                endpoint = endpoint.Replace(character, '_');
-            }
-
-            endpoint = endpoint.Replace('-', '_');
-            endpoint = endpoint.Replace('.', '_');
-            endpoint = endpoint.Replace('=', '_');
-            endpoint = endpoint.Replace('&', '_');
         }
 
         /// <summary>
@@ -77,9 +58,50 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="str">The string to encode.</param>
         /// <returns>Base64 encoded version of the string data.</returns>
-        internal static string Hex64Encode(string str)
+        public static string Hex64Encode(string str)
         {
             return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(str));
+        }
+
+        /// <summary>
+        /// Checks if this device is a hololens.
+        /// </summary>
+        /// <param name="platform">The platform.</param>
+        /// <param name="deviceFamily">The device family.</param>
+        /// <returns>Whether this is a hololens.</returns>
+        public static bool IsHoloLens(
+            DevicePortalPlatforms platform,
+            string deviceFamily)
+        {
+            bool isHoloLens = false;
+
+            if ((platform == DevicePortalPlatforms.HoloLens) ||
+                ((platform == DevicePortalPlatforms.VirtualMachine) && (deviceFamily == "Windows.Holographic")))
+            {
+                isHoloLens = true;
+            }
+
+            return isHoloLens;
+        }
+
+        /// <summary>
+        /// Modifies an endpoint to match the way we store it in a file.
+        /// This involves replacing a number of characters with underscores.
+        /// </summary>
+        /// <param name="endpoint">The endpoint that is being modified.</param>
+        public static void ModifyEndpointForFilename(ref string endpoint)
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+
+            foreach (char character in invalidChars)
+            {
+                endpoint = endpoint.Replace(character, '_');
+            }
+
+            endpoint = endpoint.Replace('-', '_');
+            endpoint = endpoint.Replace('.', '_');
+            endpoint = endpoint.Replace('=', '_');
+            endpoint = endpoint.Replace('&', '_');
         }
     }
 }

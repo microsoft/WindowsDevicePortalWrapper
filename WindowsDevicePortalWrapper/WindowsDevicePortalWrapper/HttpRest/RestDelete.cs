@@ -6,13 +6,14 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP Delete
+    /// .net 4.x implementation of HTTP DeleteAsync
     /// </content>
     public partial class DevicePortal
     {
@@ -21,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
-        private async Task<Stream> Delete(Uri uri)
+        private async Task<Stream> DeleteAsync(Uri uri)
         {
             MemoryStream dataStream = null;
 
@@ -34,16 +35,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 this.ApplyHttpHeaders(client, HttpMethods.Delete);
 
-                Task<HttpResponseMessage> deleteTask = client.DeleteAsync(uri);
-                await deleteTask.ConfigureAwait(false);
-                deleteTask.Wait();
-
-                using (HttpResponseMessage response = deleteTask.Result)
+                using (HttpResponseMessage response = await client.DeleteAsync(uri).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new DevicePortalException(response);
+                        throw await DevicePortalException.CreateAsync(response);
                     }
+
+                    this.RetrieveCsrfToken(response);
 
                     if (response.Content != null)
                     {
@@ -51,9 +50,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         {
                             dataStream = new MemoryStream();
 
-                            Task copyTask = content.CopyToAsync(dataStream);
-                            await copyTask.ConfigureAwait(false);
-                            copyTask.Wait();
+                            await content.CopyToAsync(dataStream).ConfigureAwait(false);
 
                             // Ensure we return with the stream pointed at the origin.
                             dataStream.Position = 0;

@@ -20,6 +20,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
     internal partial class WebSocket<T>
     {
         /// <summary>
+        /// The websocket connection has closed after the request was fulfilled.
+        /// </summary>
+        private const ushort WebSocketCloseStatusNormalClosure = 1000;
+
+        /// <summary>
         /// The <see cref="MessageWebSocket" /> that is being wrapped.
         /// </summary>
         private MessageWebSocket websocket = null;
@@ -37,11 +42,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Opens a connection to the specified websocket API and starts listening for messages.
+        /// Opens a connection to the specified websocket API.
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
-        private async Task StartListeningForMessagesInternal(
+        private async Task ConnectInternalAsync(
             Uri endpoint)
         {
             this.websocket = new MessageWebSocket();
@@ -71,35 +76,36 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             this.websocket.SetRequestHeader("Origin", this.deviceConnection.Connection.AbsoluteUri);
 
-            // Do not wait on receiving messages.
-            Task connectTask = this.ConnectAsync(endpoint);
+            await this.websocket.ConnectAsync(endpoint);
+
+            this.IsConnected = true;
         }
 
         /// <summary>
-        /// Opens a connection to the specified websocket API.
+        /// Closes the connection to the websocket.
         /// </summary>
-        /// <param name="endpoint">The uri that the weboscket should connect to</param>
-        /// <returns>The task of opening a connection to the websocket.</returns>
-        private async Task ConnectAsync(
-            Uri endpoint)
+        /// <returns>The task of closing the websocket connection.</returns>
+        private async Task CloseInternalAsync()
         {
-            bool connecting = true;
-            try
+            await Task.Run(() =>
             {
-                await this.websocket.ConnectAsync(endpoint);
-                connecting = false;
+                this.websocket.Close(WebSocketCloseStatusNormalClosure, "Closed due to user request.");
+                this.websocket.Dispose();
+                this.websocket = null;
+                this.IsConnected = false;
+            });
+        }
+
+        /// <summary>
+        /// Opens a connection to the specified websocket API and starts listening for messages.
+        /// </summary>
+        /// <returns>The task of opening a connection to the websocket.</returns>
+        private async Task StartListeningForMessagesInternalAsync()
+        {
+            await Task.Run(() =>
+            {
                 this.IsListeningForMessages = true;
-            }
-            catch (Exception)
-            {
-                // Error happened during connect operation.
-                if (connecting && this.websocket != null)
-                {
-                    this.websocket.Dispose();
-                    this.websocket = null;
-                    this.IsListeningForMessages = false;
-                }
-            }
+            });
         }
 
         /// <summary>
@@ -107,37 +113,55 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="sender">The  <see cref="MessageWebSocket" /> that sent the message.</param>
         /// <param name="args">The message from the web socket.</param>
-        private void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+        private async void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
         {
-            using (IInputStream inputStream = args.GetDataStream())
+            if (this.IsListeningForMessages)
             {
-                Stream stream = new MemoryStream();
+                using (IInputStream inputStream = args.GetDataStream())
+                {
+                    Stream stream = new MemoryStream();
 
-                Task copyTask = inputStream.AsStreamForRead().CopyToAsync(stream);
-                copyTask.Wait();
+                    await inputStream.AsStreamForRead().CopyToAsync(stream);
 
-                // Ensure we return with the stream pointed at the origin.
-                stream.Position = 0;
+                    // Ensure we return with the stream pointed at the origin.
+                    stream.Position = 0;
 
-                this.ConvertStreamToMessage(stream);
+                    this.ConvertStreamToMessage(stream);
+                }
             }
         }
 
         /// <summary>
-        /// Closes the connection to the websocket.
+        /// Stops listening for messages from the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        private async Task StopListeningForMessagesInternal()
+        private async Task StopListeningForMessagesInternalAsync()
         {
-            if (this.IsListeningForMessages)
+            await Task.Run(() =>
             {
-                if (this.websocket != null)
-                {
-                    // Code 1000 indicates that the purpose of the connection has been fulfilled and the connection is no longer needed.
-                    this.websocket.Close(1000, "Closed due to user request.");
-                    this.websocket = null;
-                    this.IsListeningForMessages = false;
-                }
+                this.IsListeningForMessages = false;
+            });
+        }
+
+        /// <summary>
+        /// Sends a message to the websocket.
+        /// </summary>
+        /// <param name="message">The message to be sent.</param>
+        /// <returns>The task of sending the specified message to the server.</returns>
+        private async Task SendMessageInternalAsync(string message)
+        {
+            using (DataWriter data = new DataWriter(this.websocket.OutputStream))
+            {
+                // Load the content into the data writer.
+                data.UnicodeEncoding = UnicodeEncoding.Utf8;
+                data.WriteString(message);
+
+                // Send the content to the output stream.
+                await data.StoreAsync();
+                await data.FlushAsync();
+
+                // Do not close the output stream when the data writer is disposed.
+                data.DetachStream();
             }
         }
     }

@@ -75,8 +75,16 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Utilities.ModifyEndpointForFilename(ref endpoint);
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            string filepath = Path.Combine("MockData", platform.ToString(), friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
-            response.Content = this.LoadContentFromFile(filepath);
+            if (platform == DevicePortalPlatforms.IoTDragonboard410c || platform == DevicePortalPlatforms.IoTMinnowboardMax || platform == DevicePortalPlatforms.IoTRaspberryPi2 || platform == DevicePortalPlatforms.IoTRaspberryPi3)
+            {
+                string filepath = Path.Combine("MockData", "IoT", friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
+                response.Content = this.LoadContentFromFile(filepath);
+            }
+            else
+            {
+                string filepath = Path.Combine("MockData", platform.ToString(), friendlyOperatingSystemVersion, endpoint + "_" + platform.ToString() + "_" + friendlyOperatingSystemVersion + ".dat");
+                response.Content = this.LoadContentFromFile(filepath);
+            }
 
             this.mockResponses.Add(endpoint.ToLowerInvariant(), response);
         }
