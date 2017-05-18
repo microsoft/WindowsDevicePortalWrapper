@@ -45,7 +45,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="chain">The cert chain</param>
         /// <param name="policyErrors">Policy Errors</param>
         /// <returns>whether the cert passes validation</returns>
-        private bool ServerCertificateValidation(
+        internal bool ServerCertificateValidation(
             object sender,
             X509Certificate cert,
             X509Chain chain,

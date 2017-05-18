@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -60,7 +61,7 @@ namespace XboxWdpDriver
 
             if (operationType.Equals("list"))
             {
-                Task<UserList> getUsers = portal.GetXboxLiveUsersAsync();
+                Task<UserList> getUsers = portal.Xbox.GetXboxLiveUsersAsync();
 
                 getUsers.Wait();
                 Console.WriteLine(getUsers.Result);
@@ -162,7 +163,7 @@ namespace XboxWdpDriver
         {
             try
             {
-                Task updateUsers = portal.UpdateXboxLiveUsersAsync(userList);
+                Task updateUsers = portal.Xbox.UpdateXboxLiveUsersAsync(userList);
                 updateUsers.Wait();
             }
             catch (AggregateException e)
