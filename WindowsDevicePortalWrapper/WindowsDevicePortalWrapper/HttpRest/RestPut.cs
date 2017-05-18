@@ -23,7 +23,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the put request will be issued.</param>
         /// <param name="body">The HTTP content comprising the body of the request.</param>
         /// <returns>Task tracking the PUT completion.</returns>
-        private async Task<Stream> PutAsync(
+        public async Task<Stream> PutAsync(
             Uri uri,
             HttpContent body = null)
         {

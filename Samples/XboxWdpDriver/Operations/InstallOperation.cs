@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -171,7 +172,7 @@ namespace XboxWdpDriver
                         {
                             if (e.HResult == ErrorLogonFailureHresult)
                             {
-                                Task<SmbInfo> smbTask = portal.GetSmbShareInfoAsync();
+                                Task<SmbInfo> smbTask = portal.Xbox.GetSmbShareInfoAsync();
                                 smbTask.Wait();
 
                                 // Set the username/password for accessing the share.
@@ -205,14 +206,14 @@ namespace XboxWdpDriver
                         return;
                     }
 
-                    Task registerTask = portal.RegisterApplicationAsync(destinationFolderName);
+                    Task registerTask = portal.Xbox.RegisterApplicationAsync(destinationFolderName);
                     registerTask.Wait();
 
                     Console.WriteLine("Install complete.");
                 }
                 else if (!string.IsNullOrEmpty(registerPath))
                 {
-                    Task registerTask = portal.RegisterApplicationAsync(registerPath);
+                    Task registerTask = portal.Xbox.RegisterApplicationAsync(registerPath);
                     registerTask.Wait();
 
                     Console.WriteLine("Registration complete.");
@@ -275,7 +276,7 @@ namespace XboxWdpDriver
         /// <param name="relativeDestination">The relative destination directory.</param>
         private void UploadDirectoryOverHttp(string folderPath, string relativeDestination)
         {
-            Task uploadTask = this.portal.UploadPackageFolderAsync(folderPath, relativeDestination);
+            Task uploadTask = this.portal.Xbox.UploadPackageFolderAsync(folderPath, relativeDestination);
             uploadTask.Wait();
 
             foreach (string subDir in Directory.GetDirectories(folderPath))

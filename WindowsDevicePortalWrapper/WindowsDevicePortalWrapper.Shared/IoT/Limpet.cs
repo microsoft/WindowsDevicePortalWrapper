@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// TPM Limpet APIs for IoT.
     /// </summary>
-    public partial class DevicePortal
+    public partial class IoTDevicePortal
     {
         /// <summary>
         /// TPM settings API.

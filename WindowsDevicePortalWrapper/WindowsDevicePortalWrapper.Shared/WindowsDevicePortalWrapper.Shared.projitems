@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsErrorReporting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsPerformanceRecorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DevicePortal.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DevicePortalNamespace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ApplicationInstallStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ConnectionStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\WebSocketMessageReceivedEventArgs.cs" />
@@ -34,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicOs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicPerception.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicThermal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HoloLensDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\MixedRealityCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationPlayback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationRecording.cs" />
@@ -56,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IoT\RemoteSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\DeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\WindowsUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoT\IoTDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxLiveSandbox.cs" />

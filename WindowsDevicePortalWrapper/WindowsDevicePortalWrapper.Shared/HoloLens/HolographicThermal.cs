@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic Thermal methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal
     {
         /// <summary>
         /// API for getting the thermal stage
