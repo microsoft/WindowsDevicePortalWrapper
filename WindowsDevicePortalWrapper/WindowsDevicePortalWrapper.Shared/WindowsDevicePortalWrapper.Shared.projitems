@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsErrorReporting.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\WindowsPerformanceRecorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DevicePortal.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DevicePortalNamespace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ApplicationInstallStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ConnectionStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\WebSocketMessageReceivedEventArgs.cs" />
@@ -57,7 +56,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IoT\DeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\WindowsUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxLiveSandbox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\SmbShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\UserManagement.cs" />
