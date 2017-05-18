@@ -9,13 +9,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
     /// XboxSettings Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal
     {
         /// <summary>
         /// Endpoint for Xbox settings management REST calls.

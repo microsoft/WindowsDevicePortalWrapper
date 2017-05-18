@@ -156,6 +156,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+
+        public XboxDevicePortal Xbox = new XboxDevicePortal();
+
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
         /// </summary>
