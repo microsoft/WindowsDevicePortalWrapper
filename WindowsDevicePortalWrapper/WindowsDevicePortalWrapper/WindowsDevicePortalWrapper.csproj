@@ -30,7 +30,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <XefDelaySign>true</XefDelaySign>
     <DocumentationFile>bin\Release\WindowsDevicePortalWrapper.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
