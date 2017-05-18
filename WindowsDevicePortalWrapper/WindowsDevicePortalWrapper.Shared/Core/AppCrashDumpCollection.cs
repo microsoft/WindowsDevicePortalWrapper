@@ -74,9 +74,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="app">The app to get settings for</param>
         /// <returns>The crash settings for the app</returns>
-        public async Task<AppCrashDumpSettings> GetAppCrashDumpSettingsAsync(AppPackage app)
+        public async Task<AppCrashDumpSettings> GetAppCrashDumpSettingsAsync(PackageInfo app)
         {
-            return await this.GetAppCrashDumpSettingsAsync(app.PackageFullName);
+            return await this.GetAppCrashDumpSettingsAsync(app.FullName);
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="app">The app to set crash settings for.</param>
         /// <param name="enable">Whether to enable or disable crash collection for the app. </param>
         /// <returns>Task tracking completion of the request.</returns>
-        public async Task SetAppCrashDumpSettingsAsync(AppPackage app, bool enable = true)
+        public async Task SetAppCrashDumpSettingsAsync(PackageInfo app, bool enable = true)
         {
-            string pfn = app.PackageFullName;
+            string pfn = app.FullName;
             await this.SetAppCrashDumpSettingsAsync(pfn, enable);
         }
 

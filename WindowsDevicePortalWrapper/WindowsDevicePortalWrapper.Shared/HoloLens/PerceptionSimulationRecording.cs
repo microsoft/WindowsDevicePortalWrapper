@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Perception Simulation Recording methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal
     {
         /// <summary>
         /// API for getting a Holographic Perception Simulation recording status.

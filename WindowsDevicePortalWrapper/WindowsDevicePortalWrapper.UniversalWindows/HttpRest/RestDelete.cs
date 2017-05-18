@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
 #pragma warning disable 1998
-        private async Task<Stream> DeleteAsync(Uri uri)
+        public async Task<Stream> DeleteAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 

@@ -58,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Device connection object.
         /// </summary>
-        private IDevicePortalConnection deviceConnection;
+        internal IDevicePortalConnection deviceConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortal" /> class.
@@ -175,8 +175,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+        public HoloLensDevicePortal HoloLens;
 
-        public XboxDevicePortal Xbox = new XboxDevicePortal();
+        public IoTDevicePortal IoT;
+
+        public XboxDevicePortal Xbox;
 
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
@@ -234,7 +237,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         DeviceConnectionStatus.Connecting,
                         DeviceConnectionPhase.DeterminingConnectionRequirements,
                         connectionPhaseDescription);
-                    requiresHttps = await this.GetIsHttpsRequiredAsync().ConfigureAwait(false);
+                    requiresHttps = await this.HoloLens.GetIsHttpsRequiredAsync().ConfigureAwait(false);
                 }
 
                 // Connect the device to the specified network.

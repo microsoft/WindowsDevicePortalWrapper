@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Mixed reality capture methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal
     {
         /// <summary>
         ///  API for getting or deleting a Mixed Reality Capture file.

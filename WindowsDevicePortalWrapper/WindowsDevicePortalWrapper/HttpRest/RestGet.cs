@@ -21,7 +21,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
-        private async Task<Stream> GetAsync(
+        public async Task<Stream> GetAsync(
             Uri uri)
         {
             MemoryStream dataStream = null;

@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Windows update APIs for IoT.
     /// </summary>
-    public partial class DevicePortal
+    public partial class IoTDevicePortal
     {
         /// <summary>
         /// Install time API.

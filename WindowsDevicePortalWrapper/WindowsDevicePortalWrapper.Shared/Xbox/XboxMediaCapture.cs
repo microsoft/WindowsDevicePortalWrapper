@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// MediaCapture Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal
     {
         /// <summary>
         /// Endpoint for getting a screenshot.

@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Xbox Live Sandbox Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal
     {
         /// <summary>
         /// Endpoint for getting or changing the Xbox Live sandbox for the device.
