@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// UserManagement Wrappers
     /// </content>
-    public partial class XboxDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// Endpoint for User management REST calls

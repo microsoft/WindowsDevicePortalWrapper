@@ -65,13 +65,13 @@ namespace XboxWdpDriver
                         return;
                     }
 
-                    Task fiddlerEnableTask = portal.Xbox.EnableFiddlerTracingAsync(proxyAddress, proxyPort, parameters.GetParameterValue("certpath"));
+                    Task fiddlerEnableTask = portal.EnableFiddlerTracingAsync(proxyAddress, proxyPort, parameters.GetParameterValue("certpath"));
                     fiddlerEnableTask.Wait();
                     Console.WriteLine("Fiddler enabled.");
                 }
                 else if (string.Equals(state, "off", StringComparison.OrdinalIgnoreCase))
                 {
-                    Task fiddlerDisableTask = portal.Xbox.DisableFiddlerTracingAsync();
+                    Task fiddlerDisableTask = portal.DisableFiddlerTracingAsync();
                     fiddlerDisableTask.Wait();
                     Console.WriteLine("Fiddler disabled.");
                 }

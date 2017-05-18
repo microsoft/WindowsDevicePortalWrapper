@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Bluetooth Connectivity.
     /// </content>
-    public partial class IoTDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// Available bluetooth device list API.

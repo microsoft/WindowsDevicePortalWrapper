@@ -8,7 +8,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -43,14 +42,14 @@ namespace XboxWdpDriver
 
             if (string.IsNullOrEmpty(desiredValue))
             {
-                Task<Sandbox> getSandboxTask = portal.Xbox.GetXboxLiveSandboxAsync();
+                Task<Sandbox> getSandboxTask = portal.GetXboxLiveSandboxAsync();
                 getSandboxTask.Wait();
 
                 Console.WriteLine(getSandboxTask.Result);
             }
             else
             {
-                Task<Sandbox> setSandboxTask = portal.Xbox.SetXboxLiveSandboxAsync(desiredValue);
+                Task<Sandbox> setSandboxTask = portal.SetXboxLiveSandboxAsync(desiredValue);
                 setSandboxTask.Wait();
 
                 Console.WriteLine("{0} -> {1}", setSandboxTask.Result, desiredValue);

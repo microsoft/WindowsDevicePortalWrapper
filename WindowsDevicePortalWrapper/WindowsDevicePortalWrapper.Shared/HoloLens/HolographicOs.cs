@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic OS methods
     /// </content>
-    public partial class HoloLensDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// API for getting or setting Interpupilary distance

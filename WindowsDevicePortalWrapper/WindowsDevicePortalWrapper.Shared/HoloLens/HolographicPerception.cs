@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic Perception methods
     /// </content>
-    public partial class HoloLensDevicePortal
+    public partial class DevicePortal
     {
         /// <summary>
         /// API for running a Perception client.

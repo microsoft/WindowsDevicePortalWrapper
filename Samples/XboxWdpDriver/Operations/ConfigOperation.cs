@@ -8,7 +8,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
-using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -47,7 +46,7 @@ namespace XboxWdpDriver
             // Determine if this is for all settings or a single setting.
             if (string.IsNullOrWhiteSpace(desiredSetting))
             {
-                Task<XboxSettingList> getSettingsTask = portal.Xbox.GetXboxSettingsAsync();
+                Task<XboxSettingList> getSettingsTask = portal.GetXboxSettingsAsync();
                 getSettingsTask.Wait();
 
                 Console.WriteLine(getSettingsTask.Result);
@@ -56,7 +55,7 @@ namespace XboxWdpDriver
             {
                 if (string.IsNullOrWhiteSpace(desiredValue))
                 {
-                    Task<XboxSetting> getSettingTask = portal.Xbox.GetXboxSettingAsync(desiredSetting);
+                    Task<XboxSetting> getSettingTask = portal.GetXboxSettingAsync(desiredSetting);
                     getSettingTask.Wait();
 
                     Console.WriteLine(getSettingTask.Result);
@@ -67,7 +66,7 @@ namespace XboxWdpDriver
                     setting.Name = desiredSetting;
                     setting.Value = desiredValue;
 
-                    Task<XboxSetting> setSettingTask = portal.Xbox.UpdateXboxSettingAsync(setting);
+                    Task<XboxSetting> setSettingTask = portal.UpdateXboxSettingAsync(setting);
                     setSettingTask.Wait();
 
                     Console.WriteLine(setSettingTask.Result);

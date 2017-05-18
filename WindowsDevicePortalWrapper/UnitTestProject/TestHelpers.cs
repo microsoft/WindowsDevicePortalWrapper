@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             if (platform == DevicePortalPlatforms.HoloLens)
             {
                 TestHelpers.MockHttpResponder.AddMockResponse(
-                    HoloLensDevicePortal.HolographicWebManagementHttpSettingsApi, 
+                    DevicePortal.HolographicWebManagementHttpSettingsApi, 
                     platform, 
                     operatingSystemVersion, 
                     HttpMethods.Get);
