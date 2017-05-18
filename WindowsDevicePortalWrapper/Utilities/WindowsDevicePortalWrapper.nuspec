@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>WindowsDevicePortalWrapper</id>
-        <version>FILL IN AT RELEASE</version>
+        <version>0.0.0.0</version>
         <title>Windows Device Portal Wrapper</title>
         <authors>Windows Device Portal</authors>
         <owners>Microsoft; Windows Device Portal</owners>
