@@ -233,7 +233,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets the process id (pid)
             /// </summary>
             [DataMember(Name = "ProcessId")]
-            public int ProcessId { get; private set; }
+            public uint ProcessId { get; private set; }
 
             /// <summary>
             /// Gets the user the process is running as. 
@@ -248,22 +248,22 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public string PackageFullName { get; private set; }
 
             /// <summary>
-            /// Gets the Page file usage info
+            /// Gets the Page file usage info, in bytes
             /// </summary>
             [DataMember(Name = "PageFileUsage")]
-            public uint PageFile { get; private set; }
+            public ulong PageFile { get; private set; }
 
             /// <summary>
-            /// Gets the working set size
+            /// Gets the working set size, in bytes
             /// </summary>
             [DataMember(Name = "WorkingSetSize")]
-            public uint WorkingSet { get; private set; }
+            public ulong WorkingSet { get; private set; }
 
             /// <summary>
-            /// Gets package working set
+            /// Gets package working set, in bytes
             /// </summary>
             [DataMember(Name = "PrivateWorkingSet")]
-            public double PrivateWorkingSet { get; private set; }
+            public ulong PrivateWorkingSet { get; private set; }
 
             /// <summary>
             /// Gets session id
@@ -272,16 +272,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public uint SessionId { get; private set; }
 
             /// <summary>
-            /// Gets total commit in bytes
+            /// Gets total commit, in bytes
             /// </summary>
             [DataMember(Name = "TotalCommit")]
-            public double TotalCommit { get; private set; }
+            public ulong TotalCommit { get; private set; }
 
             /// <summary>
-            /// Gets virtual size in bytes
+            /// Gets virtual size, in bytes
             /// </summary>
             [DataMember(Name = "VirtualSize")]
-            public double VirtualSize { get; private set; }
+            public ulong VirtualSize { get; private set; }
 
             /// <summary>
             /// Gets a value indicating whether or not the app is running 
