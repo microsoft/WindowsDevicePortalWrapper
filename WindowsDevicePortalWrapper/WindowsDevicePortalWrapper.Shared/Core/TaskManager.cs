@@ -24,7 +24,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="appid">Application ID</param>
         /// <param name="packageName">The name of the application package.</param>
         /// <returns>Process identifier for the application instance.</returns>
-        public async Task<int> LaunchApplicationAsync(
+        public async Task<uint> LaunchApplicationAsync(
             string appid,
             string packageName)
         {
@@ -39,7 +39,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             RunningProcesses runningApps = await this.GetRunningProcessesAsync();
 
-            int processId = 0;
+            uint processId = 0;
             foreach (DeviceProcessInfo process in runningApps.Processes)    
             {
                 if (string.Compare(process.PackageFullName, packageName) == 0)
