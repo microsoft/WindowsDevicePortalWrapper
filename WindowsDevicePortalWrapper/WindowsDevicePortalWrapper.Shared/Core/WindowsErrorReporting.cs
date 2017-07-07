@@ -82,7 +82,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             payload.Add("file", Utilities.Hex64Encode(file));
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 WindowsErrorReportingFileApi,
                 Utilities.BuildQueryString(payload));
 

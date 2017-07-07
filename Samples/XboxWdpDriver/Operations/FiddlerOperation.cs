@@ -30,9 +30,9 @@ namespace XboxWdpDriver
         /// <summary>
         /// Main entry point for handling a Fiddler operation
         /// </summary>
-        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="portal">XboxDevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(XboxDevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {

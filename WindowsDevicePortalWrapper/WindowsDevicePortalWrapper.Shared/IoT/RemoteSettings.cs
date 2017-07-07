@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <summary>
     /// Wrappers for remote settings for IoT.
     /// </summary>
-    public partial class DevicePortal
+    public partial class IotDevicePortal : DevicePortal
     {
         /// <summary>
         /// Remote status API.

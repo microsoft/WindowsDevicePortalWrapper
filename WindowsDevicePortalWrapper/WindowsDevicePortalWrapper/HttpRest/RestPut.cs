@@ -31,7 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
-            requestSettings.Credentials = this.deviceConnection.Credentials;
+            requestSettings.Credentials = this.DeviceConnection.Credentials;
             requestSettings.ServerCertificateValidationCallback = this.ServerCertificateValidation;
 
             using (HttpClient client = new HttpClient(requestSettings))

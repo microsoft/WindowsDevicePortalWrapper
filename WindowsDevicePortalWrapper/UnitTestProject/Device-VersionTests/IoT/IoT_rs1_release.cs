@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.IotDevicePortal;
 
 namespace Microsoft.Tools.WindowsDevicePortal.Tests
 {
@@ -134,12 +135,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetControllerDriverInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.ControllerDriverApi,
+                IotDevicePortal.ControllerDriverApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<ControllerDriverInfo> getTask = TestHelpers.Portal.GetControllerDriverInfoAsync();
+            Task<ControllerDriverInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetControllerDriverInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -157,12 +158,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetCurrentDateTimeInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.DateTimeInfoApi,
+                IotDevicePortal.DateTimeInfoApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DateTimeInfo> getTask = TestHelpers.Portal.GetDateTimeInfoAsync();
+            Task<DateTimeInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetDateTimeInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -179,12 +180,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetTimezoneInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.TimezoneInfoApi,
+                IotDevicePortal.TimezoneInfoApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TimezoneInfo> getTask = TestHelpers.Portal.GetTimezoneInfoAsync();
+            Task<TimezoneInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetTimezoneInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -202,12 +203,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetDisplayResolutionInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.DisplayResolutionApi,
+                IotDevicePortal.DisplayResolutionApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DisplayResolutionInfo> getTask = TestHelpers.Portal.GetDisplayResolutionInfoAsync();
+            Task<DisplayResolutionInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetDisplayResolutionInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -224,12 +225,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetDisplayOrientationInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.DisplayOrientationApi,
+                IotDevicePortal.DisplayOrientationApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<DisplayOrientationInfo> getTask = TestHelpers.Portal.GetDisplayOrientationInfoAsync();
+            Task<DisplayOrientationInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetDisplayOrientationInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -246,12 +247,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetDeviceInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.IoTOsInfoApi,
+                IotDevicePortal.IoTOsInfoApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<IoTOSInfo> getTask = TestHelpers.Portal.GetIoTOSInfoAsync();
+            Task<IoTOSInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetIoTOSInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -270,12 +271,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetStatusInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.StatusApi,
+                IotDevicePortal.StatusApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<StatusInfo> getTask = TestHelpers.Portal.GetStatusInfoAsync();
+            Task<StatusInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -294,12 +295,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetUpdateInstallTime_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.InstallTimeApi,
+                IotDevicePortal.InstallTimeApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<UpdateInstallTimeInfo> getTask = TestHelpers.Portal.GetUpdateInstallTimeAsync();
+            Task<UpdateInstallTimeInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetUpdateInstallTimeAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -316,12 +317,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetRemoteSettingsStatus_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.RemoteSettingsStatusApi,
+                IotDevicePortal.RemoteSettingsStatusApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfoAsync();
+            Task<RemoteSettingsStatusInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetRemoteSettingsStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -339,12 +340,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetSoftAPSettings_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.SoftAPSettingsApi,
+                IotDevicePortal.SoftAPSettingsApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<SoftAPSettingsInfo> getTask = TestHelpers.Portal.GetSoftAPSettingsInfoAsync();
+            Task<SoftAPSettingsInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetSoftAPSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -362,12 +363,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetAllJoynSettings_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.AllJoynSettingsApi,
+                IotDevicePortal.AllJoynSettingsApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AllJoynSettingsInfo> getTask = TestHelpers.Portal.GetAllJoynSettingsInfoAsync();
+            Task<AllJoynSettingsInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetAllJoynSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -387,9 +388,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string deviceName = "test_IoT";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DeviceNameApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.DeviceNameApi, response, HttpMethods.Post);
 
-            Task setIoTDeviceName = TestHelpers.Portal.SetIoTDeviceNameAsync(deviceName);
+            Task setIoTDeviceName = (TestHelpers.Portal as IotDevicePortal).SetIoTDeviceNameAsync(deviceName);
             setIoTDeviceName.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDeviceName.Status);
@@ -406,9 +407,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string softApPassword = "p@ssw0rd";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.SoftAPSettingsApi, response, HttpMethods.Post);
 
-            Task setSoftApSettings = TestHelpers.Portal.SetSoftApSettingsAsync(softApEnabled, softApSsid, softApPassword);
+            Task setSoftApSettings = (TestHelpers.Portal as IotDevicePortal).SetSoftApSettingsAsync(softApEnabled, softApSsid, softApPassword);
             setSoftApSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setSoftApSettings.Status);
@@ -426,9 +427,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string allJoynModelNumber = "IoTCore Onboarding";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AllJoynSettingsApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.AllJoynSettingsApi, response, HttpMethods.Post);
 
-            Task setAllJoynSettings = TestHelpers.Portal.SetAllJoynSettingsAsync(allJoynStatus, allJoynDescription, allJoynManufacturer, allJoynModelNumber);
+            Task setAllJoynSettings = (TestHelpers.Portal as IotDevicePortal).SetAllJoynSettingsAsync(allJoynStatus, allJoynDescription, allJoynManufacturer, allJoynModelNumber);
             setAllJoynSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setAllJoynSettings.Status);
@@ -448,9 +449,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StringContent(string.Format("{{\"ErrorCode\" : {0}, \"Status\" : \"{1}\"}}", errorCode, status));
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ResetPasswordApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.ResetPasswordApi, response, HttpMethods.Post);
 
-            Task<ErrorInformation> setIoTNewPassword = TestHelpers.Portal.SetNewPasswordAsync(oldPassword, newPassword);
+            Task<ErrorInformation> setIoTNewPassword = (TestHelpers.Portal as IotDevicePortal).SetNewPasswordAsync(oldPassword, newPassword);
             setIoTNewPassword.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewPassword.Status);
@@ -467,9 +468,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string newPin = "123";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.NewRemoteDebuggingPinApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.NewRemoteDebuggingPinApi, response, HttpMethods.Post);
 
-            Task setIoTNewRemoteDebuggingPin = TestHelpers.Portal.SetNewRemoteDebuggingPinAsync(newPin);
+            Task setIoTNewRemoteDebuggingPin = (TestHelpers.Portal as IotDevicePortal).SetNewRemoteDebuggingPinAsync(newPin);
             setIoTNewRemoteDebuggingPin.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTNewRemoteDebuggingPin.Status);
@@ -487,9 +488,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StringContent(string.Format("{{\"RequestReboot\" : \"{0}\"}}", requestReboot));
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ControllerDriverApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.ControllerDriverApi, response, HttpMethods.Post);
 
-            Task<ControllerDriverInfo> setIoTControllersDrivers = TestHelpers.Portal.SetControllersDriversAsync(newDriver);
+            Task<ControllerDriverInfo> setIoTControllersDrivers = (TestHelpers.Portal as IotDevicePortal).SetControllersDriversAsync(newDriver);
             setIoTControllersDrivers.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTControllersDrivers.Status);
@@ -505,9 +506,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             int index = 0;
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetTimeZoneApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.SetTimeZoneApi, response, HttpMethods.Post);
 
-            Task setIoTTimeZone = TestHelpers.Portal.SetTimeZoneAsync(index);
+            Task setIoTTimeZone = (TestHelpers.Portal as IotDevicePortal).SetTimeZoneAsync(index);
             setIoTTimeZone.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTTimeZone.Status);
@@ -522,9 +523,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string displayResolution = "1600x1200 (75Hz)";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayResolutionApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.DisplayResolutionApi, response, HttpMethods.Post);
 
-            Task setDisplayResolution = TestHelpers.Portal.SetDisplayResolutionAsync(displayResolution);
+            Task setDisplayResolution = (TestHelpers.Portal as IotDevicePortal).SetDisplayResolutionAsync(displayResolution);
             setDisplayResolution.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setDisplayResolution.Status);
@@ -539,9 +540,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string displayOrientation = "90";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.DisplayOrientationApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.DisplayOrientationApi, response, HttpMethods.Post);
 
-            Task setIoTDisplayOrientation = TestHelpers.Portal.SetDisplayOrientationAsync(displayOrientation);
+            Task setIoTDisplayOrientation = (TestHelpers.Portal as IotDevicePortal).SetDisplayOrientationAsync(displayOrientation);
             setIoTDisplayOrientation.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTDisplayOrientation.Status);
@@ -554,12 +555,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetAppsListInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.AppsListApi,
+                IotDevicePortal.AppsListApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AppsListInfo> getTask = TestHelpers.Portal.GetAppsListInfoAsync();
+            Task<AppsListInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetAppsListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -576,12 +577,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetHeadlessAppsListInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.HeadlessAppsListApi,
+                IotDevicePortal.HeadlessAppsListApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<HeadlessAppsListInfo> getTask = TestHelpers.Portal.GetHeadlessAppsListInfoAsync();
+            Task<HeadlessAppsListInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetHeadlessAppsListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -600,9 +601,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string startupApp = "23983CETAthensQuality.IoTCoreSmartDisplay_7grdn1j1n8awe!App";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.AppsListApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.AppsListApi, response, HttpMethods.Post);
 
-            Task setIoTStartupApp = TestHelpers.Portal.UpdateStartupAppAsync(startupApp);
+            Task setIoTStartupApp = (TestHelpers.Portal as IotDevicePortal).UpdateStartupAppAsync(startupApp);
             setIoTStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTStartupApp.Status);
@@ -617,9 +618,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string startupApp = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.HeadlessStartupAppApi, response, HttpMethods.Post);
 
-            Task setIoTHeadlessStartupApp = TestHelpers.Portal.UpdateHeadlessStartupAppAsync(startupApp);
+            Task setIoTHeadlessStartupApp = (TestHelpers.Portal as IotDevicePortal).UpdateHeadlessStartupAppAsync(startupApp);
             setIoTHeadlessStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, setIoTHeadlessStartupApp.Status);
@@ -634,9 +635,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string startupApp = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.HeadlessStartupAppApi, response, HttpMethods.Delete);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.HeadlessStartupAppApi, response, HttpMethods.Delete);
 
-            Task removeIoTHeadlessStartupApp = TestHelpers.Portal.RemoveHeadlessStartupAppAsync(startupApp);
+            Task removeIoTHeadlessStartupApp = (TestHelpers.Portal as IotDevicePortal).RemoveHeadlessStartupAppAsync(startupApp);
             removeIoTHeadlessStartupApp.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, removeIoTHeadlessStartupApp.Status);
@@ -651,9 +652,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string appId = "ZWaveAdapterHeadlessAdapterApp_1w720vyc4ccym!ZWaveHeadlessAdapterApp";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.ActivatePackageApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.ActivatePackageApi, response, HttpMethods.Post);
 
-            Task activatePackage = TestHelpers.Portal.ActivatePackageAsync(appId);
+            Task activatePackage = (TestHelpers.Portal as IotDevicePortal).ActivatePackageAsync(appId);
             activatePackage.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, activatePackage.Status);
@@ -666,12 +667,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetAudioDeviceListInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.AudioDeviceListApi,
+                IotDevicePortal.AudioDeviceListApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<AudioDeviceListInfo> getTask = TestHelpers.Portal.GetAudioDeviceListInfoAsync();
+            Task<AudioDeviceListInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetAudioDeviceListInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -690,9 +691,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string renderVolume = "80";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetRenderVolumeApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.SetRenderVolumeApi, response, HttpMethods.Post);
 
-            Task renderVolumeTask = TestHelpers.Portal.SetRenderVolumeAsync(renderVolume);
+            Task renderVolumeTask = (TestHelpers.Portal as IotDevicePortal).SetRenderVolumeAsync(renderVolume);
             renderVolumeTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, renderVolumeTask.Status);
@@ -707,9 +708,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string captureVolume = "80";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.SetCaptureVolumeApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.SetCaptureVolumeApi, response, HttpMethods.Post);
 
-            Task captureVolumeTask = TestHelpers.Portal.SetCaptureVolumeAsync(captureVolume);
+            Task captureVolumeTask = (TestHelpers.Portal as IotDevicePortal).SetCaptureVolumeAsync(captureVolume);
             captureVolumeTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, captureVolumeTask.Status);
@@ -725,9 +726,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string publicInterfaceIndex = "1";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.IcSharingApi, response, HttpMethods.Post);
 
-            Task icsStart = TestHelpers.Portal.IcSharingStartAsync(privateInterfaceIndex, publicInterfaceIndex);
+            Task icsStart = (TestHelpers.Portal as IotDevicePortal).IcSharingStartAsync(privateInterfaceIndex, publicInterfaceIndex);
             icsStart.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, icsStart.Status);
@@ -743,9 +744,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string publicInterfaceIndex = "1";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.IcSharingApi, response, HttpMethods.Delete);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.IcSharingApi, response, HttpMethods.Delete);
 
-            Task icsStop = TestHelpers.Portal.IcSharingStopAsync(privateInterfaceIndex, publicInterfaceIndex);
+            Task icsStop = (TestHelpers.Portal as IotDevicePortal).IcSharingStopAsync(privateInterfaceIndex, publicInterfaceIndex);
             icsStop.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, icsStop.Status);
@@ -758,12 +759,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetIcsInterfacesInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.IcsInterfacesApi,
+                IotDevicePortal.IcsInterfacesApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<IscInterfacesInfo> getTask = TestHelpers.Portal.GetIcsInterfacesInfoAsync();
+            Task<IscInterfacesInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetIcsInterfacesInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -783,9 +784,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string runAsDefaultAccount = "true";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.RunCommandApi, response, HttpMethods.Post);
 
-            Task runCommand = TestHelpers.Portal.RunCommandAsync(command, runAsDefaultAccount);
+            Task runCommand = (TestHelpers.Portal as IotDevicePortal).RunCommandAsync(command, runAsDefaultAccount);
             runCommand.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, runCommand.Status);
@@ -804,9 +805,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StringContent(string.Format("{{\"output\" : \"{0}\"}}", output));
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RunCommandWithoutOutputApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.RunCommandWithoutOutputApi, response, HttpMethods.Post);
 
-            Task<RunCommandOutputInfo> runCommandWithoutOutput = TestHelpers.Portal.RunCommandWithoutOutputAsync(command, runAsDefaultAccount, timeout);
+            Task<RunCommandOutputInfo> runCommandWithoutOutput = (TestHelpers.Portal as IotDevicePortal).RunCommandWithoutOutputAsync(command, runAsDefaultAccount, timeout);
             runCommandWithoutOutput.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, runCommandWithoutOutput.Status);
@@ -819,12 +820,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetRemoteSettingsStatusInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.RemoteSettingsStatusApi,
+                IotDevicePortal.RemoteSettingsStatusApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<RemoteSettingsStatusInfo> getTask = TestHelpers.Portal.GetRemoteSettingsStatusInfoAsync();
+            Task<RemoteSettingsStatusInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetRemoteSettingsStatusInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -845,9 +846,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StringContent(string.Format("{{\"IsRunning\" : {0}, \"IsScheduled\" : {1}}}", isRunning, isScheduled));
 
-             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsEnableApi, response, HttpMethods.Post);
+             TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.RemoteSettingsEnableApi, response, HttpMethods.Post);
 
-            Task<RemoteSettingsStatusInfo> remoteSettingsEnable = TestHelpers.Portal.RemoteSettingsEnableAsync();
+            Task<RemoteSettingsStatusInfo> remoteSettingsEnable = (TestHelpers.Portal as IotDevicePortal).RemoteSettingsEnableAsync();
             remoteSettingsEnable.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsEnable.Status);
@@ -864,9 +865,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StringContent(string.Format("{{\"IsRunning\" : {0}, \"IsScheduled\" : {1}}}", isRunning, isScheduled));
 
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RemoteSettingsDisableApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.RemoteSettingsDisableApi, response, HttpMethods.Post);
 
-            Task<RemoteSettingsStatusInfo> remoteSettingsDisable = TestHelpers.Portal.RemoteSettingsDisableAsync();
+            Task<RemoteSettingsStatusInfo> remoteSettingsDisable = (TestHelpers.Portal as IotDevicePortal).RemoteSettingsDisableAsync();
             remoteSettingsDisable.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, remoteSettingsDisable.Status);
@@ -879,12 +880,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetTpmSettingsInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.TpmSettingsApi,
+                IotDevicePortal.TpmSettingsApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmSettingsInfo> getTask = TestHelpers.Portal.GetTpmSettingsInfoAsync();
+            Task<TpmSettingsInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetTpmSettingsInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -901,12 +902,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void GetTpmAcpiTablesInfo_IoT()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(
-                DevicePortal.TpmAcpiTablesApi,
+                IotDevicePortal.TpmAcpiTablesApi,
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmAcpiTablesInfo> getTask = TestHelpers.Portal.GetTpmAcpiTablesInfoAsync();
+            Task<TpmAcpiTablesInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetTpmAcpiTablesInfoAsync();
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -925,12 +926,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             int logicalDeviceId = 1;
 
             TestHelpers.MockHttpResponder.AddMockResponse(
-                string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId),
+                string.Format("{0}/{1}", IotDevicePortal.TpmSettingsApi, logicalDeviceId),
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmLogicalDeviceSettingsInfo> getTask = TestHelpers.Portal.GetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
+            Task<TpmLogicalDeviceSettingsInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);
@@ -949,9 +950,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string acpiTableIndex = "1";
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.TpmAcpiTablesApi, response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(IotDevicePortal.TpmAcpiTablesApi, response, HttpMethods.Post);
 
-            Task tpmAcpiTables = TestHelpers.Portal.SetTpmAcpiTablesInfoAsync(acpiTableIndex);
+            Task tpmAcpiTables = (TestHelpers.Portal as IotDevicePortal).SetTpmAcpiTablesInfoAsync(acpiTableIndex);
             tpmAcpiTables.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmAcpiTables.Status);
@@ -968,9 +969,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string azureKey = string.Empty;
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", IotDevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Post);
 
-            Task tpmLogicalDeviceSettings = TestHelpers.Portal.SetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId, azureUri, azureKey);
+            Task tpmLogicalDeviceSettings = (TestHelpers.Portal as IotDevicePortal).SetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId, azureUri, azureKey);
             tpmLogicalDeviceSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
@@ -985,9 +986,9 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             int logicalDeviceId = 1;
            
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
-            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", DevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
+            TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", IotDevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
 
-            Task tpmLogicalDeviceSettings = TestHelpers.Portal.ResetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
+            Task tpmLogicalDeviceSettings = (TestHelpers.Portal as IotDevicePortal).ResetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
             tpmLogicalDeviceSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
@@ -1003,12 +1004,12 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             string validity = "18000";
 
             TestHelpers.MockHttpResponder.AddMockResponse(
-               string.Format("{0}/{1}", DevicePortal.TpmAzureTokenApi, logicalDeviceId),
+               string.Format("{0}/{1}", IotDevicePortal.TpmAzureTokenApi, logicalDeviceId),
                 this.PlatformType,
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.GetTpmAzureTokenInfoAsync(logicalDeviceId, validity);
+            Task<TpmAzureTokenInfo> getTask = (TestHelpers.Portal as IotDevicePortal).GetTpmAzureTokenInfoAsync(logicalDeviceId, validity);
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);

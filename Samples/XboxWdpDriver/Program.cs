@@ -224,7 +224,7 @@ namespace XboxWdpDriver
 
                 IDevicePortalConnection connection = new DefaultDevicePortalConnection(finalConnectionAddress, userName, password);
 
-                DevicePortal portal = new DevicePortal(connection);
+                XboxDevicePortal portal = new XboxDevicePortal(connection);
 
                 if (parameters.HasParameter(ParameterHelper.Cert))
                 {

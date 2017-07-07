@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Bluetooth Connectivity.
     /// </content>
-    public partial class DevicePortal
+    public partial class IotDevicePortal : DevicePortal
     {
         /// <summary>
         /// Available bluetooth device list API.
@@ -166,9 +166,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.bluetoothWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.bluetoothWebSocket = new WebSocket<AvailableBluetoothDevicesInfo>(this.deviceConnection);
+                this.bluetoothWebSocket = new WebSocket<AvailableBluetoothDevicesInfo>(this.DeviceConnection);
 #else
-                this.bluetoothWebSocket = new WebSocket<AvailableBluetoothDevicesInfo>(this.deviceConnection, this.ServerCertificateValidation);
+                this.bluetoothWebSocket = new WebSocket<AvailableBluetoothDevicesInfo>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
 
                 this.bluetoothWebSocket.WebSocketMessageReceived += this.BluetoothReceivedHandler;
@@ -204,9 +204,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.pairedBluetoothWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.pairedBluetoothWebSocket = new WebSocket<PairedBluetoothDevicesInfo>(this.deviceConnection);
+                this.pairedBluetoothWebSocket = new WebSocket<PairedBluetoothDevicesInfo>(this.DeviceConnection);
 #else
-                this.pairedBluetoothWebSocket = new WebSocket<PairedBluetoothDevicesInfo>(this.deviceConnection, this.ServerCertificateValidation);
+                this.pairedBluetoothWebSocket = new WebSocket<PairedBluetoothDevicesInfo>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
 
                 this.pairedBluetoothWebSocket.WebSocketMessageReceived += this.PairedBluetoothReceivedHandler;
@@ -248,9 +248,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
             if (this.pairBluetoothWebSocket == null)
             {
 #if WINDOWS_UWP
-                this.pairBluetoothWebSocket = new WebSocket<PairBluetoothDevicesInfo>(this.deviceConnection);
+                this.pairBluetoothWebSocket = new WebSocket<PairBluetoothDevicesInfo>(this.DeviceConnection);
 #else
-                this.pairBluetoothWebSocket = new WebSocket<PairBluetoothDevicesInfo>(this.deviceConnection, this.ServerCertificateValidation);
+                this.pairBluetoothWebSocket = new WebSocket<PairBluetoothDevicesInfo>(this.DeviceConnection, this.ServerCertificateValidation);
 #endif
 
                 this.pairBluetoothWebSocket.WebSocketMessageReceived += this.PairBluetoothReceivedHandler;

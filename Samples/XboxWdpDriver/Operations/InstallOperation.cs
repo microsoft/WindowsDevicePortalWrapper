@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Tools.WindowsDevicePortal;
 using static Microsoft.Tools.WindowsDevicePortal.DevicePortal;
+using static Microsoft.Tools.WindowsDevicePortal.XboxDevicePortal;
 
 namespace XboxWdpDriver
 {
@@ -53,13 +54,13 @@ namespace XboxWdpDriver
         /// <summary>
         /// Reference to our portal object.
         /// </summary>
-        private DevicePortal portal;
+        private XboxDevicePortal portal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstallOperation"/> class. 
         /// </summary>
         /// <param name="portal">Reference to the device portal object.</param>
-        public InstallOperation(DevicePortal portal)
+        public InstallOperation(XboxDevicePortal portal)
         {
             this.portal = portal;
         }
@@ -67,9 +68,9 @@ namespace XboxWdpDriver
         /// <summary>
         /// Main entry point for handling an install operation
         /// </summary>
-        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="portal">XboxDevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(XboxDevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {

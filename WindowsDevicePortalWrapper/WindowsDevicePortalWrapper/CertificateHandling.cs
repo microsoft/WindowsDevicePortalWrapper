@@ -36,7 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             X509Certificate2 certificate = null;
 
-            Uri uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
+            Uri uri = Utilities.BuildEndpoint(this.DeviceConnection.Connection, RootCertificateEndpoint);
 
             using (Stream stream = await this.GetAsync(uri))
             {
@@ -51,15 +51,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Sets the manual certificate.
-        /// </summary>
-        /// <param name="cert">Manual certificate</param>
-        private void SetManualCertificate(X509Certificate2 cert)
-        {
-            this.manualCertificate = cert;
-        }
-
-        /// <summary>
         /// Validate the server certificate
         /// </summary>
         /// <param name="sender">The sender object</param>
@@ -67,7 +58,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="chain">The cert chain</param>
         /// <param name="sslPolicyErrors">Policy Errors</param>
         /// <returns>whether the cert passes validation</returns>
-        private bool ServerCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        public bool ServerCertificateValidation(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (this.manualCertificate != null)
             {
@@ -120,6 +111,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             return isValid;
+        }
+
+        /// <summary>
+        /// Sets the manual certificate.
+        /// </summary>
+        /// <param name="cert">Manual certificate</param>
+        private void SetManualCertificate(X509Certificate2 cert)
+        {
+            this.manualCertificate = cert;
         }
     }
 }

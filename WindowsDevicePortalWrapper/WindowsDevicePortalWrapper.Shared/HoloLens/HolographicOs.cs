@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic OS methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal : DevicePortal
     {
         /// <summary>
         /// API for getting or setting Interpupilary distance
@@ -23,11 +23,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// API for getting a list of running HoloLens specific services.
         /// </summary>
         public static readonly string HolographicServicesApi = "api/holographic/os/services";
-
-        /// <summary>
-        /// API for getting or setting HTTPS setting
-        /// </summary>
-        public static readonly string HolographicWebManagementHttpSettingsApi = "api/holographic/os/webmanagement/settings/https";
 
         /// <summary>
         /// Enumeration describing the status of a process
@@ -90,10 +85,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             await this.PostAsync(
-                HolographicWebManagementHttpSettingsApi,
+                DevicePortal.HolographicWebManagementHttpSettingsApi,
                 string.Format("required={0}", httpsRequired));
 
-            this.deviceConnection.UpdateConnection(httpsRequired);
+            this.DeviceConnection.UpdateConnection(httpsRequired);
         }
 
         /// <summary>
@@ -114,22 +109,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             await this.PostAsync(
                 HolographicIpdApi,
                 payload);
-        }
-
-        /// <summary>
-        /// Gets the WiFi http security requirements for communication with the device.
-        /// </summary>
-        /// <returns>True if WiFi based communication requires a secure connection, false otherwise.</returns>
-        /// <remarks>This method is only supported on HoloLens.</remarks>
-        public async Task<bool> GetIsHttpsRequiredAsync()
-        {
-            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
-            {
-                throw new NotSupportedException("This method is only supported on HoloLens.");
-            }
-
-            WebManagementHttpSettings httpSettings = await this.GetAsync<WebManagementHttpSettings>(HolographicWebManagementHttpSettingsApi);
-            return httpSettings.IsHttpsRequired;
         }
 
         #region Data contract
@@ -250,19 +229,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     return (this.ObservedRaw == "Running") ? ProcessStatus.Running : ProcessStatus.Stopped;
                 }
             }
-        }
-
-        /// <summary>
-        /// Object representation for HTTP settings
-        /// </summary>
-        [DataContract]
-        public class WebManagementHttpSettings
-        {
-            /// <summary>
-            /// Gets a value indicating whether HTTPS is required
-            /// </summary>
-            [DataMember(Name = "httpsRequired")]
-            public bool IsHttpsRequired { get; private set; }
         }
 
         #endregion // Data contract

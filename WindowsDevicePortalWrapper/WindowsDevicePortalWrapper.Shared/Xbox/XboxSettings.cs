@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// XboxSettings Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal : DevicePortal
     {
         /// <summary>
         /// Endpoint for Xbox settings management REST calls.

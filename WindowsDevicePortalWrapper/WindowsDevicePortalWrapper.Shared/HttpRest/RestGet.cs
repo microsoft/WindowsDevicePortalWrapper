@@ -31,6 +31,59 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private static readonly string SysPerfInfoErrorPostfix = "\"}";
 
         /// <summary>
+        /// Calls the specified API with the provided payload.
+        /// </summary>
+        /// <typeparam name="T">Return type for the GET call</typeparam>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>An object of the specified type containing the data returned by the request.</returns>
+        public async Task<T> GetAsync<T>(
+            string apiPath,
+            string payload = null) where T : new()
+        {
+            T data = default(T);
+
+            Uri uri = Utilities.BuildEndpoint(
+                this.DeviceConnection.Connection,
+                apiPath,
+                payload);
+
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+
+            using (Stream dataStream = await this.GetAsync(uri).ConfigureAwait(false))
+            {
+                if ((dataStream != null) &&
+                    (dataStream.Length != 0))
+                {
+                    JsonFormatCheck<T>(dataStream);
+ 
+                    object response = serializer.ReadObject(dataStream);
+                    data = (T)response;
+                }
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// Calls the specified API with the provided payload.
+        /// </summary>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>The raw response stream object containing the data returned by the request.</returns>
+        public async Task<Stream> GetAsyncRaw(
+            string apiPath,
+            string payload = null)
+        {
+            Uri uri = Utilities.BuildEndpoint(
+                this.DeviceConnection.Connection,
+                apiPath,
+                payload);
+
+            return await this.GetAsync(uri).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Checks the JSON for any known formatting errors and fixes them.
         /// </summary>
         /// <typeparam name="T">Return type for the JSON message</typeparam>
@@ -61,41 +114,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 jsonStream.Seek(0, SeekOrigin.Begin);
             }
-        }
-
-        /// <summary>
-        /// Calls the specified API with the provided payload.
-        /// </summary>
-        /// <typeparam name="T">Return type for the GET call</typeparam>
-        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
-        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
-        /// <returns>An object of the specified type containing the data returned by the request.</returns>
-        public async Task<T> GetAsync<T>(
-            string apiPath,
-            string payload = null) where T : new()
-        {
-            T data = default(T);
-
-            Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
-                apiPath,
-                payload);
-
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-
-            using (Stream dataStream = await this.GetAsync(uri).ConfigureAwait(false))
-            {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
-                {
-                    JsonFormatCheck<T>(dataStream);
- 
-                    object response = serializer.ReadObject(dataStream);
-                    data = (T)response;
-                }
-            }
-
-            return data;
         }
     }
 }

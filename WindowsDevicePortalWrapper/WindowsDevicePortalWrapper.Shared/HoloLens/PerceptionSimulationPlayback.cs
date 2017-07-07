@@ -16,7 +16,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Perception Simulation Playback methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal : DevicePortal
     {
         /// <summary>
         /// API for loading or unloading a Holographic Perception Simulation recording.
@@ -186,7 +186,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 name);
 
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 HolographicSimulationPlaybackStateApi,
                 payload);
 

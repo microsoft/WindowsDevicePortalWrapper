@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// MediaCapture Wrappers
     /// </content>
-    public partial class DevicePortal
+    public partial class XboxDevicePortal : DevicePortal
     {
         /// <summary>
         /// Endpoint for getting a screenshot.
@@ -31,11 +31,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
 
-            Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
-                GetXboxScreenshotApi);
-
-            return await this.GetAsync(uri);
+            return await this.GetAsyncRaw(GetXboxScreenshotApi);
         }
     }
 }

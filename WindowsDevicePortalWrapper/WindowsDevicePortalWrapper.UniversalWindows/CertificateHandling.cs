@@ -30,7 +30,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Certificate certificate = null;
 
-            Uri uri = Utilities.BuildEndpoint(this.deviceConnection.Connection, RootCertificateEndpoint);
+            Uri uri = Utilities.BuildEndpoint(this.DeviceConnection.Connection, RootCertificateEndpoint);
                 
             HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
             requestSettings.AllowUI = false;

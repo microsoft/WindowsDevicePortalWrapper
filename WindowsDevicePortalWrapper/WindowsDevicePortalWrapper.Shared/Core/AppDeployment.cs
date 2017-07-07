@@ -241,7 +241,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             out string boundaryString)           
         {
             uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 PackageManagerApi,
                 string.Format("package={0}", packageName));
 

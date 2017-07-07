@@ -15,7 +15,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Mixed reality capture methods
     /// </content>
-    public partial class DevicePortal
+    public partial class HoloLensDevicePortal : DevicePortal
     {
         /// <summary>
         ///  API for getting or deleting a Mixed Reality Capture file.
@@ -118,7 +118,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeAudio).ToLower();
 
             return Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 MrcLiveStreamHighResApi,
                 payload);
         }
@@ -146,7 +146,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeAudio).ToLower();
 
             return Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 MrcLiveStreamLowResApi,
                 payload);
         }
@@ -174,7 +174,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeAudio).ToLower();
 
             return Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 MrcLiveStreamMediumResApi,
                 payload);
         }
@@ -201,7 +201,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             string payload = string.Format("filename={0}", Utilities.Hex64Encode(fileName));
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 apiPath,
                 payload);
 
@@ -265,7 +265,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 includeAudio).ToLower();
 
             return Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 MrcLiveStreamApi,
                 payload);
         }

@@ -61,7 +61,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             string queryString = BugcheckFileApi + string.Format("?filename={0}", crashdump.Filename);
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 queryString);
 
             return await this.GetAsync(uri);
@@ -74,7 +74,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task<Stream> GetLiveKernelDumpAsync()
         {
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 LiveKernelDumpApi);
 
             return await this.GetAsync(uri);
@@ -89,7 +89,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             string queryString = LiveProcessDumpApi + string.Format("?pid={0}", pid);
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 queryString);
 
             return await this.GetAsync(uri);

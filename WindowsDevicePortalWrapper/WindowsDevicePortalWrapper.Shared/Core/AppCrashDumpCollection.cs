@@ -51,7 +51,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             string queryString = CrashDumpFileApi + string.Format("?packageFullName={0}&fileName={1}", crashdump.PackageFullName, crashdump.Filename);
             Uri uri = Utilities.BuildEndpoint(
-                this.deviceConnection.Connection,
+                this.DeviceConnection.Connection,
                 queryString);
 
             return await this.GetAsync(uri);
@@ -126,6 +126,25 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         #region Data contract
+
+        /// <summary>
+        /// Application package.
+        /// </summary>
+        [DataContract]
+        public class AppPackage
+        {
+            /// <summary>
+            /// Gets a value indicating whether the app is the startup app
+            /// </summary>
+            [DataMember(Name = "IsStartup")]
+            public bool IsStartup { get; private set; }
+
+            /// <summary>
+            /// Gets the complate package name
+            /// </summary>
+            [DataMember(Name = "PackageFullName")]
+            public string PackageFullName { get; private set; }
+        }
 
         /// <summary>
         /// Per-app crash dump settings.

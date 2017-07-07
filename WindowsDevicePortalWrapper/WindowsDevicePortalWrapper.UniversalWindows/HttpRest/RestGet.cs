@@ -28,18 +28,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> GetAsync(Uri uri)
+        protected async Task<Stream> GetAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 
             HttpBaseProtocolFilter requestSettings = new HttpBaseProtocolFilter();
             requestSettings.AllowUI = false;
 
-            if (this.deviceConnection.Credentials != null)
+            if (this.DeviceConnection.Credentials != null)
             {
                 requestSettings.ServerCredential = new PasswordCredential();
-                requestSettings.ServerCredential.UserName = this.deviceConnection.Credentials.UserName;
-                requestSettings.ServerCredential.Password = this.deviceConnection.Credentials.Password;
+                requestSettings.ServerCredential.UserName = this.DeviceConnection.Credentials.UserName;
+                requestSettings.ServerCredential.Password = this.DeviceConnection.Credentials.Password;
             }
 
             using (HttpClient client = new HttpClient(requestSettings))

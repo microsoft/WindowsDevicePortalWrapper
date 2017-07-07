@@ -30,9 +30,9 @@ namespace XboxWdpDriver
         /// <summary>
         /// Main entry point for handling a Screenshot operation
         /// </summary>
-        /// <param name="portal">DevicePortal reference for communicating with the device.</param>
+        /// <param name="portal">XboxDevicePortal reference for communicating with the device.</param>
         /// <param name="parameters">Parsed command line parameters.</param>
-        public static void HandleOperation(DevicePortal portal, ParameterHelper parameters)
+        public static void HandleOperation(XboxDevicePortal portal, ParameterHelper parameters)
         {
             if (parameters.HasFlag(ParameterHelper.HelpFlag))
             {
@@ -59,6 +59,7 @@ namespace XboxWdpDriver
                 using (var fileStream = new FileStream(filepath, FileMode.Create))
                 {
                     screenshotTask.Result.CopyTo(fileStream);
+                    screenshotTask.Result.Dispose();
                 }
 
                 Console.WriteLine("Screenshot saved as {0}.", filepath);
