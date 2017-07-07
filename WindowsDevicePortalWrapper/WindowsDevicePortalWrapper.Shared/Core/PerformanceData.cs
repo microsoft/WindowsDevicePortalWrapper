@@ -329,13 +329,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets total Dedicated memory in bytes
             /// </summary>
             [DataMember(Name = "DedicatedMemory")]
-            public uint DedicatedMemory { get; private set; }
+            public ulong DedicatedMemory { get; private set; }
 
             /// <summary>
             /// Gets used Dedicated memory in bytes
             /// </summary>
             [DataMember(Name = "DedicatedMemoryUsed")]
-            public uint DedicatedMemoryUsed { get; private set; }
+            public ulong DedicatedMemoryUsed { get; private set; }
 
             /// <summary>
             /// Gets description
@@ -347,19 +347,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets system memory in bytes
             /// </summary>
             [DataMember(Name = "SystemMemory")]
-            public uint SystemMemory { get; private set; }
+            public ulong SystemMemory { get; private set; }
 
             /// <summary>
             /// Gets memory used in bytes
             /// </summary>
             [DataMember(Name = "SystemMemoryUsed")]
-            public uint SystemMemoryUsed { get; private set; }
+            public ulong SystemMemoryUsed { get; private set; }
 
             /// <summary>
             /// Gets engines utilization as percent of maximum. 
             /// </summary>
             [DataMember(Name = "EnginesUtilization")]
-            public List<float> EnginesUtilization { get; private set; }
+            public List<double> EnginesUtilization { get; private set; }
         }
 
         /// <summary>
@@ -385,13 +385,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets current download speed in bytes per second
             /// </summary>
             [DataMember(Name = "NetworkInBytes")]
-            public int BytesIn { get; private set; }
+            public ulong BytesIn { get; private set; }
 
             /// <summary>
             ///  Gets current upload speed in bytes per second
             /// </summary>
             [DataMember(Name = "NetworkOutBytes")]
-            public int BytesOut { get; private set; }
+            public ulong BytesOut { get; private set; }
         }
 
         /// <summary>
@@ -463,73 +463,73 @@ namespace Microsoft.Tools.WindowsDevicePortal
             /// Gets available pages
             /// </summary>
             [DataMember(Name = "AvailablePages")]
-            public int AvailablePages { get; private set; }
+            public ulong AvailablePages { get; private set; }
 
             /// <summary>
             /// Gets commit limit in bytes
             /// </summary>
             [DataMember(Name = "CommitLimit")]
-            public int CommitLimit { get; private set; }
+            public uint CommitLimit { get; private set; }
 
             /// <summary>
             /// Gets committed pages
             /// </summary>
             [DataMember(Name = "CommittedPages")]
-            public int CommittedPages { get; private set; }
+            public uint CommittedPages { get; private set; }
 
             /// <summary>
             /// Gets CPU load as percent of maximum (0 - 100)
             /// </summary>
             [DataMember(Name = "CpuLoad")]
-            public int CpuLoad { get; private set; }
+            public uint CpuLoad { get; private set; }
 
             /// <summary>
             /// Gets IO Other Speed in bytes per second
             /// </summary>
             [DataMember(Name = "IOOtherSpeed")]
-            public int IoOtherSpeed { get; private set; }
+            public ulong IoOtherSpeed { get; private set; }
 
             /// <summary>
             /// Gets IO Read speed in bytes per second. 
             /// </summary>
             [DataMember(Name = "IOReadSpeed")]
-            public int IoReadSpeed { get; private set; }
+            public ulong IoReadSpeed { get; private set; }
 
             /// <summary>
             /// Gets IO write speed in bytes per second
             /// </summary>
             [DataMember(Name = "IOWriteSpeed")]
-            public int IoWriteSpeed { get; private set; }
+            public ulong IoWriteSpeed { get; private set; }
 
             /// <summary>
             /// Gets Non paged pool pages
             /// </summary>
             [DataMember(Name = "NonPagedPoolPages")]
-            public int NonPagedPoolPages { get; private set; }
+            public uint NonPagedPoolPages { get; private set; }
 
             /// <summary>
             /// Gets page size
             /// </summary>
             [DataMember(Name = "PageSize")]
-            public int PageSize { get; private set; }
+            public uint PageSize { get; private set; }
 
             /// <summary>
             /// Gets paged pool pages
             /// </summary>
             [DataMember(Name = "PagedPoolPages")]
-            public int PagedPoolPages { get; private set; }
+            public uint PagedPoolPages { get; private set; }
 
             /// <summary>
             /// Gets total installed in KB
             /// </summary>
             [DataMember(Name = "TotalInstalledInKb")]
-            public int TotalInstalledKb { get; private set; }
+            public ulong TotalInstalledKb { get; private set; }
 
             /// <summary>
             /// Gets total pages
             /// </summary>
             [DataMember(Name = "TotalPages")]
-            public int TotalPages { get; private set; }
+            public uint TotalPages { get; private set; }
 
             /// <summary>
             /// Gets GPU data
