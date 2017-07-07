@@ -5,7 +5,9 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
@@ -159,11 +161,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         };
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
 
-                        T message = (T)serializer.ReadObject(stream);
+                        try
+                        {
+                            T message = (T)serializer.ReadObject(stream);
 
-                        this.WebSocketMessageReceived?.Invoke(
-                            this,
-                            new WebSocketMessageReceivedEventArgs<T>(message));
+                            this.WebSocketMessageReceived?.Invoke(
+                                this,
+                                new WebSocketMessageReceivedEventArgs<T>(message));
+                        }
+                        catch(SerializationException)
+                        {
+                            // Assert on serialization failure.
+                            Debug.Assert(false);
+                            throw;
+                        }
                     }
                 }
             }
