@@ -87,7 +87,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Stream requestStream = null,
             string requestStreamContentType = null) where T : new()
         {
-           Uri uri = Utilities.BuildEndpoint(
+            Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath, 
                 payload);
