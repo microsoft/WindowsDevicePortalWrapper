@@ -76,9 +76,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                                 if (dataStream != null)
                                 {
-                                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
-
-                                    HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
+                                    HttpErrorResponse errorResponse = DevicePortal.ReadJsonStream<HttpErrorResponse>(dataStream);
 
                                     if (errorResponse.Success)
                                     {

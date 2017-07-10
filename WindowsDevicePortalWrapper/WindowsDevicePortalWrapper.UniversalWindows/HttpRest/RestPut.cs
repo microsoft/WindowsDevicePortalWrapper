@@ -29,7 +29,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="body">The HTTP content comprising the body of the request.</param>
         /// <returns>Task tracking the PUT completion.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> PutAsync(
+        public async Task<Stream> PutAsync(
             Uri uri,
             IHttpContent body = null)
         {

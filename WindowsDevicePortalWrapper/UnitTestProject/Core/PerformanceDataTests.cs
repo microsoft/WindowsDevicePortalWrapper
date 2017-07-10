@@ -145,14 +145,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             Assert.AreEqual(systemIdleprocess.Name, "System Idle Process");
             Assert.IsNull(systemIdleprocess.PackageFullName);
             Assert.AreEqual(systemIdleprocess.PageFile, 0U);
-            Assert.AreEqual(systemIdleprocess.PrivateWorkingSet, 4096);
-            Assert.AreEqual(systemIdleprocess.ProcessId, 0);
+            Assert.AreEqual(systemIdleprocess.PrivateWorkingSet, 4096U);
+            Assert.AreEqual(systemIdleprocess.ProcessId, 0U);
             Assert.IsNull(systemIdleprocess.Publisher);
             Assert.AreEqual(systemIdleprocess.SessionId, 0U);
-            Assert.AreEqual(systemIdleprocess.TotalCommit, 0);
+            Assert.AreEqual(systemIdleprocess.TotalCommit, 0U);
             Assert.AreEqual(systemIdleprocess.UserName, "NT AUTHORITY\\SYSTEM");
             Assert.IsNull(systemIdleprocess.Version);
-            Assert.AreEqual(systemIdleprocess.VirtualSize, 65536);
+            Assert.AreEqual(systemIdleprocess.VirtualSize, 65536U);
             Assert.AreEqual(systemIdleprocess.WorkingSet, 4096U);
 
             DeviceProcessInfo devHomeProcess = processes[1];
@@ -163,14 +163,14 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
             Assert.AreEqual(devHomeProcess.Name, "svchost.exe");
             Assert.IsNull(devHomeProcess.PackageFullName);
             Assert.AreEqual(devHomeProcess.PageFile, 5472256U);
-            Assert.AreEqual(devHomeProcess.PrivateWorkingSet, 4755456);
-            Assert.AreEqual(devHomeProcess.ProcessId, 892);
+            Assert.AreEqual(devHomeProcess.PrivateWorkingSet, 4755456U);
+            Assert.AreEqual(devHomeProcess.ProcessId, 892U);
             Assert.IsNull(devHomeProcess.Publisher);
             Assert.AreEqual(devHomeProcess.SessionId, 0U);
-            Assert.AreEqual(devHomeProcess.TotalCommit, 5914624);
+            Assert.AreEqual(devHomeProcess.TotalCommit, 5914624U);
             Assert.AreEqual(devHomeProcess.UserName, "NT AUTHORITY\\SYSTEM");
             Assert.IsNull(devHomeProcess.Version);
-            Assert.AreEqual(devHomeProcess.VirtualSize, 2203387539456);
+            Assert.AreEqual(devHomeProcess.VirtualSize, 2203387539456U);
             Assert.AreEqual(devHomeProcess.WorkingSet, 17285120U);
         }
 
@@ -181,18 +181,18 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         private static void ValidateSystemPerm(SystemPerformanceInformation systemPerfInfo)
         {
             // Check some known things about this response.
-            Assert.AreEqual(systemPerfInfo.AvailablePages, 369054);
-            Assert.AreEqual(systemPerfInfo.CommitLimit, 784851);
-            Assert.AreEqual(systemPerfInfo.CommittedPages, 322627);
-            Assert.AreEqual(systemPerfInfo.CpuLoad, 1);
-            Assert.AreEqual(systemPerfInfo.IoOtherSpeed, 3692);
-            Assert.AreEqual(systemPerfInfo.IoReadSpeed, 36);
-            Assert.AreEqual(systemPerfInfo.IoWriteSpeed, 6480);
-            Assert.AreEqual(systemPerfInfo.NonPagedPoolPages, 42504);
-            Assert.AreEqual(systemPerfInfo.PageSize, 4096);
-            Assert.AreEqual(systemPerfInfo.PagedPoolPages, 30697);
-            Assert.AreEqual(systemPerfInfo.TotalInstalledKb, 1048592);
-            Assert.AreEqual(systemPerfInfo.TotalPages, 655360);
+            Assert.AreEqual(systemPerfInfo.AvailablePages, 369054U);
+            Assert.AreEqual(systemPerfInfo.CommitLimit, 784851U);
+            Assert.AreEqual(systemPerfInfo.CommittedPages, 322627U);
+            Assert.AreEqual(systemPerfInfo.CpuLoad, 1U);
+            Assert.AreEqual(systemPerfInfo.IoOtherSpeed, 3692U);
+            Assert.AreEqual(systemPerfInfo.IoReadSpeed, 36U);
+            Assert.AreEqual(systemPerfInfo.IoWriteSpeed, 6480U);
+            Assert.AreEqual(systemPerfInfo.NonPagedPoolPages, 42504U);
+            Assert.AreEqual(systemPerfInfo.PageSize, 4096U);
+            Assert.AreEqual(systemPerfInfo.PagedPoolPages, 30697U);
+            Assert.AreEqual(systemPerfInfo.TotalInstalledKb, 1048592U);
+            Assert.AreEqual(systemPerfInfo.TotalPages, 655360U);
 
             Assert.AreEqual(systemPerfInfo.GpuData.Adapters.Count, 1);
             GpuAdapter gpuAdapter = systemPerfInfo.GpuData.Adapters[0];
@@ -204,11 +204,11 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
 
             Assert.AreEqual(gpuAdapter.EnginesUtilization.Count, 7);
             double enguineUtilization = gpuAdapter.EnginesUtilization[0];
-            Assert.AreEqual(enguineUtilization, 0.0011459999950602651);
+            Assert.AreEqual(enguineUtilization, 0.001146);
 
             NetworkPerformanceData networkPerformanceData = systemPerfInfo.NetworkData;
-            Assert.AreEqual(networkPerformanceData.BytesIn, 15000);
-            Assert.AreEqual(networkPerformanceData.BytesOut, 0);
+            Assert.AreEqual(networkPerformanceData.BytesIn, 15000U);
+            Assert.AreEqual(networkPerformanceData.BytesOut, 0U);
         }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SignConfigXML>
+
+  <job platform="" configuration="Release" dest="" jobname="WDPW Sign" approvers="hirsin;aaronste">
+    <file src="__INPATHROOT__\WindowsDevicePortalWrapper.dll" signType="Authenticode" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.dll" />
+    <file src="__INPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.dll" signType="Authenticode" dest="__OUTPATHROOT__\WindowsDevicePortalWrapper.UniversalWindows.dll" />
+  </job>
+
+</SignConfigXML>

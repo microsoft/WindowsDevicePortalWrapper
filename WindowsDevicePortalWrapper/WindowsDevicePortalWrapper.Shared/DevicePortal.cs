@@ -175,6 +175,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
+
         /// <summary>
         /// Connects to the device pointed to by IDevicePortalConnection provided in the constructor.
         /// </summary>
