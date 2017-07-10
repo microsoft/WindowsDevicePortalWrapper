@@ -153,29 +153,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
                 else
                 {
-                    using (stream)
+                    DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
                     {
-                        DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
-                        {
-                            UseSimpleDictionaryFormat = true
-                        };
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
+                        UseSimpleDictionaryFormat = true
+                    };
 
-                        try
-                        {
-                            T message = (T)serializer.ReadObject(stream);
+                    T message = DevicePortal.ReadJsonStream<T>(stream, settings);
 
-                            this.WebSocketMessageReceived?.Invoke(
-                                this,
-                                new WebSocketMessageReceivedEventArgs<T>(message));
-                        }
-                        catch(SerializationException)
-                        {
-                            // Assert on serialization failure.
-                            Debug.Assert(false);
-                            throw;
-                        }
-                    }
+                    this.WebSocketMessageReceived?.Invoke(
+                        this,
+                        new WebSocketMessageReceivedEventArgs<T>(message));
                 }
             }
         }
