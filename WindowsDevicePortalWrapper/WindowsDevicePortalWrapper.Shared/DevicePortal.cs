@@ -59,7 +59,17 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Device connection object.
         /// </summary>
         private IDevicePortalConnection deviceConnection;
+#if !WINDOWS_UWP
 
+        /// <summary>
+        /// Initializes static members of the <see cref="DevicePortal" /> class.
+        /// </summary>
+        static DevicePortal()
+        {
+            System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+        }
+
+#endif
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortal" /> class.
         /// </summary>

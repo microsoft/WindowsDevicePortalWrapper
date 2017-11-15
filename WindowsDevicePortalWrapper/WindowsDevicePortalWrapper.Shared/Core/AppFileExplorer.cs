@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -79,6 +80,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             Dictionary<string, string> payload = this.BuildCommonFilePayload(knownFolderId, subPath, packageFullName);
 
+            filename = WebUtility.UrlEncode(filename);
             payload.Add("filename", filename);
 
             Uri uri = Utilities.BuildEndpoint(
@@ -126,7 +128,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string packageFullName = null)
         {
             Dictionary<string, string> payload = this.BuildCommonFilePayload(knownFolderId, subPath, packageFullName);
-
+            filename = WebUtility.UrlEncode(filename);
             payload.Add("filename", filename);
 
             await this.DeleteAsync(GetFileApi, Utilities.BuildQueryString(payload));
