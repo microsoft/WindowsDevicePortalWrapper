@@ -4,17 +4,17 @@
         <id>WindowsDevicePortalWrapper</id>
         <version>0.0.0.0</version>
         <title>Windows Device Portal Wrapper</title>
-        <authors>Windows Device Portal</authors>
+        <authors>Microsoft</authors>
         <owners>Microsoft; Windows Device Portal</owners>
         <licenseUrl>https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/License.txt</licenseUrl>
         <projectUrl>https://github.com/microsoft/windowsdeviceportalwrapper</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>The Device Portal Wrapper is a library that allows a client application to connect to a Device Portal instance on a Windows 10 device and call the REST APIs presented.  This allows an application to e.g. install apps, reboot the device, or get performance metrics.  
 
 See the GitHub repo at https://github.com/microsoft/windowsdeviceportalwrapper</description>
         <summary>Remote control of Windows 10 device for developers and device labs.</summary>
         <releaseNotes>[FILL IN BEFORE RELEASE]</releaseNotes>
-        <copyright>Microsoft Corp</copyright>
+        <copyright>© Microsoft Corporation. All rights reserved.</copyright>
         <language />
         <tags>WDP Windows 10 Device Portal</tags>
     </metadata>
