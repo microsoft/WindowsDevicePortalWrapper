@@ -37,7 +37,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
-            return PostAsync(uri, requestContent);
+            return await PostAsync(uri, requestContent);
         }
 
         public async Task<Stream> PostAsync(
