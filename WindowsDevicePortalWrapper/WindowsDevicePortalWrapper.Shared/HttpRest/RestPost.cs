@@ -32,29 +32,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             List<string> files,
             string payload = null)
         {
-            string boundaryString = Guid.NewGuid().ToString();
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                apiPath,
+                payload);
 
-            using (MemoryStream dataStream = new MemoryStream())
-            {
-                byte[] data;
-
-                foreach (string file in files)
-                {
-                    FileInfo fi = new FileInfo(file);
-                    data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundaryString));
-                    dataStream.Write(data, 0, data.Length);
-                    CopyFileToRequestStream(fi, dataStream);
-                }
-
-                // Close the multipart request data.
-                data = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--\r\n", boundaryString));
-                dataStream.Write(data, 0, data.Length);
-
-                dataStream.Position = 0;
-                string contentType = string.Format("multipart/form-data; boundary={0}", boundaryString);
-
-                await this.PostAsync<NullResponse>(apiPath, payload, dataStream, contentType);
-            }
+            var content = new HttpMultipartFileContent();
+            content.AddRange(files);
+            await this.PostAsync(uri, content);
         }
 
         /// <summary>
