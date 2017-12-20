@@ -30,14 +30,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string requestStreamContentType = null)
         {
             StreamContent requestContent = null;
-            MemoryStream responseDataStream = null;
-
+            
             if (requestStream != null)
             {
                 requestContent = new StreamContent(requestStream);
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
+            return PostAsync(uri, requestContent);
+        }
+
+        public async Task<Stream> PostAsync(
+            Uri uri,
+            HttpContent requestContent)
+        {
+            MemoryStream responseDataStream = null;
 
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;

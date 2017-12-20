@@ -60,6 +60,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\WindowsDevicePortalWrapper\HttpRest\HttpMultipartFileContent.cs">
+      <Link>WDPMockImplementations\HttpMultipartFileContent.cs</Link>
+    </Compile>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Core\AppFileExplorerTests.cs" />
     <Compile Include="Core\WindowsErrorReportingTests.cs" />
