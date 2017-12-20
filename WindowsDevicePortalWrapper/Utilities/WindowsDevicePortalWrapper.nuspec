@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>WindowsDevicePortalWrapper</id>
+        <version>0.0.0.0</version>
+        <title>Windows Device Portal Wrapper</title>
+        <authors>Microsoft</authors>
+        <owners>Microsoft; Windows Device Portal</owners>
+        <licenseUrl>https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/License.txt</licenseUrl>
+        <projectUrl>https://github.com/microsoft/windowsdeviceportalwrapper</projectUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>The Device Portal Wrapper is a library that allows a client application to connect to a Device Portal instance on a Windows 10 device and call the REST APIs presented.  This allows an application to e.g. install apps, reboot the device, or get performance metrics.  
+
+See the GitHub repo at https://github.com/microsoft/windowsdeviceportalwrapper</description>
+        <summary>Remote control of Windows 10 device for developers and device labs.</summary>
+        <releaseNotes>[FILL IN BEFORE RELEASE]</releaseNotes>
+        <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+        <language />
+        <tags>WDP Windows 10 Device Portal</tags>
+    </metadata>
+	<files>
+		<file src="WindowsDevicePortalWrapper.dll" target="lib\net452" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.pdb" target="lib\net452" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.xml" target="lib\net452" />
+		           
+		<file src="WindowsDevicePortalWrapper.UniversalWindows.dll" target="lib\uap10.0" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.pdb" target="lib\uap10.0" />
+		<file src="release\AnyCPU\WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.XML" target="lib\uap10.0" />
+    </files>
+</package>

@@ -5,7 +5,9 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
@@ -151,20 +153,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 }
                 else
                 {
-                    using (stream)
+                    DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
                     {
-                        DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings()
-                        {
-                            UseSimpleDictionaryFormat = true
-                        };
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
+                        UseSimpleDictionaryFormat = true
+                    };
 
-                        T message = (T)serializer.ReadObject(stream);
+                    T message = DevicePortal.ReadJsonStream<T>(stream, settings);
 
-                        this.WebSocketMessageReceived?.Invoke(
-                            this,
-                            new WebSocketMessageReceivedEventArgs<T>(message));
-                    }
+                    this.WebSocketMessageReceived?.Invoke(
+                        this,
+                        new WebSocketMessageReceivedEventArgs<T>(message));
                 }
             }
         }

@@ -22,18 +22,18 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         internal static void ValidateSystemPerfAsync(SystemPerformanceInformation systemPerfInfo)
         {
             // Check some known things about this response.
-            Assert.AreEqual(275897, systemPerfInfo.AvailablePages);
-            Assert.AreEqual(764290, systemPerfInfo.CommitLimit);
-            Assert.AreEqual(225486, systemPerfInfo.CommittedPages);
-            Assert.AreEqual(20, systemPerfInfo.CpuLoad);
-            Assert.AreEqual(4337544, systemPerfInfo.IoOtherSpeed);
-            Assert.AreEqual(1717438, systemPerfInfo.IoReadSpeed);
-            Assert.AreEqual(788621, systemPerfInfo.IoWriteSpeed);
-            Assert.AreEqual(15470, systemPerfInfo.NonPagedPoolPages);
-            Assert.AreEqual(4096, systemPerfInfo.PageSize);
-            Assert.AreEqual(18894, systemPerfInfo.PagedPoolPages);
-            Assert.AreEqual(2097152, systemPerfInfo.TotalInstalledKb);
-            Assert.AreEqual(502146, systemPerfInfo.TotalPages);
+            Assert.AreEqual(275897U, systemPerfInfo.AvailablePages);
+            Assert.AreEqual(764290U, systemPerfInfo.CommitLimit);
+            Assert.AreEqual(225486U, systemPerfInfo.CommittedPages);
+            Assert.AreEqual(20U, systemPerfInfo.CpuLoad);
+            Assert.AreEqual(4337544U, systemPerfInfo.IoOtherSpeed);
+            Assert.AreEqual(1717438U, systemPerfInfo.IoReadSpeed);
+            Assert.AreEqual(788621U, systemPerfInfo.IoWriteSpeed);
+            Assert.AreEqual(15470U, systemPerfInfo.NonPagedPoolPages);
+            Assert.AreEqual(4096U, systemPerfInfo.PageSize);
+            Assert.AreEqual(18894U, systemPerfInfo.PagedPoolPages);
+            Assert.AreEqual(2097152U, systemPerfInfo.TotalInstalledKb);
+            Assert.AreEqual(502146U, systemPerfInfo.TotalPages);
 
             Assert.AreEqual(systemPerfInfo.GpuData.Adapters.Count, 1);
             GpuAdapter gpuAdapter = systemPerfInfo.GpuData.Adapters[0];
@@ -47,8 +47,8 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             Assert.AreEqual("7.098184", gpuAdapter.EnginesUtilization[0].ToString("n6"));
 
             NetworkPerformanceData networkPerformanceData = systemPerfInfo.NetworkData;
-            Assert.AreEqual(0, networkPerformanceData.BytesIn);
-            Assert.AreEqual(0, networkPerformanceData.BytesOut);
+            Assert.AreEqual(0U, networkPerformanceData.BytesIn);
+            Assert.AreEqual(0U, networkPerformanceData.BytesOut);
         }
         
         /// <summary>

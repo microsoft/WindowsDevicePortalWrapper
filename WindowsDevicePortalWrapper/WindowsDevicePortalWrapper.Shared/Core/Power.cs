@@ -130,7 +130,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             public int DefaultAlert2 { get; private set; }
 
             /// <summary>
-            /// Gets estimated battery time.
+            /// Gets estimated battery time left in seconds.
             /// </summary>
             [DataMember(Name = "EstimatedTime")]
             public uint EstimatedTimeRaw { get; private set; }
@@ -161,6 +161,19 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
 
                     return 100.0f * ((float)this.RemainingCapacity / this.MaximumCapacity);
+                }
+            }
+
+            /// <summary>
+            /// Gets the remaining battery time left, as a TimeSpan. 
+            /// Will be 0 if the device has no battery. 
+            /// Will be 0xFFFF,FFFF (around 138 years) if the device is charging. 
+            /// </summary>
+            public TimeSpan EstimatedTime
+            {
+                get
+                {
+                    return new TimeSpan(0,0,(int)EstimatedTimeRaw);
                 }
             }
         }

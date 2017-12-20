@@ -64,8 +64,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = null) where T : new()
                                    where K : class
         {
-            T data = default(T);
-
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath,
@@ -94,21 +92,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 #endif // WINDOWS_UWP
             }
 
-            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
-
-            using (Stream dataStream = await this.PutAsync(uri, streamContent))
-            {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
-                {
-                    JsonFormatCheck<T>(dataStream);
-
-                    object response = deserializer.ReadObject(dataStream);
-                    data = (T)response;
-                }
-            }
-
-            return data;
+            return ReadJsonStream<T>(await this.PutAsync(uri, streamContent));
         }
     }
 }

@@ -151,9 +151,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     if (dataStream != null)
                     {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HttpErrorResponse));
-
-                        HttpErrorResponse errorResponse = (HttpErrorResponse)serializer.ReadObject(dataStream);
+                        HttpErrorResponse errorResponse = DevicePortal.ReadJsonStream<HttpErrorResponse>(dataStream);
 
                         error.HResult = errorResponse.ErrorCode;
                         error.Reason = errorResponse.ErrorMessage;
@@ -168,8 +166,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
                         {
                             error.Reason = errorResponse.Reason;
                         }
-
-                        dataStream.Dispose();
                     }
                 }
             }

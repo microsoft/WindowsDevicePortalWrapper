@@ -80,6 +80,7 @@ When creating a new NuGet and GitHub release, the following steps should be take
 2. Merge from Master to Release, with a PR appropriately named ("v1.2.3 release")
 3. Squash and merge commits, leaving major feature entries and fixes in the description. 
 4. Compile release builds of the .NET and UWP libraries, sign them, and upload to NuGet 
+  a. We now have a CI server for this that builds, signs, and packages the NuGet package [here](https://microsoft.visualstudio.com/DefaultCollection/OS/_build/index?path=%5C&definitionId=14239).  
 5. Cut a new release on GitHub using the same version number ("v1.2.3") and attach the signed libraries to the release. 
 6. Update code documentation. 
 

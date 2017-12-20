@@ -87,28 +87,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
             Stream requestStream = null,
             string requestStreamContentType = null) where T : new()
         {
-            T data = default(T);
-
             Uri uri = Utilities.BuildEndpoint(
                 this.deviceConnection.Connection,
                 apiPath, 
                 payload);
 
-            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(T));
-
-            using (Stream dataStream = await this.PostAsync(uri, requestStream, requestStreamContentType))
-            {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
-                {
-                    JsonFormatCheck<T>(dataStream);
-
-                    object response = deserializer.ReadObject(dataStream);
-                    data = (T)response;
-                }
-            }
-
-            return data;
+            return ReadJsonStream<T>(await this.PostAsync(uri, requestStream, requestStreamContentType));
         }
     }
 }

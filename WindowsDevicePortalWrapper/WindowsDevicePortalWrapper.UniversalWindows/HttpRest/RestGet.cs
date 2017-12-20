@@ -28,7 +28,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
 #pragma warning disable 1998
-        private async Task<Stream> GetAsync(Uri uri)
+        public async Task<Stream> GetAsync(Uri uri)
         {
             IBuffer dataBuffer = null;
 

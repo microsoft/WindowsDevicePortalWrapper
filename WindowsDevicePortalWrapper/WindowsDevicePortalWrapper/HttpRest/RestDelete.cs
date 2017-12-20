@@ -22,7 +22,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
-        private async Task<Stream> DeleteAsync(Uri uri)
+        public async Task<Stream> DeleteAsync(Uri uri)
         {
             MemoryStream dataStream = null;
 
