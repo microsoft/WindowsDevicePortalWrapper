@@ -173,7 +173,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 get
                 {
-                    return new TimeSpan(0,0,(int)EstimatedTimeRaw);
+                    return new TimeSpan(0, 0, (int)this.EstimatedTimeRaw);
                 }
             }
         }

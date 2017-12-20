@@ -43,8 +43,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAppendWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
-            return await PostAsync(uri, requestContent);
+
+            return await this.PostAsync(uri, requestContent);
         }
+
         /// <summary>
         /// Submits the http post request to the specified uri.
         /// </summary>

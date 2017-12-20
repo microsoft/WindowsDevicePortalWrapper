@@ -36,8 +36,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 requestContent.Headers.Remove(ContentTypeHeaderName);
                 requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
-            return PostAsync(uri, requestContent);
+
+            return this.PostAsync(uri, requestContent);
         }
+
+        /// <summary>
+        /// Submits the http post request to the specified uri.
+        /// </summary>
+        /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestContent">Optional content for the request body.</param>
+        /// <returns>Task tracking the completion of the POST request</returns>
         private async Task<Stream> PostAsync(
             Uri uri,
             HttpContent requestContent)

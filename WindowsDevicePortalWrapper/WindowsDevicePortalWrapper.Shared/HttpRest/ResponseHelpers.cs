@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// </content>
     public partial class DevicePortal
     {
-        // <summary>
+        /// <summary>
         /// The prefix for the <see cref="SystemPerformanceInformation" /> JSON formatting error.
         /// </summary>
         private static readonly string SysPerfInfoErrorPrefix = "{\"Reason\" : \"";
@@ -27,6 +27,44 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// The postfix for the <see cref="SystemPerformanceInformation" /> JSON formatting error.
         /// </summary>
         private static readonly string SysPerfInfoErrorPostfix = "\"}";
+
+        /// <summary>
+        /// Reads dataStream as T.
+        /// </summary>
+        /// <typeparam name="T">Return type for the JSON message</typeparam>
+        /// <param name="dataStream">The stream that contains the JSON message to be checked.</param>
+        /// <param name="settings">Optional settings for JSON serialization.</param>
+        /// <returns>Read data</returns>
+        public static T ReadJsonStream<T>(Stream dataStream, DataContractJsonSerializerSettings settings = null)
+        {
+            T data = default(T);
+            object response = null;
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
+
+            using (dataStream)
+            {
+                if ((dataStream != null) &&
+                    (dataStream.Length != 0))
+                {
+                    JsonFormatCheck<T>(dataStream);
+
+                    try
+                    {
+                        response = serializer.ReadObject(dataStream);
+                    }
+                    catch (SerializationException)
+                    {
+                        // Assert on serialization failure.
+                        Debug.Assert(false, "Serialization failure encountered. Check DataContract types for a possible mismatch between expectations and reality");
+                        throw;
+                    }
+
+                    data = (T)response;
+                }
+            }
+
+            return data;
+        }
 
         /// <summary>
         /// Checks the JSON for any known formatting errors and fixes them.
@@ -59,43 +97,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                 jsonStream.Seek(0, SeekOrigin.Begin);
             }
-        }
-
-        /// <summary>
-        /// Reads dataStream as T.
-        /// </summary>
-        /// <typeparam name="T">Return type for the JSON message</typeparam>
-        /// <param name="jsonStream">The stream that contains the JSON message to be checked.</param>
-        /// <param name="settings">Optional settings for JSON serialization.</param>
-        public static T ReadJsonStream<T>(Stream dataStream, DataContractJsonSerializerSettings settings = null)
-        {
-            T data = default(T);
-            object response = null;
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T), settings);
-
-            using (dataStream)
-            {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
-                {
-                    JsonFormatCheck<T>(dataStream);
-
-                    try
-                    {
-                        response = serializer.ReadObject(dataStream);
-                    }
-                    catch (SerializationException)
-                    {
-                        // Assert on serialization failure.
-                        Debug.Assert(false);
-                        throw;
-                    }
-
-                    data = (T)response;
-                }
-            }
-
-            return data;
         }
 
         #region Data contract
