@@ -34,6 +34,16 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <summary>
         /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
         /// </summary>
+        /// <param name="baseException">A base exception that we are converting to a DevicePortalException.</param>
+        public DevicePortalException(Exception baseException)
+        {
+            this.HResult = baseException.HResult;
+            this.Reason = baseException.Message;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DevicePortalException"/> class.
+        /// </summary>
         /// <param name="statusCode">The Http status code.</param>
         /// <param name="errorResponse">Http parsed error response message.</param>
         /// <param name="requestUri">Request URI which threw the exception.</param>
@@ -97,6 +107,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Gets a reason for the exception.
         /// </summary>
         public string Reason { get; private set; }
+
+        /// <summary>
+        /// Message override to return Reason.
+        /// </summary>
+        public override string Message { get { return this.Reason; } }
 
         /// <summary>
         /// Gets the request URI that threw the exception.

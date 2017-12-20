@@ -84,11 +84,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         response = serializer.ReadObject(dataStream);
                     }
-                    catch (SerializationException)
+                    catch (SerializationException e)
                     {
                         // Assert on serialization failure.
                         Debug.Assert(false);
-                        throw;
+                        throw new DevicePortalException(e);
                     }
 
                     data = (T)response;
