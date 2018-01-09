@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Register Application Wrappers
     /// </content>
-    public partial class XboxDevicePortal 
+    public partial class AppInstallDevicePortal : SubPortal	 
     {
         /// <summary>
         /// REST endpoint for registering a package from a loose folder
@@ -33,7 +33,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task RegisterApplicationAsync(string folderName)
         {
-            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            if (this.Platform != DevicePortal.DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
