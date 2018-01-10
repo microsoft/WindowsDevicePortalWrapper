@@ -9,8 +9,10 @@
     <Import_RootNamespace>Microsoft.Tools.WindowsDevicePortal</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AppManagement\AppDeployment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppManagement\AppManagementPortal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppManagement\XboxAppDeployment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AppCrashDumpCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\AppDeployment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AppFileExplorer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DeviceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Dns-Sd.cs" />
@@ -33,8 +35,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicOs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicPerception.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HolographicThermal.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HoloLens\HoloLensDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\MixedRealityCapture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HoloLens\MRPortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationPlayback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HoloLens\PerceptionSimulationRecording.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RequestHelpers.cs" />
@@ -46,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\RestPut.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpRest\WebSocket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDevicePortalConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\SubPortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\BluetoothConnectivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\Limpet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\ApplicationManager.cs" />
@@ -56,15 +59,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)IoT\RemoteSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\DeviceInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IoT\WindowsUpdate.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IoT\IoTDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxDevicePortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxLiveSandbox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\SmbShare.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\UserManagement.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxAppDeployment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\FiddlerSetup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxMediaCapture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxPortal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Xbox\XboxSettings.cs" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

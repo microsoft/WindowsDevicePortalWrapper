@@ -12,7 +12,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic OS methods
     /// </content>
-    public partial class HoloLensDevicePortal
+    public partial class MixedRealityPortal
     {
         /// <summary>
         /// API for getting or setting Interpupilary distance
@@ -52,7 +52,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <remarks>This method is only supported on HoloLens.</remarks>
         public async Task<HolographicServices> GetHolographicServiceState()
         {
-            if (!Utilities.IsHoloLens(this.Platform, this.DeviceFamily))
+            if (!Utilities.IsHoloLens(_portal.Platform, _portal.DeviceFamily))
             {
                 throw new NotSupportedException("This method is only supported on HoloLens.");
             }

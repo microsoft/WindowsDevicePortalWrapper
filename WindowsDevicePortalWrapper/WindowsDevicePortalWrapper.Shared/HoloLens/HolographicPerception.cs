@@ -13,7 +13,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for Holographic Perception methods
     /// </content>
-    public partial class HoloLensDevicePortal
+    public partial class MixedRealityPortal
     {
         /// <summary>
         /// API for running a Perception client.
@@ -150,7 +150,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string payload = string.Format(
                 "mode={0}",
                 (int)mode);
-            await this.PostAsync(HolographicSimulationModeApi, payload);
+            await _portal.PostAsync(HolographicSimulationModeApi, payload);
         }
 
         /// <summary>

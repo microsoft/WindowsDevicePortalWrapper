@@ -26,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>A stream of the screenshot in PNG form.</returns>
         public async Task<Stream> TakeXboxScreenshotAsync()
         {
-            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            if (this.Platform != DevicePortal.DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }

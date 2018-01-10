@@ -988,7 +988,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.NoContent);
             TestHelpers.MockHttpResponder.AddMockResponse(string.Format("{0}/{1}", IoTDevicePortal.TpmSettingsApi, logicalDeviceId), response, HttpMethods.Delete);
 
-            Task tpmLogicalDeviceSettings = TestHelpers.Portal.IoT.IoT.ResetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
+            Task tpmLogicalDeviceSettings = TestHelpers.Portal.IoT.ResetTpmLogicalDeviceSettingsInfoAsync(logicalDeviceId);
             tpmLogicalDeviceSettings.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, tpmLogicalDeviceSettings.Status);
@@ -1009,7 +1009,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                 this.FriendlyOperatingSystemVersion,
                 HttpMethods.Get);
 
-            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.IoT.IoT.GetTpmAzureTokenInfoAsync(logicalDeviceId, validity);
+            Task<TpmAzureTokenInfo> getTask = TestHelpers.Portal.IoT.GetTpmAzureTokenInfoAsync(logicalDeviceId, validity);
             getTask.Wait();
 
             Assert.AreEqual(TaskStatus.RanToCompletion, getTask.Status);

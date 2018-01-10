@@ -1,7 +1,10 @@
 ﻿namespace Microsoft.Tools.WindowsDevicePortal
 {
-    public class AppManagementPortal
+    public partial class AppManagementPortal : SubPortal
     {
-        
+        public AppManagementPortal(DevicePortal portal)
+        {
+            this._portal = portal;
+        }
     }
 }

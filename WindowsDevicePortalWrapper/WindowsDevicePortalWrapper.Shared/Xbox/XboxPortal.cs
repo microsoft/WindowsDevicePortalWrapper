@@ -1,7 +1,10 @@
 ﻿namespace Microsoft.Tools.WindowsDevicePortal
 {
-    public class XboxPortal
+    public partial class XboxDevicePortal : SubPortal
     {
-        
+        public XboxDevicePortal(DevicePortal portal)
+        {
+            this._portal = portal;
+        }
     }
 }

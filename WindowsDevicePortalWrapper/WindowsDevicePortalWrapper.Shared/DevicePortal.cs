@@ -175,7 +175,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
         }
 
-        public HoloLensDevicePortal HoloLens;
+        public MixedRealityPortal MixedReality = new MixedRealityPortal(this);
 
         public IoTDevicePortal IoT;
 

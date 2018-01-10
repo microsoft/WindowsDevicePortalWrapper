@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Wrappers for App Deployment methods.
     /// </content>
-    public partial class DevicePortal
+    public partial class AppManagementPortal
     {
         /// <summary>
         /// API to retrieve list of installed packages.
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                     await Task.Delay(TimeSpan.FromMilliseconds(stateCheckIntervalMs));
 
-                    status = await this.GetInstallStatusAsync().ConfigureAwait(false);
+                    status = await _portal.GetInstallStatusAsync().ConfigureAwait(false);
                 }
                 while (status == ApplicationInstallStatus.InProgress);
 

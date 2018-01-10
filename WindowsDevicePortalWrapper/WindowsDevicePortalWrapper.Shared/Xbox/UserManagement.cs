@@ -27,7 +27,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>UserList object containing a List of UserInfo objects representing the users on the device.</returns>
         public async Task<UserList> GetXboxLiveUsersAsync()
         {
-            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            if (this.Platform != DevicePortal.DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }
@@ -42,7 +42,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>Task for tracking async completion.</returns>
         public async Task UpdateXboxLiveUsersAsync(UserList users)
         {
-            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            if (this.Platform != DevicePortal.DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }

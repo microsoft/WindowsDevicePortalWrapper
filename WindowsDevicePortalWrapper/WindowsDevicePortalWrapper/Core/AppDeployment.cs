@@ -17,7 +17,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// .net 4.x implementation of App Deployment methods.
     /// </content>
-    public partial class DevicePortal
+    public partial class AppManagementPortal
     {
         /// <summary>
         /// Gets the status of a pending or most recent installation, if any. 
@@ -38,7 +38,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(handler))
             {
-                this.ApplyHttpHeaders(client, HttpMethods.Get);
+                this.ApplyHttpHeaders(client, DevicePortal.HttpMethods.Get);
                 using (HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false))
                 {
                     if (response.IsSuccessStatusCode)

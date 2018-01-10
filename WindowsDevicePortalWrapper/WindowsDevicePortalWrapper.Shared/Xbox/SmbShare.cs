@@ -26,7 +26,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <returns>The SMB path, username, and password.</returns>
         public async Task<SmbInfo> GetSmbShareInfoAsync()
         {
-            if (this.Platform != DevicePortalPlatforms.XboxOne)
+            if (this.Platform != DevicePortal.DevicePortalPlatforms.XboxOne)
             {
                 throw new NotSupportedException("This method is only supported on Xbox One.");
             }

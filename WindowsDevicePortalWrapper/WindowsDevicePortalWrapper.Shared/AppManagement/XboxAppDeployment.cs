@@ -14,7 +14,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
     /// <content>
     /// Register Application Wrappers
     /// </content>
-    public partial class AppInstallDevicePortal : SubPortal	 
+    public partial class AppManagementPortal 
     {
         /// <summary>
         /// REST endpoint for registering a package from a loose folder
