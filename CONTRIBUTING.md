@@ -59,7 +59,7 @@ You can update message of local commits you haven't pushed yet using git commit 
 
 # Pull request
 
-Start a GitHub pull request to merge your topic branch into the [main repository's master branch](https://github.com/Microsoft/WindowsDevicePortalWrapper/tree/master). 
+Start a GitHub pull request to merge your topic branch into the [main repository's **Development** branch](https://github.com/Microsoft/WindowsDevicePortalWrapper/tree/Development). 
 (If you are a Microsoft employee and are not a member of the [Microsoft organization on GitHub](https://github.com/Microsoft) yet, please contact the DDE team via e-mail for instructions before starting your pull request. There's some process stuff you'll need to do ahead of time.)
 If you haven't contributed to a Microsoft project before, you may be asked to sign a [contribution license agreement](https://cla.microsoft.com/). 
 A comment in the PR will let you know if you do.
@@ -77,12 +77,11 @@ If the pull request review goes well, a project maintainer will merge your chang
 
 When creating a new NuGet and GitHub release, the following steps should be taken:
 1. Bump the version number as appropriate in master (after 1.0, WDP Wrapper will correctly use semver)
-2. Merge from Master to Release, with a PR appropriately named ("v1.2.3 release")
-3. Squash and merge commits, leaving major feature entries and fixes in the description. 
-4. Compile release builds of the .NET and UWP libraries, sign them, and upload to NuGet 
+2. Follow the steps documented in [Release Process](ReleaseProcess.md).
+3. Compile release builds of the .NET and UWP libraries, sign them, and upload to NuGet 
   a. We now have a CI server for this that builds, signs, and packages the NuGet package [here](https://microsoft.visualstudio.com/DefaultCollection/OS/_build/index?path=%5C&definitionId=14239).  
-5. Cut a new release on GitHub using the same version number ("v1.2.3") and attach the signed libraries to the release. 
-6. Update code documentation. 
+4. Cut a new release on GitHub using the same version number ("v1.2.3") and attach the signed libraries to the release. 
+5. Update code documentation. 
 
 # Updating code documentation
 
