@@ -2,9 +2,9 @@
 
 The following description and diagram illustrate the process that the Windows Device Portal Wrapper repository undergoes to create a release.
 
-## Release Steps
-0. [Performed one time on the repository] Create a Development branch off of master.
+![Release Process Flow](External/ReadMeImages/ReleaseProcess.png)
 
+## Release Steps
 1. Declare that a release is feature complete.
 
 This will done by / in coordination with the Windows Device Portal Wrapper maintainers.
@@ -26,8 +26,3 @@ During this time, the release is compiled, signed, packaged and submitted to NuG
 No squashing is necessary on this merge.
 
 6. The stabilization branch is, optionally, deleted.
-
-
-The following diagram illustrates the process as it occurs across the repository branches.
-
-![Release Process Flow](External/ReadMeImages/ReleaseProcess.png)
