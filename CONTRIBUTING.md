@@ -25,9 +25,9 @@ Note:  If you wish to work on something that already exists on our backlog, you 
 1. Fork the repository. Click on the "Fork" button on the top right of the page and follow the flow.
 2. If your work needs more time, the consider branching off of master else just code in your fork.
 3. Ensure your changes check for the appropriate device families (ex: Windows Desktop and IoT only).
-4. Implement one or more [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) to ensure the change works on the target platform(s).
-5. Make small and frequent commits that include [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) against mock data or manual tests which can be run against real devices.
-6. Make sure that all existing [tests](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/Testing.md) continue to pass.
+4. Implement one or more [tests](Testing.md) to ensure the change works on the target platform(s).
+5. Make small and frequent commits that include [tests](Testing.md) against mock data or manual tests which can be run against real devices.
+6. Make sure that all existing [tests](Testing.md) continue to pass.
 
 # Run StyleCop
 

@@ -3,12 +3,12 @@ A client library that wraps the [Windows Device Portal](https://msdn.microsoft.c
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
- [Get Started](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/GettingStarted.md) using the library.  
+ [Get Started](GettingStarted.md) using the library.  
 
 ---
 ---
 
-To start contributing, see [Contributing](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/CONTRIBUTING.md).
+To start contributing, see [Contributing](CONTRIBUTING.md).
 
 ```
 Note: The contribution guidelines were updated in January 2018. Pull requests that target the master branch will be asked to be retargeted to the Development branch prior to approval.
