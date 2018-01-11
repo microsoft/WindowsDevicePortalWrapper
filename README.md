@@ -11,7 +11,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 To start contributing, see [Contributing](https://github.com/Microsoft/WindowsDevicePortalWrapper/blob/master/CONTRIBUTING.md).
 
 ```
-Note: The contribution guidelines were updated in January 2018 to have all pull requests go through the [**Development** branch](https://github.com/Microsoft/WindowsDevicePortalWrapper/tree/Development). Pull requests that target the master branch will be asked to be retargeted to the Development branch prior to approval.
+Note: The contribution guidelines were updated in January 2018. Pull requests that target the master branch will be asked to be retargeted to the Development branch prior to approval.
 ```
 
 ---

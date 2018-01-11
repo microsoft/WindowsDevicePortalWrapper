@@ -30,4 +30,4 @@ No squashing is necessary on this merge.
 
 The following diagram illustrates the process as it occurs across the repository branches.
 
-![Release Process Flow](External/ReadmeImages/ReleaseProcess.png)
+![Release Process Flow](External/ReadMeImages/ReleaseProcess.png)
