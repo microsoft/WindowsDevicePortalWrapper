@@ -13,6 +13,8 @@ This will done by / in coordination with the Windows Device Portal Wrapper maint
 
 Bug fixes get submitted to the stabilization branch while work on the next release continues in Development. Note: While not expected in every release, there _may_ be some cherry-picking of individual commits from Development.
 
+The goal is to stabilize rapidly, over the course of approximately one week. If additional time is warrented for a release, we will extend the stabilization window.
+
 3. When the release has stabilized, a pull request is issued from the stabilization branch to master and it is merged.
 
 The pull request should be squashed as part of the merge, with relevant feature and fix comments retained.
@@ -25,4 +27,4 @@ During this time, the release is compiled, signed, packaged and submitted to NuG
 
 No squashing is necessary on this merge.
 
-6. The stabilization branch is, optionally, deleted.
+6. The stabilization branch is deleted.
