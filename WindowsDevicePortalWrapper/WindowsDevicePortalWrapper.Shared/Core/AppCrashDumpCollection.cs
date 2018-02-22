@@ -88,7 +88,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             return await this.GetAsync<AppCrashDumpSettings>(
                 CrashDumpSettingsApi,
-                string.Format("packageFullname={0}", packageFullname));
+                string.Format("packageFullName={0}", packageFullname));
         }
 
         /// <summary>
