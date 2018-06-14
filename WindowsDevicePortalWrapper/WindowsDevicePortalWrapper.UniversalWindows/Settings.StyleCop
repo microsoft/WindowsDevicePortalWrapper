@@ -27,7 +27,7 @@
     </Analyzer>
     <Analyzer AnalyzerId="StyleCop.CSharp.OrderingRules">
       <Rules>
-         <Rule Name="UsingDirectivesMustBePlacedWithinNamespace">
+        <Rule Name="UsingDirectivesMustBePlacedWithinNamespace">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>

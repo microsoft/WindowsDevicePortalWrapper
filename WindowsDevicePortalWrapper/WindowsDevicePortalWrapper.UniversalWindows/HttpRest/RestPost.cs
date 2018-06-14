@@ -36,8 +36,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
             string requestStreamContentType = null)
         {
             HttpStreamContent requestContent = null;
-            IBuffer dataBuffer = null;
-
+            
             if (requestStream != null)
             {
                 requestContent = new HttpStreamContent(requestStream.AsInputStream());
@@ -45,6 +44,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 requestContent.Headers.TryAppendWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
 
+            return await this.PostAsync(uri, requestContent);
+        }
+
+        /// <summary>
+        /// Submits the http post request to the specified uri.
+        /// </summary>
+        /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestContent">Optional content for the request body.</param>
+        /// <returns>Task tracking the completion of the POST request</returns>
+        public async Task<Stream> PostAsync(
+            Uri uri,
+            IHttpContent requestContent)
+        {
+            IBuffer dataBuffer = null;
             HttpBaseProtocolFilter httpFilter = new HttpBaseProtocolFilter();
             httpFilter.AllowUI = false;
 

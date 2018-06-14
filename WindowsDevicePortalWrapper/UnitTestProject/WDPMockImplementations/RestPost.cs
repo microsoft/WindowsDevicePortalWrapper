@@ -24,14 +24,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="requestStream">Optional stream containing data for the request body.</param>
         /// <param name="requestStreamContentType">The type of that request body data.</param>
         /// <returns>Task tracking the completion of the POST request</returns>
-        private async Task<Stream> PostAsync(
+        private Task<Stream> PostAsync(
             Uri uri,
             Stream requestStream = null,
             string requestStreamContentType = null)
         {
             StreamContent requestContent = null;
-            MemoryStream dataStream = null;
-
             if (requestStream != null)
             {
                 requestContent = new StreamContent(requestStream);
@@ -39,6 +37,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 requestContent.Headers.TryAddWithoutValidation(ContentTypeHeaderName, requestStreamContentType);
             }
 
+            return this.PostAsync(uri, requestContent);
+        }
+
+        /// <summary>
+        /// Submits the http post request to the specified uri.
+        /// </summary>
+        /// <param name="uri">The uri to which the post request will be issued.</param>
+        /// <param name="requestContent">Optional content for the request body.</param>
+        /// <returns>Task tracking the completion of the POST request</returns>
+        private async Task<Stream> PostAsync(
+            Uri uri,
+            HttpContent requestContent)
+        {
+            MemoryStream dataStream = null;
             WebRequestHandler requestSettings = new WebRequestHandler();
             requestSettings.UseDefaultCredentials = false;
             requestSettings.Credentials = this.deviceConnection.Credentials;
