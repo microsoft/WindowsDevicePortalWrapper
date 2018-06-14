@@ -153,18 +153,21 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     {
                         HttpErrorResponse errorResponse = DevicePortal.ReadJsonStream<HttpErrorResponse>(dataStream);
 
-                        error.HResult = errorResponse.ErrorCode;
-                        error.Reason = errorResponse.ErrorMessage;
-
-                        // If we didn't get the Hresult and reason from these properties, try the other ones.
-                        if (error.HResult == 0)
+                        if (errorResponse != null)
                         {
-                            error.HResult = errorResponse.Code;
-                        }
+                            error.HResult = errorResponse.ErrorCode;
+                            error.Reason = errorResponse.ErrorMessage;
 
-                        if (string.IsNullOrEmpty(error.Reason))
-                        {
-                            error.Reason = errorResponse.Reason;
+                            // If we didn't get the Hresult and reason from these properties, try the other ones.
+                            if (error.HResult == 0)
+                            {
+                                error.HResult = errorResponse.Code;
+                            }
+
+                            if (string.IsNullOrEmpty(error.Reason))
+                            {
+                                error.Reason = errorResponse.Reason;
+                            }
                         }
                     }
                 }
