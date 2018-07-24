@@ -55,7 +55,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         {
             await this.PostAsync(
                  SoftAPSettingsApi,
-                string.Format("SoftApEnabled={0}&SoftApSsid={1}&SoftApPassword={2}", Utilities.Hex64Encode(softApStatus), Utilities.Hex64Encode(softApSsid), Utilities.Hex64Encode(softApPassword)));
+                string.Format("SoftAPEnabled={0}&SoftApSsid={1}&SoftApPassword={2}", Utilities.Hex64Encode(softApStatus), Utilities.Hex64Encode(softApSsid), Utilities.Hex64Encode(softApPassword)));
         }
 
         /// <summary>
