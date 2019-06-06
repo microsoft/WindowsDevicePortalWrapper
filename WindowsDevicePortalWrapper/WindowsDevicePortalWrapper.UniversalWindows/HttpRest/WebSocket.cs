@@ -74,7 +74,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 this.websocket.Control.ServerCredential = cred;
             }
 
-            this.websocket.SetRequestHeader("Origin", this.deviceConnection.Connection.AbsoluteUri);
+            //Origin address must be especially cooked to pass through all Device Portal checks
+            this.websocket.SetRequestHeader("Origin", this.deviceConnection.Connection.Scheme + "://" + this.deviceConnection.Connection.Host);
 
             await this.websocket.ConnectAsync(endpoint);
 
