@@ -73,7 +73,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
             this.websocket = new ClientWebSocket();
             this.websocket.Options.UseDefaultCredentials = false;
             this.websocket.Options.Credentials = this.deviceConnection.Credentials;
-            this.websocket.Options.SetRequestHeader("Origin", this.deviceConnection.Connection.AbsoluteUri);
+            //Origin address must be especially cooked to pass through all Device Portal checks
+            string OriginAddress = this.deviceConnection.Connection.Scheme + "://" + this.deviceConnection.Connection.Host;
+            if((this.deviceConnection.Connection.Scheme == "http" && this.deviceConnection.Connection.Port != 80) || 
+                (this.deviceConnection.Connection.Scheme == "https" && this.deviceConnection.Connection.Port != 443))
+            {
+                OriginAddress += ":" + this.deviceConnection.Connection.Port;
+            }
+            this.websocket.Options.SetRequestHeader("Origin", OriginAddress);
 
             // There is no way to set a ServerCertificateValidationCallback for a single web socket, hence the workaround.
             ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors policyErrors)
