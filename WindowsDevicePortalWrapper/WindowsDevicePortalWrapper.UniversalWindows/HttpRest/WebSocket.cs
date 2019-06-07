@@ -75,7 +75,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             }
 
             //Origin address must be especially cooked to pass through all Device Portal checks
-            this.websocket.SetRequestHeader("Origin", this.deviceConnection.Connection.Scheme + "://" + this.deviceConnection.Connection.Host);
+            string OriginAddress = this.deviceConnection.Connection.Scheme + "://" + this.deviceConnection.Connection.Host;
+            if ((this.deviceConnection.Connection.Scheme == "http" && this.deviceConnection.Connection.Port != 80) ||
+                (this.deviceConnection.Connection.Scheme == "https" && this.deviceConnection.Connection.Port != 443))
+            {
+                OriginAddress += ":" + this.deviceConnection.Connection.Port;
+            }
+            this.websocket.SetRequestHeader("Origin", OriginAddress);
 
             await this.websocket.ConnectAsync(endpoint);
 
