@@ -206,8 +206,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 get
                 {
-                    DevicePortalPlatforms platform = DevicePortalPlatforms.Unknown;
-
                     try
                     {
                         // MinnowBoard Max model no. can change based on firmware
@@ -216,31 +214,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             return DevicePortalPlatforms.IoTMinnowboardMax;
                         }
 
+                        // Xbox One platform names may refer to devkit
+                        if (this.PlatformName.Contains("Xbox One"))
+                        {
+                            return DevicePortalPlatforms.XboxOne;
+                        }
+
                         switch (this.PlatformName)
                         {
-                            case "Xbox One":
-                                platform = DevicePortalPlatforms.XboxOne;
-                                break;
-
                             case "SBC":
-                                platform = DevicePortalPlatforms.IoTDragonboard410c;
-                                break;
+                                return DevicePortalPlatforms.IoTDragonboard410c;
 
                             case "Raspberry Pi 2":
-                                platform = DevicePortalPlatforms.IoTRaspberryPi2;
-                                break;
+                                return DevicePortalPlatforms.IoTRaspberryPi2;
 
                             case "Raspberry Pi 3":
-                                platform = DevicePortalPlatforms.IoTRaspberryPi3;
-                                break;
+                                return DevicePortalPlatforms.IoTRaspberryPi3;
 
                             case "Virtual Machine":
-                                platform = DevicePortalPlatforms.VirtualMachine;
-                                break;
+                                return DevicePortalPlatforms.VirtualMachine;
 
                             default:
-                                platform = (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);
-                                break;
+                                return (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);
                         }
                     }
                     catch
@@ -250,20 +245,15 @@ namespace Microsoft.Tools.WindowsDevicePortal
                             case "Enterprise":
                             case "Home":
                             case "Professional":
-                                platform = DevicePortalPlatforms.Windows;
-                                break;
+                                return DevicePortalPlatforms.Windows;
 
                             case "Mobile":
-                                platform = DevicePortalPlatforms.Mobile;
-                                break;
+                                return DevicePortalPlatforms.Mobile;
 
                             default:
-                                platform = DevicePortalPlatforms.Unknown;
-                                break;
+                                return DevicePortalPlatforms.Unknown;
                         }
                     }
-
-                    return platform;
                 }
             }
         }
