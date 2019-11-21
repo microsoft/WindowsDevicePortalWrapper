@@ -192,8 +192,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.GetAsync(uri))
             {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
                 {
                     // Try to get the session state.
                     try

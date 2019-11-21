@@ -207,8 +207,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.GetAsync(uri))
             {
-                dataBytes = new byte[dataStream.Length];
-                dataStream.Read(dataBytes, 0, dataBytes.Length);
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    await dataStream.CopyToAsync(outStream);
+                    dataBytes = new byte[outStream.Length];
+                    await outStream.ReadAsync(dataBytes, 0, dataBytes.Length);
+                }
             }
 
             return dataBytes;   

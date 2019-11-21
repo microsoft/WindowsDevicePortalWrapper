@@ -101,8 +101,6 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.GetAsync(uri))
             {
-                if ((dataStream != null) &&
-                    (dataStream.Length != 0))
                 {
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
                     HolographicSimulationError error = null;
@@ -123,8 +121,12 @@ namespace Microsoft.Tools.WindowsDevicePortal
                     }
 
                     // Getting here indicates that we have file data to return.
-                    dataBytes = new byte[dataStream.Length];
-                    dataStream.Read(dataBytes, 0, dataBytes.Length);
+                    using (MemoryStream outStream = new MemoryStream())
+                    {
+                        await dataStream.CopyToAsync(outStream);
+                        dataBytes = new byte[outStream.Length];
+                        await outStream.ReadAsync(dataBytes, 0, dataBytes.Length);
+                    }
                 }
             }
 
