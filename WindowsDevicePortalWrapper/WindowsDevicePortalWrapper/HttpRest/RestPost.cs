@@ -60,6 +60,8 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (HttpClient client = new HttpClient(requestSettings))
             {
+                client.Timeout = TimeSpan.FromMilliseconds(-1);
+
                 this.ApplyHttpHeaders(client, HttpMethods.Post);
 
                 using (HttpResponseMessage response = await client.PostAsync(uri, requestContent).ConfigureAwait(false))
