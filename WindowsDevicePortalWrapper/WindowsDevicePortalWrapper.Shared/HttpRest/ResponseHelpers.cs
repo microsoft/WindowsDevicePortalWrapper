@@ -43,6 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (dataStream)
             {
+                if (dataStream != null)
                 {
                     JsonFormatCheck<T>(dataStream);
 
