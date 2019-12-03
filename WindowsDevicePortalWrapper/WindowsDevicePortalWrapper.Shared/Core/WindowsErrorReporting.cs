@@ -89,8 +89,13 @@ namespace Microsoft.Tools.WindowsDevicePortal
             byte[] werFile = null;
             using (Stream stream = await this.GetAsync(uri))
             {
-                werFile = new byte[stream.Length];
-                stream.Read(werFile, 0, werFile.Length);
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    await outStream.CopyToAsync(outStream);
+
+                    werFile = new byte[outStream.Length];
+                    await stream.ReadAsync(werFile, 0, werFile.Length);
+                }
             }
 
             return werFile;

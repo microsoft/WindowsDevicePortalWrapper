@@ -57,6 +57,11 @@ namespace Microsoft.Tools.WindowsDevicePortal
             HoloLens,
 
             /// <summary>
+            /// HoloLens 2 platform
+            /// </summary>
+            HoloLens2,
+
+            /// <summary>
             /// Xbox One platform
             /// </summary>
             XboxOne,
@@ -233,6 +238,9 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                             case "Virtual Machine":
                                 return DevicePortalPlatforms.VirtualMachine;
+
+                            case "HoloLens 2":
+                                return DevicePortalPlatforms.HoloLens2;
 
                             default:
                                 return (DevicePortalPlatforms)Enum.Parse(typeof(DevicePortalPlatforms), this.PlatformName);

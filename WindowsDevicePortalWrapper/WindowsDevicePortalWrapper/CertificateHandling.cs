@@ -40,10 +40,14 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream stream = await this.GetAsync(uri))
             {
-                using (BinaryReader reader = new BinaryReader(stream))
+                using (MemoryStream outStream = new MemoryStream())
                 {
-                    byte[] certData = reader.ReadBytes((int)stream.Length);
-                    certificate = new X509Certificate2(certData);
+                    await stream.CopyToAsync(outStream);
+                    using (BinaryReader reader = new BinaryReader(outStream))
+                    {
+                        byte[] certData = reader.ReadBytes((int)outStream.Length);
+                        certificate = new X509Certificate2(certData);
+                    }
                 }
             }
 

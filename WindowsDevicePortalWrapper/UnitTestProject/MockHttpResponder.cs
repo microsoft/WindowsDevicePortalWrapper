@@ -134,6 +134,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// <returns>Async task returning the response.</returns>
         public async Task<HttpResponseMessage> PostAsync(Uri uri, HttpContent content)
         {
+            if(content != null)
+            {
+                await content.ReadAsByteArrayAsync();
+            }
             Task<HttpResponseMessage> task = new Task<HttpResponseMessage>(() => this.HttpStoredResponse(uri, HttpMethods.Post));
             task.Start();
 

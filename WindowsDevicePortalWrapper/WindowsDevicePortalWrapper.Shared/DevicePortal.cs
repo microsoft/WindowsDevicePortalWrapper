@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 #endif // !WINDOWS_UWP
 #if WINDOWS_UWP
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -61,12 +62,34 @@ namespace Microsoft.Tools.WindowsDevicePortal
         private IDevicePortalConnection deviceConnection;
 #if !WINDOWS_UWP
 
+        // Enable/disable useUnsafeHeaderParsing.
+        // See https://social.msdn.microsoft.com/Forums/en-US/ff098248-551c-4da9-8ba5-358a9f8ccc57/how-do-i-enable-useunsafeheaderparsing-from-code-net-20?forum=netfxnetcom
+        private static bool ToggleAllowUnsafeHeaderParsing(bool enable)
+        {
+            Type settingsSectionType = Assembly.GetAssembly(typeof(System.Net.Configuration.SettingsSection))?.GetType("System.Net.Configuration.SettingsSectionInternal");
+            if (settingsSectionType == null) { return false; }
+
+            object anInstance = settingsSectionType.InvokeMember("Section", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.NonPublic, null, null, new object[] { });
+            if (anInstance == null) { return false; }
+
+            FieldInfo aUseUnsafeHeaderParsing = settingsSectionType.GetField("useUnsafeHeaderParsing", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (aUseUnsafeHeaderParsing == null) { return false; }
+
+            aUseUnsafeHeaderParsing.SetValue(anInstance, enable);
+
+            return true;
+        }
+
         /// <summary>
         /// Initializes static members of the <see cref="DevicePortal" /> class.
         /// </summary>
         static DevicePortal()
         {
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            if (!ToggleAllowUnsafeHeaderParsing(true))
+            {
+                Console.WriteLine("Failed to enable useUnsafeHeaderParsing");
+            }
         }
 
 #endif

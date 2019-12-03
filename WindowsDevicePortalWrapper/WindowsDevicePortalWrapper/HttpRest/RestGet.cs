@@ -24,39 +24,39 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public async Task<Stream> GetAsync(
             Uri uri)
         {
-            MemoryStream dataStream = null;
-
-            WebRequestHandler handler = new WebRequestHandler();
-            handler.UseDefaultCredentials = false;
-            handler.Credentials = this.deviceConnection.Credentials;
-            handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-            using (HttpClient client = new HttpClient(handler))
+            HttpClient client = null;
+            HttpResponseMessage response = null;
+            try
             {
+                WebRequestHandler handler = new WebRequestHandler();
+                handler.UseDefaultCredentials = false;
+                handler.Credentials = this.deviceConnection.Credentials;
+                handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
+
+                client = new HttpClient(handler);
                 this.ApplyHttpHeaders(client, HttpMethods.Get);
 
-                using (HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false))
+                response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
                 {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw await DevicePortalException.CreateAsync(response);
-                    }
-
-                    this.RetrieveCsrfToken(response);
-
-                    using (HttpContent content = response.Content)
-                    {
-                        dataStream = new MemoryStream();
-
-                        await content.CopyToAsync(dataStream).ConfigureAwait(false);
-
-                        // Ensure we return with the stream pointed at the origin.
-                        dataStream.Position = 0;
-                    }
+                    throw await DevicePortalException.CreateAsync(response);
                 }
-            }
 
-            return dataStream;
+                this.RetrieveCsrfToken(response);
+
+                if (response.Content == null)
+                {
+                    throw new DevicePortalException(System.Net.HttpStatusCode.NoContent, "", uri);
+                }
+
+                return await response.Content.ReadAsStreamAsync();
+            }
+            catch (Exception)
+            {
+                response?.Dispose();
+                client?.Dispose();
+                throw;
+            }
         }
     }
 }
