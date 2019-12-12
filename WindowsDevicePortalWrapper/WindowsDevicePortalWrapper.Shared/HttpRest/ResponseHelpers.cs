@@ -45,20 +45,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 if (dataStream != null)
                 {
-                    JsonFormatCheck<T>(dataStream);
-
-                    try
+                    using (MemoryStream outStream = new MemoryStream())
                     {
-                        response = serializer.ReadObject(dataStream);
-                    }
-                    catch (SerializationException)
-                    {
-                        // Assert on serialization failure.
-                        Debug.Assert(false, "Serialization failure encountered. Check DataContract types for a possible mismatch between expectations and reality");
-                        throw;
-                    }
+                        dataStream.CopyTo(outStream);
+                        if (outStream.Length != 0)
+                        {
+                            outStream.Seek(0, SeekOrigin.Begin);
+                            JsonFormatCheck<T>(outStream);
 
-                    data = (T)response;
+                            try
+                            {
+                                response = serializer.ReadObject(outStream);
+                            }
+                            catch (SerializationException ex)
+                            {
+                                // Assert on serialization failure.
+                                Debug.Assert(false, "Serialization failure encountered. Check DataContract types for a possible mismatch between expectations and reality");
+                                throw;
+                            }
+
+                            data = (T)response;
+                        }
+                    }
                 }
             }
 
