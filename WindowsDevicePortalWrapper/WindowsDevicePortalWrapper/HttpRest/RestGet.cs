@@ -6,57 +6,39 @@
 
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP GetAsync
+    /// HTTP GET Wrapper
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// Calls the specified API with the provided payload.
+        /// </summary>
+        /// <typeparam name="T">Return type for the GET call</typeparam>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>An object of the specified type containing the data returned by the request.</returns>
+        public async Task<T> GetAsync<T>(
+            string apiPath,
+            string payload = null) where T : new()
+        {
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                apiPath,
+                payload);
+
+            return (await this.GetAsync(uri).ConfigureAwait(false)).ReadJson<T>();
+        }
+
         /// <summary>
         /// Submits the http get request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the get request will be issued.</param>
         /// <returns>Response data as a stream.</returns>
-        public async Task<Stream> GetAsync(
-            Uri uri)
-        {
-            HttpClient client = null;
-            HttpResponseMessage response = null;
-            try
-            {
-                WebRequestHandler handler = new WebRequestHandler();
-                handler.UseDefaultCredentials = false;
-                handler.Credentials = this.deviceConnection.Credentials;
-                handler.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-                client = new HttpClient(handler);
-                this.ApplyHttpHeaders(client, HttpMethods.Get);
-
-                response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw await DevicePortalException.CreateAsync(response);
-                }
-
-                this.RetrieveCsrfToken(response);
-
-                if (response.Content == null)
-                {
-                    throw new DevicePortalException(System.Net.HttpStatusCode.NoContent, "", uri);
-                }
-
-                return await response.Content.ReadAsStreamAsync();
-            }
-            catch (Exception)
-            {
-                response?.Dispose();
-                client?.Dispose();
-                throw;
-            }
-        }
+        public Task<Stream> GetAsync(Uri uri) => HttpRest.GetAsync(this.HttpClient, uri);
     }
 }

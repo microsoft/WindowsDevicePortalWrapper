@@ -5,8 +5,8 @@
 //----------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using Windows.Security.Credentials;
+using System.Net;
+using AdysTech.CredentialManager;
 
 namespace XboxWdpDriver
 {
@@ -25,14 +25,11 @@ namespace XboxWdpDriver
         {
             try
             {
-                PasswordVault vault = new PasswordVault();
                 // Set the first stored cred as our network creds.
-                IReadOnlyList<PasswordCredential> creds = vault.FindAllByResource(target);
-                if (creds != null && creds.Count > 0)
+                if (CredentialManager.GetCredentials(target) is NetworkCredential creds)
                 {
-                    creds[0].RetrievePassword();
-                    userName = creds[0].UserName;
-                    password = creds[0].Password;
+                    userName = creds.UserName;
+                    password = creds.Password;
                 }
             }
             catch (Exception)
@@ -49,22 +46,17 @@ namespace XboxWdpDriver
         /// <param name="password">The new password.</param>
         public static void UpdateStoredCreds(string target, string userName, string password)
         {
-            PasswordVault vault = new PasswordVault();
-
             try
             {
                 // Remove any existing stored creds for this address and add these ones.
-                foreach (var cred in vault.FindAllByResource(target))
-                {
-                    vault.Remove(cred);
-                }
+                CredentialManager.RemoveCredentials(target);
             }
             catch (Exception)
             {
                 // Do nothing. This is expected if no credentials have been previously stored
             }
 
-            vault.Add(new PasswordCredential(target, userName, password));
+            CredentialManager.SaveCredentials(target, new NetworkCredential(userName, password));
         }
     }
 }

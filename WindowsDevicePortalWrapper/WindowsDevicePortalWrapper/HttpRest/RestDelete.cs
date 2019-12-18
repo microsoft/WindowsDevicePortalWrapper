@@ -13,53 +13,49 @@ using System.Threading.Tasks;
 namespace Microsoft.Tools.WindowsDevicePortal
 {
     /// <content>
-    /// .net 4.x implementation of HTTP DeleteAsync
+    /// HTTP DELETE Wrapper
     /// </content>
     public partial class DevicePortal
     {
+        /// <summary>
+        /// Calls the specified API with the provided payload. This signature leaves
+        /// off the optional response so callers who don't need a response body
+        /// don't need to specify a type for it.
+        /// </summary>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>Task tracking the HTTP completion.</returns>
+        public async Task DeleteAsync(
+            string apiPath,
+            string payload = null)
+        {
+            await this.DeleteAsync<NullResponse>(apiPath, payload);
+        }
+
+        /// <summary>
+        /// Calls the specified API with the provided payload.
+        /// </summary>
+        /// <typeparam name="T">The type of the data for the HTTP response body (if present).</typeparam>
+        /// <param name="apiPath">The relative portion of the uri path that specifies the API to call.</param>
+        /// <param name="payload">The query string portion of the uri path that provides the parameterized data.</param>
+        /// <returns>Task tracking the HTTP completion.</returns>
+        public async Task<T> DeleteAsync<T>(
+            string apiPath,
+            string payload = null) where T : new()
+        {
+            Uri uri = Utilities.BuildEndpoint(
+                this.deviceConnection.Connection,
+                apiPath, 
+                payload);
+
+            return (await this.DeleteAsync(uri)).ReadJson<T>();
+        }
+
         /// <summary>
         /// Submits the http delete request to the specified uri.
         /// </summary>
         /// <param name="uri">The uri to which the delete request will be issued.</param>
         /// <returns>Task tracking HTTP completion</returns>
-        public async Task<Stream> DeleteAsync(Uri uri)
-        {
-            MemoryStream dataStream = null;
-
-            WebRequestHandler requestSettings = new WebRequestHandler();
-            requestSettings.UseDefaultCredentials = false;
-            requestSettings.Credentials = this.deviceConnection.Credentials;
-            requestSettings.ServerCertificateValidationCallback = this.ServerCertificateValidation;
-
-            using (HttpClient client = new HttpClient(requestSettings))
-            {
-                this.ApplyHttpHeaders(client, HttpMethods.Delete);
-
-                using (HttpResponseMessage response = await client.DeleteAsync(uri).ConfigureAwait(false))
-                {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw await DevicePortalException.CreateAsync(response);
-                    }
-
-                    this.RetrieveCsrfToken(response);
-
-                    if (response.Content != null)
-                    {
-                        using (HttpContent content = response.Content)
-                        {
-                            dataStream = new MemoryStream();
-
-                            await content.CopyToAsync(dataStream).ConfigureAwait(false);
-
-                            // Ensure we return with the stream pointed at the origin.
-                            dataStream.Position = 0;
-                        }
-                    }
-                }
-            }
-
-            return dataStream;
-        }
+        public Task<Stream> DeleteAsync(Uri uri) => HttpRest.DeleteAsync(this.HttpClient, uri);
     }
 }

@@ -373,7 +373,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         public void XboxAppRegisterTest()
         {
             TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.RegisterPackageApi, HttpMethods.Post);
-            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.InstallStateApi, HttpMethods.Post);
+            TestHelpers.MockHttpResponder.AddMockResponse(DevicePortal.InstallStateApi, HttpMethods.Get);
 
             Task registerTask = TestHelpers.Portal.RegisterApplicationAsync("SomeLooseFolder");
             registerTask.Wait();
