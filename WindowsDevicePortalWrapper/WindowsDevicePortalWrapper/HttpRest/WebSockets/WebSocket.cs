@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
         /// <param name="args">Web socket message received args</param>
         /// <typeparam name="T">Return type for the websocket messages.</typeparam>
-        public delegate void MessageReceivedEventInternalHandler(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<T> args);
+        public delegate void MessageReceivedEventHandler(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<T> args);
 
         /// <summary>
         /// Web socket stream received event handler
@@ -87,20 +87,20 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="sender">sender <see cref="WebSocket{T}"/> object</param>
         /// <param name="args">Web socket message received args</param>
         /// <typeparam name="T">Return type for the websocket.</typeparam>
-        public delegate void StreamReceivedEventInternalHandler(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<Stream> args);
+        public delegate void StreamReceivedEventHandler(WebSocket<T> sender, WebSocketMessageReceivedEventArgs<Stream> args);
 
         /// <summary>
         /// Gets or sets the message received handler.
         /// </summary>
-        public event MessageReceivedEventInternalHandler WebSocketMessageReceived;
+        public event MessageReceivedEventHandler WebSocketMessageReceived;
 
         /// <summary>
         /// Gets or sets the stream received handler.
         /// </summary>
-        public event StreamReceivedEventInternalHandler WebSocketStreamReceived;
+        public event StreamReceivedEventHandler WebSocketStreamReceived;
 
         /// <summary>
-        /// Gets a value indicating whether the web socket is connected.
+        /// Gets or sets a value indicating whether the web socket is connected.
         /// </summary>
         public bool IsConnected
         {
@@ -109,7 +109,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         }
 
         /// <summary>
-        /// Gets a value indicating whether the web socket is listening for messages.
+        /// Gets or sets a value indicating whether the web socket is listening for messages.
         /// </summary>
         public bool IsListeningForMessages
         {

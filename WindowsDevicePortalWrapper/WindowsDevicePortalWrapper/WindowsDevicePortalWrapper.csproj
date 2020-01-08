@@ -9,7 +9,7 @@
     <AssemblyName>WindowsDevicePortalWrapper</AssemblyName>
     <AssemblyTitle>Windows Device Portal Wrapper</AssemblyTitle>
 
-    <Version>0.9.6</Version>
+    <Version>0.9.7</Version>
     <Description>Remote control of Windows 10 device for developers and device labs.</Description>
     <Authors>Microsoft</Authors>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>

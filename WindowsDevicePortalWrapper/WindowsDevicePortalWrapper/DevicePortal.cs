@@ -366,7 +366,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 ManualResetEvent streamReceived = new ManualResetEvent(false);
                 Stream stream = null;
 
-                WebSocket<object>.StreamReceivedEventInternalHandler streamReceivedHandler =
+                WebSocket<object>.StreamReceivedEventHandler streamReceivedHandler =
                     delegate(WebSocket<object> sender, WebSocketMessageReceivedEventArgs<Stream> args)
                 {
                     if (args.Message != null)
