@@ -105,7 +105,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public bool IsConnected
         {
             get;
-            protected internal set;
+            protected set;
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         public bool IsListeningForMessages
         {
             get;
-            protected internal set;
+            protected set;
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// override this and send the <see cref="Stream" /> instead via the WebSocketStreamReceived handler.
         /// </summary>
         /// <param name="stream">The received stream.</param>
-        protected internal void ConvertStreamToMessage(Stream stream)
+        protected void ConvertStreamToMessage(Stream stream)
         {
             if (stream != null && stream.Length != 0)
             {
@@ -216,7 +216,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
-        protected internal virtual async Task ConnectInternalAsync(
+        protected virtual async Task ConnectInternalAsync(
             Uri endpoint)
         {
             this.websocket = new ClientWebSocket();
@@ -249,7 +249,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Closes the connection to the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        protected internal virtual async Task CloseInternalAsync()
+        protected virtual async Task CloseInternalAsync()
         {
             await Task.Run(() =>
             {
@@ -263,7 +263,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Stops listening for messages.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        protected internal virtual async Task StopListeningForMessagesInternalAsync()
+        protected virtual async Task StopListeningForMessagesInternalAsync()
         {
             await this.websocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
 
@@ -279,7 +279,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// Starts listening for messages from the websocket. Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        protected internal virtual async Task StartListeningForMessagesInternalAsync()
+        protected virtual async Task StartListeningForMessagesInternalAsync()
         {
             await Task.Run(() =>
             {
@@ -292,7 +292,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// </summary>
         /// <param name="message">The message to send.</param>
         /// <returns>The task of sending a message to the websocket.</returns>
-        protected internal virtual async Task SendMessageInternalAsync(string message)
+        protected virtual async Task SendMessageInternalAsync(string message)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(message);
             ArraySegment<byte> buffer = new ArraySegment<byte>(bytes);

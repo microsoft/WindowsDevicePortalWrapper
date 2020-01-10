@@ -51,7 +51,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         /// <param name="endpoint">The uri that the weboscket should connect to.</param>
         /// <returns>The task of opening a connection to the websocket.</returns>
-        protected internal override async Task ConnectInternalAsync(Uri endpoint)
+        protected override async Task ConnectInternalAsync(Uri endpoint)
         {
             await Task.Run(() =>
             {
@@ -64,7 +64,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Closes the connection to the websocket.
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
-        protected internal override async Task CloseInternalAsync()
+        protected override async Task CloseInternalAsync()
         {
             await Task.Run(() =>
             {
@@ -79,7 +79,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         /// <returns>The task of closing the websocket connection.</returns>
 #pragma warning disable 1998
-        protected internal override async Task StopListeningForMessagesInternalAsync()
+        protected override async Task StopListeningForMessagesInternalAsync()
         {
             this.keepListeningForMessages = false;
 
@@ -97,7 +97,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// Once they are received they are parsed and the WebSocketMessageReceived event is raised.
         /// </summary>
         /// <returns>The task of listening for messages from the websocket.</returns>
-        protected internal override async Task StartListeningForMessagesInternalAsync()
+        protected override async Task StartListeningForMessagesInternalAsync()
         {
             this.IsListeningForMessages = true;
             this.keepListeningForMessages = true;
@@ -144,7 +144,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
         /// </summary>
         /// <param name="message">The message to send.</param>
         /// <returns>The task of sending the message to the websocket</returns>
-        protected internal override async Task SendMessageInternalAsync(string message)
+        protected override async Task SendMessageInternalAsync(string message)
         {
             await this.webSocketTask.ConfigureAwait(false);
             this.webSocketTask.Wait();
