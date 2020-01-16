@@ -53,7 +53,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests.Core
         }
 
         /// <summary>
-        /// Basic test of Get methof for getting ETW events.
+        /// Basic test of Get method for getting ETW events.
         /// </summary>
         [TestMethod]
         public void GetEtwEventsTest()

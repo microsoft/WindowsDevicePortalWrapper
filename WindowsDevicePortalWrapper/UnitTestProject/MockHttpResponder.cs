@@ -18,7 +18,7 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
     /// <summary>
     /// Mock implementation of HttpWrapper.
     /// </summary>
-    public class MockHttpResponder
+    public class MockHttpResponder : IHttpClient
     {
         /// <summary>
         /// Dictionary of mock responses from endpoints to the stored response message

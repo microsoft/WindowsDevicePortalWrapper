@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29521.150
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsDevicePortalWrapper", "WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj", "{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsDevicePortalWrapper", "WindowsDevicePortalWrapper\WindowsDevicePortalWrapper.csproj", "{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsDevicePortalWrapper.UniversalWindows", "WindowsDevicePortalWrapper.UniversalWindows\WindowsDevicePortalWrapper.UniversalWindows.csproj", "{F2D8B145-A737-494E-AEF4-508F9D02E0D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WindowsDevicePortalWrapper.Shared", "WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.shproj", "{AF72A46D-5D30-4FB4-8D3E-B516ED19F9A4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockDataGenerator", "MockDataGenerator\MockDataGenerator.csproj", "{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockDataGenerator", "MockDataGenerator\MockDataGenerator.csproj", "{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}"
 EndProject
@@ -19,11 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{84BC236A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{20AF4B15-122A-4C9B-A941-73824C518AFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWdpClient.UniversalWindows", "..\Samples\SampleWdpClient.UniversalWindows\SampleWdpClient.UniversalWindows.csproj", "{E605CD33-1B19-4091-9BD2-289D3CA4729E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XboxWdpDriver", "..\Samples\XboxWdpDriver\XboxWdpDriver.csproj", "{1F3CA46B-1E52-418E-A293-23F3FA3BD213}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxWdpDriver", "..\Samples\XboxWdpDriver\XboxWdpDriver.csproj", "{1F3CA46B-1E52-418E-A293-23F3FA3BD213}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWdpClient", "..\Samples\SampleWdpClient\SampleWdpClient.csproj", "{7E0481EB-514A-4292-AD1D-3A3EAF38D359}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWdpClient", "..\Samples\SampleWdpClient\SampleWdpClient.csproj", "{7E0481EB-514A-4292-AD1D-3A3EAF38D359}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{0A85BE2B-52BE-4ACD-A332-991B3B81ED49}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,12 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{4fc7c762-adbe-4a0a-882d-10771cd8bd55}*SharedItemsImports = 4
-		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{6a9e862e-5cda-4a8a-bbc0-56e9ea921e39}*SharedItemsImports = 4
-		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{af72a46d-5d30-4fb4-8d3e-b516ed19f9a4}*SharedItemsImports = 13
-		WindowsDevicePortalWrapper.Shared\WindowsDevicePortalWrapper.Shared.projitems*{f2d8b145-a737-494e-aef4-508f9d02e0d7}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -65,22 +53,6 @@ Global
 		{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}.Release|x64.Build.0 = Release|Any CPU
 		{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A9E862E-5CDA-4A8A-BBC0-56E9EA921E39}.Release|x86.Build.0 = Release|Any CPU
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|ARM.ActiveCfg = Debug|ARM
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|ARM.Build.0 = Debug|ARM
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x64.ActiveCfg = Debug|x64
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x64.Build.0 = Debug|x64
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x86.ActiveCfg = Debug|x86
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Debug|x86.Build.0 = Debug|x86
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|ARM.ActiveCfg = Release|ARM
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|ARM.Build.0 = Release|ARM
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x64.ActiveCfg = Release|x64
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x64.Build.0 = Release|x64
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x86.ActiveCfg = Release|x86
-		{F2D8B145-A737-494E-AEF4-508F9D02E0D7}.Release|x86.Build.0 = Release|x86
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -113,30 +85,6 @@ Global
 		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x64.Build.0 = Release|Any CPU
 		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x86.ActiveCfg = Release|Any CPU
 		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD}.Release|x86.Build.0 = Release|Any CPU
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|Any CPU.Build.0 = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|Any CPU.Deploy.0 = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|ARM.ActiveCfg = Debug|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|ARM.Build.0 = Debug|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|ARM.Deploy.0 = Debug|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x64.ActiveCfg = Debug|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x64.Build.0 = Debug|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x64.Deploy.0 = Debug|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x86.ActiveCfg = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x86.Build.0 = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Debug|x86.Deploy.0 = Debug|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|Any CPU.ActiveCfg = Release|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|Any CPU.Build.0 = Release|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|Any CPU.Deploy.0 = Release|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|ARM.ActiveCfg = Release|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|ARM.Build.0 = Release|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|ARM.Deploy.0 = Release|ARM
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x64.ActiveCfg = Release|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x64.Build.0 = Release|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x64.Deploy.0 = Release|x64
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x86.ActiveCfg = Release|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x86.Build.0 = Release|x86
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E}.Release|x86.Deploy.0 = Release|x86
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -176,8 +124,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4FC7C762-ADBE-4A0A-882D-10771CD8BD55} = {20AF4B15-122A-4C9B-A941-73824C518AFD}
 		{C5AF45CA-C804-42ED-81FD-041B9B7FDBBD} = {84BC236A-C79C-47E2-A5A3-F6FF03BE64F3}
-		{E605CD33-1B19-4091-9BD2-289D3CA4729E} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
 		{1F3CA46B-1E52-418E-A293-23F3FA3BD213} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
 		{7E0481EB-514A-4292-AD1D-3A3EAF38D359} = {07E3DB19-3DDB-42EF-BDAB-0A61F07D637C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {936C9913-9A2F-4E36-BD3E-658B41786D5D}
 	EndGlobalSection
 EndGlobal

@@ -45,7 +45,10 @@ namespace Microsoft.Tools.WindowsDevicePortal.Tests
                     HttpMethods.Get);
             }
           
-            TestHelpers.Portal = new DevicePortal(new MockDevicePortalConnection());
+            TestHelpers.Portal = new DevicePortal(
+                connection: new MockDevicePortalConnection(),
+                createHttpClient: (_, __) => TestHelpers.MockHttpResponder,
+                webSocketFactory: new MockWebSocketFactory());
 
             Task connectTask = TestHelpers.Portal.ConnectAsync(updateConnection: false);
             connectTask.Wait();
