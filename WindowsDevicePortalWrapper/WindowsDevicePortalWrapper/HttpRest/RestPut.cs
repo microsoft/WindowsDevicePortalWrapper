@@ -58,6 +58,10 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
                             // Ensure we return with the stream pointed at the origin.
                             dataStream.Position = 0;
+                            if(dataStream.Length == 0)
+                            {
+                                dataStream = null;
+                            }
                         }
                     }
                 }

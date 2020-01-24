@@ -101,6 +101,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.GetAsync(uri))
             {
+                if (dataStream != null)
                 {
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
                     HolographicSimulationError error = null;
