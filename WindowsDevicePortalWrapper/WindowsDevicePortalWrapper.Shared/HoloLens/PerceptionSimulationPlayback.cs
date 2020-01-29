@@ -1,4 +1,4 @@
-﻿//----------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
 // <copyright file="PerceptionSimulationPlayback.cs" company="Microsoft Corporation">
 //     Licensed under the MIT License. See LICENSE.TXT in the project root license information.
 // </copyright>
@@ -194,20 +194,28 @@ namespace Microsoft.Tools.WindowsDevicePortal
             {
                 if (dataStream != null)
                 {
-                    // Try to get the session state.
-                    try
+                    using (MemoryStream outStream = new MemoryStream())
                     {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationPlaybackSessionState));
-                        HolographicSimulationPlaybackSessionState sessionState = (HolographicSimulationPlaybackSessionState)serializer.ReadObject(dataStream);
-                        playbackState = sessionState.State;
-                    }
-                    catch 
-                    {
-                        // We did not receive the session state, check to see if we received a simulation error.
-                        dataStream.Position = 0;
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
-                        HolographicSimulationError error = (HolographicSimulationError)serializer.ReadObject(dataStream);
-                        throw new InvalidOperationException(error.Reason);
+                        dataStream.CopyTo(outStream);
+                        if (outStream.Length != 0)
+                        {
+                            outStream.Seek(0, SeekOrigin.Begin);
+                            // Try to get the session state.
+                            try
+                            {
+                                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationPlaybackSessionState));
+                                HolographicSimulationPlaybackSessionState sessionState = (HolographicSimulationPlaybackSessionState)serializer.ReadObject(dataStream);
+                                playbackState = sessionState.State;
+                            }
+                            catch
+                            {
+                                // We did not receive the session state, check to see if we received a simulation error.
+                                dataStream.Position = 0;
+                                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
+                                HolographicSimulationError error = (HolographicSimulationError)serializer.ReadObject(dataStream);
+                                throw new InvalidOperationException(error.Reason);
+                            }
+                        }
                     }
                 }
             }
