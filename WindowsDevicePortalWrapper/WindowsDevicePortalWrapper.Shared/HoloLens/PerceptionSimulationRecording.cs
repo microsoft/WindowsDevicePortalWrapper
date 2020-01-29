@@ -101,31 +101,36 @@ namespace Microsoft.Tools.WindowsDevicePortal
 
             using (Stream dataStream = await this.GetAsync(uri))
             {
+                if (dataStream != null)
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
-                    HolographicSimulationError error = null;
- 
-                    try
-                    {
-                        // Try to get / interpret an error response.
-                        error = (HolographicSimulationError)serializer.ReadObject(dataStream);
-                    }
-                    catch
-                    {
-                    }
-
-                    if (error != null)
-                    {
-                        // We received an error response.
-                        throw new InvalidOperationException(error.Reason);
-                    }
-
-                    // Getting here indicates that we have file data to return.
                     using (MemoryStream outStream = new MemoryStream())
                     {
-                        await dataStream.CopyToAsync(outStream);
-                        dataBytes = new byte[outStream.Length];
-                        await outStream.ReadAsync(dataBytes, 0, dataBytes.Length);
+                        dataStream.CopyTo(outStream);
+                        if (outStream.Length != 0)
+                        {
+                            outStream.Seek(0, SeekOrigin.Begin);
+                            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(HolographicSimulationError));
+                            HolographicSimulationError error = null;
+
+                            try
+                            {
+                                // Try to get / interpret an error response.
+                                error = (HolographicSimulationError)serializer.ReadObject(outStream);
+                            }
+                            catch
+                            {
+                            }
+
+                            if (error != null)
+                            {
+                                // We received an error response.
+                                throw new InvalidOperationException(error.Reason);
+                            }
+
+                            // Getting here indicates that we have file data to return.
+                            dataBytes = new byte[outStream.Length];
+                            await outStream.ReadAsync(dataBytes, 0, dataBytes.Length);
+                        }
                     }
                 }
             }
