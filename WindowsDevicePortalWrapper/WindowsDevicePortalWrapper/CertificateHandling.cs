@@ -43,6 +43,7 @@ namespace Microsoft.Tools.WindowsDevicePortal
                 using (MemoryStream outStream = new MemoryStream())
                 {
                     await stream.CopyToAsync(outStream);
+                    outStream.Position = 0;
                     using (BinaryReader reader = new BinaryReader(outStream))
                     {
                         byte[] certData = reader.ReadBytes((int)outStream.Length);
