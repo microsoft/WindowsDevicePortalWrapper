@@ -98,14 +98,18 @@ namespace Microsoft.Tools.WindowsDevicePortal
         /// <param name="filepath">The path to the file we are uploading.</param>
         /// <param name="subPath">An optional subpath to the folder.</param>
         /// <param name="packageFullName">The package full name if using LocalAppData.</param>
+        /// <param name="shouldExtract">The indication if the file should be extracted after upload.</param>
         /// <returns>Task tracking completion of the upload request.</returns>
         public async Task UploadFileAsync(
             string knownFolderId,
             string filepath,
             string subPath = null,
-            string packageFullName = null)
+            string packageFullName = null,
+            bool shouldExtract = false)
         {
             Dictionary<string, string> payload = this.BuildCommonFilePayload(knownFolderId, subPath, packageFullName);
+
+            payload.Add("extract", shouldExtract.ToString());
 
             List<string> files = new List<string>();
             files.Add(filepath);
